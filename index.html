@@ -1108,7 +1108,8 @@ function renderDateMode(container, display) {
     sep +
     '<div style="margin:0.5rem 0"></div>' +
     '<div style="display:flex;gap:0.3rem;flex-wrap:wrap;margin:0.5rem 0"><button class="date-preset" onclick="setDatePreset(\'1w\')">1W</button><button class="date-preset" onclick="setDatePreset(\'2w\')">2W</button><button class="date-preset" onclick="setDatePreset(\'1m\')">1M</button><button class="date-preset" onclick="setDatePreset(\'3m\')">3M</button><button class="date-preset" onclick="setDatePreset(\'6m\')">6M</button><button class="date-preset" onclick="setDatePreset(\'1y\')">1Y</button></div>' +
-    sep;
+    sep +
+    '<div style="text-align:center;margin-top:0.5rem"><button onclick="toggleCalcHistory()" style="padding:0.5rem 1.5rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:transparent;color:var(--text-primary);font-size:0.9rem;cursor:pointer">Show History</button></div>';
 
   display.textContent = '';
   calcDateDiff(); calcDateAdd();
