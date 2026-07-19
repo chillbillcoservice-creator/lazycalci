@@ -112,6 +112,12 @@ details[open] summary:before { content:'▼'; }
 .sp-expense-top .rm-exp:hover { color:var(--color-accent); }
 .sp-chips { display:flex; flex-wrap:wrap; gap:0.3rem; margin-top:0.35rem; }
 .sp-chip { font-size:0.75rem; padding:0.2rem 0.45rem; border-radius:10px; border:1px solid var(--border-color); cursor:pointer; color:var(--text-muted); background:transparent; touch-action:manipulation; }
+.sp-action-row { display:flex; gap:0.5rem; margin-bottom:0.3rem; }
+.sp-btn-primary { flex:1; padding:0.55rem; border:1px solid var(--color-accent); border-radius:var(--radius-sm); background:transparent; color:var(--color-accent); cursor:pointer; font-size:0.9rem; font-weight:600; touch-action:manipulation; }
+.sp-btn-secondary { flex:1; padding:0.55rem; border:1px solid var(--border-color); border-radius:var(--radius-sm); background:var(--bg-tertiary); color:#fff; cursor:pointer; font-size:0.9rem; font-weight:600; touch-action:manipulation; }
+.sp-btn-primary:hover { background:var(--color-accent); color:#fff; }
+.exp-shortcuts { display:flex; gap:0.4rem; padding:0.2rem 0 0.5rem 0; flex-wrap:wrap; }
+.exp-shortcuts span { font-size:0.75rem; padding:0.2rem 0.6rem; border-radius:8px; border:1px solid var(--border-color); cursor:pointer; color:var(--text-muted); background:transparent; touch-action:manipulation; }
 .sp-chip.on { background:var(--color-accent); color:#fff; border-color:var(--color-accent); }
 .sp-chip.payer { border-color:#f1c40f; color:#f1c40f; }
 .sp-chip.payer.on { background:#f1c40f; border-color:#f1c40f; color:#000; }
@@ -1238,7 +1244,7 @@ function fbJoinTrip(name, phone) {
 
 var _showAddBuddy = false;
 function toggleAddBuddy() { _showAddBuddy = !_showAddBuddy; renderSplitterMode(document.getElementById('calc-mode-body')); }
-function shareTripInvite() { if (_fbTripId) { shareInviteLink(); return; } fbCreateTrip(function(){ shareInviteLink(); }); }
+function shareTripInvite() { if (_fbTripId) { shareInviteLink(); return; } var btn = document.querySelector('.sp-btn-primary'); if (btn) { btn.disabled = true; btn.textContent = 'Creating...'; } fbCreateTrip(function(id) { if (id) { shareInviteLink(); showToast('Invite link copied!'); } else { showToast('Failed to create trip'); } if (btn) { btn.disabled = false; btn.textContent = '📨 Send Invite'; } }); }
 function spPersonId() { return _splitIdCounter++; }
 
 function createNewTrip() {
@@ -1724,7 +1730,7 @@ function renderExpensesMode(container) {
   var html = '';
   html += '<div class="exp-row"><input id="exp-desc" placeholder="What for?" onkeydown="if(event.key===\'Enter\')document.getElementById(\'exp-amt\').focus()"><input id="exp-amt" class="exp-amt" placeholder="₹ Amount" inputmode="decimal" onkeydown="if(event.key===\'Enter\')addExpenseItem()"><button onclick="addExpenseItem()">+ Add</button></div>';
   if (_recordExpenses && expensesList.length) {
-    html += '<div style="font-size:0.75rem;color:var(--text-muted);padding:0.2rem 0 0.5rem 0">Tap above digit to add a label, tap again to record in Expenses</div>';
+    html += '<div class="exp-shortcuts"><span onclick="document.getElementById(\'exp-desc\').value=\'FUEL\';document.getElementById(\'exp-amt\').focus()">FUEL</span><span onclick="document.getElementById(\'exp-desc\').value=\'DIET\';document.getElementById(\'exp-amt\').focus()">DIET</span><span onclick="document.getElementById(\'exp-desc\').value=\'SHOPPING\';document.getElementById(\'exp-amt\').focus()">SHOPPING</span><span onclick="document.getElementById(\'exp-desc\').value=\'OTHERS\';document.getElementById(\'exp-amt\').focus()">OTHERS</span></div>';
   }
   if (expensesList.length) {
     var groups = {};
@@ -1818,7 +1824,7 @@ function renderSplitterModeContent(container) {
   }
   /* people */
   var buddyFormHtml = _showAddBuddy ? '<div style="display:flex;gap:0.4rem;margin-top:0.4rem"><input id="sp-person-input" placeholder="Enter name" onkeydown="if(event.key===\'Enter\')addSplitPersonManual()"><input id="sp-tel-input" class="sp-add-tel" type="tel" inputmode="numeric" placeholder="📞 Phone" onkeydown="if(event.key===\'Enter\')addSplitPersonManual()"><button onclick="addSplitPerson()">+ Add</button></div>' : '';
-  html += '<div style="display:flex;gap:0.5rem;margin-bottom:0.3rem"><button onclick="shareTripInvite()" style="flex:1;padding:0.55rem;border:1px solid var(--color-accent);border-radius:var(--radius-sm);background:transparent;color:var(--color-accent);cursor:pointer;font-size:0.9rem;font-weight:600">📨 Send Invite</button><button onclick="toggleAddBuddy()" style="flex:1;padding:0.55rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-tertiary);color:#fff;cursor:pointer;font-size:0.9rem;font-weight:600">➕ Add Buddy</button></div>' + buddyFormHtml;
+  html += '<div class="sp-action-row"><button class="sp-btn-primary" onclick="shareTripInvite()">📨 Send Invite</button><button class="sp-btn-secondary" onclick="toggleAddBuddy()">➕ Add Buddy</button></div>' + buddyFormHtml;
   html += '<div class="sp-people">';
   splitPeople.forEach(function(p,i){
     var c = _spColors[i % _spColors.length];
