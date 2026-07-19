@@ -1089,20 +1089,18 @@ function renderDateMode(container, display) {
   var sep = '<div style="border-top:2px solid var(--border-color);margin:0.7rem 0"></div>';
   var dr = '<div style="position:relative;flex:1;min-width:0;height:100%">';
 
-  var sDate = '<span id="d-start-display" style="display:block;padding:0.5rem 0.6rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);font-size:1rem;color:var(--text-primary)">' + fmtDateInput(todayISO) + '</span>';
+  var sDate = '<span id="d-start-display" style="display:flex;align-items:center;gap:0.3rem;padding:0.4rem 0.5rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);font-size:0.9rem;color:var(--text-primary);background:var(--bg-secondary)"><span style="opacity:0.5;font-size:1rem">📅</span>' + fmtDateInput(todayISO) + '</span>';
   var sInput = '<input id="d-start" type="date" value="' + todayISO + '" style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;cursor:pointer" onchange="updateDateDisplay(\'d-start\',\'d-start-display\');calcDateDiff()">';
   var sPicker = dr + sDate + sInput + '</div>';
 
-  var eDate = '<span id="d-end-display" style="display:block;padding:0.5rem 0.6rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);font-size:1rem;color:var(--text-primary)">' + fmtDateInput(todayISO) + '</span>';
+  var eDate = '<span id="d-end-display" style="display:flex;align-items:center;gap:0.3rem;padding:0.4rem 0.5rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);font-size:0.9rem;color:var(--text-primary);background:var(--bg-secondary)"><span style="opacity:0.5;font-size:1rem">📅</span>' + fmtDateInput(todayISO) + '</span>';
   var eInput = '<input id="d-end" type="date" value="' + todayISO + '" style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;cursor:pointer" onchange="updateDateDisplay(\'d-end\',\'d-end-display\');calcDateDiff()">';
   var ePicker = dr + eDate + eInput + '</div>';
 
   container.innerHTML =
     '<div class="mode-results"><div class="mr-item"><span class="mr-label">DIFF</span><span class="mr-value" id="d-diff">0 days</span></div><div class="mr-item"><span class="mr-label">DETAILS</span><span class="mr-value" id="d-detail" style="font-size:0.85rem">0y 0m 0d</span></div></div>' +
     sep +
-    '<div class="field-row" style="margin-bottom:0.7rem"><span class="field-label" style="min-width:38px">From</span>' + sPicker + '</div>' +
-    sep +
-    '<div class="field-row" style="margin-bottom:0.7rem"><span class="field-label" style="min-width:38px">To</span>' + ePicker + '</div>' +
+    '<div class="field-row" style="display:flex;gap:0.5rem;margin-bottom:0.7rem;flex-wrap:wrap"><div style="flex:1;min-width:120px"><span class="field-label" style="font-size:0.8rem;color:var(--text-muted);min-width:34px;margin-bottom:0.15rem;display:block">From</span>' + sPicker + '</div><div style="flex:1;min-width:120px"><span class="field-label" style="font-size:0.8rem;color:var(--text-muted);min-width:34px;margin-bottom:0.15rem;display:block">To</span>' + ePicker + '</div></div>' +
     sep +
     '<div style="display:flex;align-items:center;gap:0.5rem"><span class="field-label" style="min-width:38px;flex-shrink:0">Add</span><input id="d-add" type="number" inputmode="numeric" value="" style="width:60px;flex-shrink:0;min-width:0;font-size:1rem;padding:0.5rem 0.4rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:transparent;color:var(--text-primary)" oninput="calcDateAdd()"><span style="white-space:nowrap;color:var(--text-primary);font-size:0.95rem;flex-shrink:0">days to</span><div style="display:flex;align-items:center;border:1px solid var(--border-color);border-radius:var(--radius-sm);overflow:hidden;flex:1 1 160px;min-width:130px"><span style="font-size:0.9rem;color:#fff;padding:0.5rem 0 0.5rem 0.5rem;flex-shrink:0">Today</span><span style="font-size:0.9rem;font-weight:700;color:#fff;padding:0.5rem 0.5rem 0.5rem 0.25rem;min-width:0">' + todayDate + '</span></div></div><div style="background:var(--bg-tertiary);border-radius:var(--radius-sm);padding:0.7rem 0.8rem;margin-top:0.5rem;min-height:2.5rem;text-align:center"><span class="result-value" id="d-add-result" style="font-size:1.2rem"></span></div>' +
     sep +
