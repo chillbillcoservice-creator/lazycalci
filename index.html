@@ -84,7 +84,7 @@
 .exp-row button { padding:0.7rem 1rem; border:1px solid var(--color-accent); border-radius:var(--radius-sm); background:var(--color-accent); color:#fff; cursor:pointer; font-size:1rem; font-weight:600; }
 .exp-item { display:flex; align-items:center; gap:0.4rem; padding:0.5rem 0.6rem; background:var(--bg-primary); border-radius:var(--radius-sm); margin-bottom:0.35rem; }
 .exp-item .exp-desc { flex:1; font-size:0.9rem; color:#fff; }
-.exp-item .exp-amt-val { font-weight:700; color:var(--color-accent); white-space:nowrap; min-width:70px; text-align:right; }
+.exp-item .exp-amt-val { font-weight:400; color:var(--color-accent); white-space:nowrap; min-width:70px; text-align:right; }
 .exp-item .exp-date { font-size:0.7rem; color:#fff; min-width:55px; }
 .exp-item .rm-exp { cursor:pointer; color:var(--text-muted); font-size:0.85rem; padding:2px 4px; }
 .exp-item .rm-exp:hover { color:var(--color-accent); }
@@ -1728,18 +1728,18 @@ function renderExpensesMode(container) {
       if (inRange(d, monStr, sunStr)) { weekItems = weekItems.concat(groups[d]); return; }
       if (d.slice(0,7) === thisMon) { monthItems = monthItems.concat(groups[d]); return; }
     });
-    function expSection(title, items, open) {
+    function expSection(title, items, open, bold) {
       if (!items.length) return '';
       var t = 0; items.forEach(function(e){ t += parseFloat(e.amount)||0; });
       var o = open ? ' open' : '';
-      var h = '<details'+o+' style="margin-bottom:0.3rem"><summary class="exp-summary">'+title+' <span style="font-weight:400;font-size:1rem;color:var(--color-accent);margin-left:auto">₹'+fmtNum(t)+'</span></summary>';
+      var h = '<details'+o+' style="margin-bottom:0.3rem"><summary class="exp-summary">'+title+' <span style="font-weight:'+(bold?'700':'400')+';font-size:1rem;color:var(--color-accent);margin-left:auto">₹'+fmtNum(t)+'</span></summary>';
       items.forEach(function(e){
         h += '<div class="exp-item"><span class="exp-date">'+fmtDateShort(e.date)+'</span><span class="exp-desc">'+escHtml(e.desc)+'</span><span class="exp-amt-val">₹'+fmtNum(parseFloat(e.amount)||0)+'</span><span class="rm-exp" onclick="removeExpenseItem('+e.id+')">🗑️</span></div>';
       });
       h += '</details>';
       return h;
     }
-    html += expSection('📅 Today', todayItems, true);
+    html += expSection('📅 Today', todayItems, true, true);
     html += expSection('📅 This Week', weekItems, false);
     html += expSection('📅 This Month', monthItems, false);
   } else {
