@@ -474,6 +474,18 @@ function calcExprFromTokens() {
   return calcTokens.map(function(t) { return t.v; }).join('');
 }
 
+function parseExprToTokens(expr) {
+  var tokens = [];
+  var parts = expr.replace(/×/g, '*').replace(/÷/g, '/').match(/(\d+(?:\.\d+)?)|([+\-*/%])/g);
+  if (parts) {
+    parts.forEach(function(p) {
+      if (/^[\d.]+$/.test(p)) tokens.push({v: p, label: ''});
+      else tokens.push({v: p, label: ''});
+    });
+  }
+  return tokens.length ? tokens : [{v: '0', label: ''}];
+}
+
 function escHtml(str) {
   if (!str) return '';
   return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
@@ -673,7 +685,7 @@ function calcBtn(label) {
       else { deactivateSticky(); calcClear(); }
       return;
     }
-    if (label === "=") { stickyFlush(); var finalResult = _stickyResult; var fullExpr = _stickyFullExpr; deactivateSticky(); calcTokens = [{v: String(finalResult), label: ""}]; _calcSavedExpr = ""; var _ce = document.getElementById("calc-expression"); _ce.innerHTML = "<span style=\"cursor:pointer;font-weight:600;color:#fff\" onclick=\"editCalcTokenLabel(0)\">" + escHtml(fullExpr || fmtNum(finalResult)) + "</span>"; _ce.style.fontSize = "1.7rem"; _ce.scrollLeft = _ce.scrollWidth; var _cd = document.getElementById("calc-display"); _cd.style.display = ''; _cd.textContent = "= " + fmtNum(finalResult); _calcShowExpr = false; return; }
+    if (label === "=") { stickyFlush(); var finalResult = _stickyResult; var fullExpr = _stickyFullExpr; deactivateSticky(); calcTokens = parseExprToTokens(fullExpr); _calcSavedExpr = ""; _calcShowExpr = true; calcUpdateDisplay(); var _cd = document.getElementById("calc-display"); _cd.style.display = ''; _cd.textContent = "= " + fmtNum(finalResult); return; }
     if (label === '±' && _stickyInput) { _stickyInput = String(-parseFloat(_stickyInput)); updateStickyDisplay(); return; }
     if (label === '%' && _stickyInput) { _stickyInput = String(parseFloat(_stickyInput) / 100); updateStickyDisplay(); return; }
     return;
