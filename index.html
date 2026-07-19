@@ -1236,6 +1236,9 @@ function fbJoinTrip(name, phone) {
   renderSplitterMode(document.getElementById('calc-mode-body'));
 }
 
+var _showAddBuddy = false;
+function toggleAddBuddy() { _showAddBuddy = !_showAddBuddy; renderSplitterMode(document.getElementById('calc-mode-body')); }
+function shareTripInvite() { if (_fbTripId) { shareInviteLink(); return; } fbCreateTrip(function(){ shareInviteLink(); }); }
 function spPersonId() { return _splitIdCounter++; }
 
 function createNewTrip() {
@@ -1456,6 +1459,15 @@ function spTogglePerson(expId, personId) {
     else e.checked[personId] = true;
     var allChecked = splitPeople.every(function(p) { return e.checked[p.id]; });
     e.splitMode = allChecked ? 'equal' : 'custom';
+    if (e.splitMode === 'custom') {
+      if (!e.customAmounts) e.customAmounts = {};
+      var total = parseFloat(e.amount) || 0;
+      var checkedIds = []; splitPeople.forEach(function(p){ if (e.checked[p.id]) checkedIds.push(p.id); });
+      if (checkedIds.length > 0) {
+        var share = total / checkedIds.length;
+        checkedIds.forEach(function(id){ e.customAmounts[id] = share; });
+      }
+    }
   });
   calcSplit();
 }
@@ -1792,8 +1804,8 @@ function renderSplitterModeContent(container) {
     html += '<div class="sp-trip"><span>🏕️</span><input id="sp-trip-name" placeholder="Trip Name" value="'+escHtml(splitTripName)+'" oninput="splitTripName=this.value;fbUpdateTrip()"><span class="sp-trip-date">📅 '+(splitTripDate?fmtDate(splitTripDate):'')+'</span>'+( _fbTripId ? '<span class="sp-invite-btn" onclick="shareInviteLink();event.stopPropagation()" title="Share Trip" style="font-size:1.1rem">🔗</span>' : '')+'</div>';
   }
   /* people */
-  html += '<div class="sp-section-title">People</div>';
-  html += '<div class="sp-add-row"><input id="sp-person-input" placeholder="Enter name" onkeydown="if(event.key===\'Enter\')addSplitPersonManual()"><input id="sp-tel-input" class="sp-add-tel" type="tel" inputmode="numeric" placeholder="📞 Phone" onkeydown="if(event.key===\'Enter\')addSplitPersonManual()"><button onclick="addSplitPerson()">+ Add</button></div>';
+  var buddyFormHtml = _showAddBuddy ? '<div style="display:flex;gap:0.4rem;margin-top:0.4rem"><input id="sp-person-input" placeholder="Enter name" onkeydown="if(event.key===\'Enter\')addSplitPersonManual()"><input id="sp-tel-input" class="sp-add-tel" type="tel" inputmode="numeric" placeholder="📞 Phone" onkeydown="if(event.key===\'Enter\')addSplitPersonManual()"><button onclick="addSplitPerson()">+ Add</button></div>' : '';
+  html += '<div style="display:flex;gap:0.5rem;margin-bottom:0.3rem"><button onclick="shareTripInvite()" style="flex:1;padding:0.55rem;border:1px solid var(--color-accent);border-radius:var(--radius-sm);background:transparent;color:var(--color-accent);cursor:pointer;font-size:0.9rem;font-weight:600">📨 Send Invite</button><button onclick="toggleAddBuddy()" style="flex:1;padding:0.55rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-tertiary);color:#fff;cursor:pointer;font-size:0.9rem;font-weight:600">➕ Add Buddy</button></div>' + buddyFormHtml;
   html += '<div class="sp-people">';
   splitPeople.forEach(function(p,i){
     var c = _spColors[i % _spColors.length];
@@ -2133,10 +2145,11 @@ function shareCalcExpression() {
     var lines = [];
     calcTokens.forEach(function(t, i) {
       var displayV = t.v;
+      if (displayV === '-') displayV = '−';
       if (displayV === '*') displayV = '×';
       else if (displayV === '/') displayV = '÷';
 
-      if (['+','-','×','÷'].indexOf(displayV) !== -1) {
+      if (['+','−','×','÷'].indexOf(displayV) !== -1) {
         lines.push('\n' + displayV + ' ');
       } else {
         lines.push(t.label ? t.v + '(' + t.label + ')' : t.v);
