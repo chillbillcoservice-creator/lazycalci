@@ -111,7 +111,7 @@ details[open] summary:before { content:'▼'; }
 .sp-expense-top .rm-exp { cursor:pointer; color:var(--text-muted); font-size:0.9rem; flex-shrink:0; margin-top:2px; }
 .sp-expense-top .rm-exp:hover { color:var(--color-accent); }
 .sp-chips { display:flex; flex-wrap:wrap; gap:0.3rem; margin-top:0.35rem; }
-.sp-chip { font-size:0.75rem; padding:0.2rem 0.45rem; border-radius:10px; border:1px solid var(--border-color); cursor:pointer; color:var(--text-muted); background:transparent; }
+.sp-chip { font-size:0.75rem; padding:0.2rem 0.45rem; border-radius:10px; border:1px solid var(--border-color); cursor:pointer; color:var(--text-muted); background:transparent; touch-action:manipulation; }
 .sp-chip.on { background:var(--color-accent); color:#fff; border-color:var(--color-accent); }
 .sp-chip.payer { border-color:#f1c40f; color:#f1c40f; }
 .sp-chip.payer.on { background:#f1c40f; border-color:#f1c40f; color:#000; }
@@ -1453,15 +1453,23 @@ function spUpdateDesc(id, val) {
   splitExpenses.forEach(function(e) { if (e.id === id) e.desc = val; });
 }
 function spTogglePerson(expId, personId) {
+  var removedName = '', removed = false, expAmt = 0;
   splitExpenses.forEach(function(e) {
     if (e.id !== expId) return;
-    if (e.checked[personId]) delete e.checked[personId];
-    else e.checked[personId] = true;
+    expAmt = parseFloat(e.amount) || 0;
+    var wasChecked = !!e.checked[personId];
+    if (wasChecked) {
+      splitPeople.forEach(function(p){ if (p.id === personId) removedName = p.name; });
+      delete e.checked[personId];
+      removed = true;
+    } else {
+      e.checked[personId] = true;
+    }
     var allChecked = splitPeople.every(function(p) { return e.checked[p.id]; });
     e.splitMode = allChecked ? 'equal' : 'custom';
     if (e.splitMode === 'custom') {
       if (!e.customAmounts) e.customAmounts = {};
-      var total = parseFloat(e.amount) || 0;
+      var total = expAmt;
       var checkedIds = []; splitPeople.forEach(function(p){ if (e.checked[p.id]) checkedIds.push(p.id); });
       if (checkedIds.length > 0) {
         var share = total / checkedIds.length;
@@ -1470,6 +1478,11 @@ function spTogglePerson(expId, personId) {
     }
   });
   calcSplit();
+  if (removed) {
+    var checkedCount = 0;
+    splitExpenses.forEach(function(e){ if (e.id === expId) { splitPeople.forEach(function(p){ if (e.checked[p.id]) checkedCount++; }); } });
+    showToast(removedName + ' removed \u00B7 \u20B9' + fmtNum(expAmt / checkedCount) + ' each for remaining ' + checkedCount);
+  }
 }
 
 function aepSetDesc(el, val) {
