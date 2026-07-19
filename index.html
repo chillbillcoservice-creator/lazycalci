@@ -1657,7 +1657,7 @@ function addExpenseItem() {
   var amt = document.getElementById('exp-amt').value.trim();
   if (!desc || !amt) return;
   var today = new Date().toISOString().split('T')[0];
-  expensesList.push({ id:expId(), desc:desc, amount:amt, date:today });
+  expensesList.unshift({ id:expId(), desc:desc, amount:amt, date:today });
   document.getElementById('exp-desc').value = '';
   document.getElementById('exp-amt').value = '';
   renderExpensesMode(document.getElementById('calc-mode-body'));
