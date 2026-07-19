@@ -85,7 +85,7 @@
 .exp-item { display:flex; align-items:center; gap:0.4rem; padding:0.5rem 0.6rem; background:var(--bg-primary); border-radius:var(--radius-sm); margin-bottom:0.35rem; }
 .exp-item .exp-desc { flex:1; font-size:0.9rem; color:#fff; }
 .exp-item .exp-amt-val { font-weight:700; color:var(--color-accent); white-space:nowrap; min-width:70px; text-align:right; }
-.exp-item .exp-date { font-size:0.7rem; color:var(--text-muted); min-width:55px; }
+.exp-item .exp-date { font-size:0.7rem; color:#fff; min-width:55px; }
 .exp-item .rm-exp { cursor:pointer; color:var(--text-muted); font-size:0.85rem; padding:2px 4px; }
 .exp-item .rm-exp:hover { color:var(--color-accent); }
 .exp-total { font-size:1rem; font-weight:700; color:#fff; text-align:center; padding:0.6rem; background:var(--bg-tertiary); border-radius:var(--radius-sm); margin-top:0.5rem; }
@@ -173,10 +173,11 @@ body {
   position:relative;
 }
 .modal-header h3 { flex:0 0 auto; font-size:1.1rem; }
-.mode-heading-btn { cursor:pointer; padding:5px 10px; border-radius:8px; font-size:0.9rem; font-weight:700; letter-spacing:0.02em; white-space:nowrap; transition:all 0.15s; background:var(--bg-tertiary); color:var(--text-secondary); }
-.mode-heading-btn:hover { background:var(--border-color); color:var(--text-primary); }
-.mode-heading-btn.active { background:var(--color-accent); color:#fff; }
-#calc-heading { display:flex; gap:0.35rem; align-items:center; flex:1; justify-content:center; flex-wrap:wrap; min-width:0; }
+.mode-heading-btn { cursor:pointer; padding:5px 10px; border-radius:8px; font-size:0.92rem; font-weight:700; letter-spacing:0.02em; white-space:nowrap; transition:all 0.15s; background:var(--bg-tertiary); color:#fff; }
+.mode-heading-btn:hover { background:var(--border-color); }
+.mode-heading-btn.active { background:var(--color-accent); color:#fff; font-size:1.15rem; }
+#calc-heading { display:flex; gap:0.5rem; align-items:center; flex:1; justify-content:center; flex-wrap:wrap; min-width:0; }
+@media (max-width:420px) { .mode-heading-btn { font-size:0.92rem; } .mode-heading-btn.active { font-size:1.2rem; } }
 .modal-header-left { position:absolute; left:0.8rem; flex:0 0 auto; display:flex; align-items:center; }
 .modal-header-right { position:absolute; right:0.8rem; flex:0 0 auto; display:flex; align-items:center; gap:0.5rem; }
 .modal-body { padding:1rem; max-height:calc(100vh - 90px); overflow-y:auto; }
@@ -329,7 +330,7 @@ body {
       • <b>🧮 CALCULATOR</b> — numbers aur operators se calculate karo<br>
       • <b>🔒 STICKY OP</b> — operator ko long-press karo, baar baar same op use karo. Long-press phir se → exit<br>
       • <b>🗓️ DATE CALC</b> — heading pe tap karo, date diff nikaalo<br>
-      • <b>🔀 SPLITTER</b> — heading pe tap karo, bill split karo<br>
+      • <b>👥 SPLITTER</b> — heading pe tap karo, bill split karo<br>
       • <b>⚙️ SETTINGS</b> — theme badlo aur Soft Press band karo<br>
       • <b>🏷️ LABEL</b> — kisi digit pe tap karo, usme label add karo<br>
       • <b>💸 EXPENSES</b> — amount label karo, phir labeled digit pe dubara tap karo to record ho jayega. Settings mein on/off karo<br>
@@ -348,7 +349,7 @@ body {
       • <b>🧮 CALCULATOR</b> — numbers aur operators se calculate karo<br>
       • <b>🔒 STICKY OP</b> — operator ko long-press karo, baar baar same op use karo. Long-press phir se → exit<br>
       • <b>🗓️ DATE CALC</b> — heading pe tap karo, date diff nikaalo<br>
-      • <b>🔀 SPLITTER</b> — heading pe tap karo, bill split karo<br>
+      • <b>👥 SPLITTER</b> — heading pe tap karo, bill split karo<br>
       • <b>⚙️ SETTINGS</b> — theme badlo aur Soft Press band karo<br>
       • <b>🏷️ LABEL</b> — kisi digit pe tap karo, usme label add karo<br>
       • <b>📜 HISTORY</b> — purane calculations dekho aur reuse karo<br>
@@ -396,9 +397,9 @@ body {
         <button id="settings-btn" class="settings-btn" onclick="openSettingsModal()" title="Settings">⚙️</button>
       </div>
       <div id="calc-heading">
-        <span id="h-btn-date" class="mode-heading-btn" onclick="setCalcMode('date')">🗓️</span>
         <span id="h-btn-expenses" class="mode-heading-btn" onclick="setCalcMode('expenses')">💸 Expenses</span>
-        <span id="h-btn-splitter" class="mode-heading-btn" onclick="setCalcMode('splitter')">🔀 Splitter</span>
+        <span id="h-btn-date" class="mode-heading-btn" onclick="setCalcMode('date')">🗓️</span>
+        <span id="h-btn-splitter" class="mode-heading-btn" onclick="setCalcMode('splitter')">👥 Splitter</span>
       </div>
       <div class="modal-header-right">
         <span id="exp-wa-btn-wrap" style="display:none"><button class="whatsapp-btn" onclick="shareExpensesWA()" title="Share Expenses on WhatsApp">
@@ -957,7 +958,7 @@ function calcEqual() {
     _calcSavedResult = result;
     var hasOp = calcTokens.some(function(t){return ['+','-','*','/','%'].indexOf(t.v)!==-1;});
     if (hasOp) {
-      calcHistory.push({ expression: displayStr, result: result, date: new Date().toLocaleString() });
+      calcHistory.unshift({ expression: displayStr, result: result, date: new Date().toLocaleString() });
       localStorage.setItem('calc_history', JSON.stringify(calcHistory));
       renderCalcHistory();
     }
@@ -984,7 +985,7 @@ function calcClear() {
           }).join('').replace(/\*/g, '×').replace(/\//g, '÷');
           var hasOp = calcTokens.some(function(t){return ['+','-','*','/','%'].indexOf(t.v)!==-1;});
           if (hasOp) {
-            calcHistory.push({ expression: displayStr, result: result, date: new Date().toLocaleString() });
+            calcHistory.unshift({ expression: displayStr, result: result, date: new Date().toLocaleString() });
             localStorage.setItem('calc_history', JSON.stringify(calcHistory));
             renderCalcHistory();
           }
@@ -1095,7 +1096,7 @@ function calcDateDiff() {
   document.getElementById('d-detail').textContent = Math.floor(days/365) + 'y ' + Math.floor((days%365)/30) + 'm ' + (days%365)%30 + 'd';
   var sv = document.getElementById('d-start').value, ev = document.getElementById('d-end').value;
   if (sv && ev && sv !== ev) {
-    calcHistory.push({ mode:'date', expression:'🗓️ From '+sv+' \u2192 '+ev, result:days.toLocaleString()+' days ('+Math.floor(days/365)+'y '+Math.floor((days%365)/30)+'m '+(days%365)%30+'d)', date:new Date().toLocaleString() });
+    calcHistory.unshift({ mode:'date', expression:'🗓️ From '+sv+' \u2192 '+ev, result:days.toLocaleString()+' days ('+Math.floor(days/365)+'y '+Math.floor((days%365)/30)+'m '+(days%365)%30+'d)', date:new Date().toLocaleString() });
     localStorage.setItem('calc_history', JSON.stringify(calcHistory));
     renderCalcHistory();
   }
@@ -1110,7 +1111,7 @@ function calcDateAdd() {
   var fmt = formatDate(r);
   document.getElementById('d-add-result').textContent = fmt;
   var todayISO = start.toISOString().split('T')[0];
-  calcHistory.push({ mode:'date', expression:'🗓️ '+todayISO+' + '+days+' days', result:fmt, date:new Date().toLocaleString() });
+  calcHistory.unshift({ mode:'date', expression:'🗓️ '+todayISO+' + '+days+' days', result:fmt, date:new Date().toLocaleString() });
   localStorage.setItem('calc_history', JSON.stringify(calcHistory));
   renderCalcHistory();
 }
@@ -1337,8 +1338,8 @@ function waPerson(payId, receiveId, amt, tel, ev, collect) {
     if (p.id === receiveId) toName = p.name;
   });
   var txt;
-  if (collect) txt = '🔀 Split Bill'+trip+'\n'+fromName+' needs to pay you ₹'+fmtNum(amt)+'\nTotal: ₹'+fmtNum(total);
-  else txt = '🔀 Split Bill'+trip+'\nYou need to pay ₹'+fmtNum(amt)+' to '+toName+'\nTotal: ₹'+fmtNum(total);
+  if (collect) txt = '👥 Split Bill'+trip+'\n'+fromName+' needs to pay you ₹'+fmtNum(amt)+'\nTotal: ₹'+fmtNum(total);
+  else txt = '👥 Split Bill'+trip+'\nYou need to pay ₹'+fmtNum(amt)+' to '+toName+'\nTotal: ₹'+fmtNum(total);
   window.open('https://wa.me/'+tel.replace(/[^0-9]/g,'')+'?text='+encodeURIComponent(txt));
 }
 
@@ -1407,7 +1408,7 @@ function shareExpenseWA(expId) {
   });
   var trip = splitTripName ? ' 🏕️ '+splitTripName : '';
   var mode = splitPeople.every(function(p) { return e.checked[p.id]; }) ? 'Equal' : 'Custom';
-  var txt = '🔀 Split Bill'+trip+'\n\n'+escHtml(e.desc)+' — ₹'+fmtNum(amtNum)+'\n💵 Paid by '+payerName+'\n\n'+parts.map(function(p){return '• '+p}).join('\n')+'\n('+mode+')';
+  var txt = '👥 Split Bill'+trip+'\n\n'+escHtml(e.desc)+' — ₹'+fmtNum(amtNum)+'\n💵 Paid by '+payerName+'\n\n'+parts.map(function(p){return '• '+p}).join('\n')+'\n('+mode+')';
   window.open('https://wa.me/?text='+encodeURIComponent(txt));
 }
 function removeSplitPerson(id) {
@@ -1855,20 +1856,21 @@ function renderSplitterModeContent(container) {
   } else {
     html += '<div style="font-size:0.8rem;color:var(--text-muted);padding:0.3rem 0">Add expenses to see results</div>';
   }
-  html += '<div style="font-size:0.7rem;color:var(--text-muted);padding:0.3rem 0;text-align:center">Total: ₹'+fmtNum(totalBill)+'</div>';
-  /* New Trip button removed */
+  html += '<div class="exp-total">Total: ₹'+fmtNum(totalBill)+'</div>';
+  html += '<div style="text-align:center;margin-top:0.5rem"><button onclick="createNewTrip()" style="padding:0.5rem 1.2rem;border:1px solid var(--color-accent);border-radius:var(--radius-sm);background:transparent;color:var(--color-accent);cursor:pointer;font-size:0.85rem;font-weight:600">🔄 New Trip</button></div>';
   html += '</div>'; /* close sp-results-wrap */
   container.innerHTML = html;
   if (!splitExpenses.length && document.getElementById('sp-person-input')) document.getElementById('sp-person-input').focus();
   /* auto-save to history */
-  var last = calcHistory.length ? calcHistory[calcHistory.length-1] : null;
+  var last = calcHistory.length ? calcHistory[0] : null;
   if (totalBill > 0 && (!last || last.mode !== 'splitter' || last.expression !== splitExprKey())) {
-    calcHistory.push({ mode:'splitter', expression:splitExprKey(), result:splitPeople.length+' people, ₹'+fmtNum(totalBill), splitPeople:JSON.stringify(splitPeople), splitExpenses:JSON.stringify(splitExpenses), splitTripName:splitTripName, splitTripDate:splitTripDate, date:new Date().toLocaleString() });
+    calcHistory.unshift({ mode:'splitter', expression:splitExprKey(), result:splitPeople.length+' people, ₹'+fmtNum(totalBill), splitPeople:JSON.stringify(splitPeople), splitExpenses:JSON.stringify(splitExpenses), splitTripName:splitTripName, splitTripDate:splitTripDate, date:new Date().toLocaleString() });
     localStorage.setItem('calc_history', JSON.stringify(calcHistory));
   if (_calcHistoryVisible) renderCalcHistory();
   }
   fbUpdateTrip();
 }
+
 function renderSplitResults() {
   calcSplit();
   var bals = calcSplit._balances || {};
@@ -1898,13 +1900,14 @@ function renderSplitResults() {
   } else {
     html += '<div style="font-size:0.8rem;color:var(--text-muted);padding:0.3rem 0">Add expenses to see results</div>';
   }
-  html += '<div style="font-size:0.7rem;color:var(--text-muted);padding:0.3rem 0;text-align:center">Total: ₹'+fmtNum(totalBill)+'</div>';
+  html += '<div class="exp-total">Total: ₹'+fmtNum(totalBill)+'</div>';
+  html += '<div style="text-align:center;margin-top:0.5rem"><button onclick="createNewTrip()" style="padding:0.5rem 1.2rem;border:1px solid var(--color-accent);border-radius:var(--radius-sm);background:transparent;color:var(--color-accent);cursor:pointer;font-size:0.85rem;font-weight:600">🔄 New Trip</button></div>';
   el.innerHTML = html;
   fbUpdateTrip();
   /* auto-save to history */
-  var last = calcHistory.length ? calcHistory[calcHistory.length-1] : null;
+  var last = calcHistory.length ? calcHistory[0] : null;
   if (totalBill > 0 && (!last || last.mode !== 'splitter' || last.expression !== splitExprKey())) {
-    calcHistory.push({ mode:'splitter', expression:splitExprKey(), result:splitPeople.length+' people, ₹'+fmtNum(totalBill), splitPeople:JSON.stringify(splitPeople), splitExpenses:JSON.stringify(splitExpenses), date:new Date().toLocaleString() });
+    calcHistory.unshift({ mode:'splitter', expression:splitExprKey(), result:splitPeople.length+' people, ₹'+fmtNum(totalBill), splitPeople:JSON.stringify(splitPeople), splitExpenses:JSON.stringify(splitExpenses), date:new Date().toLocaleString() });
     localStorage.setItem('calc_history', JSON.stringify(calcHistory));
     if (_calcHistoryVisible) renderCalcHistory();
   }
@@ -1916,7 +1919,7 @@ function splitShareText() {
   var expLines = calcSplit._expLines || [];
   var totalBill = calcSplit._totalBill || 0;
   if (!totalBill) return '';
-  var title = '🔀 '+(splitTripName||'Split Bill')+(splitTripDate?' — '+fmtDate(splitTripDate):'');
+  var title = '👥 '+(splitTripName||'Split Bill')+(splitTripDate?' — '+fmtDate(splitTripDate):'');
   var lines = [title, ''];
   splitExpenses.forEach(function(e){
     var amt = parseFloat(e.amount);
@@ -1942,7 +1945,7 @@ function splitShareText() {
 function splitExprKey() {
   var names = splitPeople.map(function(p){return p.name}).join(', ');
   var n = splitExpenses.filter(function(e){return parseFloat(e.amount)>0}).length;
-  return '🔀 '+(splitTripName||'Trip')+' — '+names+' ('+n+' expenses)';
+  return '👥 '+(splitTripName||'Trip')+' — '+names+' ('+n+' expenses)';
 }
 
 function renderCalcHistory() {
