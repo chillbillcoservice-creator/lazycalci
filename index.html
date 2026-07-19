@@ -45,7 +45,6 @@
 .settings-btn:hover { background:var(--bg-tertiary); }
 #modal-settings { z-index: 1001; }
 #modal-onboarding { z-index: 1002; }
-#modal-phone-prompt { z-index: 1003; }
 #modal-guide { z-index: 1003; }
 .modal-sm { max-width:300px; }
 .theme-circle { width:36px; height:26px; border-radius:4px; cursor:pointer; border:2px solid transparent; transition:border-color .2s; flex-shrink:0; }
@@ -171,14 +170,15 @@ body {
   padding: 0.6rem 0.8rem;
   border-bottom: 1px solid var(--border-color);
   gap:0.4rem;
+  position:relative;
 }
 .modal-header h3 { flex:0 0 auto; font-size:1.1rem; }
 .mode-heading-btn { cursor:pointer; padding:5px 10px; border-radius:8px; font-size:0.9rem; font-weight:700; letter-spacing:0.02em; white-space:nowrap; transition:all 0.15s; background:var(--bg-tertiary); color:var(--text-secondary); }
 .mode-heading-btn:hover { background:var(--border-color); color:var(--text-primary); }
 .mode-heading-btn.active { background:var(--color-accent); color:#fff; }
 #calc-heading { display:flex; gap:0.35rem; align-items:center; flex:1; justify-content:center; flex-wrap:wrap; min-width:0; }
-.modal-header-left { flex:0 0 auto; display:flex; align-items:center; }
-.modal-header-right { flex:0 0 auto; display:flex; align-items:center; gap:0.2rem; }
+.modal-header-left { position:absolute; left:0.8rem; flex:0 0 auto; display:flex; align-items:center; }
+.modal-header-right { position:absolute; right:0.8rem; flex:0 0 auto; display:flex; align-items:center; gap:0.5rem; }
 .modal-body { padding:1rem; max-height:calc(100vh - 90px); overflow-y:auto; }
 .modal-body.sp-mode { height:calc(100vh - 50px); max-height:calc(100vh - 50px); padding:1.2rem; }
 .modal-body.sp-mode .calc-mode-body { margin-top:0; }
@@ -389,20 +389,6 @@ body {
   </div>
 </div>
 
-<div id="modal-phone-prompt" class="modal-overlay">
-  <div class="modal-container" style="max-width:340px">
-    <div class="modal-header"><h3 style="margin:0;font-size:1rem">📞 Your Phone</h3></div>
-    <div class="modal-body" style="text-align:center">
-      <p style="font-size:0.9rem;color:var(--text-muted);margin-bottom:1rem">Enter your number to become the trip organizer</p>
-      <input id="phone-prompt-input" type="tel" inputmode="numeric" placeholder="Phone number" style="width:100%;padding:0.7rem 0.6rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-primary);color:var(--text-primary);font-size:1.1rem;text-align:center;margin-bottom:1rem;box-sizing:border-box">
-      <div style="display:flex;gap:0.5rem;justify-content:center">
-        <button onclick="dismissPhonePrompt(true)" style="padding:0.6rem 1.5rem;border:none;border-radius:var(--radius-sm);background:var(--color-accent);color:#fff;cursor:pointer;font-size:1rem;font-weight:600">Continue</button>
-        <button onclick="dismissPhonePrompt(false)" style="padding:0.6rem 1.5rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:transparent;color:var(--text-muted);cursor:pointer;font-size:1rem">Skip</button>
-      </div>
-    </div>
-  </div>
-</div>
-
 <div class="modal-overlay active" id="modal-calculator">
   <div class="modal-container">
     <div class="modal-header">
@@ -573,7 +559,7 @@ function applyCalcMode(name) {
     if (settingsBtn) settingsBtn.style.display = '';
     if (closeBtn) closeBtn.style.display = 'none';
     if (waBtn) waBtn.style.display = '';
-    if (hDate) { hDate.classList.remove('active'); hDate.style.display = ''; }
+    if (hDate) { hDate.classList.remove('active'); hDate.style.display = ''; hDate.textContent = '🗓️'; }
     if (hExpenses) { hExpenses.classList.remove('active'); hExpenses.style.display = ''; }
     if (hSplit) { hSplit.classList.remove('active'); hSplit.style.display = ''; }
     if (histBtn) histBtn.style.display = '';
@@ -588,7 +574,7 @@ function applyCalcMode(name) {
     if (settingsBtn) settingsBtn.style.display = 'none';
     if (closeBtn) closeBtn.style.display = '';
     if (waBtn) waBtn.style.display = name === 'splitter' ? '' : 'none';
-    if (hDate) { hDate.classList.toggle('active', name === 'date'); hDate.style.display = name === 'date' ? '' : 'none'; }
+    if (hDate) { hDate.classList.toggle('active', name === 'date'); hDate.style.display = name === 'date' ? '' : 'none'; hDate.textContent = name === 'date' ? '🗓️ DATE CALCULATOR' : '🗓️'; }
     if (hExpenses) { hExpenses.classList.toggle('active', name === 'expenses'); hExpenses.style.display = name === 'expenses' ? '' : 'none'; }
     if (hSplit) { hSplit.classList.toggle('active', name === 'splitter'); hSplit.style.display = name === 'splitter' ? '' : 'none'; }
     if (expWaBtn) expWaBtn.style.display = name === 'expenses' ? '' : 'none';
@@ -969,9 +955,12 @@ function calcEqual() {
 
     _calcSavedExpr = displayStr;
     _calcSavedResult = result;
-    calcHistory.push({ expression: displayStr, result: result, date: new Date().toLocaleString() });
-    localStorage.setItem('calc_history', JSON.stringify(calcHistory));
-    renderCalcHistory();
+    var hasOp = calcTokens.some(function(t){return ['+','-','*','/','%'].indexOf(t.v)!==-1;});
+    if (hasOp) {
+      calcHistory.push({ expression: displayStr, result: result, date: new Date().toLocaleString() });
+      localStorage.setItem('calc_history', JSON.stringify(calcHistory));
+      renderCalcHistory();
+    }
 
     calcTokens = [{v: String(result), label: ''}];
     _editingCalcToken = -1;
@@ -993,9 +982,12 @@ function calcClear() {
             if (['+','-','*','/','%'].indexOf(t.v) !== -1) return ' ' + t.v + ' ';
             return t.label ? t.v + '(' + t.label + ')' : t.v;
           }).join('').replace(/\*/g, '×').replace(/\//g, '÷');
-          calcHistory.push({ expression: displayStr, result: result, date: new Date().toLocaleString() });
-          localStorage.setItem('calc_history', JSON.stringify(calcHistory));
-          renderCalcHistory();
+          var hasOp = calcTokens.some(function(t){return ['+','-','*','/','%'].indexOf(t.v)!==-1;});
+          if (hasOp) {
+            calcHistory.push({ expression: displayStr, result: result, date: new Date().toLocaleString() });
+            localStorage.setItem('calc_history', JSON.stringify(calcHistory));
+            renderCalcHistory();
+          }
         }
       } catch(e) {}
     }
@@ -1749,27 +1741,26 @@ function renderSplitterMode(container) {
   if (_fbTripId === null) {
     var tripParam = getUrlParam('trip');
     if (tripParam) {
+      container.innerHTML = '<div style="padding:1rem;text-align:center;color:var(--text-muted);font-size:0.85rem">Loading trip...</div>';
       fbListenTrip(tripParam, function(err) {
         if (err) { container.innerHTML = '<div style="padding:2rem;color:var(--text-muted);text-align:center">🚫 Trip not found<br><br><button onclick="window.location.href=window.location.pathname" style="margin-top:0.5rem;padding:0.5rem 1rem;border:none;border-radius:var(--radius-sm);background:var(--color-accent);color:#fff;cursor:pointer;font-size:1rem">Start New Trip</button></div>'; return; }
         renderSplitterMode(container);
       });
       return;
-    } else {
-      if (!splitPeople.length) seedSplitterMockData();
-      function doCreateTrip() {
-        fbCreateTrip(function() {
-          setUrlParam('trip', _fbTripId);
-          renderSplitterMode(container);
-        });
-      }
-      if (!_fbPhone) {
-        showPhonePrompt(function(val) { if (val) _fbPhone = val; doCreateTrip(); });
-      } else {
-        doCreateTrip();
-      }
-      return;
     }
+    if (!splitPeople.length) seedSplitterMockData();
+    if (!_fbPhone) _fbPhone = 'local_' + Date.now();
+    renderSplitterModeContent(container);
+    fbCreateTrip(function() {
+      setUrlParam('trip', _fbTripId);
+      renderSplitterModeContent(container);
+    });
+    return;
   }
+  renderSplitterModeContent(container);
+}
+function renderSplitterModeContent(container) {
+  if (!container) return;
   calcSplit();
   var bals = calcSplit._balances || {};
   var settlements = calcSplit._settlements || [];
@@ -1964,19 +1955,26 @@ function renderCalcHistory() {
 
   var filtered = [], indices = [];
   for (var i = calcHistory.length - 1; i >= 0; i--) {
-    if (calcHistory[i].mode !== 'splitter') { filtered.push(calcHistory[i]); indices.push(i); }
+    var e = calcHistory[i];
+    if (_calcMode === 'basic' && (!e.mode || e.mode === 'basic')) { filtered.push(e); indices.push(i); }
+    else if (_calcMode === 'date' && e.mode === 'date') { filtered.push(e); indices.push(i); }
+    else if (_calcMode === 'splitter' && e.mode === 'splitter') { filtered.push(e); indices.push(i); }
   }
   if (filtered.length === 0) {
-    container.innerHTML = '<div style="padding:0.5rem;color:var(--text-muted);font-size:0.85rem;">No calculations yet</div>';
+    container.innerHTML = '<div style="padding:0.5rem;color:var(--text-muted);font-size:0.85rem;">No history yet</div>';
     return;
   }
 
   var html = '';
   for (var j = 0; j < filtered.length; j++) {
     var entry = filtered[j], realIdx = indices[j];
+    var expr = entry.expression || '';
+    if (entry.mode !== 'date' && entry.mode !== 'splitter') {
+      expr = expr.replace(/=\s*[\d.]+$/, '').trim();
+    }
     html += '<div class="history-entry" onclick="loadCalcEntry(' + realIdx + ')">';
     html += '<div class="history-entry-inner">';
-    html += '<div class="history-entry-body"><div>' + escHtml(entry.expression) + ' = <strong>' + (entry.mode === 'date' ? escHtml(String(entry.result)) : fmtNum(entry.result)) + '</strong></div>';
+    html += '<div class="history-entry-body"><div>' + escHtml(expr) + ' = <strong>' + (entry.mode === 'date' ? escHtml(String(entry.result)) : fmtNum(entry.result)) + '</strong></div>';
     html += '<div style="font-size:0.65rem;color:var(--text-muted);">' + escHtml(entry.date) + '</div></div>';
     html += '<button class="del-entry-btn" onclick="event.stopPropagation();deleteCalcEntry(' + realIdx + ')" title="Delete entry">🗑️</button>';
     html += '</div></div>';
@@ -2072,24 +2070,6 @@ function deleteCalcEntry(idx) {
   calcHistory.splice(idx, 1);
   localStorage.setItem('calc_history', JSON.stringify(calcHistory));
   renderCalcHistory();
-}
-
-var _phonePromptCallback = null;
-
-function showPhonePrompt(callback) {
-  _phonePromptCallback = callback;
-  document.getElementById('modal-phone-prompt').classList.add('active');
-  setTimeout(function() { document.getElementById('phone-prompt-input').focus(); }, 200);
-}
-
-function dismissPhonePrompt(submitted) {
-  document.getElementById('modal-phone-prompt').classList.remove('active');
-  if (_phonePromptCallback) {
-    var val = submitted ? document.getElementById('phone-prompt-input').value.trim() : '';
-    _phonePromptCallback(val);
-    _phonePromptCallback = null;
-  }
-  document.getElementById('phone-prompt-input').value = '';
 }
 
 function fmtDate(d) {
