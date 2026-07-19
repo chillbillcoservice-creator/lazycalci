@@ -1149,6 +1149,7 @@ var expensesList = [];
 var _expIdCounter = 1;
 var _spColors = ['#e74c3c','#3498db','#2ecc71','#f39c12','#9b59b6','#1abc9c','#e67e22','#34495e','#e91e63','#00bcd4'];
 
+function fmtDateShort(isoStr) { if (!isoStr) return ''; var p = isoStr.split('-'); var months = ['JANUARY','FEBRUARY','MARCH','APRIL','MAY','JUNE','JULY','AUGUST','SEPTEMBER','OCTOBER','NOVEMBER','DECEMBER']; return parseInt(p[2],10) + ' ' + months[parseInt(p[1],10)-1]; }
 /* Firebase */
 var firebaseConfig = {
   apiKey: "AIzaSyBwevLqbg_bNNjK0K3IlGf8spFjcDJmAq8",
@@ -1721,7 +1722,7 @@ function renderExpensesMode(container) {
       var o = open ? ' open' : '';
       var h = '<details'+o+' style="margin-bottom:0.3rem"><summary class="exp-summary">'+title+' <span style="font-weight:400;font-size:1rem;color:var(--color-accent);margin-left:auto">₹'+fmtNum(t)+'</span></summary>';
       items.forEach(function(e){
-        h += '<div class="exp-item"><span class="exp-date">'+e.date.slice(5)+'</span><span class="exp-desc">'+escHtml(e.desc)+'</span><span class="exp-amt-val">₹'+fmtNum(parseFloat(e.amount)||0)+'</span><span class="rm-exp" onclick="removeExpenseItem('+e.id+')">🗑️</span></div>';
+        h += '<div class="exp-item"><span class="exp-date">'+fmtDateShort(e.date)+'</span><span class="exp-desc">'+escHtml(e.desc)+'</span><span class="exp-amt-val">₹'+fmtNum(parseFloat(e.amount)||0)+'</span><span class="rm-exp" onclick="removeExpenseItem('+e.id+')">🗑️</span></div>';
       });
       h += '</details>';
       return h;
@@ -1859,7 +1860,6 @@ function renderSplitterModeContent(container) {
     html += '<div style="font-size:0.8rem;color:var(--text-muted);padding:0.3rem 0">Add expenses to see results</div>';
   }
   html += '<div class="exp-total">Total: ₹'+fmtNum(totalBill)+'</div>';
-  html += '<div style="text-align:center;margin-top:0.5rem"><button onclick="createNewTrip()" style="padding:0.5rem 1.2rem;border:1px solid var(--color-accent);border-radius:var(--radius-sm);background:transparent;color:var(--color-accent);cursor:pointer;font-size:0.85rem;font-weight:600">🔄 New Trip</button></div>';
   html += '</div>'; /* close sp-results-wrap */
   container.innerHTML = html;
   if (!splitExpenses.length && document.getElementById('sp-person-input')) document.getElementById('sp-person-input').focus();
@@ -1903,7 +1903,6 @@ function renderSplitResults() {
     html += '<div style="font-size:0.8rem;color:var(--text-muted);padding:0.3rem 0">Add expenses to see results</div>';
   }
   html += '<div class="exp-total">Total: ₹'+fmtNum(totalBill)+'</div>';
-  html += '<div style="text-align:center;margin-top:0.5rem"><button onclick="createNewTrip()" style="padding:0.5rem 1.2rem;border:1px solid var(--color-accent);border-radius:var(--radius-sm);background:transparent;color:var(--color-accent);cursor:pointer;font-size:0.85rem;font-weight:600">🔄 New Trip</button></div>';
   el.innerHTML = html;
   fbUpdateTrip();
   /* auto-save to history */
