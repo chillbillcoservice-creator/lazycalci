@@ -701,7 +701,7 @@ function stickyOpDown(op) {
   if (_stickyActive) {
     _stickyOpPending = op;
     _stickyOpTimer = setTimeout(function() {
-      if (op === _stickyOp) { var finalR = _stickyResult; calcTokens = [{v: String(finalR), label: ""}]; deactivateSticky(); var _ce = document.getElementById("calc-expression"); _ce.innerHTML = "<span onclick=\"editCalcTokenLabel(0)\" style=\"cursor:pointer;font-weight:600;color:#fff\">" + escHtml(_stickyFullExpr || fmtNum(finalR)) + "</span>"; _ce.style.fontSize = "1.7rem"; _ce.scrollLeft = _ce.scrollWidth; document.getElementById("calc-display").textContent = "= " + fmtNum(finalR); _calcShowExpr = false; }
+      if (op === _stickyOp) { var finalR = _stickyResult; var fullExpr = _stickyFullExpr; deactivateSticky(); calcTokens = parseExprToTokens(fullExpr); _calcSavedExpr = ""; _calcShowExpr = true; calcUpdateDisplay(); document.getElementById("calc-display").textContent = "= " + fmtNum(finalR); return; }
       else { stickyFlush(); _stickyOp = op; updateStickyOpHighlight(); updateStickyDisplay(); }
       _stickyOpTimer = null;
     }, 400);
