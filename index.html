@@ -98,7 +98,7 @@ details[open] summary:before { content:'▼'; }
 .sp-wa-btn { display:inline-flex; cursor:pointer; font-size:0.9rem; margin-left:4px; padding:2px 5px; border-radius:3px; background:var(--bg-primary); vertical-align:middle; }
 .date-preset { font-size:0.75rem; padding:0.3rem 0.5rem; border-radius:6px; border:1px solid var(--border-color); cursor:pointer; color:var(--text-muted); background:transparent; font-weight:600; }
 .date-preset:hover { color:#fff; border-color:var(--color-accent); }
-.sp-org-badge { font-size:0.6rem; color:var(--color-accent); font-weight:600; margin-left:0.2rem; }
+.sp-org-badge { font-size:0.55rem; color:#f1c40f; border:1px solid #f1c40f; border-radius:3px; padding:1px 4px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; display:inline-block; }
 .sp-wa-btn:hover { background:var(--color-accent); }
 .sp-section-title { font-size:0.85rem; font-weight:600; color:#fff; padding:0.45rem 0.6rem; border-radius:var(--radius-sm); background:var(--bg-tertiary); margin-bottom:0.5rem; letter-spacing:0.03em; text-transform:uppercase; }
 .sp-trip { display:flex; align-items:center; gap:0.5rem; padding:0.7rem; background:var(--bg-tertiary); border-radius:var(--radius-sm); margin-bottom:0.7rem; flex-wrap:wrap; }
@@ -160,7 +160,7 @@ body {
   padding: 0.5rem;
 }
 .modal-overlay.active { display: flex; }
-#modal-add-expense { z-index:1001; }
+#modal-add-expense, #modal-create-group, #modal-join-group { z-index:1001; }
 #modal-add-expense .modal-container { max-width:340px; }
 #modal-add-expense .field-row { display:flex; flex-direction:column; gap:0.25rem; margin-bottom:0.7rem; }
 #modal-add-expense .field-row label { font-size:1rem; color:#fff; display:block; }
@@ -208,6 +208,8 @@ body {
   white-space: nowrap;
   border-bottom: 1px solid var(--border-color);
   padding: 0.6rem 0.85rem;
+  user-select: text;
+  -webkit-user-select: text;
 }
 #calc-expression::-webkit-scrollbar { display: none; }
 #calc-label-editor { padding:0.5rem 0; font-size:1rem; min-height:2.2rem; }
@@ -227,6 +229,9 @@ body {
   white-space: nowrap;
   scrollbar-width: none;
   -ms-overflow-style: none;
+  user-select: text;
+  -webkit-user-select: text;
+  cursor: pointer;
 }
 #calc-display::-webkit-scrollbar { display: none; }
 #calc-buttons { display:grid; grid-template-columns:repeat(4,1fr); gap:0.4rem; margin-top:0.75rem; }
@@ -330,6 +335,20 @@ body {
           <span class="toggle-slider"></span>
         </label>
       </div>
+      <div class="toggle-row">
+        <span class="toggle-label">Amount in Words</span>
+        <label class="toggle-switch">
+          <input type="checkbox" id="show-words-toggle" onchange="toggleShowWords(this.checked)">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+      <div class="toggle-row">
+        <span class="toggle-label">K Mode (Thousands)</span>
+        <label class="toggle-switch">
+          <input type="checkbox" id="k-mode-toggle" onchange="toggleKMode(this.checked)">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
       <div style="border-top:1px solid var(--border-color);margin:1rem 0 0.5rem 0"></div>
       <button onclick="openGuideModal()" style="display:block;width:100%;padding:0.6rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-tertiary);color:#fff;font-size:0.85rem;cursor:pointer;font-weight:600;text-align:center;text-transform:uppercase;margin-bottom:0.4rem">How to use</button>
     </div>
@@ -375,30 +394,97 @@ body {
 <div class="modal-overlay" id="modal-add-expense" onclick="closeAddExpensePopup(event)">
   <div class="modal-container" onclick="event.stopPropagation()" style="padding:1.5rem;text-align:left">
     <div class="aep-title" style="margin-bottom:0.8rem">✏️ Add Expense for: <span id="aep-person-name">Rahul</span></div>
-    <div class="field-row">
-      <div style="display:flex;align-items:center;gap:0.4rem">
-        <label style="font-size:0.9rem;white-space:nowrap">What for?</label>
-        <input id="aep-desc" placeholder="" style="flex:1">
+    
+    <!-- WHAT FOR AND AMOUNT (COMPACT) -->
+    <div class="field-row" style="display:flex;flex-direction:row;align-items:center;gap:0.5rem;margin-bottom:1rem;">
+      <div style="flex:1;display:flex;flex-direction:column;gap:0.2rem;">
+        <label style="font-size:0.85rem;color:#ccc;">What for?</label>
+        <input id="aep-desc" placeholder="E.g. Dinner" style="width:100%;padding:0.6rem 0.5rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-primary);color:var(--text-primary);font-size:0.95rem;">
       </div>
-      <div style="display:flex;gap:0.3rem;flex-wrap:wrap">
-        <span class="aep-sc" data-val="⛽ FUEL" onclick="aepSetDesc(this,'⛽ FUEL')">⛽ FUEL</span>
-        <span class="aep-sc" data-val="🍽️ DIET" onclick="aepSetDesc(this,'🍽️ DIET')">🍽️ DIET</span>
-        <span class="aep-sc" data-val="💊 MEDICINE" onclick="aepSetDesc(this,'💊 MEDICINE')">💊 MEDICINE</span>
-        <span class="aep-sc" data-val="🛒 GROCERY" onclick="aepSetDesc(this,'🛒 GROCERY')">🛒 GROCERY</span>
-        <span class="aep-sc" data-val="🚕 TRAVEL" onclick="aepSetDesc(this,'🚕 TRAVEL')">🚕 TRAVEL</span>
-        <span class="aep-sc" data-val="🛍️ SHOPPING" onclick="aepSetDesc(this,'🛍️ SHOPPING')">🛍️ SHOPPING</span>
-        <span class="aep-sc" data-val="🏠 RENT" onclick="aepSetDesc(this,'🏠 RENT')">🏠 RENT</span>
-        <span class="aep-sc" data-val="📄 BILLS" onclick="aepSetDesc(this,'📄 BILLS')">📄 BILLS</span>
+      <div style="width:110px;display:flex;flex-direction:column;gap:0.2rem;">
+        <label style="font-size:0.85rem;color:#ccc;">Amount</label>
+        <input id="aep-amount" inputmode="decimal" placeholder="₹0" style="width:100%;padding:0.6rem 0.5rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-primary);color:#fff;font-size:0.95rem;">
       </div>
     </div>
-    <div class="field-row" style="flex-direction:row;align-items:center"><label style="white-space:nowrap;flex-shrink:0">Amount</label><input id="aep-amount" inputmode="decimal" placeholder="₹0" style="flex:1;width:auto;min-width:0"></div>
-    <div style="font-size:0.8rem;color:#fff;margin-bottom:0.4rem">Split among:</div>
-    <div id="aep-chips" style="display:flex;flex-wrap:wrap;gap:0.3rem;margin-bottom:0.3rem"></div>
-    <div id="aep-split-label" style="font-size:0.8rem;color:var(--color-accent);margin-bottom:0.4rem"></div>
+    
+    <!-- SPLIT MODE SELECTOR -->
+    <div class="field-row" style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1rem;">
+      <label style="font-size:0.85rem;white-space:nowrap;color:#ccc;min-width:65px;">Split Mode</label>
+      <select id="aep-split-mode" onchange="aepUpdateUI()" style="flex:1;padding:0.6rem 0.5rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-primary);color:#fff;font-size:0.95rem;">
+        <option value="equal">⚖️ Equally</option>
+        <option value="shares">📈 Shares</option>
+        <option value="percentages">➗ Percentages</option>
+        <option value="custom">✂️ Custom Amounts</option>
+      </select>
+    </div>
+    
+    <div style="font-size:0.85rem;color:#ccc;margin-bottom:0.5rem">Split among:</div>
+    <div id="aep-chips" style="display:flex;flex-direction:row;flex-wrap:wrap;align-items:center;gap:0.4rem;margin-bottom:0.5rem"></div>
+    <div id="aep-split-label" style="font-size:0.8rem;color:var(--color-accent);margin-bottom:0.4rem;font-weight:600;"></div>
     <div id="aep-custom-amts" style="margin-bottom:0.5rem"></div>
-    <div style="display:flex;gap:0.5rem;justify-content:flex-end">
+    
+    <div style="display:flex;gap:0.5rem;justify-content:flex-end;margin-top:0.75rem;">
       <button onclick="closeAddExpensePopup()" style="padding:0.6rem 1.2rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-tertiary);color:#fff;cursor:pointer;font-size:0.9rem">Cancel</button>
       <button onclick="confirmAddExpense()" style="padding:0.6rem 1.2rem;border:none;border-radius:var(--radius-sm);background:var(--color-accent);color:#fff;cursor:pointer;font-weight:600;font-size:0.9rem">Add</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-create-group" onclick="closeCreateGroupPopup(event)">
+  <div class="modal-container modal-sm" onclick="event.stopPropagation()" style="padding:1.5rem;text-align:left">
+    <div class="aep-title" style="margin-bottom:1rem;font-weight:600;font-size:1.1rem;color:#fff;">🚀 Create Your Trip Group</div>
+    
+    <div class="field-row" style="display:flex;flex-direction:column;gap:0.25rem;margin-bottom:0.75rem;">
+      <label style="font-size:0.9rem;color:#fff;">Trip / Group Name</label>
+      <input id="cg-trip-name" placeholder="e.g. Goa Trip 2026" style="width:100%;padding:0.6rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-primary);color:#fff;font-size:0.95rem;outline:none;">
+    </div>
+    
+    <div class="field-row" style="display:flex;flex-direction:column;gap:0.25rem;margin-bottom:0.75rem;" id="cg-name-row">
+      <label style="font-size:0.9rem;color:#fff;">Your Name</label>
+      <input id="cg-user-name" placeholder="e.g. Rahul" style="width:100%;padding:0.6rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-primary);color:#fff;font-size:0.95rem;outline:none;">
+    </div>
+    
+    <div class="field-row" style="display:flex;flex-direction:column;gap:0.25rem;margin-bottom:1rem;" id="cg-phone-row">
+      <label style="font-size:0.9rem;color:#fff;">Your Phone Number</label>
+      <input id="cg-user-phone" type="tel" inputmode="numeric" placeholder="e.g. 9876543210" style="width:100%;padding:0.6rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-primary);color:#fff;font-size:0.95rem;outline:none;">
+    </div>
+    
+    <div style="display:flex;gap:0.5rem;justify-content:flex-end;">
+      <button onclick="closeCreateGroupPopup()" style="padding:0.55rem 1.2rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-tertiary);color:#fff;cursor:pointer;font-size:0.9rem">Cancel</button>
+      <button onclick="confirmCreateGroup()" style="padding:0.55rem 1.2rem;border:none;border-radius:var(--radius-sm);background:var(--color-accent);color:#fff;cursor:pointer;font-weight:600;font-size:0.9rem">Create</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-join-group" onclick="closeJoinGroupPopup(event)">
+  <div class="modal-container modal-sm" onclick="event.stopPropagation()" style="padding:1.5rem;text-align:left">
+    <div class="aep-title" id="jg-title" style="margin-bottom:1rem;font-weight:600;font-size:1.1rem;color:#fff;">👋 Join Trip Group</div>
+    
+    <div class="field-row" style="display:flex;flex-direction:column;gap:0.25rem;margin-bottom:0.75rem;">
+      <label style="font-size:0.9rem;color:#fff;">Your Name</label>
+      <input id="jg-user-name" placeholder="e.g. Aman" style="width:100%;padding:0.6rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-primary);color:#fff;font-size:0.95rem;outline:none;">
+    </div>
+    
+    <div class="field-row" style="display:flex;flex-direction:column;gap:0.25rem;margin-bottom:1.2rem;" id="jg-phone-row">
+      <label style="font-size:0.9rem;color:#fff;">Your Phone Number</label>
+      <input id="jg-user-phone" type="tel" inputmode="numeric" placeholder="e.g. 9876543210" style="width:100%;padding:0.6rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-primary);color:#fff;font-size:0.95rem;outline:none;">
+    </div>
+    
+    <div style="display:flex;gap:0.5rem;justify-content:flex-end;">
+      <button onclick="closeJoinGroupPopup()" style="padding:0.55rem 1.2rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-tertiary);color:#fff;cursor:pointer;font-size:0.9rem">Cancel</button>
+      <button onclick="confirmJoinGroup()" style="padding:0.55rem 1.2rem;border:none;border-radius:var(--radius-sm);background:var(--color-accent);color:#fff;cursor:pointer;font-weight:600;font-size:0.9rem">Join</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-trip-history" onclick="closeTripHistory(event)">
+  <div class="modal-container" onclick="event.stopPropagation()" style="padding:1.5rem;text-align:left">
+    <div class="aep-title" style="margin-bottom:1rem;font-weight:600;font-size:1.1rem;color:#fff;">📖 Trip History</div>
+    <div id="trip-history-list" style="max-height: 60vh; overflow-y: auto; display:flex; flex-direction:column; gap:0.5rem;">
+      <!-- Trips will be rendered here -->
+    </div>
+    <div style="display:flex;justify-content:flex-end;margin-top:1rem;">
+      <button onclick="closeTripHistory()" style="padding:0.6rem 1.2rem;border:none;border-radius:var(--radius-sm);background:var(--color-accent);color:#fff;cursor:pointer;font-weight:600;font-size:0.9rem">Close</button>
     </div>
   </div>
 </div>
@@ -431,7 +517,10 @@ body {
     <div class="modal-body">
       <div id="calc-expression"></div>
       <div id="calc-label-editor"></div>
-      <div class="calc-result-area"><div id="calc-display">0</div></div>
+      <div class="calc-result-area">
+        <div id="calc-display" onclick="toggleResultExpr()">0</div>
+        <div id="calc-display-words" style="display:none;font-size:0.75rem;color:var(--text-muted);text-align:right;margin-top:0.25rem;font-style:italic;"></div>
+      </div>
       <div id="calc-buttons"></div>
       <div id="calc-mode-body" class="calc-mode-body" style="display:none"></div>
       <button id="calc-history-btn" onclick="toggleCalcHistory()">Show History</button>
@@ -448,11 +537,14 @@ var _calcHistoryVisible = false;
 var _calcShowExpr = true;
 var _calcSavedExpr = '';
 var _calcSavedResult = 0;
+var _calcSavedTokens = null;
 var _calcTheme = localStorage.getItem('calc_theme') || 'peach';
 var _calcMode = localStorage.getItem('calc_mode') || 'basic';
 var _fastInput = localStorage.getItem('calc_fast_input') !== 'false';
 var _fastLazy = localStorage.getItem('fast_lazy') === 'true';
 var _recordExpenses = localStorage.getItem('calc_record_expenses') !== 'false';
+var _showWords = localStorage.getItem('calc_show_words') === 'true';
+var _kMode = localStorage.getItem('calc_k_mode') === 'true';
 var _expensesNewCount = 0;
 var _exprFontSize = 1.7;
 var _exprResetTimer = null;
@@ -490,7 +582,54 @@ function escHtml(str) {
   if (!str) return '';
   return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
 }
-function fmtNum(n) { return Number(n).toLocaleString('en-IN'); }
+function fmtNum(n) {
+  var base = Number(n).toLocaleString('en-IN');
+  return _kMode ? base + 'k' : base;
+}
+function fmtTokenVal(v) {
+  if (!v || typeof v !== 'string') return v;
+  if (['+','-','*','/','%'].indexOf(v) !== -1) return v;
+  var parts = v.split('.');
+  var intPart = parts[0];
+  var decPart = parts.length > 1 ? '.' + parts[1] : '';
+  var formattedInt = intPart;
+  if (intPart !== '' && intPart !== '-') {
+    var num = Number(intPart);
+    if (!isNaN(num)) formattedInt = num.toLocaleString('en-IN');
+  }
+  var res = formattedInt + decPart;
+  return _kMode ? res + 'k' : res;
+}
+function numToWords(n) {
+  if (isNaN(n) || n === null || n === undefined) return '';
+  n = Math.round(n * 100) / 100;
+  if (n === 0) return 'Zero';
+  var isNeg = n < 0;
+  n = Math.abs(n);
+  var intPart = Math.floor(n);
+  var decPart = Math.round((n - intPart) * 100);
+  var units = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen'];
+  var tens = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
+  function convertChunk(num) {
+    var str = '';
+    if (num >= 100) { str += units[Math.floor(num / 100)] + ' Hundred '; num %= 100; }
+    if (num >= 20) { str += tens[Math.floor(num / 10)] + ' '; num %= 10; }
+    if (num > 0) { str += units[num] + ' '; }
+    return str;
+  }
+  function convertInteger(num) {
+    if (num === 0) return 'Zero ';
+    var res = '';
+    if (num >= 10000000) { res += convertChunk(Math.floor(num / 10000000)) + 'Crore '; num %= 10000000; }
+    if (num >= 100000) { res += convertChunk(Math.floor(num / 100000)) + 'Lakh '; num %= 100000; }
+    if (num >= 1000) { res += convertChunk(Math.floor(num / 1000)) + 'Thousand '; num %= 1000; }
+    if (num > 0) { res += convertChunk(num); }
+    return res;
+  }
+  var words = (isNeg ? 'Minus ' : '') + convertInteger(intPart).trim();
+  if (decPart > 0) { words += ' Point ' + convertChunk(decPart).trim(); }
+  return words;
+}
 function evalExpr(str) { try { return eval(str.replace(/([\d.]+)%([\d.]+)/g, '$1*$2/100')); } catch(e) { return NaN; } }
 
 function showToast(msg) {
@@ -558,6 +697,16 @@ function toggleFastLazy(v) {
   _fastLazy = v;
   localStorage.setItem('fast_lazy', v);
 }
+function toggleShowWords(v) {
+  _showWords = v;
+  localStorage.setItem('calc_show_words', v);
+  calcUpdateDisplay();
+}
+function toggleKMode(v) {
+  _kMode = v;
+  localStorage.setItem('calc_k_mode', v);
+  calcUpdateDisplay();
+}
 
 function applyCalcMode(name) {
   var expr = document.getElementById('calc-expression');
@@ -604,8 +753,8 @@ function applyCalcMode(name) {
     if (hExpenses) { hExpenses.classList.toggle('active', name === 'expenses'); hExpenses.style.display = name === 'expenses' ? '' : 'none'; }
     if (hSplit) { hSplit.classList.toggle('active', name === 'splitter'); hSplit.style.display = name === 'splitter' ? '' : 'none'; }
     if (expWaBtn) expWaBtn.style.display = name === 'expenses' ? '' : 'none';
-    if (histBtn) histBtn.style.display = name === 'expenses' ? 'none' : '';
-    if (histContainer) histContainer.style.display = name === 'expenses' ? 'none' : '';
+    if (histBtn) histBtn.style.display = (name === 'expenses' || name === 'splitter') ? 'none' : '';
+    if (histContainer) histContainer.style.display = (name === 'expenses' || name === 'splitter') ? 'none' : '';
     if (name === 'date') { if (modalBody) modalBody.classList.remove('sp-mode'); renderDateMode(modeBody, display); }
     else if (name === 'expenses') { if (modalBody) modalBody.classList.add('sp-mode'); _expensesNewCount = 0; updateExpensesBadge(); renderExpensesMode(modeBody); }
     else if (name === 'splitter') { if (modalBody) modalBody.classList.add('sp-mode'); renderSplitterMode(modeBody); }
@@ -613,6 +762,18 @@ function applyCalcMode(name) {
 }
 
 function setCalcMode(name) {
+  if (name !== 'splitter') {
+    var p = new URLSearchParams(window.location.search);
+    var changed = false;
+    if (p.has('trip')) { p.delete('trip'); changed = true; }
+    if (p.has('phone')) { p.delete('phone'); changed = true; }
+    if (changed) {
+      var newQuery = p.toString();
+      var url = window.location.pathname + (newQuery ? '?' + newQuery : '');
+      window.history.replaceState({}, '', url);
+    }
+  }
+
   if (name === 'basic') {
     deactivateSticky();
     _calcMode = 'basic';
@@ -622,6 +783,9 @@ function setCalcMode(name) {
     _calcShowExpr = true;
     _calcSavedExpr = '';
     calcUpdateDisplay();
+    _calcHistoryVisible = false;
+    document.getElementById('calc-history-btn').textContent = 'Show History';
+    renderCalcHistory();
     return;
   }
   if ((name === 'date' || name === 'expenses' || name === 'splitter') && _calcMode === name) { setCalcMode('basic'); return; }
@@ -629,6 +793,9 @@ function setCalcMode(name) {
   _calcMode = name;
   localStorage.setItem('calc_mode', name);
   applyCalcMode(name);
+  _calcHistoryVisible = false;
+  document.getElementById('calc-history-btn').textContent = 'Show History';
+  renderCalcHistory();
 }
 
 function openCalculator() {
@@ -650,8 +817,8 @@ function openCalculator() {
     _exprFontSize = 1.7;
     if (_exprResetTimer) clearTimeout(_exprResetTimer);
   };
-  if (_calcMode === 'date' || _calcMode === 'expenses' || _calcMode === 'splitter') {
-    var savedMode = _calcMode;
+  var savedMode = localStorage.getItem('calc_mode') || 'basic';
+  if (savedMode !== 'basic') {
     _calcMode = 'basic';
     setCalcMode(savedMode);
   }
@@ -825,18 +992,33 @@ function updateStickyOpHighlight() {
   }
 }
 
-function calcUpdateDisplay() {
+function calcUpdateDisplay(skipEditor) {
   if (_stickyActive) return;
   var display = document.getElementById('calc-display');
   var expr = document.getElementById('calc-expression');
 
   if (!_calcShowExpr) {
-    expr.innerHTML = '';
     try {
-      var live = evalExpr(calcExprFromTokens());
-      if (isFinite(live)) display.textContent = fmtNum(live);
-    } catch(e) {}
-    renderCalcLabelEditor();
+      var live = typeof _calcSavedResult !== 'undefined' && isFinite(_calcSavedResult) ? _calcSavedResult : evalExpr(calcExprFromTokens());
+      if (isFinite(live)) {
+        display.textContent = '= ' + fmtNum(live);
+        if (_showWords) {
+          expr.innerHTML = '';
+          updateOutputWords(live);
+        } else {
+          var w = numToWords(live);
+          expr.innerHTML = w ? '<span onclick="toggleResultExpr()" style="cursor:pointer;font-size:0.85rem;color:var(--text-muted);font-style:italic;display:block;text-align:right;width:100%;">' + escHtml(w) + '</span>' : '';
+          updateOutputWords(null);
+        }
+      } else {
+        expr.innerHTML = '';
+        updateOutputWords(null);
+      }
+    } catch(e) {
+      expr.innerHTML = '';
+      updateOutputWords(null);
+    }
+    if (!skipEditor) renderCalcLabelEditor();
     return;
   }
 
@@ -847,13 +1029,14 @@ function calcUpdateDisplay() {
       var displayV = t.v === '*' ? '×' : t.v === '/' ? '÷' : t.v;
       parts.push('<span>' + escHtml(displayV) + '</span>');
     } else {
+      var formattedVal = fmtTokenVal(t.v);
       if (_recordExpenses && t.label) {
-        var recClick = t._recorded ? '' : 'sendTokenToExpenses('+i+')';
+        var recClick = t._recorded ? 'showToast(\'⏳ Already added to Expenses\')' : 'sendTokenToExpenses('+i+')';
         var recColor = t._recorded ? '#e74c3c' : 'var(--color-accent)';
-        parts.push('<span onclick="'+recClick+'" style="cursor:'+(t._recorded?'default':'pointer')+';font-weight:600">' + escHtml(t.v) + '</span> <span onclick="editCalcTokenLabel(' + i + ')" style="cursor:pointer;color:'+recColor+';font-size:0.75em;text-decoration:underline dotted '+recColor+';">(' + escHtml(t.label) + ')</span>');
+        parts.push('<span onclick="editCalcTokenLabel('+i+')" style="cursor:pointer;font-weight:600;text-decoration:underline dotted var(--color-accent);">' + escHtml(formattedVal) + '</span> <span onclick="'+recClick+'" style="cursor:pointer;color:'+recColor+';font-size:0.75em;font-weight:600;">(' + escHtml(t.label) + ')</span>');
       } else {
-        var showLabel = t.label ? ' <span style="color:var(--color-accent);font-size:0.75em;">(' + escHtml(t.label) + ')</span>' : '';
-        parts.push('<span onclick="editCalcTokenLabel(' + i + ')" style="cursor:pointer;font-weight:600;text-decoration:underline dotted var(--color-accent);">' + escHtml(t.v) + '</span>' + showLabel);
+        var showLabel = t.label ? ' <span onclick="editCalcTokenLabel('+i+')" style="color:var(--color-accent);font-size:0.75em;cursor:pointer;">(' + escHtml(t.label) + ')</span>' : '';
+        parts.push('<span onclick="editCalcTokenLabel('+i+')" style="cursor:pointer;font-weight:600;text-decoration:underline dotted var(--color-accent);">' + escHtml(formattedVal) + '</span>' + showLabel);
       }
     }
   });
@@ -873,16 +1056,38 @@ function calcUpdateDisplay() {
 
   try {
     var live = evalExpr(str);
-    if (isFinite(live)) display.textContent = fmtNum(live);
-  } catch(e) {}
+    if (isFinite(live)) {
+      display.textContent = fmtNum(live);
+      updateOutputWords(live);
+    } else {
+      updateOutputWords(null);
+    }
+  } catch(e) {
+    updateOutputWords(null);
+  }
 
-  renderCalcLabelEditor();
+  if (!skipEditor) renderCalcLabelEditor();
+}
+
+function updateOutputWords(num) {
+  var el = document.getElementById('calc-display-words');
+  if (!el) return;
+  if ((_showWords || _kMode) && num !== null && num !== undefined && isFinite(num)) {
+    var valForWords = _kMode ? num * 1000 : num;
+    var w = numToWords(valForWords);
+    if (w) {
+      el.textContent = w;
+      el.style.display = 'block';
+      return;
+    }
+  }
+  el.style.display = 'none';
 }
 
 function renderCalcLabelEditor() {
   var container = document.getElementById('calc-label-editor');
   if (_editingCalcToken === -1) {
-    container.innerHTML = '<div style="font-size:0.75rem;color:var(--text-muted);padding:0.3rem 0">' + (_recordExpenses ? 'Tap above digit to add a label, tap again to record in Expenses' : 'Tap a digit above to add label') + '</div>';
+    container.innerHTML = '<div style="font-size:0.75rem;color:var(--text-muted);padding:0.3rem 0">' + (_recordExpenses ? 'Tap a digit above to edit amount or label, tap label to record in Expenses' : 'Tap a digit above to edit amount or label') + '</div>';
     return;
   }
   if (['+','-','*','/'].indexOf(calcTokens[_editingCalcToken].v) !== -1) {
@@ -890,11 +1095,54 @@ function renderCalcLabelEditor() {
     return;
   }
   var token = calcTokens[_editingCalcToken];
-  container.innerHTML = '<div class="label-flex"><span>Label for <strong>' + escHtml(token.v) + '</strong>:</span><input id="calc-label-input" type="text" value="' + escHtml(token.label) + '" style="padding:0.5rem 0.6rem;width:160px;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-primary);color:var(--text-primary);font-size:1rem;"><button onclick="saveCalcTokenLabel()" style="padding:0.5rem 0.8rem;border:1px solid var(--color-accent);border-radius:var(--radius-sm);background:var(--color-accent);color:#fff;cursor:pointer;font-size:1rem;">OK</button><button onclick="cancelCalcTokenLabel()" style="padding:0.5rem 0.8rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-tertiary);color:#fff;cursor:pointer;font-size:1rem;">✕</button></div>';
+  container.innerHTML = '<div class="label-flex"><span style="font-weight:600;font-size:0.9rem">Edit:</span>' +
+    '<input id="calc-val-input" type="text" inputmode="decimal" value="' + escHtml(token.v) + '" oninput="liveUpdateTokenEdit()" onkeydown="if(event.key===\'Enter\')saveCalcTokenLabel()" style="padding:0.4rem 0.5rem;width:80px;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-primary);color:var(--text-primary);font-size:0.95rem;font-weight:600;">' +
+    '<input id="calc-label-input" type="text" placeholder="Label (optional)" value="' + escHtml(token.label) + '" oninput="liveUpdateTokenEdit()" onkeydown="if(event.key===\'Enter\')saveCalcTokenLabel()" style="padding:0.4rem 0.5rem;width:140px;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-primary);color:var(--text-primary);font-size:0.95rem;">' +
+    '<button onclick="saveCalcTokenLabel()" style="padding:0.4rem 0.7rem;border:1px solid var(--color-accent);border-radius:var(--radius-sm);background:var(--color-accent);color:#fff;cursor:pointer;font-size:0.95rem;font-weight:600;">OK</button>' +
+    '<button onclick="cancelCalcTokenLabel()" style="padding:0.4rem 0.7rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-tertiary);color:#fff;cursor:pointer;font-size:0.95rem;">✕</button></div>';
   setTimeout(function() {
-    var input = document.getElementById('calc-label-input');
-    if (input) input.focus();
+    var valInp = document.getElementById('calc-val-input');
+    if (valInp) {
+      valInp.focus();
+      var len = valInp.value.length;
+      try { valInp.setSelectionRange(len, len); } catch(e) {}
+    }
   }, 0);
+}
+
+function liveUpdateTokenEdit() {
+  if (_editingCalcToken === -1) return;
+  var valInp = document.getElementById('calc-val-input');
+  var labelInp = document.getElementById('calc-label-input');
+  var t = calcTokens[_editingCalcToken];
+  if (t) {
+    var oldLabel = t.label;
+    var oldVal = t.v;
+    if (valInp) {
+      t.v = valInp.value;
+    }
+    if (labelInp) {
+      t.label = labelInp.value;
+    }
+    if (t._recorded) {
+      var item = null;
+      if (t._expId !== undefined) {
+        item = expensesList.find(function(e) { return e.id === t._expId; });
+      }
+      if (!item) {
+        item = expensesList.find(function(e) { return e.desc === oldLabel && String(e.amount) === String(oldVal); });
+      }
+      if (item) {
+        item.desc = t.label;
+        item.amount = t.v;
+        var modeBody = document.getElementById('calc-mode-body');
+        if (modeBody && modeBody.style.display !== 'none' && _calcMode === 'expenses') {
+          renderExpensesMode(modeBody);
+        }
+      }
+    }
+    calcUpdateDisplay(true);
+  }
 }
 
 function editCalcTokenLabel(index) {
@@ -907,9 +1155,39 @@ function editCalcTokenLabel(index) {
 }
 
 function saveCalcTokenLabel() {
-  var input = document.getElementById('calc-label-input');
-  if (input) {
-    calcTokens[_editingCalcToken].label = input.value;
+  if (_editingCalcToken === -1) return;
+  var valInp = document.getElementById('calc-val-input');
+  var labelInp = document.getElementById('calc-label-input');
+  var t = calcTokens[_editingCalcToken];
+  if (t) {
+    var oldLabel = t.label;
+    var oldVal = t.v;
+    if (valInp) {
+      var nv = valInp.value.trim();
+      if (nv !== '' && !isNaN(Number(nv))) {
+        t.v = nv;
+      }
+    }
+    if (labelInp) {
+      t.label = labelInp.value.trim();
+    }
+    if (t._recorded) {
+      var item = null;
+      if (t._expId !== undefined) {
+        item = expensesList.find(function(e) { return e.id === t._expId; });
+      }
+      if (!item) {
+        item = expensesList.find(function(e) { return e.desc === oldLabel && String(e.amount) === String(oldVal); });
+      }
+      if (item) {
+        item.desc = t.label;
+        item.amount = t.v;
+        var modeBody = document.getElementById('calc-mode-body');
+        if (modeBody && modeBody.style.display !== 'none' && _calcMode === 'expenses') {
+          renderExpensesMode(modeBody);
+        }
+      }
+    }
   }
   _editingCalcToken = -1;
   calcUpdateDisplay();
@@ -976,11 +1254,14 @@ function calcEqual() {
 
     var displayStr = calcTokens.map(function(t) {
       if (['+','-','*','/','%'].indexOf(t.v) !== -1) return ' ' + t.v + ' ';
-      return t.label ? t.v + '(' + t.label + ')' : t.v;
+      var formattedVal = fmtTokenVal(t.v);
+      return t.label ? formattedVal + '(' + t.label + ')' : formattedVal;
     }).join('').replace(/\*/g, '×').replace(/\//g, '÷');
 
     _calcSavedExpr = displayStr;
     _calcSavedResult = result;
+    _calcSavedTokens = JSON.stringify(calcTokens);
+
     var hasOp = calcTokens.some(function(t){return ['+','-','*','/','%'].indexOf(t.v)!==-1;});
     if (hasOp) {
       calcHistory.unshift({ expression: displayStr, result: result, date: new Date().toLocaleString() });
@@ -998,6 +1279,7 @@ function calcEqual() {
 
 function calcClear() {
   deactivateSticky();
+  _calcSavedTokens = null;
   if (!_calcSavedExpr || _calcSavedExpr === '0') {
     var str = calcExprFromTokens();
     if (str !== '0') {
@@ -1006,7 +1288,8 @@ function calcClear() {
         if (isFinite(result)) {
           var displayStr = calcTokens.map(function(t) {
             if (['+','-','*','/','%'].indexOf(t.v) !== -1) return ' ' + t.v + ' ';
-            return t.label ? t.v + '(' + t.label + ')' : t.v;
+            var formattedVal = fmtTokenVal(t.v);
+            return t.label ? formattedVal + '(' + t.label + ')' : formattedVal;
           }).join('').replace(/\*/g, '×').replace(/\//g, '÷');
           var hasOp = calcTokens.some(function(t){return ['+','-','*','/','%'].indexOf(t.v)!==-1;});
           if (hasOp) {
@@ -1042,6 +1325,21 @@ function calcBackspace() {
     if (calcTokens.length === 0) calcTokens = [{v: '0', label: ''}];
   }
   calcUpdateDisplay();
+}
+
+function toggleResultExpr() {
+  if (!_calcSavedTokens) return;
+  if (!_calcShowExpr) {
+    calcTokens = JSON.parse(_calcSavedTokens);
+    _calcShowExpr = true;
+    calcUpdateDisplay();
+  } else {
+    _calcShowExpr = false;
+    calcUpdateDisplay();
+    if (typeof _calcSavedResult !== 'undefined' && isFinite(_calcSavedResult)) {
+      document.getElementById('calc-display').textContent = '= ' + fmtNum(_calcSavedResult);
+    }
+  }
 }
 
 function calcNegate() {
@@ -1164,6 +1462,7 @@ var splitPeople = [];
 var splitExpenses = [];
 var splitTripName = '';
 var splitTripDate = '';
+var splitPendingApprovals = []; // Pending approvals for Organizer
 var _aepPersonId = 0;
 var _splitIdCounter = 1;
 
@@ -1190,28 +1489,36 @@ var _fbUnsubscribe = null;
 var _fbPhone = null;
 var _fbCreatorPhone = null;
 var _fbJoinPrompted = false;
+var _tripEnded = false;
 
 function fbCleanTripData() {
   return {
     name: splitTripName || '',
     date: splitTripDate || '',
     people: splitPeople.map(function(p){return {id:p.id,name:p.name,tel:p.tel||''}}),
-    expenses: splitExpenses.map(function(e){return {id:e.id,paidBy:e.paidBy,desc:e.desc||'',amount:e.amount,splitMode:e.splitMode||'equal',checked:e.checked,customAmounts:e.customAmounts||{}}}),
-    createdBy: _fbPhone || '',
+    expenses: splitExpenses.map(function(e){return {id:e.id,paidBy:e.paidBy,desc:e.desc||'',amount:e.amount,splitMode:e.splitMode||'equal',checked:e.checked,customAmounts:e.customAmounts||{},isSettlement:e.isSettlement||false,category:e.category||'📦 Other'}}),
+    createdBy: _fbCreatorPhone || '',
+    pendingApprovals: splitPendingApprovals || [],
+    ended: _tripEnded,
     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
   };
 }
 
 function fbCreateTrip(cb) {
+  if (!_fbTripId) {
+    try {
+      _fbTripId = fdb.collection('trips').doc().id;
+    } catch(e) {
+      _fbTripId = 'local_' + Date.now();
+    }
+  }
   var data = fbCleanTripData();
   data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
-  fdb.collection('trips').add(data).then(function(ref) {
-    _fbTripId = ref.id;
+  fdb.collection('trips').doc(_fbTripId).set(data).then(function() {
     _fbUpdating = false;
-    if (cb) cb(ref.id);
+    if (cb) cb(_fbTripId);
   }).catch(function(err) {
     console.log('Firebase create error:', err);
-    _fbTripId = 'local_' + Date.now();
     _fbUpdating = false;
     if (cb) cb(_fbTripId);
   });
@@ -1223,20 +1530,59 @@ function fbCleanLoadedData(d) {
   splitTripName = d.name || '';
   splitTripDate = d.date || '';
   _fbCreatorPhone = d.createdBy || null;
+  splitPendingApprovals = d.pendingApprovals || [];
+  _tripEnded = d.ended || false;
   var maxId = _splitIdCounter;
   splitPeople.forEach(function(p){ if (p.id >= maxId) maxId = p.id + 1; });
   splitExpenses.forEach(function(e){ if (e.id >= maxId) maxId = e.id + 1; });
+  splitPendingApprovals.forEach(function(a){ if (a.id >= maxId) maxId = a.id + 1; if (a.person && a.person.id >= maxId) maxId = a.person.id + 1; });
   _splitIdCounter = maxId;
 }
 
 function fbListenTrip(tripId, onData) {
+  var first = true;
   _fbUnsubscribe = fdb.collection('trips').doc(tripId).onSnapshot(function(doc) {
-    if (!doc.exists) { if (onData) onData('not_found'); return; }
+    if (!doc.exists) {
+      if (first && onData) { onData('not_found'); }
+      return;
+    }
+    var oldPeople = JSON.stringify(splitPeople || []);
+    
     _fbUpdating = true;
     fbCleanLoadedData(doc.data());
+    
+    if (!first) {
+      var prev = JSON.parse(oldPeople);
+      splitPeople.forEach(function(newP) {
+        var oldP = null;
+        prev.forEach(function(p) { if (p.id === newP.id) oldP = p; });
+        if (newP.joined && (!oldP || !oldP.joined)) {
+           if (newP.tel !== _fbPhone) {
+             showToast('🎉 ' + newP.name + ' joined the group!');
+           }
+        }
+      });
+    }
+
     _fbTripId = tripId;
-    if (onData) onData();
+    localStorage.setItem('current_trip_id', tripId);
+    
+    if (first) {
+      first = false;
+      if (onData) onData();
+    } else {
+      if (_calcMode === 'splitter') {
+        var activeEl = document.activeElement;
+        var isTyping = activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA');
+        if (!isTyping) {
+          renderSplitterModeContent(document.getElementById('calc-mode-body'));
+        }
+      }
+    }
     _fbUpdating = false;
+  }, function(error) {
+    console.log("Listen failed: ", error);
+    if (first && onData) onData(error);
   });
 }
 
@@ -1261,13 +1607,90 @@ function fbJoinTrip(name, phone) {
 
 var _showAddBuddy = false;
 function toggleAddBuddy() { _showAddBuddy = !_showAddBuddy; renderSplitterMode(document.getElementById('calc-mode-body')); }
-function shareTripInvite() { if (_fbTripId) { shareInviteLink(); return; } var btn = document.querySelector('.sp-btn-primary'); if (btn) { btn.disabled = true; btn.textContent = 'Creating...'; } fbCreateTrip(function(id) { if (id) { shareInviteLink(); showToast('Invite link copied!'); } else { showToast('Failed to create trip'); } if (btn) { btn.disabled = false; btn.textContent = '📨 Send Invite'; } }); }
+function shareTripInvite() {
+  if (!_fbTripId) {
+    try {
+      _fbTripId = fdb.collection('trips').doc().id;
+    } catch(e) {
+      _fbTripId = 'local_' + Date.now();
+    }
+  }
+  shareInviteLink();
+}
+function settleTransaction(fromId, toId, amount) {
+  var fromName = '', toName = '';
+  splitPeople.forEach(function(p){
+    if (p.id === fromId) fromName = p.name;
+    if (p.id === toId) toName = p.name;
+  });
+  var desc = 'Settlement: ' + fromName + ' ➔ ' + toName;
+  var checked = {};
+  checked[toId] = true;
+  var id = spPersonId();
+  splitExpenses.push({
+    id: id,
+    paidBy: fromId,
+    desc: desc,
+    amount: amount,
+    splitMode: 'custom',
+    checked: checked,
+    customAmounts: {},
+    isSettlement: true,
+    category: '🤝 Settlement'
+  });
+  fbUpdateTrip();
+  renderSplitterMode(document.getElementById('calc-mode-body'));
+}
+function copyTripSummary() {
+  calcSplit();
+  var bals = calcSplit._balances || {};
+  var settlements = calcSplit._settlements || [];
+  var totalBill = calcSplit._totalBill || 0;
+  
+  var txt = '👥 TRIP SPLIT SUMMARY: ' + (splitTripName || 'Trip') + '\n';
+  if (splitTripDate) txt += '📅 Date: ' + fmtDate(splitTripDate) + '\n';
+  txt += '💰 Total Spend: ₹' + fmtNum(totalBill) + '\n\n';
+  
+  txt += '📊 INDIVIDUAL BALANCES:\n';
+  splitPeople.forEach(function(p){
+    var bal = Math.round((bals[p.id]||0)*100)/100;
+    if (bal < -0.01) txt += '• ' + p.name + ': Pays ₹' + fmtNum(Math.abs(bal)) + '\n';
+    else if (bal > 0.01) txt += '• ' + p.name + ': Gets ₹' + fmtNum(bal) + '\n';
+    else txt += '• ' + p.name + ': Settled\n';
+  });
+  
+  if (settlements.length) {
+    txt += '\n🧾 SUGGESTED SETTLEMENTS:\n';
+    settlements.forEach(function(s){
+      txt += '• ' + s.from.name + ' ➔ ' + s.to.name + ': ₹' + fmtNum(s.amt) + '\n';
+    });
+  }
+  
+  if (splitExpenses.length) {
+    txt += '\n📝 EXPENSES LIST:\n';
+    splitExpenses.slice().reverse().forEach(function(e){
+      if (e.isSettlement) return;
+      var payerName = '';
+      splitPeople.forEach(function(p){ if (p.id === e.paidBy) payerName = p.name; });
+      txt += '• ₹' + fmtNum(e.amount) + ' for ' + (e.desc || 'Expense') + ' (Paid by ' + payerName + ')\n';
+    });
+  }
+  
+  var ta = document.createElement('textarea');
+  ta.value = txt;
+  document.body.appendChild(ta);
+  ta.select();
+  document.execCommand('copy');
+  document.body.removeChild(ta);
+  showToast('Summary copied to clipboard!');
+}
 function spPersonId() { return _splitIdCounter++; }
 
 function createNewTrip() {
   fbStopListening();
   splitPeople = [];
   splitExpenses = [];
+  splitPendingApprovals = [];
   _splitIdCounter = 1;
   splitTripName = '';
   splitTripDate = '';
@@ -1276,7 +1699,178 @@ function createNewTrip() {
   _fbPhone = null;
   _fbJoinPrompted = false;
   setUrlParam('trip', '');
+  localStorage.removeItem('current_trip_id');
+  localStorage.removeItem('user_phone');
   window.history.replaceState({}, '', window.location.pathname);
+  renderSplitterMode(document.getElementById('calc-mode-body'));
+}
+
+function createGroupPopup() {
+  var savedPhone = localStorage.getItem('user_phone');
+  var savedName = localStorage.getItem('user_name');
+  document.getElementById('cg-trip-name').value = '';
+  document.getElementById('cg-user-name').value = savedName || '';
+  document.getElementById('cg-user-phone').value = savedPhone || '';
+  
+  if (savedPhone && savedName) {
+    document.getElementById('cg-name-row').style.display = 'none';
+    document.getElementById('cg-phone-row').style.display = 'none';
+  } else {
+    document.getElementById('cg-name-row').style.display = 'flex';
+    document.getElementById('cg-phone-row').style.display = 'flex';
+  }
+  
+  document.getElementById('modal-create-group').classList.add('active');
+  setTimeout(function(){ document.getElementById('cg-trip-name').focus(); }, 50);
+}
+function closeCreateGroupPopup(e) {
+  if (e && e.target !== e.currentTarget && e.target.tagName !== 'BUTTON') return;
+  document.getElementById('modal-create-group').classList.remove('active');
+}
+function confirmCreateGroup() {
+  var tripName = document.getElementById('cg-trip-name').value.trim();
+  var userName = document.getElementById('cg-user-name').value.trim();
+  var userPhone = document.getElementById('cg-user-phone').value.trim();
+  
+  if (!tripName) { document.getElementById('cg-trip-name').focus(); return; }
+  if (!userName) { document.getElementById('cg-user-name').focus(); return; }
+  if (!userPhone) { document.getElementById('cg-user-phone').focus(); return; }
+  
+  splitPeople = [];
+  splitExpenses = [];
+  splitPendingApprovals = [];
+  _splitIdCounter = 1;
+  _tripEnded = false;
+  
+  _fbCreatorPhone = userPhone;
+  _fbPhone = userPhone;
+  localStorage.setItem('user_phone', userPhone);
+  localStorage.setItem('user_name', userName);
+  splitTripName = tripName;
+  splitTripDate = new Date().toISOString().split('T')[0];
+  
+  splitPeople.push({ id: spPersonId(), name: userName, tel: userPhone, joined: true });
+  
+  try {
+    _fbTripId = fdb.collection('trips').doc().id;
+  } catch(e) {
+    _fbTripId = 'local_' + Date.now();
+  }
+  
+  setUrlParam('trip', _fbTripId);
+  localStorage.setItem('current_trip_id', _fbTripId);
+  fbCreateTrip(function() {
+    showToast('Trip Group Created! 🏕️');
+    fbListenTrip(_fbTripId, function() {
+      renderSplitterMode(document.getElementById('calc-mode-body'));
+    });
+  });
+  
+  closeCreateGroupPopup();
+  renderSplitterMode(document.getElementById('calc-mode-body'));
+}
+
+var _jgCustomPhone = null;
+function openJoinGroupPopup(prefilledPhone) {
+  _jgCustomPhone = prefilledPhone || null;
+  document.getElementById('jg-title').textContent = '👋 Join "' + (splitTripName || 'Trip') + '"';
+  document.getElementById('jg-user-name').value = '';
+  
+  var phoneRow = document.getElementById('jg-phone-row');
+  var phoneInp = document.getElementById('jg-user-phone');
+  if (_jgCustomPhone) {
+    phoneRow.style.display = 'none';
+    phoneInp.value = _jgCustomPhone;
+  } else {
+    phoneRow.style.display = 'flex';
+    phoneInp.value = '';
+  }
+  
+  document.getElementById('modal-join-group').classList.add('active');
+}
+function closeJoinGroupPopup(e) {
+  if (e && e.target !== e.currentTarget && e.target.tagName !== 'BUTTON') return;
+  document.getElementById('modal-join-group').classList.remove('active');
+}
+function confirmJoinGroup() {
+  var userName = document.getElementById('jg-user-name').value.trim();
+  var userPhone = document.getElementById('jg-user-phone').value.trim();
+  
+  if (!userName) { document.getElementById('jg-user-name').focus(); return; }
+  if (!userPhone) { document.getElementById('jg-user-phone').focus(); return; }
+  
+  var exists = false;
+  splitPeople.forEach(function(p){ 
+    if (p.tel === userPhone) {
+      exists = true;
+      p.joined = true;
+    }
+  });
+  
+  _fbPhone = userPhone;
+  localStorage.setItem('user_phone', userPhone);
+  localStorage.setItem('user_name', userName);
+  
+  if (!exists) {
+    splitPeople.push({ id: spPersonId(), name: userName, tel: userPhone, joined: true });
+  }
+  fbUpdateTrip();
+  
+  closeJoinGroupPopup();
+  showToast('Joined group successfully! 🎉');
+  renderSplitterMode(document.getElementById('calc-mode-body'));
+}
+
+function pushOrPendingPerson(name, tel) {
+  if (!name) return;
+  var _isCreator = !_fbCreatorPhone || (_fbPhone && _fbPhone === _fbCreatorPhone);
+  
+  if (_fbTripId === 'mock' || _isCreator) {
+    if (!splitPeople.length && !splitTripDate) {
+      splitTripDate = new Date().toISOString().split('T')[0];
+      if (!splitTripName) splitTripName = 'My Trip';
+    }
+    splitPeople.push({ id: spPersonId(), name: name, tel: tel });
+    fbUpdateTrip();
+  } else {
+    var addedByName = '';
+    splitPeople.forEach(function(p){ if (p.tel === _fbPhone) addedByName = p.name; });
+    var newPid = spPersonId();
+    splitPendingApprovals.push({
+      id: newPid,
+      addedBy: addedByName || 'Member',
+      person: { id: newPid, name: name, tel: tel },
+      approved: false
+    });
+    showToast('Sent approval request to Organizer! ⏳');
+    fbUpdateTrip();
+  }
+}
+
+function approveBuddy(pendingId) {
+  var reqIdx = -1;
+  splitPendingApprovals.forEach(function(a, idx){ if (a.id === pendingId) reqIdx = idx; });
+  if (reqIdx === -1) return;
+  var req = splitPendingApprovals[reqIdx];
+  
+  splitPeople.push({ id: req.person.id, name: req.person.name, tel: req.person.tel || '' });
+  splitPendingApprovals.splice(reqIdx, 1);
+  
+  showToast(req.person.name + ' added to the group!');
+  fbUpdateTrip();
+  renderSplitterMode(document.getElementById('calc-mode-body'));
+}
+
+function rejectBuddy(pendingId) {
+  var reqIdx = -1;
+  splitPendingApprovals.forEach(function(a, idx){ if (a.id === pendingId) reqIdx = idx; });
+  if (reqIdx === -1) return;
+  var req = splitPendingApprovals[reqIdx];
+  
+  splitPendingApprovals.splice(reqIdx, 1);
+  
+  showToast('Rejected ' + req.person.name + '\'s request.');
+  fbUpdateTrip();
   renderSplitterMode(document.getElementById('calc-mode-body'));
 }
 
@@ -1292,15 +1886,92 @@ function seedSplitterMockData() {
     ids[n] = id;
     splitPeople.push({ id:id, name:n, tel:tels[i] });
   });
-  function allChecked() {
+  
+  function getChecked(pNames) {
     var c = {};
-    splitPeople.forEach(function(p) { c[p.id] = true; });
+    pNames.forEach(function(n) { c[ids[n]] = true; });
     return c;
   }
-  splitExpenses.push({ id:spPersonId(), paidBy:ids['Rahul'], desc:'Hotel Booking', amount:'4500', splitMode:'equal', checked:allChecked(), customAmounts:{} });
-  splitExpenses.push({ id:spPersonId(), paidBy:ids['Priya'], desc:'Dinner at Fisherman\'s', amount:'1200', splitMode:'equal', checked:allChecked(), customAmounts:{} });
-  splitExpenses.push({ id:spPersonId(), paidBy:ids['Amit'], desc:'Cab from Airport', amount:'800', splitMode:'equal', checked:allChecked(), customAmounts:{} });
-  splitExpenses.push({ id:spPersonId(), paidBy:ids['Sneha'], desc:'Beach Shack Drinks', amount:'600', splitMode:'equal', checked:allChecked(), customAmounts:{} });
+  
+  // 1. Equal Split: Hotel Booking (Category: Hotel)
+  splitExpenses.push({
+    id: spPersonId(),
+    paidBy: ids['Rahul'],
+    desc: 'Hotel Booking',
+    amount: '4500',
+    splitMode: 'equal',
+    checked: getChecked(['Rahul', 'Priya', 'Amit', 'Sneha']),
+    customAmounts: {},
+    category: '🏨 Hotel',
+    isSettlement: false
+  });
+  
+  // 2. Shares Split: Dinner at Fisherman's (Category: Food)
+  var shares = {};
+  shares[ids['Rahul']] = 2;
+  shares[ids['Priya']] = 1;
+  shares[ids['Amit']] = 1;
+  shares[ids['Sneha']] = 2;
+  splitExpenses.push({
+    id: spPersonId(),
+    paidBy: ids['Priya'],
+    desc: 'Dinner at Fisherman\'s',
+    amount: '1200',
+    splitMode: 'shares',
+    checked: getChecked(['Rahul', 'Priya', 'Amit', 'Sneha']),
+    customAmounts: shares,
+    category: '🍽️ Food',
+    isSettlement: false
+  });
+  
+  // 3. Custom Split (Priya Excluded): Cab from Airport (Category: Travel)
+  var customAmts = {};
+  customAmts[ids['Rahul']] = 300;
+  customAmts[ids['Amit']] = 300;
+  customAmts[ids['Sneha']] = 300;
+  splitExpenses.push({
+    id: spPersonId(),
+    paidBy: ids['Amit'],
+    desc: 'Cab from Airport',
+    amount: '900',
+    splitMode: 'custom',
+    checked: getChecked(['Rahul', 'Amit', 'Sneha']),
+    customAmounts: customAmts,
+    category: '🚕 Travel',
+    isSettlement: false
+  });
+  
+  // 4. Percentages Split: Beach Shack Drinks (Category: Shopping)
+  var pct = {};
+  pct[ids['Rahul']] = 40;
+  pct[ids['Amit']] = 30;
+  pct[ids['Sneha']] = 30;
+  splitExpenses.push({
+    id: spPersonId(),
+    paidBy: ids['Sneha'],
+    desc: 'Beach Shack Drinks',
+    amount: '600',
+    splitMode: 'percentages',
+    checked: getChecked(['Rahul', 'Amit', 'Sneha']),
+    customAmounts: pct,
+    category: '🛍️ Shopping',
+    isSettlement: false
+  });
+  
+  // 5. Settlement: Amit paid Priya (Category: Settlement)
+  var settleChecked = {};
+  settleChecked[ids['Priya']] = true;
+  splitExpenses.push({
+    id: spPersonId(),
+    paidBy: ids['Amit'],
+    desc: 'Settlement: Amit ➔ Priya',
+    amount: '200',
+    splitMode: 'custom',
+    checked: settleChecked,
+    customAmounts: {},
+    category: '🤝 Settlement',
+    isSettlement: true
+  });
 }
 
 function loadSplitterMockData() {
@@ -1320,8 +1991,7 @@ function addSplitPerson() {
   var name = nameInp.value.trim();
   var tel = telInp.value.trim();
   if (name) {
-    if (!splitPeople.length && !splitTripDate) { splitTripDate = new Date().toISOString().split('T')[0]; if (!splitTripName) splitTripName = 'My Trip'; }
-    splitPeople.push({ id:spPersonId(), name:name, tel:tel });
+    pushOrPendingPerson(name, tel);
     nameInp.value = '';
     telInp.value = '';
     renderSplitterMode(document.getElementById('calc-mode-body'));
@@ -1333,12 +2003,9 @@ function addSplitPerson() {
         contacts.forEach(function(c) {
           var cName = c.name && c.name[0] ? c.name[0] : '';
           var cTel = c.tel && c.tel[0] ? c.tel[0] : '';
-          if (cName) {
-            if (!splitPeople.length && !splitTripDate) { splitTripDate = new Date().toISOString().split('T')[0]; if (!splitTripName) splitTripName = 'My Trip'; }
-            splitPeople.push({ id:spPersonId(), name:cName, tel:cTel });
-          }
+          pushOrPendingPerson(cName, cTel);
         });
-  renderSplitterMode(document.getElementById('calc-mode-body'));
+        renderSplitterMode(document.getElementById('calc-mode-body'));
       }
     }).catch(function(){});
   }
@@ -1347,10 +2014,9 @@ function addSplitPersonManual() {
   var nameInp = document.getElementById('sp-person-input');
   var telInp = document.getElementById('sp-tel-input');
   var name = nameInp.value.trim();
-  if (!name) return;
-  if (!splitPeople.length && !splitTripDate) { splitTripDate = new Date().toISOString().split('T')[0]; if (!splitTripName) splitTripName = 'My Trip'; }
   var tel = telInp.value.trim();
-  splitPeople.push({ id:spPersonId(), name:name, tel:tel });
+  if (!name) return;
+  pushOrPendingPerson(name, tel);
   nameInp.value = '';
   telInp.value = '';
   renderSplitterMode(document.getElementById('calc-mode-body'));
@@ -1391,7 +2057,7 @@ function shareInviteLink(personId) {
     splitPeople.forEach(function(pr){ if (pr.id === personId) p = pr; });
     if (!p || !_fbTripId) return;
     link = window.location.origin + window.location.pathname + '?trip=' + _fbTripId;
-    if (p.tel) link += '&phone=' + p.tel;
+    if (p.tel) link += '&phone=' + encodeURIComponent(p.tel);
     txt = '🏕️ ' + (splitTripName || 'Trip');
     if (splitTripDate) txt += '\n📅 ' + fmtDate(splitTripDate);
     txt += '\n👥 ' + p.name;
@@ -1407,7 +2073,9 @@ function shareInviteLink(personId) {
     txt += '\n\n👇 Join this trip:\n' + link;
   }
   if (navigator.share) {
-    navigator.share({ title: splitTripName || 'Trip', text: txt });
+    navigator.share({ title: splitTripName || 'Trip', text: txt, url: link }).catch(function(err) {
+      console.log('Share failed:', err);
+    });
   } else {
     var ta = document.createElement('textarea');
     ta.value = txt;
@@ -1504,7 +2172,8 @@ function spTogglePerson(expId, personId) {
   if (removed) {
     var checkedCount = 0;
     splitExpenses.forEach(function(e){ if (e.id === expId) { splitPeople.forEach(function(p){ if (e.checked[p.id]) checkedCount++; }); } });
-    showToast(removedName + ' removed \u00B7 \u20B9' + fmtNum(expAmt / checkedCount) + ' each for remaining ' + checkedCount);
+    var share = checkedCount > 0 ? (expAmt / checkedCount) : 0;
+    showToast(removedName + ' has been removed. Share of remaining: \u20B9' + fmtNum(share) + ' each (for ' + checkedCount + ' people)');
   }
 }
 
@@ -1514,6 +2183,17 @@ function aepSetDesc(el, val) {
   document.querySelectorAll('.aep-sc').forEach(function(b) {
     b.classList.toggle('on', b.getAttribute('data-val') === inp.value);
   });
+  var catSelect = document.getElementById('aep-category');
+  if (catSelect) {
+    if (val === '⛽ FUEL') catSelect.value = '⛽ Fuel';
+    else if (val === '🍽️ DIET') catSelect.value = '🍽️ Food';
+    else if (val === '💊 MEDICINE') catSelect.value = '💊 Medical';
+    else if (val === '🛒 GROCERY') catSelect.value = '🛒 Grocery';
+    else if (val === '🚕 TRAVEL') catSelect.value = '🚕 Travel';
+    else if (val === '🛍️ SHOPPING') catSelect.value = '🛍️ Shopping';
+    else if (val === '🏠 RENT') catSelect.value = '🏨 Hotel';
+    else if (val === '📄 BILLS') catSelect.value = '📄 Bill';
+  }
 }
 
 function spSetCustom(expId, personId, val) {
@@ -1535,10 +2215,20 @@ function openAddExpensePopup(personId) {
   var person = null;
   splitPeople.forEach(function(p){ if (p.id === personId) person = p; });
   if (!person) return;
+  var _isCreator = !_fbCreatorPhone || (_fbPhone && _fbPhone === _fbCreatorPhone);
+  if (!_isCreator && person.tel !== _fbPhone) {
+    showToast('Members can only add expenses they paid for themselves!');
+    return;
+  }
   _aepPersonId = personId;
   document.getElementById('aep-person-name').textContent = person.name;
   document.getElementById('aep-desc').value = '';
   document.getElementById('aep-amount').value = '';
+  var catSelect = document.getElementById('aep-category');
+  if (catSelect) catSelect.value = '🛒 Grocery';
+  var modeSelect = document.getElementById('aep-split-mode');
+  if (modeSelect) modeSelect.value = 'equal';
+  
   var chips = document.getElementById('aep-chips');
   chips.innerHTML = '';
   splitPeople.forEach(function(p){
@@ -1553,20 +2243,49 @@ function aepToggleChip(el) {
   aepUpdateUI();
 }
 function aepUpdateUI() {
+  var modeSelect = document.getElementById('aep-split-mode');
+  var splitMode = modeSelect ? modeSelect.value : 'equal';
   var allChips = document.querySelectorAll('#aep-chips .sp-chip');
   var onChips = document.querySelectorAll('#aep-chips .sp-chip.on');
-  var allSelected = onChips.length === allChips.length;
-  document.getElementById('aep-split-label').textContent = allSelected ? '⚖️ Split Equal' : '✂️ Custom';
+  
   var caDiv = document.getElementById('aep-custom-amts');
-  if (allSelected) {
+  if (splitMode === 'equal') {
     caDiv.style.display = 'none';
+    document.getElementById('aep-split-label').textContent = '⚖️ Split Equal';
   } else {
     caDiv.style.display = 'block';
     caDiv.innerHTML = '';
+    
+    var unit = '₹';
+    var placeholder = '₹';
+    var defaultVal = '';
+    if (splitMode === 'shares') {
+      unit = 'shares';
+      placeholder = '1';
+      defaultVal = '1';
+      document.getElementById('aep-split-label').textContent = '📈 Split by Shares';
+    } else if (splitMode === 'percentages') {
+      unit = '%';
+      placeholder = '%';
+      defaultVal = '';
+      document.getElementById('aep-split-label').textContent = '➗ Split by %';
+    } else {
+      document.getElementById('aep-split-label').textContent = '✂️ Split Custom';
+    }
+    
     onChips.forEach(function(chip){
       var pid = chip.getAttribute('data-pid');
       var name = chip.getAttribute('data-name');
-      caDiv.innerHTML += '<div style="display:flex;align-items:center;gap:0.3rem;margin-bottom:0.25rem"><span style="font-size:0.85rem;color:#fff;min-width:65px">'+escHtml(name)+'</span><input class="aep-ca-input" data-pid="'+pid+'" placeholder="₹" inputmode="decimal" style="width:80px;padding:0.4rem 0.3rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-primary);color:var(--text-primary);font-size:0.85rem"></div>';
+      var inputHtml = '<div style="display:flex;align-items:center;gap:0.3rem;margin-bottom:0.25rem">' +
+        '<span style="font-size:0.85rem;color:#fff;min-width:65px">' + escHtml(name) + '</span>' +
+        '<input class="aep-ca-input" data-pid="' + pid + '" placeholder="' + placeholder + '" value="' + defaultVal + '" inputmode="decimal" style="width:50px;padding:0.4rem 0.3rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-primary);color:var(--text-primary);font-size:0.85rem">';
+      if (splitMode === 'percentages') {
+        inputHtml += '<span style="color:var(--text-muted);font-size:0.85rem">%</span>';
+      } else if (splitMode === 'shares') {
+        inputHtml += '<span style="color:var(--text-muted);font-size:0.85rem">share(s)</span>';
+      }
+      inputHtml += '</div>';
+      caDiv.innerHTML += inputHtml;
     });
   }
 }
@@ -1578,24 +2297,39 @@ function confirmAddExpense() {
   var desc = document.getElementById('aep-desc').value.trim();
   var amount = document.getElementById('aep-amount').value.trim();
   var paidBy = _aepPersonId;
+  var category = document.getElementById('aep-category') ? document.getElementById('aep-category').value : '📦 Other';
+  var splitMode = document.getElementById('aep-split-mode').value;
+  
   if (!desc && !amount) { document.getElementById('aep-desc').focus(); return; }
   var id = spPersonId();
   var checked = {};
   document.querySelectorAll('#aep-chips .sp-chip.on').forEach(function(el){
     checked[parseInt(el.getAttribute('data-pid'))] = true;
   });
-  var allChecked = splitPeople.every(function(p) { return checked[p.id]; });
-  var splitMode = allChecked ? 'equal' : 'custom';
+  
   var customAmounts = {};
-  if (splitMode === 'custom') {
+  if (splitMode !== 'equal') {
     document.querySelectorAll('#aep-custom-amts .aep-ca-input').forEach(function(inp){
       var pid = parseInt(inp.getAttribute('data-pid'));
       var val = inp.value.trim();
       if (val) customAmounts[pid] = parseFloat(val) || 0;
     });
   }
-  splitExpenses.push({ id:id, paidBy:paidBy, desc:desc, amount:amount, splitMode:splitMode, checked:checked, customAmounts:customAmounts });
+  
+  splitExpenses.push({
+    id: id,
+    paidBy: paidBy,
+    desc: desc,
+    amount: amount,
+    splitMode: splitMode,
+    checked: checked,
+    customAmounts: customAmounts,
+    category: category,
+    isSettlement: false
+  });
+  
   closeAddExpensePopup();
+  fbUpdateTrip();
   renderSplitterMode(document.getElementById('calc-mode-body'));
   setTimeout(function(){
     var els = document.querySelectorAll('.sp-expense .amt');
@@ -1611,6 +2345,14 @@ function calcSplit() {
   splitExpenses.forEach(function(e) {
     var amt = parseFloat(e.amount);
     if (!amt || amt <= 0) return;
+    if (e.isSettlement) {
+      balances[e.paidBy] = (balances[e.paidBy] || 0) + amt;
+      var receiverId = Object.keys(e.checked)[0];
+      if (receiverId) {
+        balances[receiverId] = (balances[receiverId] || 0) - amt;
+      }
+      return;
+    }
     totalBill += amt;
     balances[e.paidBy] = (balances[e.paidBy] || 0) + amt;
     var included = [];
@@ -1622,6 +2364,40 @@ function calcSplit() {
     if (e.splitMode === 'equal') {
       var share = amt / count;
       included.forEach(function(p) { balances[p.id] = (balances[p.id] || 0) - share; });
+    } else if (e.splitMode === 'shares') {
+      var totalShares = 0;
+      var shares = {};
+      included.forEach(function(p) {
+        var s = e.customAmounts && e.customAmounts[p.id] !== undefined ? e.customAmounts[p.id] : 1;
+        shares[p.id] = s;
+        totalShares += s;
+      });
+      if (totalShares > 0) {
+        included.forEach(function(p) {
+          var share = amt * (shares[p.id] / totalShares);
+          balances[p.id] = (balances[p.id] || 0) - share;
+        });
+      } else {
+        var share = amt / count;
+        included.forEach(function(p) { balances[p.id] = (balances[p.id] || 0) - share; });
+      }
+    } else if (e.splitMode === 'percentages') {
+      var totalPercent = 0;
+      var percents = {};
+      included.forEach(function(p) {
+        var pct = e.customAmounts && e.customAmounts[p.id] !== undefined ? e.customAmounts[p.id] : (100 / count);
+        percents[p.id] = pct;
+        totalPercent += pct;
+      });
+      if (totalPercent > 0) {
+        included.forEach(function(p) {
+          var share = amt * (percents[p.id] / totalPercent);
+          balances[p.id] = (balances[p.id] || 0) - share;
+        });
+      } else {
+        var share = amt / count;
+        included.forEach(function(p) { balances[p.id] = (balances[p.id] || 0) - share; });
+      }
     } else {
       var customSum = 0;
       var customCount = 0;
@@ -1690,12 +2466,16 @@ function sendTokenToExpenses(i) {
   if (!t || !t.label) return;
   if (t._recorded) { showToast('⏳ Already added to Expenses'); return; }
   var today = new Date().toISOString().split('T')[0];
-  expensesList.push({ id:expId(), desc:t.label, amount:t.v, date:today });
+  var newId = expId();
+  var numericVal = parseFloat(t.v) || 0;
+  var actualAmt = _kMode ? numericVal * 1000 : numericVal;
+  expensesList.unshift({ id: newId, desc: t.label, amount: String(actualAmt), date: today });
   t._recorded = true;
+  t._expId = newId;
   _expensesNewCount++;
   updateExpensesBadge();
   calcUpdateDisplay();
-  showToast('✅ '+escHtml(t.label)+' ₹'+fmtNum(parseFloat(t.v)||0)+' recorded in Expenses');
+  showToast('✅ '+escHtml(t.label)+' ₹'+Number(actualAmt).toLocaleString('en-IN')+' recorded in Expenses');
 }
 
 function expId() { return _expIdCounter++; }
@@ -1791,24 +2571,76 @@ function renderSplitterMode(container) {
   /* Firestore init — first run */
   if (_fbTripId === null) {
     var tripParam = getUrlParam('trip');
+    if (!tripParam) {
+      var savedTripId = localStorage.getItem('current_trip_id');
+      if (savedTripId) {
+        tripParam = savedTripId;
+        setUrlParam('trip', tripParam);
+      }
+    }
     if (tripParam) {
       container.innerHTML = '<div style="padding:1rem;text-align:center;color:var(--text-muted);font-size:0.85rem">Loading trip...</div>';
       fbListenTrip(tripParam, function(err) {
-        if (err) { container.innerHTML = '<div style="padding:2rem;color:var(--text-muted);text-align:center">🚫 Trip not found<br><br><button onclick="window.location.href=window.location.pathname" style="margin-top:0.5rem;padding:0.5rem 1rem;border:none;border-radius:var(--radius-sm);background:var(--color-accent);color:#fff;cursor:pointer;font-size:1rem">Start New Trip</button></div>'; return; }
+        if (err) {
+          container.innerHTML = '<div style="padding:2rem;color:var(--text-muted);text-align:center">🚫 Trip not found or loading failed<br><br><button onclick="window.location.href=window.location.pathname" style="margin-top:0.5rem;padding:0.5rem 1rem;border:none;border-radius:var(--radius-sm);background:var(--color-accent);color:#fff;cursor:pointer;font-size:1rem">Retry / Start New Trip</button></div>';
+          return;
+        }
         renderSplitterMode(container);
       });
       return;
     }
-    if (!splitPeople.length) seedSplitterMockData();
-    if (!_fbPhone) _fbPhone = 'local_' + Date.now();
+    // No trip parameter
+    var savedPhone = localStorage.getItem('user_phone');
+    var history = JSON.parse(localStorage.getItem('trip_history') || '[]');
+    if (savedPhone || history.length > 0) {
+      _fbTripId = 'dashboard';
+      _fbPhone = savedPhone;
+      renderDashboardModeContent(container);
+      return;
+    }
+    // New user with no history: Initialize client-side Mock Demo Mode!
+    _fbTripId = 'mock';
+    _fbPhone = 'local_mock';
+    _fbCreatorPhone = null;
+    splitPendingApprovals = [];
+    seedSplitterMockData();
     renderSplitterModeContent(container);
-    fbCreateTrip(function() {
-      setUrlParam('trip', _fbTripId);
-      renderSplitterModeContent(container);
-    });
+    return;
+  }
+  if (_fbTripId === 'dashboard') {
+    renderDashboardModeContent(container);
     return;
   }
   renderSplitterModeContent(container);
+}
+
+function renderDashboardModeContent(container) {
+  var html = '<div style="padding:1rem; padding-bottom: 5rem;">';
+  html += '<div style="text-align:center; margin-bottom: 2rem;">';
+  html += '<button onclick="createGroupPopup()" style="width:100%; max-width: 300px; padding:1rem; border:none; border-radius:var(--radius-lg); background:var(--color-accent); color:#fff; font-size:1.1rem; font-weight:700; cursor:pointer; box-shadow: 0 4px 15px rgba(231,76,60,0.3);">➕ Create New Group</button>';
+  html += '</div>';
+
+  var history = JSON.parse(localStorage.getItem('trip_history') || '[]');
+  if (history.length > 0) {
+    html += '<div class="sp-section-title">📖 Your Trip History</div>';
+    html += '<div style="display:flex;flex-direction:column;gap:0.5rem;">';
+    for (var i = history.length - 1; i >= 0; i--) {
+      var t = history[i];
+      html += '<div class="sp-person" style="cursor:pointer;" onclick="viewPastTrip(\''+t.id+'\')">';
+      html += '<span class="av" style="background:var(--color-accent)">🏕️</span>';
+      html += '<div style="flex:1;">';
+      html += '<div style="font-weight:600;color:#fff;">'+escHtml(t.name)+'</div>';
+      html += '<div style="font-size:0.8rem;color:var(--text-muted)">'+escHtml(t.date)+'</div>';
+      html += '</div>';
+      html += '<div style="font-weight:700;color:var(--color-accent);">₹'+fmtNum(t.total)+'</div>';
+      html += '</div>';
+    }
+    html += '</div>';
+  } else {
+    html += '<div style="text-align:center; color:var(--text-muted); font-size: 0.9rem; margin-top:2rem;">No past trips found.<br>Create a group to start splitting!</div>';
+  }
+  html += '</div>';
+  container.innerHTML = html;
 }
 function renderSplitterModeContent(container) {
   if (!container) return;
@@ -1817,41 +2649,70 @@ function renderSplitterModeContent(container) {
   var bals = calcSplit._balances || {};
   var settlements = calcSplit._settlements || [];
   var totalBill = calcSplit._totalBill || 0;
-  /* join flow — auto-match phone from URL */
+  /* join flow — auto-match phone from URL or LocalStorage */
   if (!_fbJoinPrompted && _fbPhone === null) {
-    var phoneParam = getUrlParam('phone');
-    if (phoneParam) {
-      _fbJoinPrompted = true;
-      var matched = false;
-      splitPeople.forEach(function(p) { if (p.tel === phoneParam) { _fbPhone = phoneParam; matched = true; } });
-      if (!matched && splitPeople.length) {
-        var joinName = prompt('You\'re invited to "'+(splitTripName||'Trip')+'"\n\nEnter your name to join:');
-        if (joinName && joinName.trim()) {
-          fbJoinTrip(joinName.trim(), phoneParam);
+    var savedPhone = localStorage.getItem('user_phone');
+    if (savedPhone) {
+      var exists = false;
+      splitPeople.forEach(function(p){ if (p.tel === savedPhone) exists = true; });
+      if (exists) {
+        _fbPhone = savedPhone;
+      }
+    }
+    
+    if (_fbPhone === null) {
+      var phoneParam = getUrlParam('phone');
+      if (phoneParam) {
+        _fbJoinPrompted = true;
+        var matched = false;
+        splitPeople.forEach(function(p) { if (p.tel === phoneParam) { _fbPhone = phoneParam; matched = true; } });
+        if (matched) {
+          localStorage.setItem('user_phone', phoneParam);
+        } else {
+          openJoinGroupPopup(phoneParam);
           return;
         }
+      } else if (_fbTripId && _fbTripId !== 'mock') {
+        _fbJoinPrompted = true;
+        openJoinGroupPopup();
+        return;
       }
     }
   }
-  var _isCreator = !_fbCreatorPhone || (_fbPhone && _fbPhone === _fbCreatorPhone);
+  var _isCreator = _fbTripId === 'mock' || !_fbCreatorPhone || (_fbPhone && _fbPhone === _fbCreatorPhone);
   var html = '';
+  
+  /* Mock Demo Mode Notice Banner */
+  if (_fbTripId === 'mock') {
+    html += '<div style="background:rgba(243, 139, 168, 0.1); border:1.5px dashed var(--color-accent); border-radius:var(--radius-sm); padding:0.85rem; margin-bottom:0.8rem; text-align:center; font-size:0.85rem; color:#fff;">' +
+      '💡 Viewing <b>Demo Group</b> (Sandbox Mode).<br>' +
+      '<button onclick="createGroupPopup()" style="margin-top:0.6rem; padding:0.45rem 1rem; border:none; border-radius:var(--radius-sm); background:var(--color-accent); color:#fff; font-weight:600; cursor:pointer; font-size:0.85rem;">Create Your Group 🚀</button>' +
+      '</div>';
+  }
+  
   /* trip header */
   if (splitPeople.length) {
-    html += '<div class="sp-trip"><span>🏕️</span><input id="sp-trip-name" placeholder="Trip Name" value="'+escHtml(splitTripName)+'" oninput="splitTripName=this.value;fbUpdateTrip()"><span class="sp-trip-date">📅 '+(splitTripDate?fmtDate(splitTripDate):'')+'</span>'+( _fbTripId ? '<span class="sp-invite-btn" onclick="shareInviteLink();event.stopPropagation()" title="Share Trip" style="font-size:1.1rem">🔗</span>' : '')+'</div>';
+    var tripNameDisabled = (_isCreator && !_tripEnded) ? '' : ' disabled';
+    html += '<div class="sp-trip"><span>🏕️</span><input id="sp-trip-name" placeholder="Trip Name" value="'+escHtml(splitTripName)+'" oninput="splitTripName=this.value;fbUpdateTrip()"'+tripNameDisabled+'>'+(splitTripDate?('<span class="sp-trip-date">📅 '+fmtDate(splitTripDate)+'</span>'):'')+( (_fbTripId && _fbTripId !== 'mock') ? '<span class="sp-invite-btn" onclick="shareInviteLink();event.stopPropagation()" title="Share Trip" style="font-size:1.1rem">🔗</span>' : '')+'</div>';
   }
   /* people */
-  var buddyFormHtml = _showAddBuddy ? '<div class="sp-buddy-form"><input id="sp-person-input" placeholder="Enter name" onkeydown="if(event.key===\'Enter\')addSplitPersonManual()"><input id="sp-tel-input" class="sp-add-tel" type="tel" inputmode="numeric" placeholder="📞 Phone" onkeydown="if(event.key===\'Enter\')addSplitPersonManual()"><button class="sp-btn-primary" onclick="addSplitPerson()">+ Add</button></div>' : '';
-  html += '<div class="sp-action-row"><button class="sp-btn-primary" onclick="shareTripInvite()">📨 Send Invite</button><button class="sp-btn-secondary" onclick="toggleAddBuddy()">➕ Add Buddy</button></div>' + buddyFormHtml;
+  var buddyFormHtml = (_showAddBuddy && !_tripEnded) ? '<div class="sp-buddy-form"><input id="sp-person-input" placeholder="Enter name" onkeydown="if(event.key===\'Enter\')addSplitPersonManual()"><input id="sp-tel-input" class="sp-add-tel" type="tel" inputmode="numeric" placeholder="📞 Phone" onkeydown="if(event.key===\'Enter\')addSplitPersonManual()"><button class="sp-btn-primary" onclick="addSplitPerson()">+ Add</button></div>' : '';
+  if (!_tripEnded) {
+    html += '<div class="sp-action-row">';
+    if (_isCreator) html += '<button class="sp-btn-primary" onclick="shareTripInvite()">📨 Send Invite</button>';
+    html += '<button class="sp-btn-secondary" onclick="toggleAddBuddy()">➕ Add Buddy</button></div>' + buddyFormHtml;
+  }
   html += '<div class="sp-people">';
   splitPeople.forEach(function(p,i){
     var c = _spColors[i % _spColors.length];
     var tot = Math.round((bals[p.id]||0)*100)/100;
     var isOrganiser = p.tel && _fbCreatorPhone && p.tel === _fbCreatorPhone;
-    var youBadge = (p.tel && p.tel === _fbPhone) ? ' <span class="sp-you-badge">YOU</span>' : '';
+    var youBadge = (p.tel && p.tel === _fbPhone && !isOrganiser) ? ' <span class="sp-you-badge">YOU</span>' : '';
     var organiserBadge = isOrganiser ? ' <span class="sp-org-badge">Organiser</span>' : '';
-    var inviteBtn = (p.tel && _fbTripId) ? '<span class="sp-invite-btn" onclick="invitePersonWA('+p.id+');event.stopPropagation()" title="WhatsApp">📨</span><span class="sp-invite-btn" onclick="shareInviteLink('+p.id+');event.stopPropagation()" title="Share">🔗</span>' : '';
-    var canAddExp = _isCreator || (p.tel && p.tel === _fbPhone);
-    html += '<div class="sp-person"><span class="av" style="background:'+c+';cursor:pointer" onclick="callSplitPerson('+p.id+')">'+p.name[0].toUpperCase()+'</span><div style="cursor:pointer;flex:1;display:flex;flex-direction:column;justify-content:center" onclick="callSplitPerson('+p.id+')"><div>'+escHtml(p.name)+organiserBadge+youBadge+'</div>'+(p.tel?'<div class="sp-tel">'+escHtml(p.tel)+inviteBtn+'</div>':'')+'</div>'+(canAddExp?'<span class="sp-add-person-btn" onclick="openAddExpensePopup('+p.id+')">+</span>':'')+'<span class="sp-person-total">₹'+fmtNum(tot)+'</span>'+( _isCreator ? '<span class="rm" onclick="removeSplitPerson('+p.id+')">✕</span>' : '')+'</div>';
+    var inviteBtn = (!_tripEnded && !p.joined && p.tel !== _fbCreatorPhone && _fbTripId && _fbTripId !== 'mock') ? '<span class="sp-invite-btn" style="margin-left:5px" onclick="shareInviteLink('+p.id+');event.stopPropagation()" title="Share">🔗</span>' : '';
+    var canAddExp = !_tripEnded && (_isCreator || (p.tel && p.tel === _fbPhone));
+    var removeBtn = (!_tripEnded && _isCreator && p.tel !== _fbCreatorPhone) ? '<span class="rm" onclick="removeSplitPerson('+p.id+')">✕</span>' : '';
+    html += '<div class="sp-person"><span class="av" style="background:'+c+';cursor:pointer" onclick="callSplitPerson('+p.id+')">'+p.name[0].toUpperCase()+'</span><div style="cursor:pointer;flex:1;display:flex;flex-direction:column;justify-content:center" onclick="callSplitPerson('+p.id+')"><div>'+escHtml(p.name)+organiserBadge+youBadge+inviteBtn+'</div>'+(p.tel?'<div class="sp-tel">'+escHtml(p.tel)+'</div>':'')+'</div>'+(canAddExp?'<span class="sp-add-person-btn" onclick="openAddExpensePopup('+p.id+')">+</span>':'')+'<span class="sp-person-total">₹'+fmtNum(tot)+'</span>'+removeBtn+'</div>';
   });
   html += '</div>';
   /* expenses */
@@ -1862,25 +2723,51 @@ function renderSplitterModeContent(container) {
     splitExpenses.slice().reverse().forEach(function(e){
       var payerName = '', payerTel = null;
       splitPeople.forEach(function(p){ if (p.id === e.paidBy) { payerName = p.name; payerTel = p.tel || null; } });
+      
+      if (e.isSettlement) {
+        var receiverName = '';
+        var receiverId = Object.keys(e.checked)[0];
+        splitPeople.forEach(function(p){ if (p.id == receiverId) receiverName = p.name; });
+        html += '<div class="sp-expense" style="border-left: 3px solid #2ecc71; background: rgba(46, 204, 113, 0.05);">';
+        html += '<div class="sp-expense-top">';
+        html += '<div class="sp-expense-desc" style="font-size:0.9rem;font-weight:600;color:#2ecc71;line-height:1.3">🤝 ' + escHtml(payerName) + ' paid ' + escHtml(receiverName) + '</div>';
+        html += '<div style="font-size:1rem;font-weight:700;color:#2ecc71;white-space:nowrap;margin-left:auto;margin-right:0.4rem">₹' + fmtNum(parseFloat(e.amount)||0) + '</div>';
+        html += (_isCreator && !_tripEnded) ? '<span class="rm-exp" onclick="removeSplitExpense('+e.id+')">🗑️</span>' : '';
+        html += '</div></div>';
+        return;
+      }
+      
       html += '<div class="sp-expense">';
       html += '<div class="sp-expense-top">';
-      html += '<div class="sp-expense-desc" style="font-size:0.9rem;font-weight:600;color:#fff;line-height:1.3">'+escHtml(e.desc||'📝 Expense')+'</div>';
+      html += '<div class="sp-expense-desc" style="font-size:0.9rem;font-weight:600;color:#fff;line-height:1.3"><span style="display:inline-block;vertical-align:middle;">' + escHtml(e.desc||'📝 Expense') + '</span></div>';
       html += '<div style="font-size:1rem;font-weight:700;color:var(--color-accent);white-space:nowrap;margin-left:auto;margin-right:0.4rem">₹'+fmtNum(parseFloat(e.amount)||0)+'</div>';
-      html += (_isCreator || (payerTel && payerTel === _fbPhone)) ? '<span class="rm-exp" onclick="removeSplitExpense('+e.id+')">🗑️</span>' : '';
+      html += (_isCreator && !_tripEnded) ? '<span class="rm-exp" onclick="removeSplitExpense('+e.id+')">🗑️</span>' : '';
       html += '</div>';
       html += '<div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:0.3rem">paid by <span style="color:#fff">'+escHtml(payerName)+'</span></div>';
       html += '<div class="sp-chips">';
       splitPeople.forEach(function(p){
         var on = e.checked[p.id] ? ' on' : '';
         var payerClass = p.id === e.paidBy ? ' payer' : '';
-        html += '<span class="sp-chip'+on+payerClass+'" onclick="spTogglePerson('+e.id+','+p.id+');renderSplitResults()">'+escHtml(p.name)+'</span>';
+        var toggleClick = (_isCreator && !_tripEnded) ? 'spTogglePerson('+e.id+','+p.id+');renderSplitterMode(document.getElementById(\'calc-mode-body\'))' : 'showToast(\'Cannot modify this trip.\')';
+        var disabledAttr = (_isCreator && !_tripEnded) ? '' : ' disabled style="opacity:0.8; cursor:default;"';
+        
+        html += '<span class="sp-chip'+on+payerClass+'" onclick="'+toggleClick+'">'+escHtml(p.name)+'</span>';
         if (e.splitMode === 'custom' && e.checked[p.id]) {
           var cv = e.customAmounts && e.customAmounts[p.id] !== undefined ? e.customAmounts[p.id] : '';
-          html += '<input class="sp-custom-amt" placeholder="₹" inputmode="decimal" value="'+(cv!==''?cv:'')+'" oninput="spSetCustom('+e.id+','+p.id+',this.value);renderSplitResults()">';
+          html += '<input class="sp-custom-amt" placeholder="₹" inputmode="decimal" value="'+(cv!==''?cv:'')+'" oninput="spSetCustom('+e.id+','+p.id+',this.value);renderSplitResults()"'+disabledAttr+'>';
+        } else if (e.splitMode === 'shares' && e.checked[p.id]) {
+          var cv = e.customAmounts && e.customAmounts[p.id] !== undefined ? e.customAmounts[p.id] : '1';
+          html += '<input class="sp-custom-amt" placeholder="shares" inputmode="decimal" value="'+cv+'" oninput="spSetCustom('+e.id+','+p.id+',this.value);renderSplitResults()"'+disabledAttr+'><span style="font-size:0.7rem;color:var(--text-muted)">s</span>';
+        } else if (e.splitMode === 'percentages' && e.checked[p.id]) {
+          var cv = e.customAmounts && e.customAmounts[p.id] !== undefined ? e.customAmounts[p.id] : '';
+          html += '<input class="sp-custom-amt" placeholder="%" inputmode="decimal" value="'+cv+'" oninput="spSetCustom('+e.id+','+p.id+',this.value);renderSplitResults()"'+disabledAttr+'><span style="font-size:0.7rem;color:var(--text-muted)">%</span>';
         }
       });
-      var allChecked = splitPeople.every(function(p) { return e.checked[p.id]; });
-      html += '<span class="sp-split-badge">'+(allChecked?'Eq':'Cus')+'</span><span class="sp-wa-btn" onclick="shareExpenseWA('+e.id+');event.stopPropagation()">💬</span>';
+      var modeBadgeText = 'Eq';
+      if (e.splitMode === 'shares') modeBadgeText = 'Shares';
+      else if (e.splitMode === 'percentages') modeBadgeText = '%';
+      else if (e.splitMode === 'custom') modeBadgeText = 'Cus';
+      html += '<span class="sp-split-badge">'+modeBadgeText+'</span><span class="sp-wa-btn" onclick="shareExpenseWA('+e.id+');event.stopPropagation()">💬</span>';
       html += '</div></div>';
     });
   }
@@ -1897,17 +2784,66 @@ function renderSplitterModeContent(container) {
     if (settlements.length) {
       html += '<div style="border-top:1px solid var(--border-color);margin:0.3rem 0;padding-top:0.3rem"></div>';
       settlements.forEach(function(s){
-        var htmlSett = '🧾 '+escHtml(s.from.name)+' → '+escHtml(s.to.name)+' ₹'+fmtNum(s.amt);
+        var markPaidBtn = '';
+        if (_isCreator && !_tripEnded) {
+          markPaidBtn = ' <span class="sp-wa-btn" onclick="settleTransaction('+s.from.id+','+s.to.id+','+s.amt+')" title="Mark as Paid" style="color:#2ecc71;font-weight:bold;margin-left:8px;">✔ Mark Paid</span>';
+        }
+        var htmlSett = '🧾 '+escHtml(s.from.name)+' → '+escHtml(s.to.name)+' ₹'+fmtNum(s.amt) + markPaidBtn;
         if (s.from.tel) htmlSett += ' <span class="sp-wa-btn" onclick="waPerson('+s.from.id+','+s.to.id+','+s.amt+',\''+s.from.tel.replace(/'/g,'')+'\',event,false)" title="Request via WhatsApp">💬</span>';
         if (s.to.tel) htmlSett += ' <span class="sp-wa-btn" onclick="waPerson('+s.from.id+','+s.to.id+','+s.amt+',\''+s.to.tel.replace(/'/g,'')+'\',event,true)" title="Pay via WhatsApp">💬</span>';
         html += '<div class="sp-result-owed">'+htmlSett+'</div>';
       });
     }
     html += '</div>'; /* close sp-result */
+    html += '<button class="sp-btn-secondary" onclick="copyTripSummary()" style="width:100%;margin-top:0.6rem;padding:0.55rem;border:1px dashed var(--color-accent);color:var(--color-accent);background:transparent;cursor:pointer;border-radius:var(--radius-sm);font-weight:600;">📋 Copy Trip Summary</button>';
   } else {
     html += '<div style="font-size:0.8rem;color:var(--text-muted);padding:0.3rem 0">Add expenses to see results</div>';
   }
+  
+  /* pending approvals (Organizer only) */
+  if (_isCreator && splitPendingApprovals && splitPendingApprovals.length > 0) {
+    html += '<div class="sp-section-title" style="margin-top:0.8rem;color:var(--color-accent)">🔔 Pending Approvals</div>';
+    html += '<div class="sp-result" style="border-left:3px solid var(--color-accent);background:rgba(243, 139, 168, 0.05);">';
+    splitPendingApprovals.forEach(function(a){
+      html += '<div style="font-size:0.85rem;margin-bottom:0.4rem;display:flex;align-items:center;justify-content:space-between;color:#fff;">' +
+        '<span>👤 <b>' + escHtml(a.addedBy) + '</b> wants to add <b>' + escHtml(a.person.name) + '</b>' + (a.person.tel ? ' (' + escHtml(a.person.tel) + ')' : '') + '</span>' +
+        '<div style="display:flex;gap:0.35rem;flex-shrink:0;margin-left:8px;">' +
+          '<button onclick="approveBuddy(' + a.id + ')" style="padding:2px 8px;background:#2ecc71;border:none;border-radius:4px;color:#fff;cursor:pointer;font-weight:600;font-size:0.8rem;">✔ Approve</button>' +
+          '<button onclick="rejectBuddy(' + a.id + ')" style="padding:2px 8px;background:#e74c3c;border:none;border-radius:4px;color:#fff;cursor:pointer;font-weight:600;font-size:0.8rem;">✕ Reject</button>' +
+        '</div>' +
+        '</div>';
+    });
+    html += '</div>';
+  }
+  
+  /* member\'s pending status */
+  if (!_isCreator && splitPendingApprovals && splitPendingApprovals.length > 0) {
+    var myName = '';
+    splitPeople.forEach(function(p){ if (p.tel === _fbPhone) myName = p.name; });
+    var myPending = splitPendingApprovals.filter(function(a){ return a.addedBy === myName; });
+    if (myPending.length > 0) {
+      html += '<div class="sp-section-title" style="margin-top:0.8rem;">⏳ Waiting for Approval</div>';
+      html += '<div class="sp-result" style="border-left:3px solid var(--text-muted);">';
+      myPending.forEach(function(a){
+        html += '<div style="font-size:0.85rem;color:var(--text-muted);padding:0.2rem 0;">• Added <b>' + escHtml(a.person.name) + '</b> ' + (a.person.tel ? '(' + escHtml(a.person.tel) + ') ' : '') + '(Pending organizer approval)</div>';
+      });
+      html += '</div>';
+    }
+  }
+  
   html += '<div class="exp-total">Total: ₹'+fmtNum(totalBill)+'</div>';
+  
+  html += '<div style="display:flex;gap:0.5rem;margin-top:0.8rem;">';
+  if (_tripEnded || _fbTripId === 'mock') {
+    html += '<button style="flex:1;padding:0.75rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-tertiary);color:#fff;cursor:pointer;font-size:0.95rem;font-weight:600" onclick="goToDashboard()">🔙 Back to Trips</button>';
+  } else {
+    html += '<button style="flex:1;padding:0.75rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-tertiary);color:#fff;cursor:pointer;font-size:0.95rem;font-weight:600" onclick="goToDashboard()">🔙 Dashboard</button>';
+    if (_isCreator && _fbTripId) {
+      html += '<button style="flex:1;padding:0.75rem;border:none;border-radius:var(--radius-sm);background:#e74c3c;color:#fff;cursor:pointer;font-size:0.95rem;font-weight:600" onclick="confirmEndTrip()">🛑 End Trip</button>';
+    }
+  }
+  html += '</div>';
+  
   html += '</div>'; /* close sp-results-wrap */
   container.innerHTML = html;
   if (!splitExpenses.length && document.getElementById('sp-person-input')) document.getElementById('sp-person-input').focus();
@@ -2006,11 +2942,10 @@ function renderCalcHistory() {
   container.style.display = 'block';
 
   var filtered = [], indices = [];
-  for (var i = calcHistory.length - 1; i >= 0; i--) {
+  for (var i = 0; i < calcHistory.length; i++) {
     var e = calcHistory[i];
-    if (_calcMode === 'basic' && (!e.mode || e.mode === 'basic')) { filtered.push(e); indices.push(i); }
-    else if (_calcMode === 'date' && e.mode === 'date') { filtered.push(e); indices.push(i); }
-    else if (_calcMode === 'splitter' && e.mode === 'splitter') { filtered.push(e); indices.push(i); }
+    var entryMode = e.mode || 'basic';
+    if (entryMode === _calcMode) { filtered.push(e); indices.push(i); }
   }
   if (filtered.length === 0) {
     container.innerHTML = '<div style="padding:0.5rem;color:var(--text-muted);font-size:0.85rem;">No history yet</div>';
@@ -2018,7 +2953,8 @@ function renderCalcHistory() {
   }
 
   var html = '';
-  for (var j = 0; j < filtered.length; j++) {
+  var limit = Math.min(filtered.length, 10);
+  for (var j = 0; j < limit; j++) {
     var entry = filtered[j], realIdx = indices[j];
     var expr = entry.expression || '';
     if (entry.mode !== 'date' && entry.mode !== 'splitter') {
@@ -2061,19 +2997,20 @@ function loadCalcEntry(idx) {
   var expr = entry.expression;
   var tokens = [];
   var buffer = '';
-  var re = /^([\d.]+)\((.+)\)$/;
+  var re = /^([\d.,]+)\((.+)\)$/;
   for (var i = 0; i < expr.length; i++) {
     var ch = expr[i];
     if (ch === ' ') {
       if (buffer) {
-        var match = buffer.match(re);
+        var cleanBuffer = buffer.replace(/,/g, '');
+        var match = cleanBuffer.match(re);
         if (match) {
           tokens.push({v: match[1], label: match[2]});
-        } else if (['+','-','×','÷'].indexOf(buffer) !== -1) {
+        } else if (['+','-','×','÷'].indexOf(cleanBuffer) !== -1) {
           var map = {'×':'*','÷':'/'};
-          tokens.push({v: map[buffer] || buffer, label: ''});
-        } else if (buffer) {
-          tokens.push({v: buffer, label: ''});
+          tokens.push({v: map[cleanBuffer] || cleanBuffer, label: ''});
+        } else if (cleanBuffer) {
+          tokens.push({v: cleanBuffer, label: ''});
         }
         buffer = '';
       }
@@ -2082,14 +3019,15 @@ function loadCalcEntry(idx) {
     }
   }
   if (buffer) {
-    var match = buffer.match(re);
+    var cleanBuffer = buffer.replace(/,/g, '');
+    var match = cleanBuffer.match(re);
     if (match) {
       tokens.push({v: match[1], label: match[2]});
-    } else if (['+','-','×','÷'].indexOf(buffer) !== -1) {
+    } else if (['+','-','×','÷'].indexOf(cleanBuffer) !== -1) {
       var map = {'×':'*','÷':'/'};
-      tokens.push({v: map[buffer] || buffer, label: ''});
-    } else if (buffer) {
-      tokens.push({v: buffer, label: ''});
+      tokens.push({v: map[cleanBuffer] || cleanBuffer, label: ''});
+    } else if (cleanBuffer) {
+      tokens.push({v: cleanBuffer, label: ''});
     }
   }
 
@@ -2104,6 +3042,65 @@ function loadCalcEntry(idx) {
   document.getElementById('calc-history-btn').textContent = 'Show History';
   calcUpdateDisplay();
   renderCalcHistory();
+}
+
+function closeTripHistory(ev) {
+  if (ev && ev.target.id !== 'modal-trip-history') return;
+  document.getElementById('modal-trip-history').classList.remove('active');
+}
+
+function showTripHistory() {
+  var list = document.getElementById('trip-history-list');
+  var history = JSON.parse(localStorage.getItem('trip_history') || '[]');
+  list.innerHTML = '';
+  if (history.length === 0) {
+    list.innerHTML = '<div style="color:var(--text-muted);font-size:0.9rem;">No past trips found.</div>';
+  } else {
+    history.slice().reverse().forEach(function(trip) {
+      list.innerHTML += '<div onclick="viewPastTrip(\'' + trip.id + '\')" style="padding:0.8rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-tertiary);display:flex;justify-content:space-between;align-items:center;cursor:pointer;margin-bottom:0.5rem;">' +
+        '<div><div style="font-weight:600;color:#fff;font-size:1rem;">' + escHtml(trip.name) + '</div><div style="font-size:0.75rem;color:var(--text-muted);">' + escHtml(trip.date||'') + '</div></div>' +
+        '<div style="font-weight:bold;color:var(--color-accent);">₹' + fmtNum(trip.total) + '</div>' +
+        '</div>';
+    });
+  }
+  document.getElementById('modal-trip-history').classList.add('active');
+}
+
+function viewPastTrip(id) {
+  closeTripHistory();
+  _fbTripId = id;
+  localStorage.setItem('current_trip_id', id);
+  window.location.reload();
+}
+
+function confirmEndTrip() {
+  if (confirm("Are you sure you want to end this trip? You won't be able to add new expenses.")) {
+    var history = JSON.parse(localStorage.getItem('trip_history') || '[]');
+    var total = Math.round(splitExpenses.reduce(function(acc, e) { return acc + (typeof e.amount === 'number' ? e.amount : 0); }, 0)*100)/100;
+    var exists = false;
+    history.forEach(function(t) { if (t.id === _fbTripId) exists = true; });
+    if (!exists) {
+      history.push({
+        id: _fbTripId,
+        name: splitTripName || 'Unnamed Trip',
+        date: splitTripDate || new Date().toISOString().split('T')[0],
+        total: total
+      });
+      localStorage.setItem('trip_history', JSON.stringify(history));
+    }
+    
+    _tripEnded = true;
+    fbUpdateTrip();
+    
+    goToDashboard();
+  }
+}
+
+function goToDashboard() {
+  localStorage.removeItem('current_trip_id');
+  _fbTripId = null;
+  setUrlParam('trip', '');
+  renderSplitterMode(document.getElementById('calc-mode-body'));
 }
 
 function toggleCalcHistory() {
@@ -2173,11 +3170,19 @@ function shareCalcExpression() {
     return;
   }
   if (_calcMode !== 'basic') return;
+  if (_stickyActive) {
+    var exprText = _stickyFullExpr + (_stickyInput ? ' ' + _stickyOp + ' ' + _stickyInput : '');
+    var text = exprText.trim() + ' = ' + fmtNum(_stickyResult);
+    window.open('https://wa.me/?text=' + encodeURIComponent(text));
+    return;
+  }
   var str = calcExprFromTokens();
   try {
     var result = _calcShowExpr ? evalExpr(str) : _calcSavedResult;
     if (!isFinite(result)) return;
 
+    var hasLabels = false;
+    calcTokens.forEach(function(t) { if (t.label) hasLabels = true; });
     var lines = [];
     calcTokens.forEach(function(t, i) {
       var displayV = t.v;
@@ -2186,13 +3191,18 @@ function shareCalcExpression() {
       else if (displayV === '/') displayV = '÷';
 
       if (['+','−','×','÷'].indexOf(displayV) !== -1) {
-        lines.push('\n' + displayV + ' ');
+        if (hasLabels) {
+          lines.push('\n' + displayV + ' ');
+        } else {
+          lines.push(' ' + displayV + ' ');
+        }
       } else {
-        lines.push(t.label ? t.v + '(' + t.label + ')' : t.v);
+        var formattedVal = fmtTokenVal(t.v);
+        lines.push(t.label ? formattedVal + '(' + t.label + ')' : formattedVal);
       }
     });
 
-    var text = lines.join('') + '\n= ' + fmtNum(result);
+    var text = lines.join('') + (hasLabels ? '\n= ' : ' = ') + fmtNum(result);
     window.open('https://wa.me/?text=' + encodeURIComponent(text));
   } catch(e) {}
 }
@@ -2210,6 +3220,8 @@ document.querySelector('meta[name="theme-color"]').content = getComputedStyle(do
 document.getElementById('fast-input-toggle').checked = _fastInput;
 document.getElementById('record-expenses-toggle').checked = _recordExpenses;
 document.getElementById('fast-lazy-toggle').checked = _fastLazy;
+document.getElementById('show-words-toggle').checked = _showWords;
+document.getElementById('k-mode-toggle').checked = _kMode;
 updateExpensesBadge();
 
 if ('serviceWorker' in navigator) {
@@ -2220,7 +3232,7 @@ if ('serviceWorker' in navigator) {
 
 openCalculator();
 var initTripParam = getUrlParam('trip');
-if (initTripParam) {
+if (initTripParam && _calcMode !== 'splitter') {
   setTimeout(function() { setCalcMode('splitter'); }, 100);
 }
 
