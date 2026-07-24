@@ -52,14 +52,46 @@ html, body, .modal-container { touch-action: manipulation; }
   --text-muted: #94a3b8;
   --border-color: rgba(255, 255, 255, 0.15);
 }
-.theme-amber {
-  --color-accent: #fb923c;
-  --bg-primary: #17110d;
-  --bg-secondary: #100b08;
-  --bg-tertiary: #241a14;
+.theme-monochrome {
+  --color-accent: #ffffff;
+  --bg-primary: #121216;
+  --bg-secondary: #0a0a0d;
+  --bg-tertiary: #1f1f26;
   --text-primary: #ffffff;
-  --text-muted: #fed7aa;
-  --border-color: rgba(255, 255, 255, 0.15);
+  --text-muted: #a1a1aa;
+  --border-color: rgba(255, 255, 255, 0.2);
+}
+.theme-monochrome .mode-heading-btn,
+.theme-monochrome .mode-heading-btn.active,
+.theme-monochrome #calc-heading,
+.theme-monochrome .modal-header,
+.theme-monochrome h1, .theme-monochrome h2, .theme-monochrome h3 {
+  color: #ffffff !important;
+}
+.theme-monochrome .mode-heading-btn.active {
+  text-shadow: 0 0 12px rgba(255, 255, 255, 0.7) !important;
+}
+.theme-monochrome .exp-btn-add,
+.theme-monochrome button.btn-primary,
+.theme-monochrome .accent-btn,
+.theme-monochrome button[style*="background:var(--color-accent)"],
+.theme-monochrome button[style*="background: var(--color-accent)"],
+.theme-monochrome button[style*="background:#fff"],
+.theme-monochrome button[style*="background: #fff"],
+.theme-monochrome button[style*="background:#ffffff"],
+.theme-monochrome button[style*="background: #ffffff"] {
+  color: #121216 !important;
+  font-weight: 800 !important;
+}
+.theme-monochrome .toggle-switch input:checked + .toggle-slider {
+  background-color: #ffffff !important;
+}
+.theme-monochrome .toggle-switch input:checked + .toggle-slider::before {
+  background-color: #121216 !important;
+}
+.theme-monochrome .theme-circle.active {
+  border-color: #ffffff !important;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.8) !important;
 }
 .theme-silver {
   --color-accent: #cbd5e1;
@@ -150,7 +182,7 @@ html, body, .modal-container { touch-action: manipulation; }
 .modes-menu-popup.active { display: block; }
 .modes-menu-item { padding: 0.75rem 1.1rem; font-size: 0.95rem; font-weight: 600; color: var(--text-primary); cursor: pointer; border-bottom: 1px solid var(--border-color); transition: background 0.15s, color 0.15s; text-align: left; display: flex; align-items: center; min-height: 44px; touch-action: manipulation; }
 .modes-menu-item:last-child { border-bottom: none; }
-.modes-menu-item:hover { background: var(--color-accent); color: #fff; }
+.modes-menu-item:hover { background: var(--color-accent); color: #121216; font-weight: 800; }
 .calc-mode-body .result-label { font-size:0.9rem; font-weight:600; color:var(--text-primary); padding:0.3rem 0; }
 .calc-mode-body .result-value { font-size:1.1rem; font-weight:700; color:var(--color-accent); }
 .calc-mode-body input[type="date"] { color-scheme:dark; }
@@ -420,11 +452,11 @@ body {
     <div class="modal-body" style="padding-bottom:1.5rem">
       <div style="text-align:center;margin:0.25rem 0 0.4rem 0;font-size:0.85rem;color:var(--text-muted)">Themes</div>
       <div style="display:flex;gap:0.45rem;justify-content:center;flex-wrap:wrap;margin-bottom:0.85rem;">
+        <div class="theme-circle" data-theme="monochrome" style="background:#121216;border:2px solid #ffffff" onclick="setTheme('monochrome')" title="Minimal Monochrome (White)"></div>
         <div class="theme-circle" data-theme="light" style="background:#ffffff;border:2px solid #ccc" onclick="setTheme('light')" title="Light (White)"></div>
-        <div class="theme-circle" data-theme="peach" style="background:#1e1e2e;border:2px solid #f38ba8" onclick="setTheme('peach')" title="Dark Peach"></div>
         <div class="theme-circle" data-theme="skyblue" style="background:#181825;border:2px solid #89b4fa" onclick="setTheme('skyblue')" title="Dark Sky Blue"></div>
+        <div class="theme-circle" data-theme="peach" style="background:#1e1e2e;border:2px solid #f38ba8" onclick="setTheme('peach')" title="Dark Peach"></div>
         <div class="theme-circle" data-theme="blue" style="background:#0d131f;border:2px solid #60a5fa" onclick="setTheme('blue')" title="Subtle Ocean Blue"></div>
-        <div class="theme-circle" data-theme="amber" style="background:#17110d;border:2px solid #fb923c" onclick="setTheme('amber')" title="Subtle Sunset Amber"></div>
         <div class="theme-circle" data-theme="silver" style="background:#1b2028;border:2px solid #cbd5e1" onclick="setTheme('silver')" title="Metallic Silver"></div>
         <div class="theme-circle" data-theme="gold" style="background:#18150c;border:2px solid #facc15" onclick="setTheme('gold')" title="Subtle Cyber Gold"></div>
       </div>
@@ -780,7 +812,7 @@ var _calcShowExpr = true;
 var _calcSavedExpr = '';
 var _calcSavedResult = 0;
 var _calcSavedTokens = null;
-var _calcTheme = localStorage.getItem('calc_theme') || 'peach';
+var _calcTheme = localStorage.getItem('calc_theme') || 'monochrome';
 var _calcMode = localStorage.getItem('calc_mode') || 'basic';
 var _fastInput = true;
 var _fastLazy = localStorage.getItem('fast_lazy') === 'true';
