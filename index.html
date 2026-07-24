@@ -4789,22 +4789,28 @@ function shareCalcExpression() {
     doShare(text, 'Calculation');
     return;
   }
+  var targetTokens = calcTokens;
+  if (!_calcShowExpr && _calcSavedTokens) {
+    try {
+      targetTokens = JSON.parse(_calcSavedTokens);
+    } catch(e) {}
+  }
   var str = calcExprFromTokens();
   try {
     var result = _calcShowExpr ? evalExpr(str) : _calcSavedResult;
     if (!isFinite(result)) return;
 
-    var hasLabels = calcTokens.some(function(t) { return !!t.label; });
+    var hasLabels = targetTokens.some(function(t) { return !!t.label; });
     var outputText = '';
     if (hasLabels) {
       var tokenLines = [];
-      calcTokens.forEach(function(t, idx) {
+      targetTokens.forEach(function(t, idx) {
         if (['+','-','*','/','%'].indexOf(t.v) !== -1) return;
         var formattedVal = fmtTokenVal(t.v);
         var labelStr = t.label ? ' (' + t.label + ')' : '';
         var opPrefix = '';
-        if (idx > 0 && calcTokens[idx-1] && ['+','-','*','/','%'].indexOf(calcTokens[idx-1].v) !== -1) {
-          var rawOp = calcTokens[idx-1].v;
+        if (idx > 0 && targetTokens[idx-1] && ['+','-','*','/','%'].indexOf(targetTokens[idx-1].v) !== -1) {
+          var rawOp = targetTokens[idx-1].v;
           opPrefix = (rawOp === '*' ? '×' : rawOp === '/' ? '÷' : rawOp === '-' ? '−' : rawOp) + ' ';
         }
         tokenLines.push(opPrefix + formattedVal + labelStr);
@@ -4812,7 +4818,7 @@ function shareCalcExpression() {
       outputText = tokenLines.join('\n') + '\n────────────\n= ' + fmtNum(result);
     } else {
       var lines = [];
-      calcTokens.forEach(function(t) {
+      targetTokens.forEach(function(t) {
         var displayV = t.v;
         if (displayV === '-') displayV = '−';
         if (displayV === '*') displayV = '×';
