@@ -93,6 +93,11 @@ html, body, .modal-container { touch-action: manipulation; }
   border-color: #ffffff !important;
   box-shadow: 0 0 8px rgba(255, 255, 255, 0.8) !important;
 }
+.theme-monochrome #calc-toast {
+  color: #121216 !important;
+  font-weight: 800 !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5) !important;
+}
 .theme-silver {
   --color-accent: #cbd5e1;
   --bg-primary: #1b2028;
@@ -2107,7 +2112,8 @@ function updateVisualCalendar() {
 
     var style = 'padding:0.45rem 0;font-size:0.9rem;font-weight:600;border-radius:var(--radius-sm);cursor:pointer;text-align:center;transition:all 0.15s;';
     if (isSel) {
-      style += 'background:var(--color-accent);color:#fff;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,0.3);';
+      var selTextColor = (_calcTheme === 'monochrome' || _calcTheme === 'light') ? '#121216' : '#ffffff';
+      style += 'background:var(--color-accent);color:' + selTextColor + ';font-weight:800;box-shadow:0 2px 8px rgba(0,0,0,0.3);';
     } else if (isToday) {
       style += 'border:2px solid var(--color-accent);color:var(--color-accent);background:var(--bg-tertiary);font-weight:700;';
     } else {
