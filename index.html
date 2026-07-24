@@ -234,6 +234,27 @@ button:active, .calc-btn:active, .calc-key:active, .mode-heading-btn:active, .ex
 .calc-result-animated {
   animation: calcResultPulse 0.28s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
 }
+/* Flexbox Bottom Navigation Row Mode */
+#modal-calculator.nav-bottom-mode .modal-container {
+  display: flex !important;
+  flex-direction: column !important;
+}
+#modal-calculator.nav-bottom-mode .modal-header {
+  order: 999 !important;
+  margin-top: 0.1rem !important;
+  border-top: 1px solid var(--border-color) !important;
+  border-bottom: none !important;
+  padding-top: 0.25rem !important;
+}
+#modal-calculator.nav-bottom-mode #calc-history-btn {
+  margin-bottom: 0 !important;
+}
+#modal-calculator.nav-bottom-mode .modes-menu-popup {
+  top: auto !important;
+  bottom: 100% !important;
+  margin-top: 0 !important;
+  margin-bottom: 6px !important;
+}
 /* splitter */
 .sp-people { display:flex; flex-direction:column; gap:0.45rem; margin-bottom:0.8rem; }
 .sp-person { display:flex; align-items:center; gap:0.5rem; background:var(--bg-tertiary); border-radius:var(--radius-sm); padding:0.7rem 0.65rem; font-size:1rem; color:var(--text-primary); }
@@ -579,6 +600,7 @@ body {
       </div>
       <div style="border-top:1px solid var(--border-color);margin:1rem 0 0.5rem 0"></div>
       <button onclick="openGuideModal()" style="display:block;width:100%;padding:0.6rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-tertiary);color:var(--text-primary);font-size:0.85rem;cursor:pointer;font-weight:600;text-align:center;text-transform:uppercase;margin-bottom:0.4rem">How to use</button>
+      <button id="nav-pos-btn" onclick="toggleNavPosition()" style="display:block;width:100%;padding:0.6rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-tertiary);color:var(--text-primary);font-size:0.85rem;cursor:pointer;font-weight:600;text-align:center;text-transform:uppercase;margin-bottom:0.4rem">📌 NAV POSITION: TOP</button>
     </div>
   </div>
 </div>
@@ -873,7 +895,39 @@ var _showWords = localStorage.getItem('calc_show_words') !== 'false';
 var _kMode = localStorage.getItem('calc_k_mode') === 'true';
 var _shareMode = localStorage.getItem('calc_share_mode') || 'whatsapp';
 var _billMode = localStorage.getItem('calc_bill_mode') === 'true';
+var _navBottom = localStorage.getItem('calc_nav_bottom') === 'true';
 var _expensesNewCount = 0;
+
+function updateNavPositionUI() {
+  var btn = document.getElementById('nav-pos-btn');
+  if (btn) btn.textContent = _navBottom ? '📌 NAV POSITION: BOTTOM' : '📌 NAV POSITION: TOP';
+  var modesBtn = document.getElementById('h-btn-modes');
+  if (modesBtn) {
+    var arrow = _navBottom ? '▲' : '▼';
+    var labels = {
+      basic: '🛠️ MODES ' + arrow,
+      splitter: '👥 SPLITTER ' + arrow,
+      gold: '🪙 GOLD ' + arrow,
+      fuel: '⛽ FUEL ' + arrow,
+      emi: '📈 EMI ' + arrow,
+      gst: '💰 GST ' + arrow,
+      converter: '📏 CONVERT ' + arrow,
+      scientific: '📐 SCIENTIFIC ' + arrow
+    };
+    modesBtn.textContent = labels[_calcMode] || ('🛠️ MODES ' + arrow);
+  }
+  var mainCalc = document.getElementById('modal-calculator');
+  if (mainCalc) {
+    mainCalc.classList.toggle('nav-bottom-mode', _navBottom);
+  }
+}
+
+function toggleNavPosition() {
+  _navBottom = !_navBottom;
+  localStorage.setItem('calc_nav_bottom', _navBottom ? 'true' : 'false');
+  updateNavPositionUI();
+  showToast(_navBottom ? '👇 Nav row moved to Bottom' : '☝️ Nav row moved to Top');
+}
 var _exprFontSize = 1.7;
 var _exprResetTimer = null;
 
@@ -1130,15 +1184,16 @@ function applyCalcMode(name) {
   var expWaBtn = document.getElementById('exp-wa-btn-wrap');
   var resArea = document.querySelector('.calc-result-area');
 
+  var arrow = _navBottom ? '▲' : '▼';
   var modeLabels = {
-    basic: '🛠️ MODES ▼',
-    splitter: '👥 SPLITTER ▼',
-    gold: '🪙 GOLD ▼',
-    fuel: '⛽ FUEL ▼',
-    emi: '📈 EMI ▼',
-    gst: '💰 GST ▼',
-    converter: '📏 CONVERT ▼',
-    scientific: '📐 SCIENTIFIC ▼'
+    basic: '🛠️ MODES ' + arrow,
+    splitter: '👥 SPLITTER ' + arrow,
+    gold: '🪙 GOLD ' + arrow,
+    fuel: '⛽ FUEL ' + arrow,
+    emi: '📈 EMI ' + arrow,
+    gst: '💰 GST ' + arrow,
+    converter: '📏 CONVERT ' + arrow,
+    scientific: '📐 SCIENTIFIC ' + arrow
   };
 
   var modalCalc = document.getElementById('modal-calculator');
@@ -1160,7 +1215,7 @@ function applyCalcMode(name) {
     if (waBtn) waBtn.style.display = '';
     if (hDate) { hDate.classList.remove('active'); hDate.style.display = ''; hDate.textContent = '🗓️'; }
     if (hExpenses) { hExpenses.classList.remove('active'); hExpenses.style.display = ''; }
-    if (hModesBtn) { hModesBtn.classList.remove('active'); hModesBtn.style.display = ''; hModesBtn.textContent = '🛠️ MODES ▼'; }
+    if (hModesBtn) { hModesBtn.classList.remove('active'); hModesBtn.style.display = ''; hModesBtn.textContent = modeLabels.basic; }
     if (histBtn) histBtn.style.display = '';
     if (histContainer) histContainer.style.display = '';
     if (expWaBtn) expWaBtn.style.display = 'none';
@@ -4887,6 +4942,7 @@ el = document.getElementById('share-mode-toggle'); if (el) el.checked = _shareMo
 el = document.getElementById('bill-mode-toggle'); if (el) el.checked = _billMode;
 updateShareIconUI();
 updateExpensesBadge();
+updateNavPositionUI();
 
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js?v=' + Date.now()).then(function(reg) {
