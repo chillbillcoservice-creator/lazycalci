@@ -5,3 +5,6 @@ sw.js
 *.log
 backup-*/
 *.backup.*
+
+.vercel
+.env*

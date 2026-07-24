@@ -187,6 +187,48 @@ html, body, .modal-container { touch-action: manipulation; }
 .calc-mode-body .result-value { font-size:1.1rem; font-weight:700; color:var(--color-accent); }
 .calc-mode-body input[type="date"] { color-scheme:dark; }
 .theme-light .calc-mode-body input[type="date"] { color-scheme:light; }
+/* Tactile Spring Micro-Animations */
+@keyframes calcResultPulse {
+  0% { transform: scale(1); }
+  35% { transform: scale(1.028); }
+  100% { transform: scale(1); }
+}
+@keyframes springMenuIn {
+  0% { opacity: 0; transform: scale(0.94) translateY(-8px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+@keyframes springModalIn {
+  0% { opacity: 0; transform: scale(0.92) translateY(12px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+button, .calc-btn, .calc-key, .mode-heading-btn, .theme-circle, .btn, .exp-btn-add, .accent-btn {
+  transition: transform 0.12s cubic-bezier(0.2, 0.8, 0.2, 1.2), box-shadow 0.15s ease, background 0.15s ease, color 0.15s ease !important;
+}
+button:active, .calc-btn:active, .calc-key:active, .mode-heading-btn:active, .exp-btn-add:active, .accent-btn:active {
+  transform: scale(0.94) translateY(2px) !important;
+}
+.theme-circle {
+  transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.2s ease !important;
+}
+.theme-circle:hover {
+  transform: scale(1.12) !important;
+}
+.theme-circle.active {
+  transform: scale(1.18) !important;
+}
+.modes-menu-popup.active {
+  animation: springMenuIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+}
+.modal-container {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease !important;
+}
+.modal-onboarding.active .modal-container,
+.modal.active .modal-container {
+  animation: springModalIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+}
+.calc-result-animated {
+  animation: calcResultPulse 0.28s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
+}
 /* splitter */
 .sp-people { display:flex; flex-direction:column; gap:0.45rem; margin-bottom:0.8rem; }
 .sp-person { display:flex; align-items:center; gap:0.5rem; background:var(--bg-tertiary); border-radius:var(--radius-sm); padding:0.7rem 0.65rem; font-size:1rem; color:var(--text-primary); }
@@ -813,9 +855,10 @@ var _calcSavedExpr = '';
 var _calcSavedResult = 0;
 var _calcSavedTokens = null;
 var _calcTheme = localStorage.getItem('calc_theme');
-if (!_calcTheme || _calcTheme === 'amber') {
+if (localStorage.getItem('theme_v2_reset') !== 'true' || !_calcTheme || _calcTheme === 'amber') {
   _calcTheme = 'monochrome';
   localStorage.setItem('calc_theme', 'monochrome');
+  localStorage.setItem('theme_v2_reset', 'true');
 }
 var _calcMode = localStorage.getItem('calc_mode') || 'basic';
 var _fastInput = true;
@@ -1417,6 +1460,15 @@ function updateStickyOpHighlight() {
   }
 }
 
+function triggerResultPulse() {
+  var display = document.getElementById('calc-display');
+  if (display) {
+    display.classList.remove('calc-result-animated');
+    void display.offsetWidth;
+    display.classList.add('calc-result-animated');
+  }
+}
+
 function calcUpdateDisplay(skipEditor) {
   if (_stickyActive) return;
   var display = document.getElementById('calc-display');
@@ -1841,6 +1893,7 @@ function calcEqual() {
     _calcShowExpr = false;
     calcUpdateDisplay();
     document.getElementById('calc-display').textContent = '= ' + fmtNum(result);
+    triggerResultPulse();
   } catch(e) {}
 }
 
