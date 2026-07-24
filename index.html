@@ -812,7 +812,11 @@ var _calcShowExpr = true;
 var _calcSavedExpr = '';
 var _calcSavedResult = 0;
 var _calcSavedTokens = null;
-var _calcTheme = localStorage.getItem('calc_theme') || 'monochrome';
+var _calcTheme = localStorage.getItem('calc_theme');
+if (!_calcTheme || _calcTheme === 'amber') {
+  _calcTheme = 'monochrome';
+  localStorage.setItem('calc_theme', 'monochrome');
+}
 var _calcMode = localStorage.getItem('calc_mode') || 'basic';
 var _fastInput = true;
 var _fastLazy = localStorage.getItem('fast_lazy') === 'true';
