@@ -238,13 +238,15 @@ button:active, .calc-btn:active, .calc-key:active, .mode-heading-btn:active, .ex
 #modal-calculator.nav-bottom-mode .modal-container {
   display: flex !important;
   flex-direction: column !important;
+  padding-bottom: 0.85rem !important;
 }
 #modal-calculator.nav-bottom-mode .modal-header {
   order: 999 !important;
-  margin-top: 0.1rem !important;
+  margin-top: 0.35rem !important;
   border-top: 1px solid var(--border-color) !important;
   border-bottom: none !important;
-  padding-top: 0.25rem !important;
+  padding-top: 0.55rem !important;
+  padding-bottom: 0.15rem !important;
 }
 #modal-calculator.nav-bottom-mode #calc-history-btn {
   margin-bottom: 0 !important;
@@ -380,24 +382,26 @@ body {
   overflow: visible;
 }
 .modal-header {
-  display: flex; align-items: center;
+  display: flex; align-items: center; justify-content: space-between;
   padding: 0.6rem 0.8rem;
   border-bottom: 1px solid var(--border-color);
   gap:0.4rem;
   position:relative;
+  min-height: 42px;
+  box-sizing: border-box;
 }
 .modal-header h3 { flex:0 0 auto; font-size:1.1rem; }
-.mode-heading-btn { cursor:pointer; padding:2px 6px; border-radius:6px; font-size:0.92rem; font-weight:700; letter-spacing:0.02em; white-space:nowrap; transition:all 0.15s; background:transparent; color:var(--text-primary); }
+.mode-heading-btn { cursor:pointer; padding:2px 6px; border-radius:6px; font-size:0.92rem; font-weight:700; letter-spacing:0.02em; white-space:nowrap; transition:all 0.15s; background:transparent; color:var(--text-primary); display:inline-flex; align-items:center; line-height:1.2; }
 .mode-heading-btn:hover { background:var(--border-color); }
 .mode-heading-btn.active { background:transparent; color:var(--color-accent); font-size:1.15rem; }
-#calc-heading { display:flex; gap:0.25rem; align-items:center; flex:1; justify-content:center; text-align:center; flex-wrap:wrap; min-width:0; margin:0; }
+#calc-heading { display:flex; gap:0.25rem; align-items:center; flex:1; justify-content:center; text-align:center; flex-wrap:wrap; min-width:0; margin:0; line-height:1; }
 @media (max-width:900px) {
   .modal-overlay { padding:0.2rem; }
   #modal-calculator .modal-container { max-width:100% !important; width:100% !important; }
 }
 @media (max-width:420px) { .mode-heading-btn { font-size:0.92rem; } .mode-heading-btn.active { font-size:1.2rem; } }
-.modal-header-left { position:absolute; left:0.8rem; top:0; bottom:0; display:flex; align-items:center; }
-.modal-header-right { position:absolute; right:0.8rem; top:0; bottom:0; display:flex; align-items:center; gap:1rem; }
+.modal-header-left { position:absolute; left:0.8rem; top:0; bottom:0; display:flex; align-items:center; justify-content:center; }
+.modal-header-right { position:absolute; right:0.8rem; top:0; bottom:0; display:flex; align-items:center; justify-content:center; gap:0.6rem; }
 .modal-body { padding:0.1rem 0.8rem 0.8rem 0.8rem; min-height:440px; max-height:calc(100dvh - 60px); overflow-y:auto; scrollbar-width:none; -ms-overflow-style:none; }
 #modal-calculator.is-mode .modal-body { min-height:auto; padding-bottom:0.6rem; }
 .modal-body::-webkit-scrollbar { display:none; }
@@ -485,10 +489,11 @@ body {
 .del-entry-btn:hover { opacity: 1; }
 .label-flex { display:flex; align-items:center; gap:0.15rem; }
 .whatsapp-btn {
-  background:none; border:none; cursor:pointer; padding:3px; border-radius:4px;
-  display:inline-flex; align-items:center; justify-content:center;
+  background:none; border:none; cursor:pointer; padding:2px 3px; border-radius:4px;
+  display:inline-flex; align-items:center; justify-content:center; line-height:1; vertical-align:middle;
 }
-.whatsapp-btn:hover { background:var(--bg-tertiary); }
+.whatsapp-btn svg { display:block; vertical-align:middle; margin:0; }
+#exp-wa-btn-wrap, #wa-btn-wrap { display:inline-flex; align-items:center; justify-content:center; }
 .clear-history-btn {
   width:100%; margin-top:0.5rem; padding:0.6rem;
   background: transparent;
