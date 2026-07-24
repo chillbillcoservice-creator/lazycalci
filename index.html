@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>Modes</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#f38ba8">
@@ -14,6 +14,7 @@
 <meta name="apple-mobile-web-app-title" content="Modes">
 <link rel="apple-touch-icon" href="icon.svg">
 <style>
+html, body, .modal-container { touch-action: manipulation; }
 :root {
   --bg-primary: #1e1e2e;
   --bg-secondary: #181825;
@@ -24,51 +25,139 @@
   --border-color: rgba(205, 214, 244, 0.12);
   --radius-sm: 6px;
 }
-.theme-peach { --color-accent: #f38ba8; }
-.theme-blue { --color-accent: #89b4fa; }
-.theme-green { --color-accent: #a6e3a1; }
-.theme-purple { --color-accent: #cba6f7; }
+.theme-peach {
+  --color-accent: #f38ba8;
+  --bg-primary: #1e1e2e;
+  --bg-secondary: #181825;
+  --bg-tertiary: #11111b;
+  --text-primary: #cdd6f4;
+  --text-muted: #6c7086;
+  --border-color: rgba(205, 214, 244, 0.12);
+}
+.theme-skyblue {
+  --color-accent: #89b4fa;
+  --bg-primary: #1e1e2e;
+  --bg-secondary: #181825;
+  --bg-tertiary: #11111b;
+  --text-primary: #cdd6f4;
+  --text-muted: #6c7086;
+  --border-color: rgba(205, 214, 244, 0.12);
+}
+.theme-blue {
+  --color-accent: #60a5fa;
+  --bg-primary: #0d131f;
+  --bg-secondary: #0a0e17;
+  --bg-tertiary: #192233;
+  --text-primary: #ffffff;
+  --text-muted: #94a3b8;
+  --border-color: rgba(255, 255, 255, 0.15);
+}
+.theme-amber {
+  --color-accent: #fb923c;
+  --bg-primary: #17110d;
+  --bg-secondary: #100b08;
+  --bg-tertiary: #241a14;
+  --text-primary: #ffffff;
+  --text-muted: #fed7aa;
+  --border-color: rgba(255, 255, 255, 0.15);
+}
+.theme-silver {
+  --color-accent: #cbd5e1;
+  --bg-primary: #1b2028;
+  --bg-secondary: #14171d;
+  --bg-tertiary: #272f3a;
+  --text-primary: #ffffff;
+  --text-muted: #94a3b8;
+  --border-color: rgba(255, 255, 255, 0.15);
+}
+.theme-gold {
+  --color-accent: #facc15;
+  --bg-primary: #18150c;
+  --bg-secondary: #120f08;
+  --bg-tertiary: #252013;
+  --text-primary: #ffffff;
+  --text-muted: #fef08a;
+  --border-color: rgba(255, 255, 255, 0.15);
+}
 .theme-light {
   --color-accent: #e64553;
-  --bg-primary: #f5f5f5;
-  --bg-secondary: #ffffff;
-  --bg-tertiary: #eeeeee;
-  --text-primary: #222222;
-  --text-muted: #888888;
-  --border-color: rgba(0, 0, 0, 0.12);
-  --bg-display-start: #e8e8e8;
+  --bg-primary: #ffffff;
+  --bg-secondary: #f4f4f5;
+  --bg-tertiary: #e4e4e7;
+  --text-primary: #181825;
+  --text-muted: #5c5f77;
+  --border-color: rgba(0, 0, 0, 0.15);
+  --bg-display-start: #e4e4e7;
 }
+.theme-light input,
+.theme-light select,
+.theme-light textarea {
+  color: #181825 !important;
+  background: #f4f4f5 !important;
+}
+.theme-light input::placeholder {
+  color: #5c5f77 !important;
+}
+.theme-light .guide-card { background: rgba(0, 0, 0, 0.04); border-color: rgba(0, 0, 0, 0.15); }
+.theme-light .theme-circle.active { border-color: #181825; }
+.theme-light .modal-container { background: #ffffff; color: #181825; }
+.theme-light .modal-header h3 { color: #181825; }
+.theme-light .modal-header button { color: #181825 !important; }
+.theme-light #mode-close-btn { color: #181825 !important; }
 .settings-btn {
   background:none; border:none; cursor:pointer; padding:3px; border-radius:4px;
   font-size:1.1rem; display:flex; align-items:center;
 }
 .settings-btn:hover { background:var(--bg-tertiary); }
 #modal-settings { z-index: 1001; }
-#modal-onboarding { z-index: 1002; }
-#modal-guide { z-index: 1003; }
+#modal-onboarding { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.88) !important; backdrop-filter: blur(10px) !important; -webkit-backdrop-filter: blur(10px) !important; z-index: 1004; padding: 0.5rem !important; display: none; align-items: center; justify-content: center; }
+#modal-onboarding.active { display: flex !important; }
+#modal-onboarding .modal-container { width: 94vw !important; max-width: 440px !important; max-height: 90vh !important; border-radius: var(--radius-md, 14px) !important; border: 1px solid var(--border-color) !important; background: var(--bg-secondary) !important; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6) !important; padding: 1.1rem 1rem !important; box-sizing: border-box; overflow-y: auto !important; margin: auto !important; display: block !important; -ms-overflow-style: none !important; scrollbar-width: none !important; }
+#modal-onboarding .modal-container::-webkit-scrollbar { display: none !important; width: 0 !important; height: 0 !important; }
+#modal-guide { z-index: 1005; }
 .modal-sm { max-width:300px; }
+.modal-guide-box { width: 92vw; max-width: 450px; max-height: 85vh; display: flex; flex-direction: column; padding: 1.25rem; box-sizing: border-box; }
+.modal-guide-content { overflow-y: auto; -webkit-overflow-scrolling: touch; padding-right: 6px; flex: 1; }
+.modal-guide-content::-webkit-scrollbar { width: 6px; }
+.modal-guide-content::-webkit-scrollbar-thumb { background: var(--color-accent); border-radius: 4px; }
+.guide-card { background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-color); border-radius: var(--radius-md, 10px); padding: 0.65rem 0.85rem; margin-bottom: 0.65rem; transition: background 0.2s; }
+.guide-card summary { cursor: pointer; list-style: none; display: flex; align-items: center; justify-content: space-between; font-weight: 700; color: var(--color-accent); font-size: 0.88rem; letter-spacing: 0.5px; user-select: none; width: 100%; -webkit-appearance: none; appearance: none; }
+.guide-card summary::-webkit-details-marker,
+.guide-card summary::marker { display: none !important; width: 0 !important; height: 0 !important; content: "" !important; opacity: 0 !important; visibility: hidden !important; }
+.guide-card-icon { width: 22px; display: inline-block; text-align: center; flex-shrink: 0; }
+.guide-card-item { font-size: 0.82rem; line-height: 1.5; color: var(--text-primary); margin-bottom: 0.35rem; margin-top: 0.5rem; text-transform: uppercase; }
+.guide-card-item:last-child { margin-bottom: 0; }
 .theme-circle { width:36px; height:26px; border-radius:4px; cursor:pointer; border:2px solid transparent; transition:border-color .2s; flex-shrink:0; }
 .theme-circle.active { border-color:#fff; }
 .theme-circle:hover { opacity:0.8; }
-.toggle-row { display:flex; align-items:center; gap:0.5rem; margin-top:1rem; padding:0 0.5rem; }
-.toggle-label { font-size:0.85rem; color:#fff; }
+.toggle-row { display:flex; align-items:center; justify-content:space-between; margin-top:0.5rem; padding:0.65rem 0.8rem; width:100%; background:var(--bg-tertiary); border:1px solid var(--border-color); border-radius:var(--radius-sm); transition:all 0.15s; }
+.toggle-row:hover { border-color:var(--color-accent); }
+.toggle-label { font-size:0.88rem; font-weight:700; text-transform:uppercase; color: var(--text-primary); letter-spacing:0.3px; }
+.toggle-desc { font-size:0.78rem; color: var(--text-primary); opacity:0.85; display:block; margin-top:2px; line-height:1.35; }
 .toggle-switch { position:relative; display:inline-block; width:44px; height:24px; flex-shrink:0; }
 .toggle-switch input { opacity:0; width:0; height:0; }
 .toggle-slider { position:absolute; cursor:pointer; inset:0; background:#555; border-radius:24px; transition:.3s; }
 .toggle-slider::before { content:''; position:absolute; height:18px; width:18px; left:3px; bottom:3px; background:#fff; border-radius:50%; transition:.3s; }
 .toggle-switch input:checked + .toggle-slider { background:var(--color-accent); }
 .toggle-switch input:checked + .toggle-slider::before { transform:translateX(20px); }
-.calc-mode-body { margin-top:0.75rem; }
+.calc-mode-body { margin-top:0rem; }
 .calc-mode-body .field-row { display:flex; align-items:center; gap:0.5rem; margin-bottom:0.5rem; flex-wrap:wrap; }
-.calc-mode-body .field-label { font-size:0.95rem; color:#fff; min-width:100px; }
+.calc-mode-body .field-label { font-size:0.95rem; color:var(--text-primary); min-width:auto; }
 .calc-mode-body input { padding:0.7rem 0.6rem; border:1px solid var(--border-color); border-radius:var(--radius-sm); background:var(--bg-primary); color:var(--text-primary); font-size:1.05rem; width:140px; }
 .calc-mode-body select { padding:0.7rem 0.6rem; border:1px solid var(--border-color); border-radius:var(--radius-sm); background:var(--bg-primary); color:var(--text-primary); font-size:1rem; }
+.modes-dropdown-wrap { position: relative; display: inline-block; }
+.modes-menu-popup { display: none; position: absolute; top: 100%; right: 0; margin-top: 6px; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: var(--radius-sm); box-shadow: 0 6px 20px rgba(0,0,0,0.6); z-index: 1050; min-width: 210px; max-height: calc(100dvh - 100px); overflow-y: auto; }
+.modes-menu-popup.active { display: block; }
+.modes-menu-item { padding: 0.75rem 1.1rem; font-size: 0.95rem; font-weight: 600; color: var(--text-primary); cursor: pointer; border-bottom: 1px solid var(--border-color); transition: background 0.15s, color 0.15s; text-align: left; display: flex; align-items: center; min-height: 44px; touch-action: manipulation; }
+.modes-menu-item:last-child { border-bottom: none; }
+.modes-menu-item:hover { background: var(--color-accent); color: #fff; }
 .calc-mode-body .result-label { font-size:0.9rem; font-weight:600; color:var(--text-primary); padding:0.3rem 0; }
 .calc-mode-body .result-value { font-size:1.1rem; font-weight:700; color:var(--color-accent); }
 .calc-mode-body input[type="date"] { color-scheme:dark; }
+.theme-light .calc-mode-body input[type="date"] { color-scheme:light; }
 /* splitter */
 .sp-people { display:flex; flex-direction:column; gap:0.45rem; margin-bottom:0.8rem; }
-.sp-person { display:flex; align-items:center; gap:0.5rem; background:var(--bg-tertiary); border-radius:var(--radius-sm); padding:0.7rem 0.65rem; font-size:1rem; color:#fff; }
+.sp-person { display:flex; align-items:center; gap:0.5rem; background:var(--bg-tertiary); border-radius:var(--radius-sm); padding:0.7rem 0.65rem; font-size:1rem; color:var(--text-primary); }
 .sp-person .av { width:26px; height:26px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.8rem; font-weight:700; color:#fff; flex-shrink:0; }
 .sp-person .rm { cursor:pointer; font-size:0.9rem; color:var(--text-muted); }
 .sp-person .rm:hover { color:var(--color-accent); }
@@ -77,34 +166,34 @@
 .sp-add-row input { flex:1; min-width:0; padding:0.7rem 0.6rem; border:1px solid var(--border-color); border-radius:var(--radius-sm); background:var(--bg-primary); color:var(--text-primary); font-size:1rem; }
 .sp-add-row .sp-add-tel { width:90px; flex:none; }
 .sp-add-row button { padding:0.7rem 1rem; border:1px solid var(--color-accent); border-radius:var(--radius-sm); background:var(--color-accent); color:#fff; cursor:pointer; font-size:1rem; font-weight:600; }
-.sp-tel { font-size:0.75rem; color:#fff; display:block; }
+.sp-tel { font-size:0.75rem; color:var(--text-muted); display:block; }
 .exp-row { display:flex; gap:0.4rem; margin-bottom:0.6rem; }
 .exp-row input { flex:1; min-width:0; padding:0.7rem 0.6rem; border:1px solid var(--border-color); border-radius:var(--radius-sm); background:var(--bg-primary); color:var(--text-primary); font-size:1rem; }
 .exp-row .exp-amt { width:110px; flex:none; }
 .exp-row button { padding:0.7rem 1rem; border:1px solid var(--color-accent); border-radius:var(--radius-sm); background:var(--color-accent); color:#fff; cursor:pointer; font-size:1rem; font-weight:600; }
 .exp-item { display:flex; align-items:center; gap:0.4rem; padding:0.5rem 0.6rem; background:var(--bg-primary); border-radius:var(--radius-sm); margin-bottom:0.35rem; }
-.exp-item .exp-desc { flex:1; font-size:0.9rem; color:#fff; }
+.exp-item .exp-desc { flex:1; font-size:0.9rem; color:var(--text-primary); }
 .exp-item .exp-amt-val { font-weight:400; color:var(--color-accent); white-space:nowrap; min-width:70px; text-align:right; }
-.exp-item .exp-date { font-size:0.7rem; color:#fff; min-width:55px; }
+.exp-item .exp-date { font-size:0.7rem; color:var(--text-muted); min-width:55px; }
 .exp-item .rm-exp { cursor:pointer; color:var(--text-muted); font-size:0.85rem; padding:2px 4px; }
 .exp-item .rm-exp:hover { color:var(--color-accent); }
-.exp-total { font-size:1rem; font-weight:700; color:#fff; text-align:center; padding:0.6rem; background:var(--bg-tertiary); border-radius:var(--radius-sm); margin-top:0.5rem; }
+.exp-total { font-size:1rem; font-weight:700; color:var(--text-primary); text-align:center; padding:0.6rem; background:var(--bg-tertiary); border-radius:var(--radius-sm); margin-top:0.5rem; }
 details summary::-webkit-details-marker { display:none; }
 details summary::marker { display:none; content:''; }
 details summary:before { content:'▶'; font-size:0.65rem; color:var(--text-muted); transition:transform 0.15s; margin-right:0.3rem; }
 details[open] summary:before { content:'▼'; }
-.exp-summary { cursor:pointer; font-size:1rem; font-weight:600; color:#fff; padding:0.5rem 0.6rem; display:flex; align-items:center; gap:0.4rem; list-style:none; background:var(--bg-tertiary); border-radius:var(--radius-sm); margin-bottom:0.35rem; }
+.exp-summary { cursor:pointer; font-size:1rem; font-weight:600; color:var(--text-primary); padding:0.5rem 0.6rem; display:flex; align-items:center; gap:0.4rem; list-style:none; background:var(--bg-tertiary); border-radius:var(--radius-sm); margin-bottom:0.35rem; }
 .exp-summary:hover { background:var(--bg-primary); }
 .sp-wa-btn { display:inline-flex; cursor:pointer; font-size:0.9rem; margin-left:4px; padding:2px 5px; border-radius:3px; background:var(--bg-primary); vertical-align:middle; }
 .date-preset { font-size:0.75rem; padding:0.3rem 0.5rem; border-radius:6px; border:1px solid var(--border-color); cursor:pointer; color:var(--text-muted); background:transparent; font-weight:600; }
-.date-preset:hover { color:#fff; border-color:var(--color-accent); }
+.date-preset:hover { color:var(--text-primary); border-color:var(--color-accent); }
 .sp-org-badge { font-size:0.55rem; color:#f1c40f; border:1px solid #f1c40f; border-radius:3px; padding:1px 4px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; display:inline-block; }
 .sp-wa-btn:hover { background:var(--color-accent); }
-.sp-section-title { font-size:0.85rem; font-weight:600; color:#fff; padding:0.45rem 0.6rem; border-radius:var(--radius-sm); background:var(--bg-tertiary); margin-bottom:0.5rem; letter-spacing:0.03em; text-transform:uppercase; }
+.sp-section-title { font-size:0.85rem; font-weight:600; color:var(--text-primary); padding:0.45rem 0.6rem; border-radius:var(--radius-sm); background:var(--bg-tertiary); margin-bottom:0.5rem; letter-spacing:0.03em; text-transform:uppercase; }
 .sp-trip { display:flex; align-items:center; gap:0.5rem; padding:0.7rem; background:var(--bg-tertiary); border-radius:var(--radius-sm); margin-bottom:0.7rem; flex-wrap:wrap; }
-.sp-trip input { background:transparent; border:none; color:#fff; font-size:1.1rem; font-weight:600; flex:1; min-width:100px; outline:none; padding:0; }
+.sp-trip input { background:transparent; border:none; color:var(--text-primary); font-size:1.1rem; font-weight:600; flex:1; min-width:100px; outline:none; padding:0; }
 .sp-trip input::placeholder { color:var(--text-muted); font-weight:400; }
-.sp-trip-date { font-size:0.85rem; color:#fff; white-space:nowrap; }
+.sp-trip-date { font-size:0.85rem; color:var(--text-muted); white-space:nowrap; }
 .sp-expense { background:var(--bg-tertiary); border-radius:var(--radius-sm); padding:0.55rem 0.7rem; margin-bottom:0.55rem; }
 .sp-expense-top { display:flex; align-items:flex-start; gap:0.3rem; margin-bottom:0.25rem; }
 .sp-expense-desc { flex:1; min-width:0; }
@@ -114,14 +203,15 @@ details[open] summary:before { content:'▼'; }
 .sp-chip { font-size:0.75rem; padding:0.2rem 0.45rem; border-radius:10px; border:1px solid var(--border-color); cursor:pointer; color:var(--text-muted); background:transparent; touch-action:manipulation; }
 .sp-action-row { display:flex; gap:0.5rem; margin-bottom:0.3rem; }
 .sp-btn-primary { flex:1; padding:0.6rem; border:1px solid var(--color-accent); border-radius:var(--radius-sm); background:transparent; color:var(--color-accent); cursor:pointer; font-size:0.9rem; font-weight:600; touch-action:manipulation; transition:all 0.15s; }
-.sp-btn-secondary { flex:1; padding:0.6rem; border:1px solid var(--border-color); border-radius:var(--radius-sm); background:var(--bg-tertiary); color:#fff; cursor:pointer; font-size:0.9rem; font-weight:600; touch-action:manipulation; transition:all 0.15s; }
+.sp-btn-secondary { flex:1; padding:0.6rem; border:1px solid var(--border-color); border-radius:var(--radius-sm); background:var(--bg-tertiary); color:var(--text-primary); cursor:pointer; font-size:0.9rem; font-weight:600; touch-action:manipulation; transition:all 0.15s; }
 .sp-btn-primary:hover { background:var(--color-accent); color:#fff; transform:translateY(-1px); box-shadow:0 2px 8px rgba(0,0,0,0.2); }
 .sp-btn-secondary:hover { background:var(--bg-secondary); border-color:var(--color-accent); transform:translateY(-1px); }
 .sp-buddy-form { display:flex; gap:0.4rem; margin-top:0.4rem; flex-wrap:wrap; }
 .sp-buddy-form input { flex:1; min-width:120px; padding:0.55rem; border:1px solid var(--border-color); border-radius:var(--radius-sm); background:var(--bg-primary); color:var(--text-primary); font-size:0.9rem; }
 .sp-buddy-form input:focus { outline:none; border-color:var(--color-accent); }
-.exp-shortcuts { display:flex; gap:0.1rem; padding:0.2rem 0 0.5rem 0; flex-wrap:nowrap; overflow-x:auto; }
-.exp-shortcuts span { font-size:0.72rem; padding:0.35rem 0.6rem; border-radius:4px; border:1px solid var(--border-color); cursor:pointer; color:var(--text-primary); background:var(--bg-tertiary); touch-action:manipulation; transition:all 0.15s; white-space:nowrap; }
+.exp-shortcuts { display:flex; gap:0.25rem; padding:0.35rem 0 0.5rem 0; flex-wrap:nowrap; overflow-x:auto; scrollbar-width:none; -ms-overflow-style:none; }
+.exp-shortcuts::-webkit-scrollbar { display:none; }
+.exp-shortcuts span { flex:1; font-size:0.8rem; font-weight:600; padding:0.45rem 0.3rem; border-radius:6px; border:1px solid var(--border-color); cursor:pointer; color:var(--text-primary); background:var(--bg-tertiary); touch-action:manipulation; transition:all 0.15s; white-space:nowrap; display:inline-flex; align-items:center; justify-content:center; text-align:center; }
 .exp-shortcuts span:hover { background:var(--color-accent); color:#fff; border-color:var(--color-accent); transform:translateY(-1px); }
 .exp-btn-add { padding:0.55rem 1rem; border:1px solid var(--color-accent); border-radius:var(--radius-sm); background:var(--color-accent); color:#fff; cursor:pointer; font-size:0.9rem; font-weight:600; touch-action:manipulation; transition:all 0.15s; }
 .exp-btn-add:hover { transform:translateY(-1px); box-shadow:0 2px 8px rgba(0,0,0,0.2); }
@@ -135,19 +225,21 @@ details[open] summary:before { content:'▼'; }
 .sp-you-badge { font-size:0.6rem; color:var(--color-accent); border:1px solid var(--color-accent); border-radius:3px; padding:0 4px; margin-left:0.3rem; white-space:nowrap; }
 .sp-custom-amt { width:48px; padding:0.2rem 0.25rem; font-size:0.75rem; border:1px solid var(--border-color); border-radius:3px; background:var(--bg-primary); color:var(--text-primary); }
 .sp-result { background:var(--bg-tertiary); border-radius:var(--radius-sm); padding:0.6rem; margin-top:0.5rem; }
-.sp-result-line { font-size:0.85rem; color:#fff; padding:0.2rem 0; }
+.sp-result-line { font-size:0.85rem; color:var(--text-primary); padding:0.2rem 0; }
 .sp-result-owed { font-size:0.85rem; color:var(--color-accent); padding:0.15rem 0; }
 .sp-split-badge { font-size:0.6rem; color:var(--color-accent); padding:2px 5px; border-radius:3px; border:1px solid var(--color-accent); margin-left:auto; }
 .mode-results { display:flex; gap:0.5rem; margin-bottom:1rem; }
 .mode-results .mr-item { background:var(--bg-tertiary); border-radius:var(--radius-sm); padding:0.6rem 0.5rem; text-align:center; flex:1; min-width:0; }
 .mode-results .mr-label { display:block; font-size:0.65rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; }
-.mode-results .mr-value { display:block; font-size:1.2rem; font-weight:700; color:#fff; margin-top:2px;word-break:break-all; }
+.mode-results .mr-value { display:block; font-size:1.2rem; font-weight:700; color:var(--text-primary); margin-top:2px;word-break:break-all; }
 * { margin:0; padding:0; box-sizing:border-box; }
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   background: var(--bg-primary);
   color: var(--text-primary);
   min-height: 100vh;
+  min-height: 100dvh;
+  min-height: -webkit-fill-available;
   display: flex; align-items: center; justify-content: center;
   user-select: none; -webkit-user-select: none;
 }
@@ -169,14 +261,23 @@ body {
 #modal-add-expense .field-row input:focus { border-color:var(--color-accent); }
 #modal-add-expense .aep-title { font-weight:600; font-size:1.05rem; margin-bottom:0.2rem; color:#fff; }
 #modal-add-expense .sp-chip { font-size:0.95rem; padding:0.3rem 0.55rem; }
-.aep-sc { font-size:0.85rem; padding:0.2rem 0.45rem; border-radius:6px; border:1px solid var(--border-color); cursor:pointer; color:var(--text-muted); background:transparent; white-space:nowrap; }
+.aep-sc { font-size:0.88rem; font-weight:600; padding:0.5rem 0.85rem; border-radius:6px; border:1px solid var(--border-color); cursor:pointer; color:var(--text-muted); background:transparent; white-space:nowrap; }
 .aep-sc:hover { color:#fff; border-color:var(--color-accent); }
 .aep-sc.on { color:#fff; border-color:var(--color-accent); background:var(--color-accent); }
 .modal-container {
   background: var(--bg-secondary);
   border-radius: 10px;
   width: 100%;
+  max-width: 440px;
   overflow: hidden;
+}
+#modal-calculator .modal-container {
+  min-height: 520px;
+  overflow: visible;
+}
+#modal-calculator.is-mode .modal-container {
+  min-height: auto;
+  overflow: visible;
 }
 .modal-header {
   display: flex; align-items: center;
@@ -186,22 +287,30 @@ body {
   position:relative;
 }
 .modal-header h3 { flex:0 0 auto; font-size:1.1rem; }
-.mode-heading-btn { cursor:pointer; padding:2px 6px; border-radius:6px; font-size:0.92rem; font-weight:700; letter-spacing:0.02em; white-space:nowrap; transition:all 0.15s; background:transparent; color:#fff; }
+.mode-heading-btn { cursor:pointer; padding:2px 6px; border-radius:6px; font-size:0.92rem; font-weight:700; letter-spacing:0.02em; white-space:nowrap; transition:all 0.15s; background:transparent; color:var(--text-primary); }
 .mode-heading-btn:hover { background:var(--border-color); }
 .mode-heading-btn.active { background:transparent; color:var(--color-accent); font-size:1.15rem; }
 #calc-heading { display:flex; gap:0.25rem; align-items:center; flex:1; justify-content:center; text-align:center; flex-wrap:wrap; min-width:0; margin:0; }
+@media (max-width:900px) {
+  .modal-overlay { padding:0.2rem; }
+  #modal-calculator .modal-container { max-width:100% !important; width:100% !important; }
+}
 @media (max-width:420px) { .mode-heading-btn { font-size:0.92rem; } .mode-heading-btn.active { font-size:1.2rem; } }
-.modal-header-left { position:absolute; left:0.8rem; flex:0 0 auto; display:flex; align-items:center; }
-.modal-header-right { position:absolute; right:0.8rem; flex:0 0 auto; display:flex; align-items:center; gap:1rem; }
-.modal-body { padding:1rem; max-height:calc(100vh - 90px); overflow-y:auto; }
+.modal-header-left { position:absolute; left:0.8rem; top:0; bottom:0; display:flex; align-items:center; }
+.modal-header-right { position:absolute; right:0.8rem; top:0; bottom:0; display:flex; align-items:center; gap:1rem; }
+.modal-body { padding:0.1rem 0.8rem 0.8rem 0.8rem; min-height:440px; max-height:calc(100dvh - 60px); overflow-y:auto; scrollbar-width:none; -ms-overflow-style:none; }
+#modal-calculator.is-mode .modal-body { min-height:auto; padding-bottom:0.6rem; }
+.modal-body::-webkit-scrollbar { display:none; }
 .modal-body.sp-mode { height:calc(100vh - 50px); max-height:calc(100vh - 50px); padding:1.2rem; }
 .modal-body.sp-mode .calc-mode-body { margin-top:0; }
+.calc-mode-body { padding-top:0.75rem; }
 #calc-expression {
   background: var(--bg-tertiary);
   border-radius: var(--radius-sm);
   text-align: right;
   font-size: 1.7rem;
   min-height: 3.2rem;
+  margin-top: 0.55rem;
   overflow-x: auto;
   scrollbar-width: none;
   -ms-overflow-style: none;
@@ -224,7 +333,8 @@ body {
   font-weight: 700;
   min-height: 3.6rem;
   text-align: right;
-  padding: 0.6rem 0.85rem;
+  padding: 0.6rem 1.2rem 0.6rem 0.85rem;
+  box-sizing: border-box;
   overflow-x: auto;
   white-space: nowrap;
   scrollbar-width: none;
@@ -299,95 +409,207 @@ body {
 <div class="modal-overlay" id="modal-settings" onclick="closeSettingsModal(event)">
   <div class="modal-container modal-sm" onclick="event.stopPropagation()">
     <div class="modal-header">
-      <div style="flex:1"></div>
+      <div style="flex:1;text-align:left;display:flex;align-items:center;">
+        <button onclick="closeSettingsModal()" style="background:none;border:none;font-size:1.35rem;cursor:pointer;padding:0 2px;" title="Back">⬅️</button>
+      </div>
       <h3>⚙️ Settings</h3>
-      <div style="flex:1;text-align:right">
-        <button onclick="closeSettingsModal()" style="background:none;border:none;color:#fff;font-size:1.2rem;cursor:pointer;padding:2px 6px;border-radius:4px;">✕</button>
+      <div style="flex:1;text-align:right;display:flex;align-items:center;justify-content:flex-end;">
+        <button onclick="closeSettingsModal()" style="background:none;border:none;font-size:1.35rem;cursor:pointer;padding:0 2px;" title="Close">✖️</button>
       </div>
     </div>
     <div class="modal-body" style="padding-bottom:1.5rem">
-      <div style="text-align:center;margin:0.75rem 0 0.5rem 0;font-size:0.85rem;color:var(--text-muted)">Themes</div>
-      <div style="display:flex;gap:0.75rem;justify-content:center">
-        <div class="theme-circle" data-theme="light" style="background:#f0f0f0;border-color:#ccc" onclick="setTheme('light')" title="Light"></div>
-        <div class="theme-circle" data-theme="peach" style="background:#f38ba8" onclick="setTheme('peach')" title="Peach"></div>
-        <div class="theme-circle" data-theme="blue" style="background:#89b4fa" onclick="setTheme('blue')" title="Blue"></div>
-        <div class="theme-circle" data-theme="green" style="background:#a6e3a1" onclick="setTheme('green')" title="Green"></div>
-        <div class="theme-circle" data-theme="purple" style="background:#cba6f7" onclick="setTheme('purple')" title="Purple"></div>
+      <div style="text-align:center;margin:0.25rem 0 0.4rem 0;font-size:0.85rem;color:var(--text-muted)">Themes</div>
+      <div style="display:flex;gap:0.45rem;justify-content:center;flex-wrap:wrap;margin-bottom:0.85rem;">
+        <div class="theme-circle" data-theme="light" style="background:#ffffff;border:2px solid #ccc" onclick="setTheme('light')" title="Light (White)"></div>
+        <div class="theme-circle" data-theme="peach" style="background:#1e1e2e;border:2px solid #f38ba8" onclick="setTheme('peach')" title="Dark Peach"></div>
+        <div class="theme-circle" data-theme="skyblue" style="background:#181825;border:2px solid #89b4fa" onclick="setTheme('skyblue')" title="Dark Sky Blue"></div>
+        <div class="theme-circle" data-theme="blue" style="background:#0d131f;border:2px solid #60a5fa" onclick="setTheme('blue')" title="Subtle Ocean Blue"></div>
+        <div class="theme-circle" data-theme="amber" style="background:#17110d;border:2px solid #fb923c" onclick="setTheme('amber')" title="Subtle Sunset Amber"></div>
+        <div class="theme-circle" data-theme="silver" style="background:#1b2028;border:2px solid #cbd5e1" onclick="setTheme('silver')" title="Metallic Silver"></div>
+        <div class="theme-circle" data-theme="gold" style="background:#18150c;border:2px solid #facc15" onclick="setTheme('gold')" title="Subtle Cyber Gold"></div>
       </div>
       <div class="toggle-row">
-        <span class="toggle-label">Soft Press</span>
-        <label class="toggle-switch">
-          <input type="checkbox" id="fast-input-toggle" onchange="toggleFastInput(this.checked)">
-          <span class="toggle-slider"></span>
-        </label>
-      </div>
-      <div class="toggle-row">
-        <span class="toggle-label">Record Expenses</span>
+        <div>
+          <span class="toggle-label">💸 RECORD EXPENSES</span>
+          <span class="toggle-desc">Auto-saves labeled calculations to 💸 EXPENSES log</span>
+        </div>
         <label class="toggle-switch">
           <input type="checkbox" id="record-expenses-toggle" onchange="toggleRecordExpenses(this.checked)">
           <span class="toggle-slider"></span>
         </label>
       </div>
       <div class="toggle-row">
-        <span class="toggle-label">Lazy Mode Fast</span>
+        <div>
+          <span class="toggle-label">🔒 LAZY MODE</span>
+          <span class="toggle-desc">Locks operator for fast repetitive calculations (long-press + - × ÷ to activate)</span>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" id="sticky-mode-toggle" onchange="toggleStickySetting(this.checked)">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+      <div class="toggle-row">
+        <div>
+          <span class="toggle-label">⚡ LAZY MODE FAST</span>
+          <span class="toggle-desc">Instant totals on operator press (best for 2-3 terms like 25+26+27; disable for long expressions)</span>
+        </div>
         <label class="toggle-switch">
           <input type="checkbox" id="fast-lazy-toggle" onchange="toggleFastLazy(this.checked)">
           <span class="toggle-slider"></span>
         </label>
       </div>
       <div class="toggle-row">
-        <span class="toggle-label">Amount in Words</span>
+        <div>
+          <span class="toggle-label">🔤 K MODE (THOUSANDS)</span>
+          <span class="toggle-desc">Formats numbers in thousands (1k + 2k = 3k)</span>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" id="k-mode-toggle" onchange="toggleKMode(this.checked)">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+      <div class="toggle-row">
+        <div>
+          <span class="toggle-label">💬 AMOUNT IN WORDS</span>
+          <span class="toggle-desc">Translates output totals into written words</span>
+        </div>
         <label class="toggle-switch">
           <input type="checkbox" id="show-words-toggle" onchange="toggleShowWords(this.checked)">
           <span class="toggle-slider"></span>
         </label>
       </div>
       <div class="toggle-row">
-        <span class="toggle-label">K Mode (Thousands)</span>
+        <div>
+          <span class="toggle-label">📲 SYSTEM SHARE ICON</span>
+          <span class="toggle-desc">Toggle between WhatsApp & System Share Sheet</span>
+        </div>
         <label class="toggle-switch">
-          <input type="checkbox" id="k-mode-toggle" onchange="toggleKMode(this.checked)">
+          <input type="checkbox" id="share-mode-toggle" onchange="toggleShareMode(this.checked)">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+      <div class="toggle-row">
+        <div>
+          <span class="toggle-label">🧾 BILL MODE (PRINT)</span>
+          <span class="toggle-desc">Constant label input bar + POS receipt printing</span>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" id="bill-mode-toggle" onchange="toggleBillMode(this.checked)">
           <span class="toggle-slider"></span>
         </label>
       </div>
       <div style="border-top:1px solid var(--border-color);margin:1rem 0 0.5rem 0"></div>
-      <button onclick="openGuideModal()" style="display:block;width:100%;padding:0.6rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-tertiary);color:#fff;font-size:0.85rem;cursor:pointer;font-weight:600;text-align:center;text-transform:uppercase;margin-bottom:0.4rem">How to use</button>
+      <button onclick="openGuideModal()" style="display:block;width:100%;padding:0.6rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-tertiary);color:var(--text-primary);font-size:0.85rem;cursor:pointer;font-weight:600;text-align:center;text-transform:uppercase;margin-bottom:0.4rem">How to use</button>
     </div>
   </div>
 </div>
 
 <div class="modal-overlay" id="modal-guide" onclick="closeGuideModal(event)">
-  <div class="modal-container modal-sm" onclick="event.stopPropagation()" style="padding:1.5rem;text-align:center">
-    <div style="font-size:0.95rem;font-weight:600;margin-bottom:0.8rem;text-transform:uppercase;color:#fff">How to use</div>
-    <div style="font-size:0.8rem;line-height:1.8;color:#fff;text-align:left">
-      • <b>🧮 CALCULATOR</b> — numbers aur operators se calculate karo<br>
-      • <b>🔒 STICKY OP</b> — operator ko long-press karo, baar baar same op use karo. Long-press phir se → exit<br>
-      • <b>🗓️ DATE CALC</b> — heading pe tap karo, date diff nikaalo<br>
-      • <b>👥 SPLITTER</b> — heading pe tap karo, bill split karo<br>
-      • <b>⚙️ SETTINGS</b> — theme badlo aur Soft Press band karo<br>
-      • <b>🏷️ LABEL</b> — kisi digit pe tap karo, usme label add karo<br>
-      • <b>💸 EXPENSES</b> — amount label karo, phir labeled digit pe dubara tap karo to record ho jayega. Settings mein on/off karo<br>
-      • <b>📜 HISTORY</b> — purane calculations dekho aur reuse karo<br>
-      • <b>📤 SHARE</b> — WhatsApp pe result bhejo
+  <div class="modal-container modal-guide-box" onclick="event.stopPropagation()">
+    <div style="font-size:1.1rem;font-weight:700;margin-bottom:0.8rem;text-transform:uppercase;color:var(--color-accent);text-align:center;">✨ What Makes Lazy Calc Different?</div>
+    <div class="modal-guide-content">
+
+      <div class="guide-card">
+        <div onclick="toggleGuideCard(this)" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;padding:0.15rem 0;">
+          <div style="display:flex;align-items:center;gap:0.45rem;text-align:left;"><span class="guide-card-icon">🔄</span> <span style="font-weight:700;color:var(--color-accent);font-size:0.88rem;letter-spacing:0.5px;">THE SMART USERFLOW</span></div>
+          <span class="guide-arrow" style="font-size:0.75rem;color:var(--text-muted);transition:transform 0.2s ease;">▼</span>
+        </div>
+        <div class="guide-card-body" style="display:none;margin-top:0.6rem;padding-top:0.5rem;border-top:1px solid rgba(255,255,255,0.08);">
+          <div class="guide-card-item">🧮 <b>1. CALCULATE & LABEL:</b> TAP NUMBERS IN EXPRESSION TO ADD LABELS <code>56 (FOOD) + 632 (PETROL)</code>.</div>
+          <div class="guide-card-item">💸 <b>2. LOG OR PRINT:</b> TAP LABEL <code>(FOOD)</code> TO SAVE DIRECTLY TO EXPENSES, OR USE 🧾 BILL MODE TO PRINT RECEIPTS.</div>
+          <div class="guide-card-item">📲 <b>3. SHARE BREAKDOWN:</b> TAP TOP SHARE ICON TO SEND FORMATTED SUMMARIES VIA 💬 WHATSAPP OR SYSTEM SHARE.</div>
+        </div>
+      </div>
+
+      <div class="guide-card">
+        <div onclick="toggleGuideCard(this)" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;padding:0.15rem 0;">
+          <div style="display:flex;align-items:center;gap:0.45rem;text-align:left;"><span class="guide-card-icon">👥</span> <span style="font-weight:700;color:var(--color-accent);font-size:0.88rem;letter-spacing:0.5px;">TRIP SPLITTER (LIVE SYNC)</span></div>
+          <span class="guide-arrow" style="font-size:0.75rem;color:var(--text-muted);transition:transform 0.2s ease;">▼</span>
+        </div>
+        <div class="guide-card-body" style="display:none;margin-top:0.6rem;padding-top:0.5rem;border-top:1px solid rgba(255,255,255,0.08);">
+          <div class="guide-card-item">☁️ <b>LIVE GROUP SYNC:</b> CREATE TRIPS, INVITE FRIENDS & SYNC SHARED EXPENSES IN REAL-TIME ACROSS DEVICES.</div>
+          <div class="guide-card-item">⚖️ <b>SMART SETTLEMENT MATRIX:</b> AUTO-CALCULATES EXACT "WHO OWES WHOM" BALANCES WITH MINIMUM TRANSACTIONS.</div>
+          <div class="guide-card-item">📲 <b>1-TAP WHATSAPP LINKS:</b> SEND PRE-FILLED WHATSAPP PAYMENT REMINDERS & TRIP JOIN LINKS DIRECTLY TO MEMBERS.</div>
+        </div>
+      </div>
+
+      <div class="guide-card">
+        <div onclick="toggleGuideCard(this)" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;padding:0.15rem 0;">
+          <div style="display:flex;align-items:center;gap:0.45rem;text-align:left;"><span class="guide-card-icon">💸</span> <span style="font-weight:700;color:var(--color-accent);font-size:0.88rem;letter-spacing:0.5px;">EXPENSES & BILLING</span></div>
+          <span class="guide-arrow" style="font-size:0.75rem;color:var(--text-muted);transition:transform 0.2s ease;">▼</span>
+        </div>
+        <div class="guide-card-body" style="display:none;margin-top:0.6rem;padding-top:0.5rem;border-top:1px solid rgba(255,255,255,0.08);">
+          <div class="guide-card-item">📊 <b>FLEXIBLE DATE LOG:</b> LOG EXPENSES FOR ANY DATE WITH FULL EDIT FLEXIBILITY (DATE, LABEL, AMOUNT).</div>
+          <div class="guide-card-item">🧾 <b>BILL MODE & POS RECEIPTS:</b> REAL-TIME ITEMIZED BILLING WITH 🖨️ POS THERMAL RECEIPT PRINTER SUPPORT.</div>
+        </div>
+      </div>
+
+      <div class="guide-card">
+        <div onclick="toggleGuideCard(this)" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;padding:0.15rem 0;">
+          <div style="display:flex;align-items:center;gap:0.45rem;text-align:left;"><span class="guide-card-icon">⚙️</span> <span style="font-weight:700;color:var(--color-accent);font-size:0.88rem;letter-spacing:0.5px;">POWER TOOLS</span></div>
+          <span class="guide-arrow" style="font-size:0.75rem;color:var(--text-muted);transition:transform 0.2s ease;">▼</span>
+        </div>
+        <div class="guide-card-body" style="display:none;margin-top:0.6rem;padding-top:0.5rem;border-top:1px solid rgba(255,255,255,0.08);">
+          <div class="guide-card-item">🔒 <b>LAZY MODE:</b> LOCKS OPERATOR FOR FAST REPETITIVE CALCULATIONS (LONG-PRESS <code>+ - × ÷</code> TO ACTIVATE).</div>
+          <div class="guide-card-item">💬 <b>AMOUNT IN WORDS:</b> TRANSLATES TOTALS TO WORDS (<i>SIX LAKH, TWENTY FIVE THOUSAND</i>).</div>
+          <div class="guide-card-item">🔤 <b>K MODE (THOUSANDS):</b> FORMATS NUMBERS IN THOUSANDS (<code>1K + 2K = 3K</code>).</div>
+        </div>
+      </div>
+
+      <div class="guide-card">
+        <div onclick="toggleGuideCard(this)" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;padding:0.15rem 0;">
+          <div style="display:flex;align-items:center;gap:0.45rem;text-align:left;"><span class="guide-card-icon">🛠️</span> <span style="font-weight:700;color:var(--color-accent);font-size:0.88rem;letter-spacing:0.5px;">SPECIALIZED CALCULATORS</span></div>
+          <span class="guide-arrow" style="font-size:0.75rem;color:var(--text-muted);transition:transform 0.2s ease;">▼</span>
+        </div>
+        <div class="guide-card-body" style="display:none;margin-top:0.6rem;padding-top:0.5rem;border-top:1px solid rgba(255,255,255,0.08);">
+          <div class="guide-card-item">🪙 <b>GOLD CALCULATOR:</b> LIVE 24K GOLD RATES, 22K/18K PURITY, MAKING CHARGES & 3% GST.</div>
+          <div class="guide-card-item">⛽ <b>FUEL & TRIP:</b> DISTANCE, MILEAGE, FUEL RATE & PER-PERSON COST BREAKDOWN.</div>
+          <div class="guide-card-item">📈 <b>LOAN EMI:</b> MONTHLY EMI, TOTAL INTEREST PAYABLE & LOAN PAYMENT SCHEDULE.</div>
+          <div class="guide-card-item">💰 <b>GST TAX:</b> ADD OR REMOVE GST WITH CGST, SGST & BASE PRICE SPLIT.</div>
+          <div class="guide-card-item">📐 <b>SCIENTIFIC GRID:</b> TRIGONOMETRIC, LOGARITHMIC & EXPONENTIAL MATH FUNCTIONS.</div>
+          <div class="guide-card-item">📏 <b>UNIT CONVERTER:</b> LENGTH, AREA, MASS, VOLUME & TEMPERATURE CONVERSIONS.</div>
+          <div class="guide-card-item">📜 <b>CALCULATION HISTORY:</b> INSTANT ACCESS TO VIEW & RELOAD YOUR LAST 10 CALCULATION ENTRIES.</div>
+        </div>
+      </div>
+
     </div>
-    <button onclick="closeGuideModal()" style="margin-top:1rem;padding:0.6rem 2rem;border:none;border-radius:var(--radius-sm);background:var(--color-accent);color:#fff;font-size:1rem;cursor:pointer;font-weight:600">Got it! ✅</button>
+    <div style="padding-top:0.8rem;text-align:center;">
+      <button onclick="closeGuideModal()" style="width:100%;padding:0.75rem 2rem;border:none;border-radius:var(--radius-sm);background:var(--color-accent);color:#fff;font-size:1.05rem;cursor:pointer;font-weight:700;">Got it! ✅</button>
+    </div>
   </div>
 </div>
 
 <div class="modal-overlay" id="modal-onboarding" onclick="dismissOnboarding(event)">
-  <div class="modal-container modal-sm" onclick="event.stopPropagation()" style="padding:1.5rem;text-align:center">
-    <div style="font-size:2rem;margin-bottom:0.5rem">👋</div>
-    <div style="font-size:0.95rem;font-weight:600;margin-bottom:0.8rem;text-transform:uppercase">Welcome to Lazy Calc!</div>
-    <div style="font-size:0.8rem;line-height:1.8;color:#fff;text-align:left">
-      • <b>🧮 CALCULATOR</b> — numbers aur operators se calculate karo<br>
-      • <b>🔒 STICKY OP</b> — operator ko long-press karo, baar baar same op use karo. Long-press phir se → exit<br>
-      • <b>🗓️ DATE CALC</b> — heading pe tap karo, date diff nikaalo<br>
-      • <b>👥 SPLITTER</b> — heading pe tap karo, bill split karo<br>
-      • <b>⚙️ SETTINGS</b> — theme badlo aur Soft Press band karo<br>
-      • <b>🏷️ LABEL</b> — kisi digit pe tap karo, usme label add karo<br>
-      • <b>📜 HISTORY</b> — purane calculations dekho aur reuse karo<br>
-      • <b>📤 SHARE</b> — WhatsApp pe result bhejo
+  <div class="modal-container" onclick="event.stopPropagation()">
+    <div style="font-size:2rem;margin-bottom:0.2rem;text-align:center;">⚡</div>
+    <div style="font-size:1.2rem;font-weight:800;margin-bottom:0.25rem;text-transform:uppercase;color:var(--color-accent);text-align:center;letter-spacing:0.5px;">Welcome to Lazy Calc!</div>
+    <div style="font-size:0.85rem;color:var(--text-primary);opacity:0.85;text-align:center;margin-bottom:1rem;">The Smart, Easy Calculator & Expense Companion</div>
+
+    <div style="display:flex;flex-direction:column;gap:0.55rem;margin-bottom:1.2rem;">
+      <div class="guide-card" style="padding:0.65rem 0.8rem;margin:0;">
+        <div class="guide-card-title">💸 EXPENSE LOGGING & BILLING</div>
+        <div class="guide-card-item" style="font-size:0.82rem;margin:0;">Tap any calculation label to save directly to Expenses or print POS receipts.</div>
+      </div>
+      <div class="guide-card" style="padding:0.65rem 0.8rem;margin:0;">
+        <div class="guide-card-title">🔒 LAZY MODE & POWER TOOLS</div>
+        <div class="guide-card-item" style="font-size:0.82rem;margin:0;">Long-press operators to lock sticky mode, format totals in words & thousands.</div>
+      </div>
+      <div class="guide-card" style="padding:0.65rem 0.8rem;margin:0;">
+        <div class="guide-card-title">👥 TRIP SPLITTER & TOOLS</div>
+        <div class="guide-card-item" style="font-size:0.82rem;margin:0;">Real-time group trip expense sync, plus Gold, Fuel, Loan EMI & GST calculators.</div>
+      </div>
     </div>
-    <button onclick="dismissOnboarding()" style="margin-top:1rem;padding:0.6rem 2rem;border:none;border-radius:var(--radius-sm);background:var(--color-accent);color:#fff;font-size:1rem;cursor:pointer;font-weight:600">Got it! ✅</button>
+
+    <!-- PWA INSTALL BUTTON -->
+    <div id="pwa-install-container" style="margin-bottom:0.75rem;display:none;">
+      <button onclick="triggerPwaInstall()" style="width:100%;padding:0.65rem;border:1px solid var(--color-accent);border-radius:var(--radius-sm);background:var(--bg-tertiary);color:var(--color-accent);font-size:0.92rem;cursor:pointer;font-weight:700;display:flex;align-items:center;justify-content:center;gap:0.4rem;">📲 Install App Now</button>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:0.4rem;text-align:center;">
+      <button onclick="dismissOnboarding();openGuideModal();" style="width:100%;padding:0.65rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-tertiary);color:var(--text-primary);font-size:0.88rem;cursor:pointer;font-weight:700;">📖 How to Use</button>
+      <div style="font-size:0.75rem;color:var(--text-primary);opacity:0.75;margin-bottom:0.3rem;">(You can find it anytime in Settings)</div>
+      <button onclick="dismissOnboarding()" style="width:100%;padding:0.75rem;border:none;border-radius:var(--radius-sm);background:var(--color-accent);color:#fff;font-size:1.05rem;cursor:pointer;font-weight:800;">Got It! 🚀</button>
+    </div>
   </div>
 </div>
 
@@ -493,12 +715,24 @@ body {
   <div class="modal-container">
     <div class="modal-header">
       <div class="modal-header-left">
-        <button id="settings-btn" class="settings-btn" onclick="openSettingsModal()" title="Settings">⚙️</button>
+        <button id="settings-btn" class="settings-btn" onclick="openSettingsModal()" title="Settings">🛠️</button>
+        <button id="calc-back-btn" class="settings-btn" onclick="setCalcMode('basic')" title="Back to Calculator" style="display:none;font-size:1.35rem;cursor:pointer;padding:0 2px;">⬅️</button>
       </div>
       <div id="calc-heading">
         <span id="h-btn-expenses" class="mode-heading-btn" onclick="setCalcMode('expenses')">💸 EXPENSES</span>
         <span id="h-btn-date" class="mode-heading-btn" onclick="setCalcMode('date')">🗓️</span>
-        <span id="h-btn-splitter" class="mode-heading-btn" onclick="setCalcMode('splitter')">👥 SPLITTER</span>
+        <div id="modes-dropdown-wrap" class="modes-dropdown-wrap">
+          <span id="h-btn-modes" class="mode-heading-btn" onclick="toggleModesMenu(event)">⚙️ MODES ▼</span>
+          <div id="modes-menu" class="modes-menu-popup" onclick="event.stopPropagation()">
+            <div class="modes-menu-item" onclick="selectModeFromMenu('splitter')">👥 Splitter</div>
+            <div class="modes-menu-item" onclick="selectModeFromMenu('gold')">🪙 Gold & Jewellery</div>
+            <div class="modes-menu-item" onclick="selectModeFromMenu('fuel')">⛽ Fuel & Trip</div>
+            <div class="modes-menu-item" onclick="selectModeFromMenu('emi')">📈 Loan EMI</div>
+            <div class="modes-menu-item" onclick="selectModeFromMenu('gst')">💰 GST & Tax</div>
+            <div class="modes-menu-item" onclick="selectModeFromMenu('converter')">📏 Unit Converter</div>
+            <div class="modes-menu-item" onclick="selectModeFromMenu('scientific')">📐 Scientific</div>
+          </div>
+        </div>
       </div>
       <div class="modal-header-right">
         <span id="exp-wa-btn-wrap" style="display:none"><button class="whatsapp-btn" onclick="shareExpensesWA()" title="Share Expenses on WhatsApp">
@@ -506,12 +740,12 @@ body {
             <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
           </svg>
         </button></span>
-        <span id="wa-btn-wrap"><button class="whatsapp-btn" onclick="shareCalcExpression()" title="Share on WhatsApp">
+        <span id="wa-btn-wrap"><button class="whatsapp-btn" onclick="shareSpecializedMode()" title="Share Summary">
           <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="#25D366">
             <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
           </svg>
         </button></span>
-        <button id="mode-close-btn" onclick="setCalcMode('basic')" style="display:none;background:none;border:none;color:#fff;font-size:1.1rem;cursor:pointer;padding:2px 5px;border-radius:4px">✕</button>
+        <button id="mode-close-btn" onclick="setCalcMode('basic')" style="display:none;background:none;border:none;font-size:1.35rem;cursor:pointer;padding:0 2px;" title="Close">✖️</button>
       </div>
     </div>
     <div class="modal-body">
@@ -519,7 +753,7 @@ body {
       <div id="calc-label-editor"></div>
       <div class="calc-result-area">
         <div id="calc-display" onclick="toggleResultExpr()">0</div>
-        <div id="calc-display-words" style="display:none;font-size:0.75rem;color:var(--text-muted);text-align:right;margin-top:0.25rem;font-style:italic;"></div>
+        <div id="calc-display-words" style="min-height:1.25rem;line-height:1.25rem;font-size:0.80rem;color:var(--text-primary);text-align:right;margin-top:0.25rem;font-style:italic;font-weight:600;opacity:0.95;visibility:hidden;transition:opacity 0.15s ease;"></div>
       </div>
       <div id="calc-buttons"></div>
       <div id="calc-mode-body" class="calc-mode-body" style="display:none"></div>
@@ -530,6 +764,14 @@ body {
 </div>
 
 <script>
+document.addEventListener('visibilitychange', function() {
+  if (document.visibilityState === 'visible') {
+    window.dispatchEvent(new Event('resize'));
+  }
+});
+window.addEventListener('pageshow', function() {
+  window.dispatchEvent(new Event('resize'));
+});
 var calcTokens = [{v: '0', label: ''}];
 var _editingCalcToken = -1;
 var calcHistory = JSON.parse(localStorage.getItem('calc_history') || '[]');
@@ -540,11 +782,13 @@ var _calcSavedResult = 0;
 var _calcSavedTokens = null;
 var _calcTheme = localStorage.getItem('calc_theme') || 'peach';
 var _calcMode = localStorage.getItem('calc_mode') || 'basic';
-var _fastInput = localStorage.getItem('calc_fast_input') !== 'false';
+var _fastInput = true;
 var _fastLazy = localStorage.getItem('fast_lazy') === 'true';
 var _recordExpenses = localStorage.getItem('calc_record_expenses') !== 'false';
-var _showWords = localStorage.getItem('calc_show_words') === 'true';
+var _showWords = localStorage.getItem('calc_show_words') !== 'false';
 var _kMode = localStorage.getItem('calc_k_mode') === 'true';
+var _shareMode = localStorage.getItem('calc_share_mode') || 'whatsapp';
+var _billMode = localStorage.getItem('calc_bill_mode') === 'true';
 var _expensesNewCount = 0;
 var _exprFontSize = 1.7;
 var _exprResetTimer = null;
@@ -618,13 +862,13 @@ function numToWords(n) {
     return str;
   }
   function convertInteger(num) {
-    if (num === 0) return 'Zero ';
+    if (num === 0) return 'Zero';
     var res = '';
-    if (num >= 10000000) { res += convertChunk(Math.floor(num / 10000000)) + 'Crore '; num %= 10000000; }
-    if (num >= 100000) { res += convertChunk(Math.floor(num / 100000)) + 'Lakh '; num %= 100000; }
-    if (num >= 1000) { res += convertChunk(Math.floor(num / 1000)) + 'Thousand '; num %= 1000; }
+    if (num >= 10000000) { res += convertChunk(Math.floor(num / 10000000)).trim() + ' Crore, '; num %= 10000000; }
+    if (num >= 100000) { res += convertChunk(Math.floor(num / 100000)).trim() + ' Lakh, '; num %= 100000; }
+    if (num >= 1000) { res += convertChunk(Math.floor(num / 1000)).trim() + ' Thousand, '; num %= 1000; }
     if (num > 0) { res += convertChunk(num); }
-    return res;
+    return res.trim().replace(/,\s*$/, '');
   }
   var words = (isNeg ? 'Minus ' : '') + convertInteger(intPart).trim();
   if (decPart > 0) { words += ' Point ' + convertChunk(decPart).trim(); }
@@ -668,8 +912,19 @@ function openGuideModal() {
   document.getElementById('modal-guide').classList.add('active');
 }
 function closeGuideModal(e) {
-  if (e && e.target !== e.currentTarget) return;
-  document.getElementById('modal-guide').classList.remove('active');
+  if (!e || e.target.id === 'modal-guide') {
+    document.getElementById('modal-guide').classList.remove('active');
+  }
+}
+
+function toggleGuideCard(header) {
+  var card = header.parentElement;
+  var body = card.querySelector('.guide-card-body');
+  var arrow = card.querySelector('.guide-arrow');
+  if (!body) return;
+  var isOpen = (body.style.display !== 'none');
+  body.style.display = isOpen ? 'none' : 'block';
+  if (arrow) arrow.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
 }
 
 function setTheme(name) {
@@ -682,7 +937,6 @@ function setTheme(name) {
   var dot = document.querySelector('.theme-circle[data-theme="' + name + '"]');
   if (dot) dot.classList.add('active');
   document.querySelector('meta[name="theme-color"]').content = getComputedStyle(body).getPropertyValue('--color-accent').trim();
-  closeSettingsModal();
 }
 
 function toggleFastInput(v) {
@@ -707,6 +961,72 @@ function toggleKMode(v) {
   localStorage.setItem('calc_k_mode', v);
   calcUpdateDisplay();
 }
+function toggleShareMode(v) {
+  _shareMode = v ? 'system' : 'whatsapp';
+  localStorage.setItem('calc_share_mode', _shareMode);
+  updateShareIconUI();
+}
+function toggleBillMode(v) {
+  _billMode = v;
+  localStorage.setItem('calc_bill_mode', v);
+  calcUpdateDisplay();
+}
+function updateShareIconUI() {
+  var expWrap = document.getElementById('exp-wa-btn-wrap');
+  var waWrap = document.getElementById('wa-btn-wrap');
+  var waSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>';
+  var sysSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>';
+  var iconSvg = _shareMode === 'system' ? sysSvg : waSvg;
+  var titleCalc = _shareMode === 'system' ? 'Share Calculation' : 'Share on WhatsApp';
+  var titleExp = _shareMode === 'system' ? 'Share Expenses' : 'Share Expenses on WhatsApp';
+  if (waWrap) waWrap.innerHTML = '<button class="whatsapp-btn" onclick="shareSpecializedMode()" title="' + titleCalc + '">' + iconSvg + '</button>';
+  if (expWrap) expWrap.innerHTML = '<button class="whatsapp-btn" onclick="shareExpensesWA()" title="' + titleExp + '">' + iconSvg + '</button>';
+}
+function doShare(text, title) {
+  if (!text) return;
+  var waUrl = 'https://api.whatsapp.com/send?text=' + encodeURIComponent(text);
+  function openWA() {
+    var win = window.open(waUrl, '_blank');
+    if (!win) window.location.href = waUrl;
+  }
+  if (_shareMode === 'system' && navigator.share) {
+    navigator.share({ title: title || 'Lazy Calc', text: text }).catch(function(err) {
+      if (err && err.name !== 'AbortError') { openWA(); }
+    });
+  } else if (_shareMode === 'system' && navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(function() {
+      showToast('📋 Copied to clipboard!');
+    }).catch(function() {
+      openWA();
+    });
+  } else {
+    openWA();
+  }
+}
+
+function toggleModesMenu(e) {
+  if (e) e.stopPropagation();
+  var menu = document.getElementById('modes-menu');
+  if (menu) {
+    menu.classList.toggle('active');
+  }
+}
+
+document.addEventListener('click', function(e) {
+  var menu = document.getElementById('modes-menu');
+  if (menu && menu.classList.contains('active')) {
+    var wrap = document.getElementById('modes-dropdown-wrap');
+    if (wrap && !wrap.contains(e.target)) {
+      menu.classList.remove('active');
+    }
+  }
+});
+
+function selectModeFromMenu(name) {
+  var menu = document.getElementById('modes-menu');
+  if (menu) menu.classList.remove('active');
+  setCalcMode(name);
+}
 
 function applyCalcMode(name) {
   var expr = document.getElementById('calc-expression');
@@ -719,11 +1039,29 @@ function applyCalcMode(name) {
   var waBtn = document.getElementById('wa-btn-wrap');
   var hDate = document.getElementById('h-btn-date');
   var hExpenses = document.getElementById('h-btn-expenses');
-  var hSplit = document.getElementById('h-btn-splitter');
+  var hModesBtn = document.getElementById('h-btn-modes');
   var modalBody = document.querySelector('.modal-body');
   var histBtn = document.getElementById('calc-history-btn');
   var histContainer = document.getElementById('calc-history');
   var expWaBtn = document.getElementById('exp-wa-btn-wrap');
+  var resArea = document.querySelector('.calc-result-area');
+
+  var modeLabels = {
+    basic: '🛠️ MODES ▼',
+    splitter: '👥 SPLITTER ▼',
+    gold: '🪙 GOLD ▼',
+    fuel: '⛽ FUEL ▼',
+    emi: '📈 EMI ▼',
+    gst: '💰 GST ▼',
+    converter: '📏 CONVERT ▼',
+    scientific: '📐 SCIENTIFIC ▼'
+  };
+
+  var modalCalc = document.getElementById('modal-calculator');
+  if (modalCalc) modalCalc.classList.toggle('is-mode', name !== 'basic');
+
+  var backBtn = document.getElementById('calc-back-btn');
+
   if (name === 'basic') {
     if (modalBody) modalBody.classList.remove('sp-mode');
     expr.style.display = '';
@@ -731,12 +1069,14 @@ function applyCalcMode(name) {
     buttons.style.display = '';
     modeBody.style.display = 'none';
     if (display) display.style.display = '';
+    if (resArea) resArea.style.display = '';
     if (settingsBtn) settingsBtn.style.display = '';
+    if (backBtn) backBtn.style.display = 'none';
     if (closeBtn) closeBtn.style.display = 'none';
     if (waBtn) waBtn.style.display = '';
     if (hDate) { hDate.classList.remove('active'); hDate.style.display = ''; hDate.textContent = '🗓️'; }
     if (hExpenses) { hExpenses.classList.remove('active'); hExpenses.style.display = ''; }
-    if (hSplit) { hSplit.classList.remove('active'); hSplit.style.display = ''; }
+    if (hModesBtn) { hModesBtn.classList.remove('active'); hModesBtn.style.display = ''; hModesBtn.textContent = '🛠️ MODES ▼'; }
     if (histBtn) histBtn.style.display = '';
     if (histContainer) histContainer.style.display = '';
     if (expWaBtn) expWaBtn.style.display = 'none';
@@ -746,18 +1086,33 @@ function applyCalcMode(name) {
     buttons.style.display = 'none';
     modeBody.style.display = 'block';
     if (display) display.style.display = 'none';
-    if (settingsBtn) settingsBtn.style.display = 'none';
+    if (resArea) resArea.style.display = 'none';
+    var isExpOrDate = (name === 'expenses' || name === 'date');
+    if (settingsBtn) settingsBtn.style.display = isExpOrDate ? 'none' : '';
+    if (backBtn) backBtn.style.display = isExpOrDate ? '' : 'none';
     if (closeBtn) closeBtn.style.display = '';
-    if (waBtn) waBtn.style.display = name === 'splitter' ? '' : 'none';
+    if (waBtn) waBtn.style.display = (name === 'date' || name === 'expenses') ? 'none' : '';
     if (hDate) { hDate.classList.toggle('active', name === 'date'); hDate.style.display = name === 'date' ? '' : 'none'; hDate.textContent = name === 'date' ? '🗓️ DATE CALCULATOR' : '🗓️'; }
-    if (hExpenses) { hExpenses.classList.toggle('active', name === 'expenses'); hExpenses.style.display = name === 'expenses' ? '' : 'none'; }
-    if (hSplit) { hSplit.classList.toggle('active', name === 'splitter'); hSplit.style.display = name === 'splitter' ? '' : 'none'; }
+    if (hExpenses) { hExpenses.classList.toggle('active', name === 'expenses'); hExpenses.style.display = name === 'expenses' ? '' : 'none'; hExpenses.textContent = '💸 EXPENSES'; }
+    if (hModesBtn) {
+      var isSpecialized = ['splitter','gold','fuel','emi','gst','converter','scientific'].indexOf(name) !== -1;
+      hModesBtn.classList.toggle('active', isSpecialized);
+      hModesBtn.style.display = (name === 'date' || name === 'expenses') ? 'none' : '';
+      hModesBtn.textContent = modeLabels[name] || '🛠️ MODES ▼';
+    }
     if (expWaBtn) expWaBtn.style.display = name === 'expenses' ? '' : 'none';
-    if (histBtn) histBtn.style.display = (name === 'expenses' || name === 'splitter') ? 'none' : '';
+    if (histBtn) histBtn.style.display = (name === 'expenses' || name === 'splitter' || name === 'date') ? 'none' : '';
     if (histContainer) histContainer.style.display = (name === 'expenses' || name === 'splitter') ? 'none' : '';
+
     if (name === 'date') { if (modalBody) modalBody.classList.remove('sp-mode'); renderDateMode(modeBody, display); }
     else if (name === 'expenses') { if (modalBody) modalBody.classList.add('sp-mode'); _expensesNewCount = 0; updateExpensesBadge(); renderExpensesMode(modeBody); }
     else if (name === 'splitter') { if (modalBody) modalBody.classList.add('sp-mode'); renderSplitterMode(modeBody); }
+    else if (name === 'gold') { if (modalBody) modalBody.classList.remove('sp-mode'); renderGoldMode(modeBody); }
+    else if (name === 'fuel') { if (modalBody) modalBody.classList.remove('sp-mode'); renderFuelMode(modeBody); }
+    else if (name === 'emi') { if (modalBody) modalBody.classList.remove('sp-mode'); renderEmiMode(modeBody); }
+    else if (name === 'gst') { if (modalBody) modalBody.classList.remove('sp-mode'); renderGstMode(modeBody); }
+    else if (name === 'converter') { if (modalBody) modalBody.classList.remove('sp-mode'); renderConverterMode(modeBody); }
+    else if (name === 'scientific') { if (modalBody) modalBody.classList.add('sp-mode'); renderScientificMode(modeBody); }
   }
 }
 
@@ -788,7 +1143,7 @@ function setCalcMode(name) {
     renderCalcHistory();
     return;
   }
-  if ((name === 'date' || name === 'expenses' || name === 'splitter') && _calcMode === name) { setCalcMode('basic'); return; }
+  if (['date','expenses','splitter','gold','fuel','emi','gst','converter','scientific'].indexOf(name) !== -1 && _calcMode === name) { setCalcMode('basic'); return; }
   if (_calcMode === name) return;
   _calcMode = name;
   localStorage.setItem('calc_mode', name);
@@ -826,7 +1181,7 @@ function openCalculator() {
 
 function renderCalcButtons() {
   var grid = document.getElementById('calc-buttons');
-  var buttons = ['±','C','%','×','7','8','9','÷','4','5','6','-','1','2','3','+','.','0','⌫','='];
+  var buttons = ['±','C','%','÷','7','8','9','×','4','5','6','-','1','2','3','+','.','0','⌫','='];
   var opIds = {'×':'mul','÷':'div','-':'minus','+':'plus'};
   grid.innerHTML = buttons.map(function(label) {
     var isEq = label === '=';
@@ -895,18 +1250,52 @@ function stickyOpLeave() {
   if (_stickyOpTimer) { clearTimeout(_stickyOpTimer); _stickyOpTimer = null; }
   _stickyOpPending = null;
 }
+function toggleStickySetting(checked) {
+  if (checked) {
+    if (!_stickyActive) activateStickyMode('+');
+    showToast('🔒 Lazy Mode Active');
+  } else {
+    if (_stickyActive) deactivateSticky();
+    showToast('Lazy Mode Disabled');
+  }
+}
 function activateStickyMode(op) {
   if (_stickyActive) deactivateSticky();
-  _stickyOp = op;
-  var cur = parseFloat(document.getElementById('calc-display').textContent.replace(/^=\s*/, ''));
-  _stickyResult = isFinite(cur) ? cur : 0;
-  _stickyLastExpr = fmtNum(_stickyResult) + ' ' + _stickyOp;
-  _stickyFullExpr = fmtNum(_stickyResult);
+  _stickyOp = op || '+';
+  var currentTotal = 0;
+  var formattedFullExpr = '';
+  if (calcTokens && calcTokens.length) {
+    try {
+      var exprStr = calcExprFromTokens();
+      var evaluated = evalExpr(exprStr);
+      if (isFinite(evaluated)) currentTotal = evaluated;
+    } catch(e) {}
+    var validTokens = calcTokens.filter(function(t) { return t && t.v !== undefined; });
+    if (validTokens.length > 1 || (validTokens.length === 1 && validTokens[0].v !== '0' && validTokens[0].v !== '')) {
+      formattedFullExpr = validTokens.map(function(t) {
+        if (['+','-','*','/','%'].indexOf(t.v) !== -1) return ' ' + (t.v === '*' ? '×' : t.v === '/' ? '÷' : t.v) + ' ';
+        var valFormatted = fmtTokenVal(t.v);
+        return t.label ? valFormatted + '(' + t.label + ')' : valFormatted;
+      }).join('');
+    }
+  }
+  if (!formattedFullExpr) {
+    var cur = parseFloat(document.getElementById('calc-display').textContent.replace(/^=\s*/, ''));
+    currentTotal = isFinite(cur) ? cur : 0;
+    formattedFullExpr = fmtNum(currentTotal);
+  }
+  _stickyResult = currentTotal;
+  _stickyFullExpr = formattedFullExpr;
+  _stickyLastExpr = _stickyFullExpr + ' ' + _stickyOp;
   _stickyInput = ''; _stickyActive = true;
+  var toggle = document.getElementById('sticky-mode-toggle');
+  if (toggle) toggle.checked = true;
   updateStickyOpHighlight(); updateStickyDisplay();
 }
 function deactivateSticky() {
   _stickyActive = false; _stickyOp = null; _stickyInput = ''; _stickyResult = 0; _stickyLastExpr = ''; _stickyFullExpr = '';
+  var toggle = document.getElementById('sticky-mode-toggle');
+  if (toggle) toggle.checked = false;
   var expr = document.getElementById('calc-expression');
   if (expr) { expr.style.display = ''; expr.style.justifyContent = ''; expr.style.alignItems = ''; }
   if (_stickyTimer) { clearTimeout(_stickyTimer); _stickyTimer = null; }
@@ -996,18 +1385,41 @@ function calcUpdateDisplay(skipEditor) {
   if (_stickyActive) return;
   var display = document.getElementById('calc-display');
   var expr = document.getElementById('calc-expression');
+  if (_exprResetTimer) { clearTimeout(_exprResetTimer); _exprResetTimer = null; }
 
   if (!_calcShowExpr) {
     try {
       var live = typeof _calcSavedResult !== 'undefined' && isFinite(_calcSavedResult) ? _calcSavedResult : evalExpr(calcExprFromTokens());
       if (isFinite(live)) {
         display.textContent = '= ' + fmtNum(live);
-        if (_showWords) {
-          expr.innerHTML = '';
+        if (_showWords || _kMode) {
+          var valForWords = _kMode ? live * 1000 : live;
+          var w = numToWords(valForWords);
+          if (w) {
+            if (w.length > 35) {
+              expr.style.whiteSpace = 'normal';
+              expr.style.wordBreak = 'break-word';
+              expr.style.overflowX = 'hidden';
+              expr.style.overflowY = 'hidden';
+              expr.style.textAlign = 'right';
+              expr.style.lineHeight = '1.25';
+              expr.style.fontSize = w.length > 65 ? '0.82rem' : '0.90rem';
+            } else {
+              expr.style.whiteSpace = 'nowrap';
+              expr.style.overflowX = 'auto';
+              expr.style.overflowY = 'hidden';
+              expr.style.textAlign = 'right';
+              expr.style.lineHeight = '2.2rem';
+              expr.style.fontSize = '1.05rem';
+            }
+            expr.style.color = 'var(--text-primary)';
+            expr.innerHTML = '<span onclick="toggleResultExpr()" style="cursor:pointer;font-style:italic;font-weight:600;display:inline-block;width:100%;">' + escHtml(w) + '</span>';
+          } else {
+            expr.innerHTML = '';
+          }
           updateOutputWords(live);
         } else {
-          var w = numToWords(live);
-          expr.innerHTML = w ? '<span onclick="toggleResultExpr()" style="cursor:pointer;font-size:0.85rem;color:var(--text-muted);font-style:italic;display:block;text-align:right;width:100%;">' + escHtml(w) + '</span>' : '';
+          expr.innerHTML = '';
           updateOutputWords(null);
         }
       } else {
@@ -1022,6 +1434,14 @@ function calcUpdateDisplay(skipEditor) {
     return;
   }
 
+  expr.style.whiteSpace = 'nowrap';
+  expr.style.overflowX = 'auto';
+  expr.style.overflowY = 'hidden';
+  expr.style.wordBreak = 'normal';
+  expr.style.textAlign = 'right';
+  expr.style.lineHeight = '';
+  expr.style.color = '';
+
   var str = calcExprFromTokens();
   var parts = [];
   calcTokens.forEach(function(t, i) {
@@ -1030,7 +1450,7 @@ function calcUpdateDisplay(skipEditor) {
       parts.push('<span>' + escHtml(displayV) + '</span>');
     } else {
       var formattedVal = fmtTokenVal(t.v);
-      if (_recordExpenses && t.label) {
+      if (_recordExpenses && !_billMode && t.label) {
         var recClick = t._recorded ? 'showToast(\'⏳ Already added to Expenses\')' : 'sendTokenToExpenses('+i+')';
         var recColor = t._recorded ? '#e74c3c' : 'var(--color-accent)';
         parts.push('<span onclick="editCalcTokenLabel('+i+')" style="cursor:pointer;font-weight:600;text-decoration:underline dotted var(--color-accent);">' + escHtml(formattedVal) + '</span> <span onclick="'+recClick+'" style="cursor:pointer;color:'+recColor+';font-size:0.75em;font-weight:600;">(' + escHtml(t.label) + ')</span>');
@@ -1048,10 +1468,9 @@ function calcUpdateDisplay(skipEditor) {
     _exprFontSize = Math.max(1.1, _exprFontSize * ratio);
     expr.style.fontSize = _exprFontSize + 'rem';
   }
-  if (_exprResetTimer) clearTimeout(_exprResetTimer);
   _exprResetTimer = setTimeout(function() {
     var e = document.getElementById('calc-expression');
-    if (e) { e.style.fontSize = '1.7rem'; _exprFontSize = 1.7; e.scrollLeft = e.scrollWidth; }
+    if (e && _calcShowExpr) { e.style.fontSize = '1.7rem'; _exprFontSize = 1.7; e.scrollLeft = e.scrollWidth; }
   }, 1500);
 
   try {
@@ -1077,15 +1496,127 @@ function updateOutputWords(num) {
     var w = numToWords(valForWords);
     if (w) {
       el.textContent = w;
-      el.style.display = 'block';
+      el.style.opacity = '1';
+      el.style.visibility = 'visible';
       return;
     }
   }
-  el.style.display = 'none';
+  el.style.opacity = '0';
+  el.style.visibility = 'hidden';
+}
+
+function updateBillTokenValue(val) {
+  var curIdx = _editingCalcToken !== -1 ? _editingCalcToken : calcTokens.length - 1;
+  while (curIdx >= 0 && ['+','-','*','/','%'].indexOf(calcTokens[curIdx].v) !== -1) {
+    curIdx--;
+  }
+  if (curIdx >= 0 && calcTokens[curIdx]) {
+    calcTokens[curIdx].v = val;
+    calcUpdateDisplay(true);
+  }
+}
+
+function updateBillTokenLabel(val) {
+  var curIdx = _editingCalcToken !== -1 ? _editingCalcToken : calcTokens.length - 1;
+  while (curIdx >= 0 && ['+','-','*','/','%'].indexOf(calcTokens[curIdx].v) !== -1) {
+    curIdx--;
+  }
+  if (curIdx >= 0 && calcTokens[curIdx]) {
+    calcTokens[curIdx].label = val;
+    calcUpdateDisplay(true);
+  }
+}
+
+function printBill() {
+  var str = calcExprFromTokens();
+  var result = _calcShowExpr ? evalExpr(str) : _calcSavedResult;
+  if (!isFinite(result) || calcTokens.length === 0) {
+    showToast('No items to print');
+    return;
+  }
+
+  var now = new Date();
+  var dateStr = now.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) + ', ' + now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+
+  var itemsHtml = '';
+  calcTokens.forEach(function(t, i) {
+    if (['+','-','*','/','%'].indexOf(t.v) !== -1) return;
+    var itemVal = fmtTokenVal(t.v);
+    var itemLabel = t.label ? escHtml(t.label) : 'Item #' + (i+1);
+    itemsHtml += '<tr><td style="text-align:left;padding:3px 0;">' + itemLabel + '</td><td style="text-align:right;padding:3px 0;">₹' + itemVal + '</td></tr>';
+  });
+
+  var totalFormatted = fmtNum(result);
+  var valForWords = _kMode ? result * 1000 : result;
+  var wordsStr = numToWords(valForWords);
+
+  var receiptContent = '' +
+    '<!DOCTYPE html><html><head><title>Receipt - Lazy Calc</title>' +
+    '<style>' +
+    '@media print { @page { margin: 0; size: auto; } body { margin: 0.5cm; } }' +
+    'body { font-family: "Courier New", Courier, monospace; width: 280px; margin: 0 auto; padding: 10px; color: #000; background: #fff; font-size: 13px; line-height: 1.4; }' +
+    '.center { text-align: center; }' +
+    '.title { font-size: 16px; font-weight: bold; margin-bottom: 2px; text-transform: uppercase; }' +
+    '.subtitle { font-size: 11px; margin-bottom: 8px; color: #555; }' +
+    '.line { border-bottom: 1px dashed #000; margin: 6px 0; }' +
+    '.table { width: 100%; border-collapse: collapse; margin: 6px 0; }' +
+    '.total-row { font-size: 15px; font-weight: bold; margin-top: 6px; }' +
+    '.words-row { font-size: 11px; font-style: italic; margin-top: 4px; text-align: right; }' +
+    '.footer { font-size: 11px; margin-top: 12px; text-align: center; }' +
+    '</style></head><body>' +
+    '<div class="center title">LAZY CALC</div>' +
+    '<div class="center subtitle">BILL RECEIPT • ' + dateStr + '</div>' +
+    '<div class="line"></div>' +
+    '<table class="table"><thead><tr><th style="text-align:left;">ITEM</th><th style="text-align:right;">AMOUNT</th></tr></thead><tbody>' +
+    itemsHtml +
+    '</tbody></table>' +
+    '<div class="line"></div>' +
+    '<div style="display:flex;justify-content:space-between;" class="total-row"><span>TOTAL:</span><span>₹' + totalFormatted + '</span></div>' +
+    (wordsStr ? '<div class="words-row">' + escHtml(wordsStr) + '</div>' : '') +
+    '<div class="line"></div>' +
+    '<div class="footer">Thank You! Have a great day! 🙏</div>' +
+    '</body></html>';
+
+  var printFrame = document.getElementById('print-iframe');
+  if (!printFrame) {
+    printFrame = document.createElement('iframe');
+    printFrame.id = 'print-iframe';
+    printFrame.style.cssText = 'position:fixed;right:0;bottom:0;width:0;height:0;border:none;visibility:hidden;';
+    document.body.appendChild(printFrame);
+  }
+
+  var doc = printFrame.contentWindow || printFrame.contentDocument;
+  if (doc.document) doc = doc.document;
+  doc.open();
+  doc.write(receiptContent);
+  doc.close();
+
+  setTimeout(function() {
+    printFrame.contentWindow.focus();
+    printFrame.contentWindow.print();
+  }, 300);
 }
 
 function renderCalcLabelEditor() {
   var container = document.getElementById('calc-label-editor');
+  if (_billMode) {
+    var curIdx = _editingCalcToken !== -1 ? _editingCalcToken : calcTokens.length - 1;
+    while (curIdx >= 0 && ['+','-','*','/','%'].indexOf(calcTokens[curIdx].v) !== -1) {
+      curIdx--;
+    }
+    var currentVal = (curIdx >= 0 && calcTokens[curIdx]) ? calcTokens[curIdx].v : '';
+    var currentLabel = (curIdx >= 0 && calcTokens[curIdx]) ? calcTokens[curIdx].label : '';
+    
+    var html = '<div style="display:flex;align-items:center;gap:0.45rem;padding:0.1rem 0;width:100%;">';
+    html += '<input id="calc-bill-val-input" type="text" inputmode="decimal" placeholder="Amount" value="' + escHtml(currentVal) + '" oninput="updateBillTokenValue(this.value)" onkeydown="if(event.key===\'Enter\'||event.keyCode===13){this.blur();}" style="width:68px;padding:0.55rem 0.4rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-primary);color:var(--text-primary);font-size:1rem;font-weight:600;text-align:center;">';
+    html += '<input id="calc-bill-label-input" type="text" placeholder="Label (optional)" value="' + escHtml(currentLabel) + '" oninput="updateBillTokenLabel(this.value)" onkeydown="if(event.key===\'Enter\'||event.keyCode===13){this.blur();}" style="flex:1;min-width:0;padding:0.55rem 0.6rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-primary);color:var(--text-primary);font-size:1rem;">';
+    html += '<button onclick="printBill()" title="Print Bill / Receipt" style="padding:0.55rem 0.85rem;border:1px solid var(--color-accent);border-radius:var(--radius-sm);background:var(--color-accent);color:#fff;cursor:pointer;font-size:1rem;font-weight:600;display:flex;align-items:center;gap:4px;white-space:nowrap;touch-action:manipulation;">🖨️ Print</button>';
+    html += '</div>';
+    
+    container.innerHTML = html;
+    return;
+  }
+
   if (_editingCalcToken === -1) {
     container.innerHTML = '<div style="font-size:0.75rem;color:var(--text-muted);padding:0.3rem 0">' + (_recordExpenses ? 'Tap a digit above to edit amount or label, tap label to record in Expenses' : 'Tap a digit above to edit amount or label') + '</div>';
     return;
@@ -1101,11 +1632,11 @@ function renderCalcLabelEditor() {
     '<button onclick="saveCalcTokenLabel()" style="padding:0.4rem 0.7rem;border:1px solid var(--color-accent);border-radius:var(--radius-sm);background:var(--color-accent);color:#fff;cursor:pointer;font-size:0.95rem;font-weight:600;">OK</button>' +
     '<button onclick="cancelCalcTokenLabel()" style="padding:0.4rem 0.7rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-tertiary);color:#fff;cursor:pointer;font-size:0.95rem;">✕</button></div>';
   setTimeout(function() {
-    var valInp = document.getElementById('calc-val-input');
-    if (valInp) {
-      valInp.focus();
-      var len = valInp.value.length;
-      try { valInp.setSelectionRange(len, len); } catch(e) {}
+    var labelInp = document.getElementById('calc-label-input') || document.getElementById('calc-bill-label-input');
+    if (labelInp) {
+      labelInp.focus();
+      var len = labelInp.value.length;
+      try { labelInp.setSelectionRange(len, len); } catch(e) {}
     }
   }, 0);
 }
@@ -1264,7 +1795,7 @@ function calcEqual() {
 
     var hasOp = calcTokens.some(function(t){return ['+','-','*','/','%'].indexOf(t.v)!==-1;});
     if (hasOp) {
-      calcHistory.unshift({ expression: displayStr, result: result, date: new Date().toLocaleString() });
+      calcHistory.unshift({ mode: 'basic', expression: displayStr, result: result, date: new Date().toLocaleString() });
       localStorage.setItem('calc_history', JSON.stringify(calcHistory));
       renderCalcHistory();
     }
@@ -1371,90 +1902,229 @@ function fmtDateInput(isoStr) {
   var d = new Date(isoStr);
   return String(d.getDate()).padStart(2,'0')+' '+_months[d.getMonth()]+' '+d.getFullYear();
 }
-function updateDateDisplay(inputId, displayId) {
-  var input = document.getElementById(inputId);
-  var display = document.getElementById(displayId);
-  if (input && display) {
-    var d = new Date(input.value);
-    if (!isNaN(d.getTime())) display.textContent = fmtDateInput(input.value);
-  }
-}
+var _calViewDate = new Date();
+var _calSelectedDate = new Date();
+
 function renderDateMode(container, display) {
-  var todayISO = new Date().toISOString().split('T')[0];
-  var _td = new Date();
-  var todayDate = String(_td.getDate()).padStart(2,'0')+'-'+String(_td.getMonth()+1).padStart(2,'0')+'-'+_td.getFullYear();
+  _calViewDate = new Date();
+  _calSelectedDate = new Date();
+  
+  var html =
+    '<div style="padding:0.2rem 0.1rem;box-sizing:border-box;">' +
+      '<div style="font-weight:700;font-size:1.05rem;margin-bottom:0.75rem;color:var(--color-accent);display:flex;align-items:center;justify-content:space-between;">' +
+        '<span>🗓️ Interactive Date Calculator</span>' +
+        '<button onclick="calGoToday()" style="padding:0.3rem 0.65rem;font-size:0.8rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">🎯 Today</button>' +
+      '</div>' +
 
-  var sep = '<div style="border-top:2px solid var(--border-color);margin:0.7rem 0"></div>';
-  var dr = '<div style="position:relative;flex:1;min-width:0;height:100%">';
+      /* OPEN VISUAL CALENDAR BOX */
+      '<div style="background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:var(--radius-sm);padding:0.75rem;margin-bottom:0.85rem;">' +
+        '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.6rem;">' +
+          '<button onclick="calPrevMonth()" style="padding:0.35rem 0.65rem;font-size:0.9rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">◀</button>' +
+          '<span id="cal-month-year" style="font-size:1rem;font-weight:700;color:var(--text-primary);letter-spacing:0.5px;"></span>' +
+          '<button onclick="calNextMonth()" style="padding:0.35rem 0.65rem;font-size:0.9rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">▶</button>' +
+        '</div>' +
+        '<div class="cal-grid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;">' +
+          '<div style="font-size:0.8rem;font-weight:700;color:var(--text-primary);padding:4px 0;">Sun</div>' +
+          '<div style="font-size:0.8rem;font-weight:700;color:var(--text-primary);padding:4px 0;">Mon</div>' +
+          '<div style="font-size:0.8rem;font-weight:700;color:var(--text-primary);padding:4px 0;">Tue</div>' +
+          '<div style="font-size:0.8rem;font-weight:700;color:var(--text-primary);padding:4px 0;">Wed</div>' +
+          '<div style="font-size:0.8rem;font-weight:700;color:var(--text-primary);padding:4px 0;">Thu</div>' +
+          '<div style="font-size:0.8rem;font-weight:700;color:var(--text-primary);padding:4px 0;">Fri</div>' +
+          '<div style="font-size:0.8rem;font-weight:700;color:var(--text-primary);padding:4px 0;">Sat</div>' +
+        '</div>' +
+        '<div id="cal-days-grid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:4px;"></div>' +
+      '</div>' +
 
-  var sDate = '<span id="d-start-display" style="display:flex;align-items:center;gap:0.3rem;padding:0.4rem 0.5rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);font-size:0.9rem;color:var(--text-primary);background:var(--bg-secondary)"><span style="opacity:0.5;font-size:1rem">📅</span>' + fmtDateInput(todayISO) + '</span>';
-  var sInput = '<input id="d-start" type="date" value="' + todayISO + '" style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;cursor:pointer" onchange="updateDateDisplay(\'d-start\',\'d-start-display\');calcDateDiff()">';
-  var sPicker = dr + sDate + sInput + '</div>';
+      /* RESULT CARD */
+      '<div id="date-result-card" style="padding:0.9rem;background:var(--bg-tertiary);border-radius:var(--radius-sm);border-left:4px solid var(--color-accent);margin-bottom:0.85rem;display:flex;flex-direction:column;gap:0.45rem;">' +
+        '<div style="display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border-color);padding-bottom:0.45rem;gap:0.5rem;">' +
+          '<span style="font-size:0.85rem;font-weight:700;color:var(--text-primary);opacity:0.85;letter-spacing:0.5px;flex-shrink:0;">FROM</span>' +
+          '<span id="cal-from-text" style="color:var(--color-accent);font-weight:700;font-size:0.92rem;text-align:right;"></span>' +
+        '</div>' +
+        '<div style="display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border-color);padding-bottom:0.45rem;gap:0.5rem;">' +
+          '<span style="font-size:0.85rem;font-weight:700;color:var(--text-primary);opacity:0.85;letter-spacing:0.5px;flex-shrink:0;">TO</span>' +
+          '<span id="cal-to-text" style="color:var(--color-accent);font-weight:700;font-size:0.92rem;text-align:right;"></span>' +
+        '</div>' +
+        '<div style="display:flex;align-items:center;justify-content:space-between;padding-top:0.1rem;gap:0.5rem;">' +
+          '<span style="font-size:0.9rem;font-weight:700;color:var(--text-primary);opacity:0.85;flex-shrink:0;">Difference</span>' +
+          '<span id="cal-diff-text" style="font-size:1.15rem;font-weight:800;color:var(--color-accent);text-align:right;">0 days</span>' +
+        '</div>' +
+        '<div style="display:flex;align-items:center;justify-content:space-between;font-size:0.82rem;color:var(--text-muted);gap:0.5rem;">' +
+          '<span style="flex-shrink:0;">Breakdown</span>' +
+          '<span id="cal-breakdown-text" style="font-weight:600;color:var(--text-primary);text-align:right;">0y 0m 0d</span>' +
+        '</div>' +
+      '</div>' +
 
-  var eDate = '<span id="d-end-display" style="display:flex;align-items:center;gap:0.3rem;padding:0.4rem 0.5rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);font-size:0.9rem;color:var(--text-primary);background:var(--bg-secondary)"><span style="opacity:0.5;font-size:1rem">📅</span>' + fmtDateInput(todayISO) + '</span>';
-  var eInput = '<input id="d-end" type="date" value="' + todayISO + '" style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;cursor:pointer" onchange="updateDateDisplay(\'d-end\',\'d-end-display\');calcDateDiff()">';
-  var ePicker = dr + eDate + eInput + '</div>';
+      /* PRESET BUTTONS */
+      '<div style="display:flex;gap:6px;margin-bottom:0.85rem;flex-wrap:wrap;">' +
+        '<button class="date-preset" onclick="setDatePreset(\'1w\')" style="padding:0.4rem 0.75rem;font-size:0.85rem;font-weight:600;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">+1W</button>' +
+        '<button class="date-preset" onclick="setDatePreset(\'2w\')" style="padding:0.4rem 0.75rem;font-size:0.85rem;font-weight:600;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">+2W</button>' +
+        '<button class="date-preset" onclick="setDatePreset(\'1m\')" style="padding:0.4rem 0.75rem;font-size:0.85rem;font-weight:600;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">+1M</button>' +
+        '<button class="date-preset" onclick="setDatePreset(\'3m\')" style="padding:0.4rem 0.75rem;font-size:0.85rem;font-weight:600;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">+3M</button>' +
+        '<button class="date-preset" onclick="setDatePreset(\'6m\')" style="padding:0.4rem 0.75rem;font-size:0.85rem;font-weight:600;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">+6M</button>' +
+      '</div>' +
 
-  container.innerHTML =
-    '<div class="mode-results"><div class="mr-item"><span class="mr-label">DIFF</span><span class="mr-value" id="d-diff">0 days</span></div><div class="mr-item"><span class="mr-label">DETAILS</span><span class="mr-value" id="d-detail" style="font-size:0.85rem">0y 0m 0d</span></div></div>' +
-    sep +
-    '<div class="field-row" style="display:flex;gap:0.5rem;margin-bottom:0.7rem;flex-wrap:wrap"><div style="flex:1;min-width:120px"><span class="field-label" style="font-size:0.8rem;color:var(--text-muted);min-width:34px;margin-bottom:0.15rem;display:block">From</span>' + sPicker + '</div><div style="flex:1;min-width:120px"><span class="field-label" style="font-size:0.8rem;color:var(--text-muted);min-width:34px;margin-bottom:0.15rem;display:block">To</span>' + ePicker + '</div></div>' +
-    sep +
-    '<div style="display:flex;align-items:center;gap:0.5rem"><span class="field-label" style="min-width:38px;flex-shrink:0">Add</span><input id="d-add" type="number" inputmode="numeric" value="" style="width:60px;flex-shrink:0;min-width:0;font-size:1rem;padding:0.5rem 0.4rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:transparent;color:var(--text-primary)" oninput="calcDateAdd()"><span style="white-space:nowrap;color:var(--text-primary);font-size:0.95rem;flex-shrink:0">days to</span><div style="display:flex;align-items:center;border:1px solid var(--border-color);border-radius:var(--radius-sm);overflow:hidden;flex:1 1 160px;min-width:130px"><span style="font-size:0.9rem;color:#fff;padding:0.5rem 0 0.5rem 0.5rem;flex-shrink:0">Today</span><span style="font-size:0.9rem;font-weight:700;color:#fff;padding:0.5rem 0.5rem 0.5rem 0.25rem;min-width:0">' + todayDate + '</span></div></div><div style="background:var(--bg-tertiary);border-radius:var(--radius-sm);padding:0.7rem 0.8rem;margin-top:0.5rem;min-height:2.5rem;text-align:center"><span class="result-value" id="d-add-result" style="font-size:1.2rem"></span></div>' +
-    sep +
-    '<div style="margin:0.5rem 0"></div>' +
-    '<div style="display:flex;gap:0.3rem;flex-wrap:wrap;margin:0.5rem 0"><button class="date-preset" onclick="setDatePreset(\'1w\')">1W</button><button class="date-preset" onclick="setDatePreset(\'2w\')">2W</button><button class="date-preset" onclick="setDatePreset(\'1m\')">1M</button><button class="date-preset" onclick="setDatePreset(\'3m\')">3M</button><button class="date-preset" onclick="setDatePreset(\'6m\')">6M</button><button class="date-preset" onclick="setDatePreset(\'1y\')">1Y</button></div>' +
-    sep;
+      '<div style="border-top:1px solid var(--border-color);margin:0.75rem 0"></div>' +
 
-  display.textContent = '';
-  calcDateDiff(); calcDateAdd();
+      /* ADD DAYS STEPPER */
+      '<div style="display:flex;align-items:center;justify-content:center;gap:0.35rem;margin-bottom:0.4rem;flex-wrap:nowrap;max-width:100%;box-sizing:border-box;">' +
+        '<span style="font-size:0.92rem;font-weight:600;color:var(--text-primary);flex-shrink:0;">Add</span>' +
+        '<button onclick="stepCalDays(-1)" style="padding:0.3rem 0.6rem;font-size:0.9rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">-</button>' +
+        '<input id="d-add" type="number" inputmode="numeric" placeholder="Days" value="2" style="width:55px;height:34px;padding:0 0.3rem;text-align:center;font-size:0.95rem;font-weight:600;border-radius:var(--radius-sm);border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);outline:none;flex-shrink:0;" oninput="calcDateAdd()">' +
+        '<button onclick="stepCalDays(1)" style="padding:0.3rem 0.6rem;font-size:0.9rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">+</button>' +
+        '<span style="color:var(--text-primary);font-size:0.9rem;font-weight:600;white-space:nowrap;flex-shrink:0;">days to Today</span>' +
+      '</div>' +
+    '</div>';
+
+  container.innerHTML = html;
+  if (display) display.textContent = '';
+  updateVisualCalendar();
 }
-function calcDateDiff() {
-  var s = new Date(document.getElementById('d-start').value);
-  var e = new Date(document.getElementById('d-end').value);
-  var days = Math.floor(Math.abs(e-s)/(86400000));
-  document.getElementById('d-diff').textContent = days.toLocaleString() + ' days';
-  document.getElementById('d-detail').textContent = Math.floor(days/365) + 'y ' + Math.floor((days%365)/30) + 'm ' + (days%365)%30 + 'd';
-  var sv = document.getElementById('d-start').value, ev = document.getElementById('d-end').value;
-  if (sv && ev && sv !== ev) {
-    calcHistory.unshift({ mode:'date', expression:'🗓️ From '+sv+' \u2192 '+ev, result:days.toLocaleString()+' days ('+Math.floor(days/365)+'y '+Math.floor((days%365)/30)+'m '+(days%365)%30+'d)', date:new Date().toLocaleString() });
-    localStorage.setItem('calc_history', JSON.stringify(calcHistory));
-    renderCalcHistory();
+
+function updateVisualCalendar() {
+  var year = _calViewDate.getFullYear();
+  var month = _calViewDate.getMonth();
+  
+  var myEl = document.getElementById('cal-month-year');
+  if (myEl) myEl.textContent = _months[month] + ' ' + year;
+
+  var grid = document.getElementById('cal-days-grid');
+  if (!grid) return;
+
+  var firstDay = new Date(year, month, 1).getDay();
+  var totalDays = new Date(year, month + 1, 0).getDate();
+  var prevMonthDays = new Date(year, month, 0).getDate();
+
+  var today = new Date();
+  var isCurrentMonth = today.getFullYear() === year && today.getMonth() === month;
+  var todayDateNum = today.getDate();
+
+  var selYear = _calSelectedDate.getFullYear();
+  var selMonth = _calSelectedDate.getMonth();
+  var selDateNum = _calSelectedDate.getDate();
+
+  var html = '';
+
+  /* Previous Month Padding Days */
+  for (var p = firstDay - 1; p >= 0; p--) {
+    var dayNum = prevMonthDays - p;
+    html += '<div style="padding:0.45rem 0;font-size:0.85rem;color:var(--text-muted);opacity:0.35;text-align:center;">' + dayNum + '</div>';
+  }
+
+  /* Current Month Days */
+  for (var d = 1; d <= totalDays; d++) {
+    var isToday = isCurrentMonth && d === todayDateNum;
+    var isSel = selYear === year && selMonth === month && d === selDateNum;
+
+    var style = 'padding:0.45rem 0;font-size:0.9rem;font-weight:600;border-radius:var(--radius-sm);cursor:pointer;text-align:center;transition:all 0.15s;';
+    if (isSel) {
+      style += 'background:var(--color-accent);color:#fff;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,0.3);';
+    } else if (isToday) {
+      style += 'border:2px solid var(--color-accent);color:var(--color-accent);background:var(--bg-tertiary);font-weight:700;';
+    } else {
+      style += 'background:var(--bg-primary);border:1px solid var(--border-color);color:var(--text-primary);';
+    }
+
+    html += '<div onclick="selectCalDate(' + year + ',' + month + ',' + d + ')" style="' + style + '">' + d + '</div>';
+  }
+
+  grid.innerHTML = html;
+  updateCalResultDisplay();
+}
+
+function selectCalDate(y, m, d) {
+  _calSelectedDate = new Date(y, m, d);
+  updateVisualCalendar();
+}
+
+function updateCalResultDisplay() {
+  var now = new Date(); now.setHours(0,0,0,0);
+  var sel = new Date(_calSelectedDate); sel.setHours(0,0,0,0);
+
+  var diffTime = sel.getTime() - now.getTime();
+  var diffDays = Math.round(diffTime / (1000 * 3600 * 24));
+  var absDays = Math.abs(diffDays);
+
+  var fromEl = document.getElementById('cal-from-text');
+  var toEl = document.getElementById('cal-to-text');
+  var diffTextEl = document.getElementById('cal-diff-text');
+  var breakdownTextEl = document.getElementById('cal-breakdown-text');
+
+  var todayStr = formatDate(now).toUpperCase() + ' (TODAY)';
+
+  if (diffDays >= 0) {
+    if (fromEl) fromEl.textContent = todayStr;
+    if (toEl) toEl.textContent = formatDate(sel).toUpperCase() + (diffDays === 0 ? ' (TODAY)' : '');
+  } else {
+    if (fromEl) fromEl.textContent = formatDate(sel).toUpperCase();
+    if (toEl) toEl.textContent = todayStr;
+  }
+
+  if (diffTextEl) {
+    if (diffDays === 0) {
+      diffTextEl.textContent = '0 days (Today)';
+    } else {
+      diffTextEl.textContent = absDays.toLocaleString() + ' days';
+    }
+  }
+
+  if (breakdownTextEl) {
+    var y = Math.floor(absDays / 365);
+    var m = Math.floor((absDays % 365) / 30);
+    var d = (absDays % 365) % 30;
+    var w = Math.floor(absDays / 7);
+    breakdownTextEl.textContent = y + 'y ' + m + 'm ' + d + 'd' + (w > 0 ? ' (' + w + ' weeks)' : '');
   }
 }
+
+function calPrevMonth() {
+  _calViewDate.setMonth(_calViewDate.getMonth() - 1);
+  updateVisualCalendar();
+}
+
+function calNextMonth() {
+  _calViewDate.setMonth(_calViewDate.getMonth() + 1);
+  updateVisualCalendar();
+}
+
+function calGoToday() {
+  _calViewDate = new Date();
+  _calSelectedDate = new Date();
+  updateVisualCalendar();
+}
+
+function stepCalDays(delta) {
+  var inp = document.getElementById('d-add');
+  if (!inp) return;
+  var current = parseInt(inp.value) || 0;
+  var next = current + delta;
+  inp.value = next;
+  calcDateAdd();
+}
+
 function calcDateAdd() {
-  var start = new Date();
-  start.setHours(0,0,0,0);
-  var days = parseInt(document.getElementById('d-add').value) || 0;
-  if (days === 0) { document.getElementById('d-add-result').textContent = ''; return; }
-  var r = new Date(start);
-  r.setDate(r.getDate()+days);
-  var fmt = formatDate(r);
-  document.getElementById('d-add-result').textContent = fmt;
-  var todayISO = start.toISOString().split('T')[0];
-  calcHistory.unshift({ mode:'date', expression:'🗓️ '+todayISO+' + '+days+' days', result:fmt, date:new Date().toLocaleString() });
-  localStorage.setItem('calc_history', JSON.stringify(calcHistory));
-  renderCalcHistory();
+  var inp = document.getElementById('d-add');
+  if (!inp) return;
+  var days = parseInt(inp.value) || 0;
+  var target = new Date();
+  target.setDate(target.getDate() + days);
+  _calSelectedDate = target;
+  _calViewDate = new Date(target.getFullYear(), target.getMonth(), 1);
+  updateVisualCalendar();
 }
 
 function setDatePreset(period) {
-  var start = document.getElementById('d-start');
-  var end = document.getElementById('d-end');
-  var now = new Date();
-  end.value = now.toISOString().split('T')[0];
-  var d = new Date(now);
+  var target = new Date();
   switch(period) {
-    case '1w': d.setDate(d.getDate() - 7); break;
-    case '2w': d.setDate(d.getDate() - 14); break;
-    case '1m': d.setMonth(d.getMonth() - 1); break;
-    case '3m': d.setMonth(d.getMonth() - 3); break;
-    case '6m': d.setMonth(d.getMonth() - 6); break;
-    case '1y': d.setFullYear(d.getFullYear() - 1); break;
+    case '1w': target.setDate(target.getDate() + 7); break;
+    case '2w': target.setDate(target.getDate() + 14); break;
+    case '1m': target.setMonth(target.getMonth() + 1); break;
+    case '3m': target.setMonth(target.getMonth() + 3); break;
+    case '6m': target.setMonth(target.getMonth() + 6); break;
   }
-  start.value = d.toISOString().split('T')[0];
-  updateDateDisplay('d-start', 'd-start-display');
-  updateDateDisplay('d-end', 'd-end-display');
-  calcDateDiff();
+  _calSelectedDate = target;
+  _calViewDate = new Date(target.getFullYear(), target.getMonth(), 1);
+  updateVisualCalendar();
 }
 
 /* splitter */
@@ -2186,7 +2856,7 @@ function aepSetDesc(el, val) {
   var catSelect = document.getElementById('aep-category');
   if (catSelect) {
     if (val === '⛽ FUEL') catSelect.value = '⛽ Fuel';
-    else if (val === '🍽️ DIET') catSelect.value = '🍽️ Food';
+    else if (val === '🍽️ FOOD' || val === '🥗 FOOD') catSelect.value = '🍽️ Food';
     else if (val === '💊 MEDICINE') catSelect.value = '💊 Medical';
     else if (val === '🛒 GROCERY') catSelect.value = '🛒 Grocery';
     else if (val === '🚕 TRAVEL') catSelect.value = '🚕 Travel';
@@ -2458,7 +3128,7 @@ function setUrlParam(name, val) {
 function updateExpensesBadge() {
   var el = document.getElementById('h-btn-expenses');
   if (!el) return;
-  el.textContent = _expensesNewCount > 0 ? '💸 Expenses ('+_expensesNewCount+')' : '💸 Expenses';
+  el.textContent = _expensesNewCount > 0 ? '💸 EXPENSES ('+_expensesNewCount+')' : '💸 EXPENSES';
 }
 
 function sendTokenToExpenses(i) {
@@ -2483,9 +3153,10 @@ function expId() { return _expIdCounter++; }
 function addExpenseItem() {
   var desc = document.getElementById('exp-desc').value.trim();
   var amt = document.getElementById('exp-amt').value.trim();
+  var dateInp = document.getElementById('exp-date');
+  var d = (dateInp && dateInp.value) ? dateInp.value : new Date().toISOString().split('T')[0];
   if (!desc || !amt) return;
-  var today = new Date().toISOString().split('T')[0];
-  expensesList.unshift({ id:expId(), desc:desc, amount:amt, date:today });
+  expensesList.unshift({ id:expId(), desc:desc, amount:amt, date:d });
   document.getElementById('exp-desc').value = '';
   document.getElementById('exp-amt').value = '';
   renderExpensesMode(document.getElementById('calc-mode-body'));
@@ -2494,6 +3165,64 @@ function addExpenseItem() {
 function removeExpenseItem(id) {
   expensesList = expensesList.filter(function(e) { return e.id !== id; });
   renderExpensesMode(document.getElementById('calc-mode-body'));
+}
+
+function editExpenseItem(id) {
+  var item = expensesList.filter(function(e){ return e.id === id; })[0];
+  if (!item) return;
+  var div = document.getElementById('exp-item-' + id);
+  if (!div) return;
+  div.style.display = 'flex';
+  div.style.flexDirection = 'column';
+  div.style.alignItems = 'stretch';
+  div.style.gap = '6px';
+  div.style.padding = '0.6rem';
+  div.style.background = 'var(--bg-tertiary)';
+  div.style.borderRadius = 'var(--radius-sm)';
+  div.innerHTML =
+    '<div style="display:flex;align-items:center;">' +
+      '<input id="edit-exp-desc-' + id + '" value="' + escHtml(item.desc) + '" style="flex:1;padding:0.52rem 0.5rem;font-size:0.9rem;border-radius:var(--radius-sm);border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);" placeholder="What for?">' +
+    '</div>' +
+    '<div style="display:flex;gap:6px;align-items:center;">' +
+      '<span style="font-size:0.9rem;font-weight:700;color:var(--text-muted);">₹</span>' +
+      '<input id="edit-exp-amt-' + id + '" value="' + escHtml(item.amount) + '" inputmode="decimal" style="flex:1;min-width:60px;padding:0.52rem 0.5rem;font-size:0.9rem;border-radius:var(--radius-sm);border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);" placeholder="₹ Amount">' +
+      '<button onclick="saveEditExpenseItem(' + id + ')" style="padding:0.52rem 0.85rem;background:var(--color-accent);color:#fff;border:none;border-radius:var(--radius-sm);font-weight:700;font-size:0.85rem;cursor:pointer;white-space:nowrap;flex-shrink:0;">💾 Save</button>' +
+      '<button onclick="renderExpensesMode(document.getElementById(\'calc-mode-body\'))" style="padding:0.52rem 0.85rem;background:var(--bg-primary);color:var(--text-primary);border:1px solid var(--border-color);border-radius:var(--radius-sm);font-weight:700;font-size:0.85rem;cursor:pointer;white-space:nowrap;flex-shrink:0;">✕ Cancel</button>' +
+    '</div>';
+}
+
+function saveEditExpenseItem(id) {
+  var item = expensesList.filter(function(e){ return e.id === id; })[0];
+  if (!item) return;
+  var dInp = document.getElementById('edit-exp-date-' + id);
+  var descInp = document.getElementById('edit-exp-desc-' + id);
+  var amtInp = document.getElementById('edit-exp-amt-' + id);
+  if (dInp && dInp.value) item.date = dInp.value;
+  if (descInp && descInp.value.trim()) item.desc = descInp.value.trim();
+  if (amtInp && amtInp.value.trim()) item.amount = amtInp.value.trim();
+  renderExpensesMode(document.getElementById('calc-mode-body'));
+}
+
+function toggleExpDatePicker() {
+  var picker = document.getElementById('exp-date');
+  if (!picker) return;
+  if (picker.style.display === 'none' || !picker.style.display) {
+    picker.style.display = 'inline-block';
+    if (picker.showPicker) { try { picker.showPicker(); } catch(e){} }
+    else picker.focus();
+  } else {
+    picker.style.display = 'none';
+  }
+}
+
+function updateExpDateLabel(val) {
+  var picker = document.getElementById('exp-date');
+  var label = document.getElementById('exp-date-label');
+  if (!label) return;
+  var today = new Date().toISOString().split('T')[0];
+  var target = val || (picker && picker.value) || today;
+  var isToday = (target === today);
+  label.textContent = isToday ? 'Today (' + fmtDateShort(today) + ')' : fmtDateShort(target);
 }
 
 function seedExpensesMockData() {
@@ -2524,10 +3253,28 @@ function renderExpensesMode(container) {
   var sun = new Date(mon); sun.setDate(mon.getDate()+6);
   function inRange(d, start, end) { return d >= start && d <= end; }
   var thisMon = today.slice(0,7);
+  var dateVal = (document.getElementById('exp-date') && document.getElementById('exp-date').value) ? document.getElementById('exp-date').value : today;
+  var isToday = (dateVal === today);
+  var pillText = isToday ? 'Today (' + fmtDateShort(today) + ')' : fmtDateShort(dateVal);
+
   var html = '';
-  html += '<div class="exp-row"><input id="exp-desc" placeholder="What for?" onkeydown="if(event.key===\'Enter\')document.getElementById(\'exp-amt\').focus()"><input id="exp-amt" class="exp-amt" placeholder="₹ Amount" inputmode="decimal" onkeydown="if(event.key===\'Enter\')addExpenseItem()"><button class="exp-btn-add" onclick="addExpenseItem()">➕ Add</button></div>';
+  html += '<div style="background:var(--bg-secondary);padding:0.6rem;border-radius:var(--radius-sm);border:1px solid var(--border-color);margin-bottom:0.65rem;">' +
+    '<div style="display:flex;align-items:center;gap:0.45rem;margin-bottom:0.45rem;">' +
+      '<div style="position:relative;display:inline-block;flex-shrink:0;">' +
+        '<div style="display:inline-flex;align-items:center;gap:0.35rem;padding:0.55rem 0.75rem;background:var(--bg-tertiary);border:1px solid var(--border-color);border-radius:var(--radius-sm);font-size:0.88rem;font-weight:700;color:var(--color-accent);user-select:none;white-space:nowrap;">' +
+          '<span>📅</span> <span id="exp-date-label">' + pillText + '</span> <span>▾</span>' +
+        '</div>' +
+        '<input type="date" id="exp-date" value="' + dateVal + '" onchange="updateExpDateLabel(this.value)" style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;cursor:pointer;z-index:2;">' +
+      '</div>' +
+      '<input id="exp-amt" class="exp-amt" placeholder="₹ Amount" inputmode="decimal" style="flex:1;padding:0.55rem 0.65rem;font-size:0.92rem;" onkeydown="if(event.key===\'Enter\')document.getElementById(\'exp-desc\').focus()">' +
+    '</div>' +
+    '<div style="display:flex;align-items:center;gap:0.45rem;">' +
+      '<input id="exp-desc" placeholder="What for?" style="flex:1;padding:0.55rem 0.65rem;font-size:0.92rem;" onkeydown="if(event.key===\'Enter\')addExpenseItem()">' +
+      '<button class="exp-btn-add" onclick="addExpenseItem()" style="padding:0.55rem 0.85rem;font-weight:700;font-size:0.88rem;white-space:nowrap;flex-shrink:0;width:auto;">➕ Add</button>' +
+    '</div>' +
+  '</div>';
   if (_recordExpenses && expensesList.length) {
-    html += '<div class="exp-shortcuts"><span onclick="document.getElementById(\'exp-desc\').value=\'FUEL\';document.getElementById(\'exp-amt\').focus()">⛽ FUEL</span><span onclick="document.getElementById(\'exp-desc\').value=\'DIET\';document.getElementById(\'exp-amt\').focus()">🥗 DIET</span><span onclick="document.getElementById(\'exp-desc\').value=\'SHOPPING\';document.getElementById(\'exp-amt\').focus()">🛍️ SHOPPING</span><span onclick="document.getElementById(\'exp-desc\').value=\'OTHERS\';document.getElementById(\'exp-amt\').focus()">📦 OTHERS</span></div>';
+    html += '<div class="exp-shortcuts"><span onclick="document.getElementById(\'exp-desc\').value=\'FUEL\';document.getElementById(\'exp-amt\').focus()">⛽ FUEL</span><span onclick="document.getElementById(\'exp-desc\').value=\'FOOD\';document.getElementById(\'exp-amt\').focus()">🥗 FOOD</span><span onclick="document.getElementById(\'exp-desc\').value=\'SHOPPING\';document.getElementById(\'exp-amt\').focus()">🛍️ SHOPPING</span><span onclick="document.getElementById(\'exp-desc\').value=\'OTHERS\';document.getElementById(\'exp-amt\').focus()">📦 OTHERS</span></div>';
   }
   if (expensesList.length) {
     var groups = {};
@@ -2550,7 +3297,7 @@ function renderExpensesMode(container) {
       var o = open ? ' open' : '';
       var h = '<details'+o+' style="margin-bottom:0.3rem"><summary class="exp-summary">'+title+' <span style="font-weight:'+(bold?'700':'400')+';font-size:1rem;color:var(--color-accent);margin-left:auto">₹'+fmtNum(t)+'</span></summary>';
       items.forEach(function(e){
-        h += '<div class="exp-item"><span class="exp-date">'+fmtDateShort(e.date)+'</span><span class="exp-desc">'+escHtml(e.desc)+'</span><span class="exp-amt-val">₹'+fmtNum(parseFloat(e.amount)||0)+'</span><span class="rm-exp" onclick="removeExpenseItem('+e.id+')">🗑️</span></div>';
+        h += '<div class="exp-item" id="exp-item-' + e.id + '"><span class="exp-date">'+fmtDateShort(e.date)+'</span><span class="exp-desc">'+escHtml(e.desc)+'</span><span class="rm-exp" onclick="editExpenseItem('+e.id+')" title="Edit" style="cursor:pointer;margin:0 4px;font-size:0.85rem;">✏️</span><span class="exp-amt-val">₹'+fmtNum(parseFloat(e.amount)||0)+'</span><span class="rm-exp" onclick="removeExpenseItem('+e.id+')" title="Delete" style="cursor:pointer;margin-left:4px;">🗑️</span></div>';
       });
       h += '</details>';
       return h;
@@ -2564,6 +3311,734 @@ function renderExpensesMode(container) {
   html += '<div class="exp-total">Total: ₹'+fmtNum(total)+'</div>';
   container.innerHTML = html;
   if (!expensesList.length) { var fd = document.getElementById('exp-desc'); if (fd) fd.focus(); }
+}
+
+/* Specialized Calculators */
+
+function shareSpecializedMode() {
+  var mode = _calcMode;
+  var text = '';
+  if (mode === 'gold') {
+    var rateInp = document.getElementById('gold-rate-input');
+    var caratSel = document.getElementById('gold-carat-select');
+    var weightInp = document.getElementById('gold-weight-input');
+    var resDiv = document.getElementById('gold-result');
+    var weightStr = weightInp ? weightInp.value : '';
+    var caratStr = caratSel ? caratSel.value : '';
+    var rateVal = rateInp ? parseFloat(rateInp.value) || 0 : 0;
+    var info = '• Weight: ' + weightStr + 'g (' + caratStr + 'K)\n• 24K Rate: ₹' + fmtNum(rateVal) + '/g\n';
+    if (resDiv) text = '🪙 Gold Bill Summary:\n' + info + resDiv.innerText;
+  } else if (mode === 'fuel') {
+    var distInp = document.getElementById('fuel-dist');
+    var milInp = document.getElementById('fuel-mileage');
+    var rateInp = document.getElementById('fuel-rate');
+    var resDiv = document.getElementById('fuel-result');
+    var distStr = distInp ? distInp.value : '';
+    var milStr = milInp ? milInp.value : '';
+    var rateVal = rateInp ? parseFloat(rateInp.value) || 0 : 0;
+    var info = '• Distance: ' + distStr + ' km\n• Mileage: ' + milStr + ' km/l\n• Fuel Rate: ₹' + fmtNum(rateVal) + '/L\n';
+    if (resDiv) text = '⛽ Fuel & Trip Summary:\n' + info + resDiv.innerText;
+  } else if (mode === 'emi') {
+    var amtInp = document.getElementById('emi-amount');
+    var rateInp = document.getElementById('emi-rate');
+    var tenureInp = document.getElementById('emi-tenure');
+    var unitSel = document.getElementById('emi-unit');
+    var resDiv = document.getElementById('emi-result');
+    var rawAmt = amtInp ? parseFloat(String(amtInp.value).replace(/,/g, '')) || 0 : 0;
+    var rateStr = rateInp ? rateInp.value : '';
+    var tenureStr = tenureInp ? tenureInp.value : '';
+    var unitStr = unitSel ? (unitSel.options[unitSel.selectedIndex] ? unitSel.options[unitSel.selectedIndex].text : 'Years') : 'Years';
+    var info = '• Loan Amount: ₹' + fmtNum(rawAmt) + '\n• Interest Rate: ' + rateStr + '% p.a.\n• Tenure: ' + tenureStr + ' ' + unitStr + '\n';
+    if (resDiv) text = '📈 Loan EMI Summary:\n' + info + resDiv.innerText;
+  } else if (mode === 'gst') {
+    var resDiv = document.getElementById('gst-result');
+    if (resDiv) text = '💰 GST Bill Summary:\n' + resDiv.innerText;
+  } else if (mode === 'converter') {
+    var valInp = document.getElementById('conv-val');
+    var fromSel = document.getElementById('conv-from');
+    var resInp = document.getElementById('conv-res-val');
+    var toSel = document.getElementById('conv-to');
+    if (valInp && resInp && fromSel && toSel) {
+      var fromTxt = fromSel.options[fromSel.selectedIndex] ? fromSel.options[fromSel.selectedIndex].text : '';
+      var toTxt = toSel.options[toSel.selectedIndex] ? toSel.options[toSel.selectedIndex].text : '';
+      text = '📏 Unit Conversion:\n' + valInp.value + ' ' + fromTxt + ' = ' + resInp.value + ' ' + toTxt;
+    }
+  } else if (mode === 'scientific') {
+    var exprEl = document.getElementById('sci-expr-screen');
+    var resEl = document.getElementById('sci-res-screen');
+    var exprText = (_sciExpr || (exprEl ? exprEl.textContent : '') || '0').trim();
+    var resText = (resEl ? resEl.textContent.replace(/^=\s*/, '') : '0').trim();
+    text = '📐 Scientific Calculation:\nFormula: ' + exprText + '\nResult: ' + resText;
+  } else if (mode === 'splitter') {
+    shareSplitterTrip();
+    return;
+  } else {
+    shareCalcExpression();
+    return;
+  }
+
+  if (text) {
+    doShare(text, 'Lazy Calc - Mode Summary');
+  }
+}
+
+/* 1. Gold Mode */
+function fetchLiveGoldRate(silent) {
+  if (!silent) showToast('⌛ Fetching live gold rate...');
+  var urls = [
+    'https://latest.currency-api.pages.dev/v1/currencies/xau.json',
+    'https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/xau.json',
+    'https://open.er-api.com/v6/latest/USD'
+  ];
+
+  function tryFetch(index) {
+    if (index >= urls.length) {
+      if (!silent) showToast('⚠️ Could not fetch live rate');
+      return;
+    }
+    fetch(urls[index])
+      .then(function(res) { return res.json(); })
+      .then(function(data) {
+        var ratePerGram24K = 0;
+        if (data && data.xau && data.xau.inr) {
+          ratePerGram24K = Math.round(data.xau.inr / 31.1034768);
+        } else if (data && data.rates && data.rates.INR) {
+          var usdInr = data.rates.INR;
+          ratePerGram24K = Math.round((2400 * usdInr) / 31.1034768);
+        }
+        if (ratePerGram24K > 3000) {
+          var rateInp = document.getElementById('gold-rate-input');
+          if (rateInp) {
+            rateInp.value = ratePerGram24K;
+            calcGoldTotal();
+          }
+          if (!silent) showToast('✅ Updated Live 24K Rate: ₹' + fmtNum(ratePerGram24K) + '/g');
+        } else {
+          tryFetch(index + 1);
+        }
+      })
+      .catch(function() {
+        tryFetch(index + 1);
+      });
+  }
+  tryFetch(0);
+}
+
+function calcGoldTotal() {
+  var rateInp = document.getElementById('gold-rate-input');
+  var caratSel = document.getElementById('gold-carat-select');
+  var weightInp = document.getElementById('gold-weight-input');
+  var makingInp = document.getElementById('gold-making-input');
+  var makingType = document.getElementById('gold-making-type');
+  var gstCheck = document.getElementById('gold-gst-check');
+  var resDiv = document.getElementById('gold-result');
+
+  if (!rateInp || !caratSel || !weightInp || !resDiv) return;
+
+  var base24kRate = parseFloat(rateInp.value) || 0;
+  var carat = parseInt(caratSel.value, 10) || 22;
+  var weight = parseFloat(weightInp.value) || 0;
+  var makingVal = parseFloat(makingInp.value) || 0;
+  var isGst = gstCheck ? gstCheck.checked : true;
+
+  var purityRatio = carat === 24 ? 1.0 : carat === 22 ? 0.9166 : 0.75;
+  var effectiveGramRate = base24kRate * purityRatio;
+  var rawGoldCost = effectiveGramRate * weight;
+
+  var makingCost = 0;
+  if (makingType && makingType.value === 'per_gram') {
+    makingCost = makingVal * weight;
+  } else {
+    makingCost = rawGoldCost * (makingVal / 100);
+  }
+
+  var subtotal = rawGoldCost + makingCost;
+  var gstCost = isGst ? subtotal * 0.03 : 0;
+  var grandTotal = Math.round(subtotal + gstCost);
+
+  var purityPct = carat === 24 ? '100%' : carat === 22 ? '91.7%' : '75.0%';
+  resDiv.innerHTML =
+    '<div style="font-size:0.9rem;margin-bottom:0.25rem;color:var(--text-primary);"><b>24K Base Rate:</b> ₹' + fmtNum(Math.round(base24kRate)) + ' / g</div>' +
+    '<div style="font-size:0.9rem;margin-bottom:0.25rem;color:var(--color-accent);font-weight:700;"><b>Effective ' + carat + 'K Rate (' + purityPct + ' Purity):</b> ₹' + fmtNum(Math.round(effectiveGramRate)) + ' / g</div>' +
+    '<div><b>Gold Net Cost (' + weight + 'g):</b> ₹' + fmtNum(Math.round(rawGoldCost)) + '</div>' +
+    '<div><b>Making Charges:</b> ₹' + fmtNum(Math.round(makingCost)) + '</div>' +
+    (isGst ? '<div><b>3% GST:</b> ₹' + fmtNum(Math.round(gstCost)) + '</div>' : '') +
+    '<div style="font-size:1.15rem;font-weight:700;color:var(--color-accent);margin-top:6px;">Payable Total: ₹' + fmtNum(grandTotal) + '</div>';
+
+  saveCalcHistory({
+    mode: 'gold',
+    expression: '🪙 Gold: ' + weight + 'g (' + carat + 'K) @ ₹' + fmtNum(base24kRate) + '/g',
+    result: grandTotal,
+    goldData: { rate: base24kRate, carat: carat, weight: weight, making: makingVal, makingType: makingType ? makingType.value : 'percent', gst: isGst }
+  });
+}
+
+function renderGoldMode(container) {
+  if (!container) return;
+  var html = '<div style="padding:0.2rem 0.2rem;max-width:100%;box-sizing:border-box;">' +
+    '<div style="display:flex;align-items:center;justify-content:space-between;gap:0.4rem;margin-bottom:0.75rem;flex-wrap:wrap;max-width:100%;box-sizing:border-box;">' +
+      '<div style="display:flex;align-items:center;gap:0.4rem;flex:1;min-width:150px;">' +
+        '<span style="font-size:0.92rem;font-weight:600;color:var(--text-primary);white-space:nowrap;">Rate (₹/g):</span>' +
+        '<input id="gold-rate-input" type="text" inputmode="decimal" value="7250" oninput="calcGoldTotal()" style="flex:1;min-width:65px;max-width:95px;padding:0.5rem 0.4rem;font-size:1.05rem;font-weight:600;border-radius:var(--radius-sm);border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);">' +
+      '</div>' +
+      '<button onclick="fetchLiveGoldRate()" style="padding:0.5rem 0.65rem;background:var(--color-accent);color:#fff;border:none;border-radius:var(--radius-sm);font-size:0.85rem;font-weight:600;cursor:pointer;white-space:nowrap;">⚡ Live Rate</button>' +
+    '</div>' +
+    '<div style="display:flex;align-items:center;justify-content:space-between;gap:0.4rem;margin-bottom:0.75rem;flex-wrap:wrap;max-width:100%;box-sizing:border-box;">' +
+      '<div style="display:flex;align-items:center;gap:0.3rem;">' +
+        '<span style="font-size:0.92rem;font-weight:600;color:var(--text-primary);white-space:nowrap;">Purity:</span>' +
+        '<select id="gold-carat-select" onchange="calcGoldTotal()" style="padding:0.5rem 0.25rem;font-size:0.88rem;font-weight:600;border-radius:var(--radius-sm);border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);max-width:115px;">' +
+          '<option value="24">24K (99.9%)</option>' +
+          '<option value="22" selected>22K (91.6%)</option>' +
+          '<option value="18">18K (75.0%)</option>' +
+        '</select>' +
+      '</div>' +
+      '<div style="display:flex;align-items:center;gap:0.3rem;">' +
+        '<span style="font-size:0.92rem;font-weight:600;color:var(--text-primary);white-space:nowrap;">Weight:</span>' +
+        '<input id="gold-weight-input" type="text" inputmode="decimal" placeholder="Grams" value="10" oninput="calcGoldTotal()" style="width:50px;padding:0.5rem 0.35rem;font-size:1.05rem;font-weight:600;border-radius:var(--radius-sm);border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);">' +
+        '<span style="font-size:0.92rem;font-weight:700;color:var(--text-primary);">g</span>' +
+      '</div>' +
+    '</div>' +
+    '<div style="display:flex;align-items:center;justify-content:space-between;gap:0.4rem;margin-bottom:0.75rem;flex-wrap:wrap;max-width:100%;box-sizing:border-box;">' +
+      '<div style="display:flex;align-items:center;gap:0.3rem;">' +
+        '<span style="font-size:0.92rem;font-weight:600;color:var(--text-primary);white-space:nowrap;">Making:</span>' +
+        '<input id="gold-making-input" type="text" inputmode="decimal" value="8" oninput="calcGoldTotal()" style="width:48px;padding:0.5rem 0.35rem;font-size:1.05rem;font-weight:600;border-radius:var(--radius-sm);border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);">' +
+        '<select id="gold-making-type" onchange="calcGoldTotal()" style="padding:0.5rem 0.25rem;font-size:0.88rem;font-weight:600;border-radius:var(--radius-sm);border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);">' +
+          '<option value="percent">%</option>' +
+          '<option value="per_gram">₹/g</option>' +
+        '</select>' +
+      '</div>' +
+      '<label style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.35rem 0.6rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-tertiary);cursor:pointer;user-select:none;">' +
+        '<input type="checkbox" id="gold-gst-check" checked onchange="calcGoldTotal()" style="accent-color:var(--color-accent);width:16px;height:16px;cursor:pointer;">' +
+        '<span style="font-size:0.9rem;font-weight:700;color:var(--text-primary);">3% GST</span>' +
+      '</label>' +
+    '</div>' +
+    '<div id="gold-result" style="margin-top:0.8rem;padding:0.8rem;background:var(--bg-tertiary);border-radius:var(--radius-sm);border-left:4px solid var(--color-accent);font-size:0.95rem;line-height:1.6;"></div>' +
+  '</div>';
+  container.innerHTML = html;
+  calcGoldTotal();
+  fetchLiveGoldRate(true);
+}
+
+/* 2. Fuel Mode */
+function calcFuelTotal() {
+  var distInp = document.getElementById('fuel-dist');
+  var milInp = document.getElementById('fuel-mileage');
+  var rateInp = document.getElementById('fuel-rate');
+  var peopleInp = document.getElementById('fuel-people');
+  var resDiv = document.getElementById('fuel-result');
+  if (!distInp || !milInp || !rateInp || !peopleInp || !resDiv) return;
+
+  var dist = parseFloat(distInp.value) || 0;
+  var mileage = parseFloat(milInp.value) || 1;
+  var rate = parseFloat(rateInp.value) || 0;
+  var passengers = parseInt(peopleInp.value, 10) || 1;
+
+  var liters = dist / mileage;
+  var totalCost = liters * rate;
+  var costPerPerson = Math.round(totalCost / passengers);
+
+  resDiv.innerHTML =
+    '<div><b>Fuel Needed:</b> ' + liters.toFixed(1) + ' Liters</div>' +
+    '<div><b>Total Fuel Cost:</b> ₹' + fmtNum(Math.round(totalCost)) + '</div>' +
+    '<div style="font-size:1.15rem;font-weight:700;color:var(--color-accent);margin-top:6px;">Cost Per Person (' + passengers + '): ₹' + fmtNum(costPerPerson) + '</div>';
+
+  saveCalcHistory({
+    mode: 'fuel',
+    expression: '⛽ Fuel: ' + dist + 'km @ ' + mileage + 'km/L',
+    result: costPerPerson,
+    fuelData: { dist: dist, mileage: mileage, rate: rate, passengers: passengers }
+  });
+}
+
+function renderFuelMode(container) {
+  if (!container) return;
+  var html = '<div style="padding:0.2rem 0.2rem;">' +
+    '<div class="field-row" style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem;">' +
+      '<span class="field-label" style="font-size:0.95rem;min-width:90px;">Distance:</span>' +
+      '<input id="fuel-dist" type="text" inputmode="decimal" value="300" oninput="calcFuelTotal()" style="width:100px;padding:0.6rem 0.6rem;font-size:1.05rem;font-weight:600;border-radius:var(--radius-sm);border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);">' +
+      '<span style="font-size:0.9rem;color:var(--text-muted);">km</span>' +
+    '</div>' +
+    '<div class="field-row" style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem;">' +
+      '<span class="field-label" style="font-size:0.95rem;min-width:90px;">Mileage:</span>' +
+      '<input id="fuel-mileage" type="text" inputmode="decimal" value="15" oninput="calcFuelTotal()" style="width:100px;padding:0.6rem 0.6rem;font-size:1.05rem;font-weight:600;border-radius:var(--radius-sm);border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);">' +
+      '<span style="font-size:0.9rem;color:var(--text-muted);">km/L</span>' +
+    '</div>' +
+    '<div class="field-row" style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem;">' +
+      '<span class="field-label" style="font-size:0.95rem;min-width:90px;">Fuel Rate:</span>' +
+      '<input id="fuel-rate" type="text" inputmode="decimal" value="100" oninput="calcFuelTotal()" style="width:100px;padding:0.6rem 0.6rem;font-size:1.05rem;font-weight:600;border-radius:var(--radius-sm);border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);">' +
+      '<span style="font-size:0.9rem;color:var(--text-muted);">₹/L</span>' +
+    '</div>' +
+    '<div class="field-row" style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem;">' +
+      '<span class="field-label" style="font-size:0.95rem;min-width:90px;">Passengers:</span>' +
+      '<input id="fuel-people" type="text" inputmode="numeric" value="3" oninput="calcFuelTotal()" style="width:100px;padding:0.6rem 0.6rem;font-size:1.05rem;font-weight:600;border-radius:var(--radius-sm);border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);">' +
+      '<span style="font-size:0.9rem;color:var(--text-muted);">people</span>' +
+    '</div>' +
+    '<div id="fuel-result" style="margin-top:0.8rem;padding:0.8rem;background:var(--bg-tertiary);border-radius:var(--radius-sm);border-left:4px solid var(--color-accent);font-size:0.95rem;line-height:1.6;"></div>' +
+  '</div>';
+  container.innerHTML = html;
+  calcFuelTotal();
+}
+
+/* 3. EMI Mode */
+function formatEmiInput(el) {
+  if (!el) return;
+  var raw = el.value.replace(/[^0-9.]/g, '');
+  if (!raw) { el.value = ''; calcEmiTotal(); return; }
+  var parts = raw.split('.');
+  var intVal = parseFloat(parts[0]) || 0;
+  var intFormatted = fmtNum(intVal);
+  if (parts.length > 1) {
+    el.value = intFormatted + '.' + parts[1].slice(0, 2);
+  } else {
+    el.value = intFormatted;
+  }
+  calcEmiTotal();
+}
+
+function setEmiAmount(amt) {
+  var el = document.getElementById('emi-amount');
+  if (el) { el.value = fmtNum(amt); calcEmiTotal(); }
+}
+
+function calcEmiTotal() {
+  var amtInp = document.getElementById('emi-amount');
+  var rateInp = document.getElementById('emi-rate');
+  var tenureInp = document.getElementById('emi-tenure');
+  var unitSel = document.getElementById('emi-unit');
+  var resDiv = document.getElementById('emi-result');
+  if (!amtInp || !rateInp || !tenureInp || !resDiv) return;
+
+  var P = parseFloat(String(amtInp.value).replace(/,/g, '')) || 0;
+  var annualRate = parseFloat(rateInp.value) || 0;
+  var tenureVal = parseFloat(tenureInp.value) || 0;
+  var isYears = unitSel ? unitSel.value === 'years' : true;
+
+  var N = isYears ? tenureVal * 12 : tenureVal;
+  var R = (annualRate / 12) / 100;
+
+  var emi = 0;
+  if (P > 0 && N > 0 && R > 0) {
+    emi = (P * R * Math.pow(1 + R, N)) / (Math.pow(1 + R, N) - 1);
+  } else if (P > 0 && N > 0 && R === 0) {
+    emi = P / N;
+  }
+
+  var totalPayable = emi * N;
+  var totalInterest = totalPayable - P;
+  var emiRound = Math.round(emi);
+
+  resDiv.innerHTML =
+    '<div><b>Monthly EMI:</b> <span style="font-size:1.25rem;font-weight:700;color:var(--color-accent);">₹' + fmtNum(emiRound) + '</span></div>' +
+    '<div><b>Total Interest Payable:</b> ₹' + fmtNum(Math.round(totalInterest)) + '</div>' +
+    '<div><b>Total Payment:</b> ₹' + fmtNum(Math.round(totalPayable)) + '</div>';
+
+  saveCalcHistory({
+    mode: 'emi',
+    expression: '📈 Loan EMI: ₹' + fmtNum(P) + ' @ ' + annualRate + '%',
+    result: emiRound,
+    emiData: { amount: P, rate: annualRate, tenure: tenureVal, unit: unitSel ? unitSel.value : 'years' }
+  });
+}
+
+function renderEmiMode(container) {
+  if (!container) return;
+  var html = '<div style="padding:0.2rem 0.2rem;">' +
+    '<div style="display:flex;gap:6px;margin-bottom:0.75rem;flex-wrap:wrap;">' +
+      '<button onclick="setEmiAmount(100000)" style="padding:0.4rem 0.65rem;font-size:0.85rem;font-weight:600;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">1 Lakh</button>' +
+      '<button onclick="setEmiAmount(500000)" style="padding:0.4rem 0.65rem;font-size:0.85rem;font-weight:600;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">5 Lakhs</button>' +
+      '<button onclick="setEmiAmount(1000000)" style="padding:0.4rem 0.65rem;font-size:0.85rem;font-weight:600;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">10 Lakhs</button>' +
+      '<button onclick="setEmiAmount(2500000)" style="padding:0.4rem 0.65rem;font-size:0.85rem;font-weight:600;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">25 Lakhs</button>' +
+    '</div>' +
+    '<div class="field-row" style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem;">' +
+      '<span class="field-label" style="font-size:0.95rem;min-width:90px;">Amount:</span>' +
+      '<input id="emi-amount" type="text" inputmode="decimal" value="5,00,000" oninput="formatEmiInput(this)" style="width:125px;padding:0.6rem 0.6rem;font-size:1.05rem;font-weight:600;border-radius:var(--radius-sm);border:1px solid var(--border-color);background:var(--bg-primary);color:#fff;">' +
+      '<span style="font-size:0.9rem;color:var(--text-muted);">₹</span>' +
+    '</div>' +
+    '<div class="field-row" style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem;">' +
+      '<span class="field-label" style="font-size:0.95rem;min-width:90px;">Interest Rate:</span>' +
+      '<input id="emi-rate" type="text" inputmode="decimal" value="8.5" oninput="calcEmiTotal()" style="width:80px;padding:0.6rem 0.6rem;font-size:1.05rem;font-weight:600;border-radius:var(--radius-sm);border:1px solid var(--border-color);background:var(--bg-primary);color:#fff;">' +
+      '<span style="font-size:0.9rem;color:var(--text-muted);">% p.a.</span>' +
+    '</div>' +
+    '<div class="field-row" style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem;">' +
+      '<span class="field-label" style="font-size:0.95rem;min-width:90px;">Tenure:</span>' +
+      '<input id="emi-tenure" type="text" inputmode="numeric" value="5" oninput="calcEmiTotal()" style="width:70px;padding:0.6rem 0.6rem;font-size:1.05rem;font-weight:600;border-radius:var(--radius-sm);border:1px solid var(--border-color);background:var(--bg-primary);color:#fff;">' +
+      '<select id="emi-unit" onchange="calcEmiTotal()" style="padding:0.6rem 0.6rem;font-size:0.95rem;font-weight:600;border-radius:var(--radius-sm);border:1px solid var(--border-color);background:var(--bg-primary);color:#fff;">' +
+        '<option value="years">Years</option>' +
+        '<option value="months">Months</option>' +
+      '</select>' +
+    '</div>' +
+    '<div id="emi-result" style="margin-top:0.8rem;padding:0.8rem;background:var(--bg-tertiary);border-radius:var(--radius-sm);border-left:4px solid var(--color-accent);font-size:0.95rem;line-height:1.6;"></div>' +
+  '</div>';
+  container.innerHTML = html;
+  calcEmiTotal();
+}
+
+/* 4. GST Mode */
+function setGstRate(r) {
+  var el = document.getElementById('gst-rate');
+  if (el) { el.value = r; calcGstTotal(); }
+}
+
+function calcGstTotal() {
+  var amtInp = document.getElementById('gst-amount');
+  var rateInp = document.getElementById('gst-rate');
+  var modeSel = document.getElementById('gst-mode');
+  var resDiv = document.getElementById('gst-result');
+  if (!amtInp || !rateInp || !resDiv) return;
+
+  var amount = parseFloat(amtInp.value) || 0;
+  var gstRate = parseFloat(rateInp.value) || 0;
+  var isAdd = modeSel ? modeSel.value === 'add' : true;
+
+  var basePrice = 0;
+  var gstAmount = 0;
+  var grossTotal = 0;
+
+  if (isAdd) {
+    basePrice = amount;
+    gstAmount = basePrice * (gstRate / 100);
+    grossTotal = basePrice + gstAmount;
+  } else {
+    grossTotal = amount;
+    basePrice = grossTotal / (1 + (gstRate / 100));
+    gstAmount = grossTotal - basePrice;
+  }
+
+  var cgst = gstAmount / 2;
+  var sgst = gstAmount / 2;
+  var grandTotalRound = Math.round(grossTotal);
+
+  resDiv.innerHTML =
+    '<div><b>Net Base Price:</b> ₹' + fmtNum(Math.round(basePrice)) + '</div>' +
+    '<div><b>CGST (' + (gstRate/2) + '%):</b> ₹' + fmtNum(Math.round(cgst)) + '</div>' +
+    '<div><b>SGST (' + (gstRate/2) + '%):</b> ₹' + fmtNum(Math.round(sgst)) + '</div>' +
+    '<div><b>Total GST:</b> ₹' + fmtNum(Math.round(gstAmount)) + '</div>' +
+    '<div style="font-size:1.15rem;font-weight:700;color:var(--color-accent);margin-top:6px;">Gross Total: ₹' + fmtNum(grandTotalRound) + '</div>';
+
+  saveCalcHistory({
+    mode: 'gst',
+    expression: '💰 GST (' + gstRate + '% ' + (isAdd?'Add':'Remove') + '): ₹' + fmtNum(amount),
+    result: grandTotalRound,
+    gstData: { amount: amount, rate: gstRate, mode: isAdd ? 'add' : 'remove' }
+  });
+}
+
+function renderGstMode(container) {
+  if (!container) return;
+  var html = '<div style="padding:0.2rem 0.2rem;">' +
+    '<div style="display:flex;gap:6px;margin-bottom:0.75rem;">' +
+      '<button onclick="setGstRate(5)" style="padding:0.4rem 0.65rem;font-size:0.85rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">5%</button>' +
+      '<button onclick="setGstRate(12)" style="padding:0.4rem 0.65rem;font-size:0.85rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">12%</button>' +
+      '<button onclick="setGstRate(18)" style="padding:0.4rem 0.65rem;font-size:0.85rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">18%</button>' +
+      '<button onclick="setGstRate(28)" style="padding:0.4rem 0.65rem;font-size:0.85rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">28%</button>' +
+    '</div>' +
+    '<div class="field-row" style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem;">' +
+      '<span class="field-label" style="font-size:0.95rem;min-width:90px;">Amount:</span>' +
+      '<input id="gst-amount" type="text" inputmode="decimal" value="1000" oninput="calcGstTotal()" style="width:120px;padding:0.6rem 0.6rem;font-size:1.05rem;font-weight:600;border-radius:var(--radius-sm);border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);">' +
+      '<span style="font-size:0.9rem;color:var(--text-muted);">₹</span>' +
+    '</div>' +
+    '<div class="field-row" style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem;">' +
+      '<span class="field-label" style="font-size:0.95rem;min-width:90px;">GST Rate %:</span>' +
+      '<input id="gst-rate" type="text" inputmode="decimal" value="18" oninput="calcGstTotal()" style="width:60px;padding:0.6rem 0.6rem;font-size:1.05rem;font-weight:600;border-radius:var(--radius-sm);border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);">' +
+      '<select id="gst-mode" onchange="calcGstTotal()" style="padding:0.6rem 0.6rem;font-size:0.95rem;font-weight:600;border-radius:var(--radius-sm);border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);">' +
+        '<option value="add">Add GST (Exclusive)</option>' +
+        '<option value="remove">Remove GST (Inclusive)</option>' +
+      '</select>' +
+    '</div>' +
+    '<div id="gst-result" style="margin-top:0.8rem;padding:0.8rem;background:var(--bg-tertiary);border-radius:var(--radius-sm);border-left:4px solid var(--color-accent);font-size:0.95rem;line-height:1.6;"></div>' +
+  '</div>';
+  container.innerHTML = html;
+  calcGstTotal();
+}
+
+/* 5. Unit Converter Mode */
+var convUnitsMap = {
+  length: [
+    { label: 'Kilometers (km)', factor: 1000 },
+    { label: 'Meters (m)', factor: 1 },
+    { label: 'Centimeters (cm)', factor: 0.01 },
+    { label: 'Feet (ft)', factor: 0.3048 },
+    { label: 'Inches (in)', factor: 0.0254 },
+    { label: 'Miles (mi)', factor: 1609.34 }
+  ],
+  weight: [
+    { label: 'Kilograms (kg)', factor: 1000 },
+    { label: 'Grams (g)', factor: 1 },
+    { label: 'Milligrams (mg)', factor: 0.001 },
+    { label: 'Pounds (lb)', factor: 453.592 },
+    { label: 'Ounces (oz)', factor: 28.3495 }
+  ],
+  volume: [
+    { label: 'Liters (L)', factor: 1000 },
+    { label: 'Milliliters (mL)', factor: 1 },
+    { label: 'Gallons (US)', factor: 3785.41 }
+  ],
+  temp: [
+    { label: 'Celsius (°C)', code: 'C' },
+    { label: 'Fahrenheit (°F)', code: 'F' },
+    { label: 'Kelvin (K)', code: 'K' }
+  ]
+};
+
+function initConverterUnits() {
+  var catSel = document.getElementById('conv-cat');
+  var fromSel = document.getElementById('conv-from');
+  var toSel = document.getElementById('conv-to');
+  if (!catSel || !fromSel || !toSel) return;
+
+  var cat = catSel.value;
+  var units = convUnitsMap[cat] || [];
+
+  fromSel.innerHTML = units.map(function(u, idx) {
+    return '<option value="' + idx + '">' + u.label + '</option>';
+  }).join('');
+
+  toSel.innerHTML = units.map(function(u, idx) {
+    var sel = idx === (units.length > 1 ? 1 : 0) ? ' selected' : '';
+    return '<option value="' + idx + '"' + sel + '>' + u.label + '</option>';
+  }).join('');
+
+  calcConvTotal();
+}
+
+function calcConvTotal() {
+  var catSel = document.getElementById('conv-cat');
+  var valInp = document.getElementById('conv-val');
+  var fromSel = document.getElementById('conv-from');
+  var toSel = document.getElementById('conv-to');
+  var resInp = document.getElementById('conv-res-val');
+  if (!catSel || !valInp || !fromSel || !toSel || !resInp) return;
+
+  var cat = catSel.value;
+  var val = parseFloat(valInp.value) || 0;
+  var fromIdx = parseInt(fromSel.value, 10) || 0;
+  var toIdx = parseInt(toSel.value, 10) || 0;
+  var units = convUnitsMap[cat] || [];
+
+  var fromTxt = units[fromIdx] ? units[fromIdx].label.split(' ')[0] : '';
+  var toTxt = units[toIdx] ? units[toIdx].label.split(' ')[0] : '';
+
+  if (cat === 'temp') {
+    var fromCode = units[fromIdx] ? units[fromIdx].code : 'C';
+    var toCode = units[toIdx] ? units[toIdx].code : 'F';
+    var celsius = val;
+    if (fromCode === 'F') celsius = (val - 32) * (5/9);
+    else if (fromCode === 'K') celsius = val - 273.15;
+
+    var result = celsius;
+    if (toCode === 'F') result = (celsius * 9/5) + 32;
+    else if (toCode === 'K') result = celsius + 273.15;
+
+    resInp.value = result.toFixed(2);
+  } else {
+    var fromFactor = units[fromIdx] ? units[fromIdx].factor : 1;
+    var toFactor = units[toIdx] ? units[toIdx].factor : 1;
+    var baseVal = val * fromFactor;
+    var finalVal = baseVal / toFactor;
+    resInp.value = Number.isInteger(finalVal) ? finalVal : finalVal.toFixed(4).replace(/\.?0+$/, '');
+  }
+
+  saveCalcHistory({
+    mode: 'converter',
+    expression: '📏 ' + val + ' ' + fromTxt + ' → ' + toTxt,
+    result: resInp.value,
+    convData: { cat: cat, val: val, fromIdx: fromIdx, toIdx: toIdx }
+  });
+}
+
+function renderConverterMode(container) {
+  if (!container) return;
+  var html = '<div style="padding:0.2rem 0.2rem;">' +
+    '<div class="field-row" style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem;">' +
+      '<span class="field-label" style="font-size:0.95rem;min-width:75px;">Category:</span>' +
+      '<select id="conv-cat" onchange="initConverterUnits()" style="padding:0.6rem 0.6rem;font-size:0.95rem;font-weight:600;border-radius:var(--radius-sm);border:1px solid var(--border-color);background:var(--bg-primary);color:#fff;flex:1;">' +
+        '<option value="length">Length (km, m, ft, inch)</option>' +
+        '<option value="weight">Weight (kg, g, lb, oz)</option>' +
+        '<option value="volume">Volume (L, mL, gal)</option>' +
+        '<option value="temp">Temperature (°C, °F, K)</option>' +
+      '</select>' +
+    '</div>' +
+    '<div class="field-row" style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem;">' +
+      '<input id="conv-val" type="text" inputmode="decimal" value="1" oninput="calcConvTotal()" style="width:90px;padding:0.6rem 0.6rem;font-size:1.05rem;font-weight:600;border-radius:var(--radius-sm);border:1px solid var(--border-color);background:var(--bg-primary);color:#fff;">' +
+      '<select id="conv-from" onchange="calcConvTotal()" style="padding:0.6rem 0.5rem;font-size:0.95rem;font-weight:600;border-radius:var(--radius-sm);border:1px solid var(--border-color);background:var(--bg-primary);color:#fff;flex:1;"></select>' +
+    '</div>' +
+    '<div class="field-row" style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem;">' +
+      '<span style="font-weight:700;font-size:1.2rem;color:var(--color-accent);padding:0 4px;">=</span>' +
+      '<input id="conv-res-val" type="text" readonly style="width:110px;padding:0.6rem 0.6rem;font-size:1.05rem;font-weight:700;border-radius:var(--radius-sm);border:1px solid var(--border-color);background:var(--bg-tertiary);color:var(--color-accent);">' +
+      '<select id="conv-to" onchange="calcConvTotal()" style="padding:0.6rem 0.5rem;font-size:0.95rem;font-weight:600;border-radius:var(--radius-sm);border:1px solid var(--border-color);background:var(--bg-primary);color:#fff;flex:1;"></select>' +
+    '</div>' +
+  '</div>';
+  container.innerHTML = html;
+  initConverterUnits();
+}
+
+/* 6. Scientific Mode */
+var _sciIsRad = false;
+var _sciExpr = '';
+var _sciAns = '0';
+
+function toggleSciRadDeg() {
+  _sciIsRad = !_sciIsRad;
+  var btn = document.getElementById('sci-rad-deg-btn');
+  if (btn) btn.textContent = _sciIsRad ? 'RAD' : 'DEG';
+}
+
+function sciPress(key) {
+  var exprEl = document.getElementById('sci-expr-screen');
+  var resEl = document.getElementById('sci-res-screen');
+  if (!exprEl || !resEl) return;
+
+  if (key === 'AC') {
+    _sciExpr = '';
+    exprEl.textContent = '0';
+    resEl.textContent = '= 0';
+    return;
+  }
+  if (key === 'DEL') {
+    _sciExpr = _sciExpr.slice(0, -1);
+    exprEl.textContent = _sciExpr || '0';
+    sciEvalLive();
+    return;
+  }
+  if (key === '=') {
+    var finalRes = sciEvalExpr(_sciExpr);
+    resEl.textContent = '= ' + fmtNum(finalRes);
+    _sciAns = String(finalRes);
+    saveCalcHistory({
+      mode: 'scientific',
+      expression: '📐 ' + _sciExpr,
+      result: finalRes
+    });
+    return;
+  }
+  if (key === 'Ans') {
+    _sciExpr += _sciAns;
+  } else if (key === 'pi') {
+    _sciExpr += 'π';
+  } else if (key === 'e') {
+    _sciExpr += 'e';
+  } else if (key === 'sin') {
+    _sciExpr += 'sin(';
+  } else if (key === 'cos') {
+    _sciExpr += 'cos(';
+  } else if (key === 'tan') {
+    _sciExpr += 'tan(';
+  } else if (key === 'sqrt') {
+    _sciExpr += '√(';
+  } else if (key === 'log') {
+    _sciExpr += 'log(';
+  } else if (key === 'ln') {
+    _sciExpr += 'ln(';
+  } else if (key === 'pow') {
+    _sciExpr += '^';
+  } else if (key === 'fact') {
+    _sciExpr += '!';
+  } else {
+    _sciExpr += key;
+  }
+
+  exprEl.textContent = _sciExpr;
+  sciEvalLive();
+}
+
+function sciEvalLive() {
+  var resEl = document.getElementById('sci-res-screen');
+  if (!resEl) return;
+  if (!_sciExpr) { resEl.textContent = '= 0'; return; }
+  try {
+    var val = sciEvalExpr(_sciExpr);
+    if (!isNaN(val) && isFinite(val)) {
+      resEl.textContent = '= ' + fmtNum(val);
+    }
+  } catch(e) {}
+}
+
+function sciEvalExpr(expr) {
+  if (!expr) return 0;
+  var jsExpr = expr
+    .replace(/π/g, 'Math.PI')
+    .replace(/e/g, 'Math.E')
+    .replace(/√\(/g, 'Math.sqrt(')
+    .replace(/log\(/g, 'Math.log10(')
+    .replace(/ln\(/g, 'Math.log(')
+    .replace(/\^/g, '**')
+    .replace(/×/g, '*')
+    .replace(/÷/g, '/');
+
+  jsExpr = jsExpr.replace(/(sin|cos|tan)\(([^)]+)\)/g, function(match, fn, arg) {
+    var valStr = '(' + arg + ')';
+    if (!_sciIsRad) {
+      valStr = '((' + arg + ') * Math.PI / 180)';
+    }
+    return 'Math.' + fn + valStr;
+  });
+
+  jsExpr = jsExpr.replace(/(\d+)!/g, function(match, n) {
+    var num = parseInt(n, 10);
+    var f = 1;
+    for (var i = 1; i <= num; i++) f *= i;
+    return String(f);
+  });
+
+  try {
+    var res = Function('"use strict"; return (' + jsExpr + ')')();
+    if (typeof res === 'number') {
+      return Number.isInteger(res) ? res : parseFloat(res.toFixed(6));
+    }
+  } catch(e) {}
+  return 0;
+}
+
+function renderScientificMode(container) {
+  if (!container) return;
+  var html = '<div style="display:flex;flex-direction:column;height:100%;padding:0.2rem 0;box-sizing:border-box;">' +
+    '<div style="font-weight:700;font-size:1.1rem;margin-bottom:0.6rem;color:var(--color-accent);display:flex;justify-content:flex-end;align-items:center;">' +
+      '<button id="sci-rad-deg-btn" onclick="toggleSciRadDeg()" style="padding:0.4rem 0.9rem;font-size:0.9rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">DEG</button>' +
+    '</div>' +
+    '<div style="background:var(--bg-primary);border:1px solid var(--border-color);border-radius:var(--radius-sm);padding:0.85rem 1rem;margin-bottom:0.85rem;text-align:right;">' +
+      '<div id="sci-expr-screen" style="font-size:1.1rem;color:var(--text-muted);min-height:26px;word-break:break-all;">' + (_sciExpr || '0') + '</div>' +
+      '<div id="sci-res-screen" style="font-size:2rem;font-weight:700;color:var(--color-accent);margin-top:4px;">= 0</div>' +
+    '</div>' +
+    '<div style="display:grid;grid-template-columns:repeat(5,1fr);grid-template-rows:repeat(6,1fr);gap:8px;flex:1;min-height:360px;">' +
+      '<button onclick="sciPress(\'sin\')" style="padding:0;font-size:1.05rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">sin</button>' +
+      '<button onclick="sciPress(\'cos\')" style="padding:0;font-size:1.05rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">cos</button>' +
+      '<button onclick="sciPress(\'tan\')" style="padding:0;font-size:1.05rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">tan</button>' +
+      '<button onclick="sciPress(\'AC\')" style="padding:0;font-size:1.1rem;font-weight:700;background:#d32f2f;border:none;color:#fff;border-radius:var(--radius-sm);cursor:pointer;">AC</button>' +
+      '<button onclick="sciPress(\'DEL\')" style="padding:0;font-size:1.1rem;font-weight:700;background:#f57c00;border:none;color:#fff;border-radius:var(--radius-sm);cursor:pointer;">⌫</button>' +
+
+      '<button onclick="sciPress(\'sqrt\')" style="padding:0;font-size:1.05rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">√</button>' +
+      '<button onclick="sciPress(\'log\')" style="padding:0;font-size:1.05rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">log</button>' +
+      '<button onclick="sciPress(\'ln\')" style="padding:0;font-size:1.05rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">ln</button>' +
+      '<button onclick="sciPress(\'(\')" style="padding:0;font-size:1.15rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">(</button>' +
+      '<button onclick="sciPress(\')\')" style="padding:0;font-size:1.15rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">)</button>' +
+
+      '<button onclick="sciPress(\'pow\')" style="padding:0;font-size:1.05rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">x^y</button>' +
+      '<button onclick="sciPress(\'7\')" style="padding:0;font-size:1.35rem;font-weight:700;background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">7</button>' +
+      '<button onclick="sciPress(\'8\')" style="padding:0;font-size:1.35rem;font-weight:700;background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">8</button>' +
+      '<button onclick="sciPress(\'9\')" style="padding:0;font-size:1.35rem;font-weight:700;background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">9</button>' +
+      '<button onclick="sciPress(\'÷\')" style="padding:0;font-size:1.3rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--color-accent);border-radius:var(--radius-sm);cursor:pointer;">÷</button>' +
+
+      '<button onclick="sciPress(\'pi\')" style="padding:0;font-size:1.15rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">π</button>' +
+      '<button onclick="sciPress(\'4\')" style="padding:0;font-size:1.35rem;font-weight:700;background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">4</button>' +
+      '<button onclick="sciPress(\'5\')" style="padding:0;font-size:1.35rem;font-weight:700;background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">5</button>' +
+      '<button onclick="sciPress(\'6\')" style="padding:0;font-size:1.35rem;font-weight:700;background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">6</button>' +
+      '<button onclick="sciPress(\'×\')" style="padding:0;font-size:1.3rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--color-accent);border-radius:var(--radius-sm);cursor:pointer;">×</button>' +
+
+      '<button onclick="sciPress(\'e\')" style="padding:0;font-size:1.15rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">e</button>' +
+      '<button onclick="sciPress(\'1\')" style="padding:0;font-size:1.35rem;font-weight:700;background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">1</button>' +
+      '<button onclick="sciPress(\'2\')" style="padding:0;font-size:1.35rem;font-weight:700;background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">2</button>' +
+      '<button onclick="sciPress(\'3\')" style="padding:0;font-size:1.35rem;font-weight:700;background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">3</button>' +
+      '<button onclick="sciPress(\'-\')" style="padding:0;font-size:1.3rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--color-accent);border-radius:var(--radius-sm);cursor:pointer;">-</button>' +
+
+      '<button onclick="sciPress(\'fact\')" style="padding:0;font-size:1.1rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">n!</button>' +
+      '<button onclick="sciPress(\'0\')" style="padding:0;font-size:1.35rem;font-weight:700;background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">0</button>' +
+      '<button onclick="sciPress(\'.\')" style="padding:0;font-size:1.35rem;font-weight:700;background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">.</button>' +
+      '<button onclick="sciPress(\'=\')" style="padding:0;font-size:1.4rem;font-weight:700;background:var(--color-accent);border:none;color:#fff;border-radius:var(--radius-sm);cursor:pointer;">=</button>' +
+      '<button onclick="sciPress(\'+\')" style="padding:0;font-size:1.3rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--color-accent);border-radius:var(--radius-sm);cursor:pointer;">+</button>' +
+    '</div>' +
+  '</div>';
+  container.innerHTML = html;
+  sciEvalLive();
 }
 
 function renderSplitterMode(container) {
@@ -2933,6 +4408,13 @@ function splitExprKey() {
   return '👥 '+(splitTripName||'Trip')+' — '+names+' ('+n+' expenses)';
 }
 
+function saveCalcHistory(entry) {
+  entry.date = new Date().toLocaleString();
+  calcHistory.unshift(entry);
+  localStorage.setItem('calc_history', JSON.stringify(calcHistory));
+  if (_calcHistoryVisible) renderCalcHistory();
+}
+
 function renderCalcHistory() {
   var container = document.getElementById('calc-history');
   if (!_calcHistoryVisible) {
@@ -2952,8 +4434,8 @@ function renderCalcHistory() {
     return;
   }
 
+  var limit = Math.min(filtered.length, (_calcMode === 'date' || _calcMode === 'gold' || _calcMode === 'fuel' || _calcMode === 'emi' || _calcMode === 'gst') ? 5 : 10);
   var html = '';
-  var limit = Math.min(filtered.length, 10);
   for (var j = 0; j < limit; j++) {
     var entry = filtered[j], realIdx = indices[j];
     var expr = entry.expression || '';
@@ -2991,6 +4473,58 @@ function loadCalcEntry(idx) {
     _fbTripId = null;
     if (typeof _splitIdCounter === 'undefined') _splitIdCounter = 100;
     setCalcMode('splitter');
+    return;
+  }
+  if (entry.mode === 'gold' && entry.goldData) {
+    if (_calcMode !== 'gold') setCalcMode('gold');
+    var d = entry.goldData;
+    var rInp = document.getElementById('gold-rate-input'); if (rInp) rInp.value = d.rate;
+    var cSel = document.getElementById('gold-carat-select'); if (cSel) cSel.value = d.carat;
+    var wInp = document.getElementById('gold-weight-input'); if (wInp) wInp.value = d.weight;
+    var mInp = document.getElementById('gold-making-input'); if (mInp) mInp.value = d.making;
+    var mType = document.getElementById('gold-making-type'); if (mType) mType.value = d.makingType;
+    var gCheck = document.getElementById('gold-gst-check'); if (gCheck) gCheck.checked = d.gst;
+    calcGoldTotal();
+    return;
+  }
+  if (entry.mode === 'fuel' && entry.fuelData) {
+    if (_calcMode !== 'fuel') setCalcMode('fuel');
+    var d = entry.fuelData;
+    var distInp = document.getElementById('fuel-dist'); if (distInp) distInp.value = d.dist;
+    var milInp = document.getElementById('fuel-mileage'); if (milInp) milInp.value = d.mileage;
+    var rateInp = document.getElementById('fuel-rate'); if (rateInp) rateInp.value = d.rate;
+    var peopleInp = document.getElementById('fuel-people'); if (peopleInp) peopleInp.value = d.passengers;
+    calcFuelTotal();
+    return;
+  }
+  if (entry.mode === 'emi' && entry.emiData) {
+    if (_calcMode !== 'emi') setCalcMode('emi');
+    var d = entry.emiData;
+    var amtInp = document.getElementById('emi-amount'); if (amtInp) amtInp.value = d.amount;
+    var rateInp = document.getElementById('emi-rate'); if (rateInp) rateInp.value = d.rate;
+    var tenureInp = document.getElementById('emi-tenure'); if (tenureInp) tenureInp.value = d.tenure;
+    var unitSel = document.getElementById('emi-unit'); if (unitSel) unitSel.value = d.unit;
+    calcEmiTotal();
+    return;
+  }
+  if (entry.mode === 'gst' && entry.gstData) {
+    if (_calcMode !== 'gst') setCalcMode('gst');
+    var d = entry.gstData;
+    var amtInp = document.getElementById('gst-amount'); if (amtInp) amtInp.value = d.amount;
+    var rateInp = document.getElementById('gst-rate'); if (rateInp) rateInp.value = d.rate;
+    var modeSel = document.getElementById('gst-mode'); if (modeSel) modeSel.value = d.mode;
+    calcGstTotal();
+    return;
+  }
+  if (entry.mode === 'converter' && entry.convData) {
+    if (_calcMode !== 'converter') setCalcMode('converter');
+    var d = entry.convData;
+    var catSel = document.getElementById('conv-cat'); if (catSel) catSel.value = d.cat;
+    initConverterUnits();
+    var valInp = document.getElementById('conv-val'); if (valInp) valInp.value = d.val;
+    var fromSel = document.getElementById('conv-from'); if (fromSel) fromSel.value = d.fromIdx;
+    var toSel = document.getElementById('conv-to'); if (toSel) toSel.value = d.toIdx;
+    calcConvTotal();
     return;
   }
 
@@ -3105,8 +4639,15 @@ function goToDashboard() {
 
 function toggleCalcHistory() {
   _calcHistoryVisible = !_calcHistoryVisible;
-  document.getElementById('calc-history-btn').textContent = _calcHistoryVisible ? 'Hide History' : 'Show History';
+  var btn = document.getElementById('calc-history-btn');
+  if (btn) btn.textContent = _calcHistoryVisible ? 'Hide History' : 'Show History';
   renderCalcHistory();
+  if (_calcHistoryVisible) {
+    setTimeout(function() {
+      var h = document.getElementById('calc-history');
+      if (h) h.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }, 60);
+  }
 }
 
 function clearCalcHistory() {
@@ -3135,45 +4676,28 @@ function shareExpensesWA() {
   var mon = new Date(now); mon.setDate(now.getDate() - (day===0?6:day-1));
   var sun = new Date(mon); sun.setDate(mon.getDate()+6);
   var today = now.toISOString().split('T')[0];
-  var monStr = mon.toISOString().split('T')[0], sunStr = sun.toISOString().split('T')[0];
-  var thisMon = today.slice(0,7);
-  var groups = {};
-  expensesList.forEach(function(e){ if (!groups[e.date]) groups[e.date] = []; groups[e.date].push(e); });
-  var dates = Object.keys(groups).sort().reverse();
-  var todayItems = [], weekItems = [], monthItems = [];
-  dates.forEach(function(d){
-    if (d === today) { todayItems = groups[d]; return; }
-    if (d >= monStr && d <= sunStr) { weekItems = weekItems.concat(groups[d]); return; }
-    if (d.slice(0,7) === thisMon) { monthItems = monthItems.concat(groups[d]); return; }
+  if (!expensesList.length) { showToast('No expenses recorded'); return; }
+  var lines = ['💸 EXPENSES BREAKDOWN'];
+  expensesList.forEach(function(e, i) {
+    lines.push((i+1) + '. ' + e.desc + ': ₹' + fmtNum(e.amount));
   });
-  var lines = ['📋 My Expenses\n'];
-  function addSection(title, items) {
-    if (!items.length) return;
-    var t = 0; items.forEach(function(e){ t += parseFloat(e.amount)||0; });
-    lines.push('📅 '+title+' — ₹'+fmtNum(t));
-    items.forEach(function(e){ lines.push('  '+fmtDate(e.date)+' • '+e.desc+' — ₹'+fmtNum(parseFloat(e.amount)||0)); });
-    lines.push('');
-  }
-  addSection('Today', todayItems);
-  addSection('This Week', weekItems);
-  addSection('This Month', monthItems);
   var total = 0;
   expensesList.forEach(function(e){ total += parseFloat(e.amount)||0; });
   lines.push('Total: ₹'+fmtNum(total));
-  window.open('https://wa.me/?text=' + encodeURIComponent(lines.join('\n')));
+  doShare(lines.join('\n'), 'Expenses Breakdown');
 }
 
 function shareCalcExpression() {
   if (_calcMode === 'splitter') {
     var txt = splitShareText();
-    if (txt) window.open('https://wa.me/?text=' + encodeURIComponent(txt));
+    if (txt) doShare(txt, 'Trip Expenses Split');
     return;
   }
   if (_calcMode !== 'basic') return;
   if (_stickyActive) {
     var exprText = _stickyFullExpr + (_stickyInput ? ' ' + _stickyOp + ' ' + _stickyInput : '');
     var text = exprText.trim() + ' = ' + fmtNum(_stickyResult);
-    window.open('https://wa.me/?text=' + encodeURIComponent(text));
+    doShare(text, 'Calculation');
     return;
   }
   var str = calcExprFromTokens();
@@ -3181,30 +4705,66 @@ function shareCalcExpression() {
     var result = _calcShowExpr ? evalExpr(str) : _calcSavedResult;
     if (!isFinite(result)) return;
 
-    var hasLabels = false;
-    calcTokens.forEach(function(t) { if (t.label) hasLabels = true; });
-    var lines = [];
-    calcTokens.forEach(function(t, i) {
-      var displayV = t.v;
-      if (displayV === '-') displayV = '−';
-      if (displayV === '*') displayV = '×';
-      else if (displayV === '/') displayV = '÷';
-
-      if (['+','−','×','÷'].indexOf(displayV) !== -1) {
-        if (hasLabels) {
-          lines.push('\n' + displayV + ' ');
-        } else {
-          lines.push(' ' + displayV + ' ');
-        }
-      } else {
+    var hasLabels = calcTokens.some(function(t) { return !!t.label; });
+    var outputText = '';
+    if (hasLabels) {
+      var tokenLines = [];
+      calcTokens.forEach(function(t, idx) {
+        if (['+','-','*','/','%'].indexOf(t.v) !== -1) return;
         var formattedVal = fmtTokenVal(t.v);
-        lines.push(t.label ? formattedVal + '(' + t.label + ')' : formattedVal);
-      }
-    });
+        var labelStr = t.label ? ' (' + t.label + ')' : '';
+        var opPrefix = '';
+        if (idx > 0 && calcTokens[idx-1] && ['+','-','*','/','%'].indexOf(calcTokens[idx-1].v) !== -1) {
+          var rawOp = calcTokens[idx-1].v;
+          opPrefix = (rawOp === '*' ? '×' : rawOp === '/' ? '÷' : rawOp === '-' ? '−' : rawOp) + ' ';
+        }
+        tokenLines.push(opPrefix + formattedVal + labelStr);
+      });
+      outputText = tokenLines.join('\n') + '\n────────────\n= ' + fmtNum(result);
+    } else {
+      var lines = [];
+      calcTokens.forEach(function(t) {
+        var displayV = t.v;
+        if (displayV === '-') displayV = '−';
+        if (displayV === '*') displayV = '×';
+        else if (displayV === '/') displayV = '÷';
 
-    var text = lines.join('') + (hasLabels ? '\n= ' : ' = ') + fmtNum(result);
-    window.open('https://wa.me/?text=' + encodeURIComponent(text));
+        if (['+','−','×','÷'].indexOf(displayV) !== -1) {
+          lines.push(' ' + displayV + ' ');
+        } else {
+          var formattedVal = fmtTokenVal(t.v);
+          var labelStr = t.label ? '(' + t.label + ')' : '';
+          lines.push(formattedVal + labelStr);
+        }
+      });
+      outputText = lines.join('') + '\n= ' + fmtNum(result);
+    }
+    doShare(outputText, 'Calculation');
   } catch(e) {}
+}
+
+var _deferredPwaPrompt = null;
+window.addEventListener('beforeinstallprompt', function(e) {
+  e.preventDefault();
+  _deferredPwaPrompt = e;
+  var box = document.getElementById('pwa-install-container');
+  if (box) box.style.display = 'block';
+});
+
+function triggerPwaInstall() {
+  if (_deferredPwaPrompt) {
+    _deferredPwaPrompt.prompt();
+    _deferredPwaPrompt.userChoice.then(function(res) {
+      if (res.outcome === 'accepted') {
+        showToast('🎉 App Installed!');
+      }
+      _deferredPwaPrompt = null;
+      var box = document.getElementById('pwa-install-container');
+      if (box) box.style.display = 'none';
+    });
+  } else {
+    showToast('📲 Tap Browser Menu → Add to Home Screen');
+  }
 }
 
 function dismissOnboarding(e) {
@@ -3217,15 +4777,20 @@ document.body.classList.add('theme-' + _calcTheme);
 var td = document.querySelector('.theme-circle[data-theme="' + _calcTheme + '"]');
 if (td) td.classList.add('active');
 document.querySelector('meta[name="theme-color"]').content = getComputedStyle(document.body).getPropertyValue('--color-accent').trim();
-document.getElementById('fast-input-toggle').checked = _fastInput;
-document.getElementById('record-expenses-toggle').checked = _recordExpenses;
-document.getElementById('fast-lazy-toggle').checked = _fastLazy;
-document.getElementById('show-words-toggle').checked = _showWords;
-document.getElementById('k-mode-toggle').checked = _kMode;
+var el;
+el = document.getElementById('record-expenses-toggle'); if (el) el.checked = _recordExpenses;
+el = document.getElementById('fast-lazy-toggle'); if (el) el.checked = _fastLazy;
+el = document.getElementById('show-words-toggle'); if (el) el.checked = _showWords;
+el = document.getElementById('k-mode-toggle'); if (el) el.checked = _kMode;
+el = document.getElementById('share-mode-toggle'); if (el) el.checked = _shareMode === 'system';
+el = document.getElementById('bill-mode-toggle'); if (el) el.checked = _billMode;
+updateShareIconUI();
 updateExpensesBadge();
 
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js?v=' + Date.now()).catch(function(err) {
+  navigator.serviceWorker.register('sw.js?v=' + Date.now()).then(function(reg) {
+    if (reg) reg.update();
+  }).catch(function(err) {
     console.log('SW registration failed:', err);
   });
 }
