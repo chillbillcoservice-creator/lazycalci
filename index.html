@@ -258,21 +258,23 @@ button:active, .calc-btn:active, .calc-key:active, .mode-heading-btn:active, .ex
   margin-bottom: 6px !important;
 }
 /* splitter */
-.sp-people { display:flex; flex-direction:column; gap:0.45rem; margin-bottom:0.8rem; }
-.sp-person { display:flex; align-items:center; gap:0.5rem; background:var(--bg-tertiary); border-radius:var(--radius-sm); padding:0.7rem 0.65rem; font-size:1rem; color:var(--text-primary); }
-.sp-person .av { width:26px; height:26px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.8rem; font-weight:700; color:#fff; flex-shrink:0; }
-.sp-person .rm { cursor:pointer; font-size:0.9rem; color:var(--text-muted); }
-.sp-person .rm:hover { color:var(--color-accent); }
-.sp-person-total { margin-left:auto; font-weight:600; font-size:1rem; color:var(--color-accent); min-width:70px; text-align:right; }
+.sp-people { display:flex; flex-direction:column; gap:0.4rem; margin-bottom:0.8rem; }
+.sp-person { display:flex; align-items:center; gap:0.55rem; background:var(--bg-tertiary); border-radius:var(--radius-sm); padding:0.45rem 0.65rem; font-size:0.9rem; color:var(--text-primary); border:1px solid var(--border-color); }
+.sp-person .av { width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.85rem; font-weight:700; color:#fff; flex-shrink:0; box-shadow:0 1px 4px rgba(0,0,0,0.2); }
+.sp-person-info { flex:1; min-width:0; display:flex; flex-direction:column; justify-content:center; }
+.sp-person-name { font-size:0.88rem; font-weight:600; line-height:1.25; display:flex; align-items:center; flex-wrap:wrap; gap:0.25rem; }
+.sp-person .rm { cursor:pointer; font-size:0.9rem; color:var(--text-muted); opacity:0.6; padding:0 3px; }
+.sp-person .rm:hover { color:var(--color-accent); opacity:1; }
+.sp-person-total { margin-left:auto; font-weight:700; font-size:0.88rem; color:var(--color-accent); min-width:65px; text-align:right; padding:2px 6px; border-radius:6px; background:rgba(255,255,255,0.05); }
 .sp-add-row { display:flex; gap:0.4rem; margin-bottom:0.6rem; }
-.sp-add-row input { flex:1; min-width:0; padding:0.7rem 0.6rem; border:1px solid var(--border-color); border-radius:var(--radius-sm); background:var(--bg-primary); color:var(--text-primary); font-size:1rem; }
+.sp-add-row input { flex:1; min-width:0; padding:0.55rem 0.6rem; border:1px solid var(--border-color); border-radius:var(--radius-sm); background:var(--bg-primary); color:var(--text-primary); font-size:0.9rem; }
 .sp-add-row .sp-add-tel { width:90px; flex:none; }
-.sp-add-row button { padding:0.7rem 1rem; border:1px solid var(--color-accent); border-radius:var(--radius-sm); background:var(--color-accent); color:#fff; cursor:pointer; font-size:1rem; font-weight:600; }
-.sp-tel { font-size:0.75rem; color:var(--text-muted); display:block; }
+.sp-add-row button { padding:0.55rem 1rem; border:1px solid var(--color-accent); border-radius:var(--radius-sm); background:var(--color-accent); color:#fff; cursor:pointer; font-size:0.9rem; font-weight:600; }
+.sp-tel { font-size:0.72rem; color:var(--text-muted); display:block; opacity:0.7; line-height:1.1; margin-top:1px; }
 .exp-row { display:flex; gap:0.4rem; margin-bottom:0.6rem; }
-.exp-row input { flex:1; min-width:0; padding:0.7rem 0.6rem; border:1px solid var(--border-color); border-radius:var(--radius-sm); background:var(--bg-primary); color:var(--text-primary); font-size:1rem; }
+.exp-row input { flex:1; min-width:0; padding:0.55rem 0.6rem; border:1px solid var(--border-color); border-radius:var(--radius-sm); background:var(--bg-primary); color:var(--text-primary); font-size:0.9rem; }
 .exp-row .exp-amt { width:110px; flex:none; }
-.exp-row button { padding:0.7rem 1rem; border:1px solid var(--color-accent); border-radius:var(--radius-sm); background:var(--color-accent); color:#fff; cursor:pointer; font-size:1rem; font-weight:600; }
+.exp-row button { padding:0.55rem 1rem; border:1px solid var(--color-accent); border-radius:var(--radius-sm); background:var(--color-accent); color:#fff; cursor:pointer; font-size:0.9rem; font-weight:600; }
 .exp-item { display:flex; align-items:center; gap:0.4rem; padding:0.5rem 0.6rem; background:var(--bg-primary); border-radius:var(--radius-sm); margin-bottom:0.35rem; }
 .exp-item .exp-desc { flex:1; font-size:0.9rem; color:var(--text-primary); }
 .exp-item .exp-amt-val { font-weight:400; color:var(--color-accent); white-space:nowrap; min-width:70px; text-align:right; }
@@ -286,26 +288,27 @@ details summary:before { content:'▶'; font-size:0.65rem; color:var(--text-mute
 details[open] summary:before { content:'▼'; }
 .exp-summary { cursor:pointer; font-size:1rem; font-weight:600; color:var(--text-primary); padding:0.5rem 0.6rem; display:flex; align-items:center; gap:0.4rem; list-style:none; background:var(--bg-tertiary); border-radius:var(--radius-sm); margin-bottom:0.35rem; }
 .exp-summary:hover { background:var(--bg-primary); }
-.sp-wa-btn { display:inline-flex; cursor:pointer; font-size:0.9rem; margin-left:4px; padding:2px 5px; border-radius:3px; background:var(--bg-primary); vertical-align:middle; }
+.sp-wa-btn { display:inline-flex; align-items:center; justify-content:center; cursor:pointer; font-size:0.85rem; padding:3px 7px; border-radius:6px; background:var(--bg-primary); border:1px solid var(--border-color); vertical-align:middle; transition:all 0.15s; }
 .date-preset { font-size:0.75rem; padding:0.3rem 0.5rem; border-radius:6px; border:1px solid var(--border-color); cursor:pointer; color:var(--text-muted); background:transparent; font-weight:600; }
 .date-preset:hover { color:var(--text-primary); border-color:var(--color-accent); }
 .sp-org-badge { font-size:0.55rem; color:#f1c40f; border:1px solid #f1c40f; border-radius:3px; padding:1px 4px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; display:inline-block; }
-.sp-wa-btn:hover { background:var(--color-accent); }
-.sp-section-title { font-size:0.85rem; font-weight:600; color:var(--text-primary); padding:0.45rem 0.6rem; border-radius:var(--radius-sm); background:var(--bg-tertiary); margin-bottom:0.5rem; letter-spacing:0.03em; text-transform:uppercase; }
-.sp-trip { display:flex; align-items:center; gap:0.5rem; padding:0.7rem; background:var(--bg-tertiary); border-radius:var(--radius-sm); margin-bottom:0.7rem; flex-wrap:wrap; }
-.sp-trip input { background:transparent; border:none; color:var(--text-primary); font-size:1.1rem; font-weight:600; flex:1; min-width:100px; outline:none; padding:0; }
+.sp-wa-btn:hover { background:var(--color-accent); color:#fff; border-color:var(--color-accent); }
+.sp-section-title { font-size:0.82rem; font-weight:700; color:var(--text-primary); padding:0.4rem 0.6rem; border-radius:var(--radius-sm); background:var(--bg-tertiary); margin-bottom:0.5rem; letter-spacing:0.04em; text-transform:uppercase; border-left:3px solid var(--color-accent); }
+.sp-trip { display:flex; align-items:center; gap:0.5rem; padding:0.6rem 0.75rem; background:var(--bg-tertiary); border-radius:var(--radius-sm); margin-bottom:0.7rem; flex-wrap:wrap; border:1px solid var(--border-color); }
+.sp-trip input { background:transparent; border:none; color:var(--text-primary); font-size:1.05rem; font-weight:600; flex:1; min-width:100px; outline:none; padding:0; }
 .sp-trip input::placeholder { color:var(--text-muted); font-weight:400; }
-.sp-trip-date { font-size:0.85rem; color:var(--text-muted); white-space:nowrap; }
-.sp-expense { background:var(--bg-tertiary); border-radius:var(--radius-sm); padding:0.55rem 0.7rem; margin-bottom:0.55rem; }
-.sp-expense-top { display:flex; align-items:flex-start; gap:0.3rem; margin-bottom:0.25rem; }
+.sp-trip-date { font-size:0.8rem; color:var(--text-muted); white-space:nowrap; }
+.sp-expense { background:var(--bg-tertiary); border-radius:var(--radius-sm); padding:0.65rem 0.75rem; margin-bottom:0.6rem; border:1px solid var(--border-color); box-shadow:0 2px 6px rgba(0,0,0,0.15); }
+.sp-expense-top { display:flex; align-items:center; gap:0.4rem; margin-bottom:0.35rem; }
 .sp-expense-desc { flex:1; min-width:0; }
-.sp-expense-top .rm-exp { cursor:pointer; color:var(--text-muted); font-size:0.9rem; flex-shrink:0; margin-top:2px; }
-.sp-expense-top .rm-exp:hover { color:var(--color-accent); }
-.sp-chips { display:flex; flex-wrap:wrap; gap:0.3rem; margin-top:0.35rem; }
-.sp-chip { font-size:0.75rem; padding:0.2rem 0.45rem; border-radius:10px; border:1px solid var(--border-color); cursor:pointer; color:var(--text-muted); background:transparent; touch-action:manipulation; }
-.sp-action-row { display:flex; gap:0.5rem; margin-bottom:0.3rem; }
-.sp-btn-primary { flex:1; padding:0.6rem; border:1px solid var(--color-accent); border-radius:var(--radius-sm); background:transparent; color:var(--color-accent); cursor:pointer; font-size:0.9rem; font-weight:600; touch-action:manipulation; transition:all 0.15s; }
-.sp-btn-secondary { flex:1; padding:0.6rem; border:1px solid var(--border-color); border-radius:var(--radius-sm); background:var(--bg-tertiary); color:var(--text-primary); cursor:pointer; font-size:0.9rem; font-weight:600; touch-action:manipulation; transition:all 0.15s; }
+.sp-expense-top .rm-exp { cursor:pointer; color:var(--text-muted); font-size:0.95rem; flex-shrink:0; opacity:0.7; transition:opacity 0.15s; }
+.sp-expense-top .rm-exp:hover { color:var(--color-accent); opacity:1; }
+.sp-chips { display:flex; flex-wrap:wrap; align-items:center; gap:0.35rem; margin-top:0.45rem; padding-top:0.45rem; border-top:1px solid var(--border-color); }
+.sp-chip-group { display:inline-flex; align-items:center; gap:3px; background:var(--bg-primary); padding:2px 4px; border-radius:8px; border:1px solid var(--border-color); flex-shrink:0; }
+.sp-chip { font-size:0.78rem; font-weight:600; padding:0.22rem 0.5rem; border-radius:6px; border:1px solid transparent; cursor:pointer; color:var(--text-muted); background:transparent; touch-action:manipulation; transition:all 0.15s; white-space:nowrap; }
+.sp-action-row { display:flex; gap:0.5rem; margin-bottom:0.4rem; }
+.sp-btn-primary { flex:1; padding:0.55rem; border:1px solid var(--color-accent); border-radius:var(--radius-sm); background:transparent; color:var(--color-accent); cursor:pointer; font-size:0.88rem; font-weight:600; touch-action:manipulation; transition:all 0.15s; }
+.sp-btn-secondary { flex:1; padding:0.55rem; border:1px solid var(--border-color); border-radius:var(--radius-sm); background:var(--bg-tertiary); color:var(--text-primary); cursor:pointer; font-size:0.88rem; font-weight:600; touch-action:manipulation; transition:all 0.15s; }
 .sp-btn-primary:hover { background:var(--color-accent); color:#fff; transform:translateY(-1px); box-shadow:0 2px 8px rgba(0,0,0,0.2); }
 .sp-btn-secondary:hover { background:var(--bg-secondary); border-color:var(--color-accent); transform:translateY(-1px); }
 .sp-buddy-form { display:flex; gap:0.4rem; margin-top:0.4rem; flex-wrap:wrap; }
@@ -320,16 +323,17 @@ details[open] summary:before { content:'▼'; }
 .sp-chip.on { background:var(--color-accent); color:#fff; border-color:var(--color-accent); }
 .sp-chip.payer { border-color:#f1c40f; color:#f1c40f; }
 .sp-chip.payer.on { background:#f1c40f; border-color:#f1c40f; color:#000; }
-.sp-add-person-btn { cursor:pointer; font-size:1.5rem; color:var(--color-accent); padding:2px 5px; border-radius:4px; line-height:1; }
+.sp-add-person-btn { cursor:pointer; font-size:1.3rem; color:var(--color-accent); padding:1px 6px; border-radius:4px; line-height:1; font-weight:700; border:1px solid var(--color-accent); }
 .sp-add-person-btn:hover { background:var(--color-accent); color:#fff; }
-.sp-invite-btn { cursor:pointer; font-size:1rem; padding:2px 4px; border-radius:3px; line-height:1; color:var(--text-muted); }
+.sp-invite-btn { cursor:pointer; font-size:0.95rem; padding:2px 4px; border-radius:3px; line-height:1; color:var(--text-muted); }
 .sp-invite-btn:hover { color:var(--color-accent); }
-.sp-you-badge { font-size:0.6rem; color:var(--color-accent); border:1px solid var(--color-accent); border-radius:3px; padding:0 4px; margin-left:0.3rem; white-space:nowrap; }
-.sp-custom-amt { width:48px; padding:0.2rem 0.25rem; font-size:0.75rem; border:1px solid var(--border-color); border-radius:3px; background:var(--bg-primary); color:var(--text-primary); }
-.sp-result { background:var(--bg-tertiary); border-radius:var(--radius-sm); padding:0.6rem; margin-top:0.5rem; }
+.sp-you-badge { font-size:0.58rem; color:var(--color-accent); border:1px solid var(--color-accent); border-radius:3px; padding:0 3px; margin-left:0.2rem; white-space:nowrap; font-weight:700; }
+.sp-custom-amt { width:52px; padding:0.2rem 0.3rem; font-size:0.78rem; font-weight:600; border:1px solid var(--border-color); border-radius:4px; background:var(--bg-tertiary); color:var(--text-primary); outline:none; text-align:center; }
+.sp-custom-amt:focus { border-color:var(--color-accent); }
+.sp-result { background:var(--bg-tertiary); border-radius:var(--radius-sm); padding:0.6rem; margin-top:0.5rem; border:1px solid var(--border-color); }
 .sp-result-line { font-size:0.85rem; color:var(--text-primary); padding:0.2rem 0; }
 .sp-result-owed { font-size:0.85rem; color:var(--color-accent); padding:0.15rem 0; }
-.sp-split-badge { font-size:0.6rem; color:var(--color-accent); padding:2px 5px; border-radius:3px; border:1px solid var(--color-accent); margin-left:auto; }
+.sp-split-badge { font-size:0.65rem; font-weight:700; color:var(--color-accent); padding:2px 6px; border-radius:4px; border:1px solid var(--color-accent); margin-left:auto; text-transform:uppercase; letter-spacing:0.5px; }
 .mode-results { display:flex; gap:0.5rem; margin-bottom:1rem; }
 .mode-results .mr-item { background:var(--bg-tertiary); border-radius:var(--radius-sm); padding:0.6rem 0.5rem; text-align:center; flex:1; min-width:0; }
 .mode-results .mr-label { display:block; font-size:0.65rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; }
@@ -821,14 +825,14 @@ body {
   <div class="modal-container">
     <div class="modal-header">
       <div class="modal-header-left">
-        <button id="settings-btn" class="settings-btn" onclick="openSettingsModal()" title="Settings">🛠️</button>
+        <button id="settings-btn" class="settings-btn" onclick="openSettingsModal()" title="Settings">⚙️</button>
         <button id="calc-back-btn" class="settings-btn" onclick="setCalcMode('basic')" title="Back to Calculator" style="display:none;font-size:1.35rem;cursor:pointer;padding:0 2px;">⬅️</button>
       </div>
       <div id="calc-heading">
         <span id="h-btn-expenses" class="mode-heading-btn" onclick="setCalcMode('expenses')">💸 EXPENSES</span>
         <span id="h-btn-date" class="mode-heading-btn" onclick="setCalcMode('date')">🗓️</span>
         <div id="modes-dropdown-wrap" class="modes-dropdown-wrap">
-          <span id="h-btn-modes" class="mode-heading-btn" onclick="toggleModesMenu(event)">⚙️ MODES ▼</span>
+          <span id="h-btn-modes" class="mode-heading-btn" onclick="toggleModesMenu(event)">🧮 MODES ▲</span>
           <div id="modes-menu" class="modes-menu-popup" onclick="event.stopPropagation()">
             <div class="modes-menu-item" onclick="selectModeFromMenu('splitter')">👥 Splitter</div>
             <div class="modes-menu-item" onclick="selectModeFromMenu('gold')">🪙 Gold & Jewellery</div>
@@ -910,7 +914,7 @@ function updateNavPositionUI() {
   if (modesBtn) {
     var arrow = _navBottom ? '▲' : '▼';
     var labels = {
-      basic: '🛠️ MODES ' + arrow,
+      basic: '🧮 MODES ' + arrow,
       splitter: '👥 SPLITTER ' + arrow,
       gold: '🪙 GOLD ' + arrow,
       fuel: '⛽ FUEL ' + arrow,
@@ -919,7 +923,7 @@ function updateNavPositionUI() {
       converter: '📏 CONVERT ' + arrow,
       scientific: '📐 SCIENTIFIC ' + arrow
     };
-    modesBtn.textContent = labels[_calcMode] || ('🛠️ MODES ' + arrow);
+    modesBtn.textContent = labels[_calcMode] || ('🧮 MODES ' + arrow);
   }
   var mainCalc = document.getElementById('modal-calculator');
   if (mainCalc) {
@@ -1191,7 +1195,7 @@ function applyCalcMode(name) {
 
   var arrow = _navBottom ? '▲' : '▼';
   var modeLabels = {
-    basic: '🛠️ MODES ' + arrow,
+    basic: '🧮 MODES ' + arrow,
     splitter: '👥 SPLITTER ' + arrow,
     gold: '🪙 GOLD ' + arrow,
     fuel: '⛽ FUEL ' + arrow,
@@ -4342,7 +4346,7 @@ function renderSplitterModeContent(container) {
     var inviteBtn = (!_tripEnded && !p.joined && p.tel !== _fbCreatorPhone && _fbTripId && _fbTripId !== 'mock') ? '<span class="sp-invite-btn" style="margin-left:5px" onclick="shareInviteLink('+p.id+');event.stopPropagation()" title="Share">🔗</span>' : '';
     var canAddExp = !_tripEnded && (_isCreator || (p.tel && p.tel === _fbPhone));
     var removeBtn = (!_tripEnded && _isCreator && p.tel !== _fbCreatorPhone) ? '<span class="rm" onclick="removeSplitPerson('+p.id+')">✕</span>' : '';
-    html += '<div class="sp-person"><span class="av" style="background:'+c+';cursor:pointer" onclick="callSplitPerson('+p.id+')">'+p.name[0].toUpperCase()+'</span><div style="cursor:pointer;flex:1;display:flex;flex-direction:column;justify-content:center" onclick="callSplitPerson('+p.id+')"><div>'+escHtml(p.name)+organiserBadge+youBadge+inviteBtn+'</div>'+(p.tel?'<div class="sp-tel">'+escHtml(p.tel)+'</div>':'')+'</div>'+(canAddExp?'<span class="sp-add-person-btn" onclick="openAddExpensePopup('+p.id+')">+</span>':'')+'<span class="sp-person-total">₹'+fmtNum(tot)+'</span>'+removeBtn+'</div>';
+    html += '<div class="sp-person"><span class="av" style="background:'+c+';cursor:pointer" onclick="callSplitPerson('+p.id+')">'+p.name[0].toUpperCase()+'</span><div class="sp-person-info" style="cursor:pointer" onclick="callSplitPerson('+p.id+')"><div class="sp-person-name">'+escHtml(p.name)+organiserBadge+youBadge+inviteBtn+'</div>'+(p.tel?'<div class="sp-tel">'+escHtml(p.tel)+'</div>':'')+'</div>'+(canAddExp?'<span class="sp-add-person-btn" onclick="openAddExpensePopup('+p.id+')">+</span>':'')+'<span class="sp-person-total">₹'+fmtNum(tot)+'</span>'+removeBtn+'</div>';
   });
   html += '</div>';
   /* expenses */
@@ -4369,35 +4373,42 @@ function renderSplitterModeContent(container) {
       
       html += '<div class="sp-expense">';
       html += '<div class="sp-expense-top">';
-      html += '<div class="sp-expense-desc" style="font-size:0.9rem;font-weight:600;color:#fff;line-height:1.3"><span style="display:inline-block;vertical-align:middle;">' + escHtml(e.desc||'📝 Expense') + '</span></div>';
-      html += '<div style="font-size:1rem;font-weight:700;color:var(--color-accent);white-space:nowrap;margin-left:auto;margin-right:0.4rem">₹'+fmtNum(parseFloat(e.amount)||0)+'</div>';
+      html += '<div class="sp-expense-desc" style="font-size:0.92rem;font-weight:700;color:#fff;line-height:1.3"><span style="display:inline-block;vertical-align:middle;">' + escHtml(e.desc||'📝 Expense') + '</span></div>';
+      html += '<div style="font-size:1.05rem;font-weight:700;color:var(--color-accent);white-space:nowrap;margin-left:auto;margin-right:0.4rem">₹'+fmtNum(parseFloat(e.amount)||0)+'</div>';
       html += (_isCreator && !_tripEnded) ? '<span class="rm-exp" onclick="removeSplitExpense('+e.id+')">🗑️</span>' : '';
       html += '</div>';
-      html += '<div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:0.3rem">paid by <span style="color:#fff">'+escHtml(payerName)+'</span></div>';
+      html += '<div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:0.35rem">paid by <span style="color:#fff;font-weight:600">'+escHtml(payerName)+'</span></div>';
       html += '<div class="sp-chips">';
       splitPeople.forEach(function(p){
         var on = e.checked[p.id] ? ' on' : '';
         var payerClass = p.id === e.paidBy ? ' payer' : '';
         var toggleClick = (_isCreator && !_tripEnded) ? 'spTogglePerson('+e.id+','+p.id+');renderSplitterMode(document.getElementById(\'calc-mode-body\'))' : 'showToast(\'Cannot modify this trip.\')';
         var disabledAttr = (_isCreator && !_tripEnded) ? '' : ' disabled style="opacity:0.8; cursor:default;"';
+        var hasInput = e.checked[p.id] && ['custom','shares','percentages'].indexOf(e.splitMode) !== -1;
         
+        if (hasInput) {
+          html += '<span class="sp-chip-group">';
+        }
         html += '<span class="sp-chip'+on+payerClass+'" onclick="'+toggleClick+'">'+escHtml(p.name)+'</span>';
         if (e.splitMode === 'custom' && e.checked[p.id]) {
           var cv = e.customAmounts && e.customAmounts[p.id] !== undefined ? e.customAmounts[p.id] : '';
           html += '<input class="sp-custom-amt" placeholder="₹" inputmode="decimal" value="'+(cv!==''?cv:'')+'" oninput="spSetCustom('+e.id+','+p.id+',this.value);renderSplitResults()"'+disabledAttr+'>';
         } else if (e.splitMode === 'shares' && e.checked[p.id]) {
           var cv = e.customAmounts && e.customAmounts[p.id] !== undefined ? e.customAmounts[p.id] : '1';
-          html += '<input class="sp-custom-amt" placeholder="shares" inputmode="decimal" value="'+cv+'" oninput="spSetCustom('+e.id+','+p.id+',this.value);renderSplitResults()"'+disabledAttr+'><span style="font-size:0.7rem;color:var(--text-muted)">s</span>';
+          html += '<input class="sp-custom-amt" placeholder="s" inputmode="decimal" value="'+cv+'" oninput="spSetCustom('+e.id+','+p.id+',this.value);renderSplitResults()"'+disabledAttr+'><span style="font-size:0.7rem;color:var(--text-muted);margin-right:2px">s</span>';
         } else if (e.splitMode === 'percentages' && e.checked[p.id]) {
           var cv = e.customAmounts && e.customAmounts[p.id] !== undefined ? e.customAmounts[p.id] : '';
-          html += '<input class="sp-custom-amt" placeholder="%" inputmode="decimal" value="'+cv+'" oninput="spSetCustom('+e.id+','+p.id+',this.value);renderSplitResults()"'+disabledAttr+'><span style="font-size:0.7rem;color:var(--text-muted)">%</span>';
+          html += '<input class="sp-custom-amt" placeholder="%" inputmode="decimal" value="'+cv+'" oninput="spSetCustom('+e.id+','+p.id+',this.value);renderSplitResults()"'+disabledAttr+'><span style="font-size:0.7rem;color:var(--text-muted);margin-right:2px">%</span>';
+        }
+        if (hasInput) {
+          html += '</span>';
         }
       });
-      var modeBadgeText = 'Eq';
+      var modeBadgeText = 'Equal';
       if (e.splitMode === 'shares') modeBadgeText = 'Shares';
       else if (e.splitMode === 'percentages') modeBadgeText = '%';
-      else if (e.splitMode === 'custom') modeBadgeText = 'Cus';
-      html += '<span class="sp-split-badge">'+modeBadgeText+'</span><span class="sp-wa-btn" onclick="shareExpenseWA('+e.id+');event.stopPropagation()">💬</span>';
+      else if (e.splitMode === 'custom') modeBadgeText = 'Custom ₹';
+      html += '<span class="sp-split-badge">'+modeBadgeText+'</span><span class="sp-wa-btn" onclick="shareExpenseWA('+e.id+');event.stopPropagation()" title="Share Expense">💬</span>';
       html += '</div></div>';
     });
   }
