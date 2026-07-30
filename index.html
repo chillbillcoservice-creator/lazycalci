@@ -13,6 +13,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Modes">
 <link rel="apple-touch-icon" href="icon.svg">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&display=swap" rel="stylesheet">
 <style>
 html, body, .modal-container { touch-action: manipulation; }
 :root {
@@ -209,8 +210,9 @@ html, body, .modal-container { touch-action: manipulation; }
 button, .calc-btn, .calc-key, .mode-heading-btn, .theme-circle, .btn, .exp-btn-add, .accent-btn {
   transition: transform 0.12s cubic-bezier(0.2, 0.8, 0.2, 1.2), box-shadow 0.15s ease, background 0.15s ease, color 0.15s ease !important;
 }
-button:active, .calc-btn:active, .calc-key:active, .mode-heading-btn:active, .exp-btn-add:active, .accent-btn:active {
-  transform: scale(0.94) translateY(2px) !important;
+button:active, button.key-pressed, .calc-btn:active, .calc-btn.key-pressed, .calc-key:active, .mode-heading-btn:active, .exp-btn-add:active, .accent-btn:active {
+  transform: scale(0.92) translateY(1px) !important;
+  box-shadow: 0 0 20px var(--color-accent), inset 0 0 10px rgba(255, 255, 255, 0.35) !important;
 }
 .theme-circle {
   transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.2s ease !important;
@@ -480,8 +482,8 @@ details[open] summary:before { content:'▼'; }
 /* Skins */
 .skin-samsung #modal-calculator .modal-container { background: #000000 !important; }
 .skin-samsung #calc-display-wrap { background: #000000 !important; }
-.skin-samsung #calc-buttons button { border-radius: 50% !important; background: #1c1c1e !important; color: #ffffff !important; border: none !important; font-size: 1.4rem !important; overflow: hidden !important; -webkit-tap-highlight-color: transparent !important; outline: none !important; }
-.skin-samsung #calc-buttons button:active, .skin-samsung #calc-buttons button:hover { border-radius: 50% !important; transform: scale(0.92) !important; background: #4a4a4d !important; color: #ffffff !important; opacity: 1 !important; outline: none !important; -webkit-tap-highlight-color: transparent !important; }
+.skin-samsung #calc-buttons button { border-radius: 50% !important; background: #1c1c1e !important; color: #ffffff !important; border: none !important; font-size: 1.4rem !important; overflow: hidden !important; -webkit-tap-highlight-color: transparent !important; outline: none !important; transition: transform 0.12s cubic-bezier(0.2, 0.8, 0.2, 1.2), box-shadow 0.12s ease, background 0.12s ease !important; }
+.skin-samsung #calc-buttons button:active, .skin-samsung #calc-buttons button.key-pressed { border-radius: 50% !important; transform: scale(0.91) !important; background: #4a4a4d !important; color: #ffffff !important; box-shadow: 0 0 22px rgba(255, 255, 255, 0.55), inset 0 0 10px rgba(255, 255, 255, 0.3) !important; outline: none !important; -webkit-tap-highlight-color: transparent !important; }
 .skin-samsung #calc-buttons button:nth-child(4),
 .skin-samsung #calc-buttons button:nth-child(8),
 .skin-samsung #calc-buttons button:nth-child(12),
@@ -491,8 +493,8 @@ details[open] summary:before { content:'▼'; }
 
 .skin-ios #modal-calculator .modal-container { background: #000000 !important; }
 .skin-ios #calc-display-wrap { background: #000000 !important; }
-.skin-ios #calc-buttons button { border-radius: 50% !important; background: #333333 !important; color: #ffffff !important; border: none !important; font-size: 1.4rem !important; overflow: hidden !important; -webkit-tap-highlight-color: transparent !important; outline: none !important; }
-.skin-ios #calc-buttons button:active, .skin-ios #calc-buttons button:hover { border-radius: 50% !important; transform: scale(0.92) !important; background: #666666 !important; color: #ffffff !important; opacity: 1 !important; outline: none !important; -webkit-tap-highlight-color: transparent !important; }
+.skin-ios #calc-buttons button { border-radius: 50% !important; background: #333333 !important; color: #ffffff !important; border: none !important; font-size: 1.4rem !important; overflow: hidden !important; -webkit-tap-highlight-color: transparent !important; outline: none !important; transition: transform 0.12s cubic-bezier(0.2, 0.8, 0.2, 1.2), box-shadow 0.12s ease, background 0.12s ease !important; }
+.skin-ios #calc-buttons button:active, .skin-ios #calc-buttons button.key-pressed { border-radius: 50% !important; transform: scale(0.91) !important; background: #666666 !important; color: #ffffff !important; box-shadow: 0 0 22px rgba(255, 255, 255, 0.55), inset 0 0 10px rgba(255, 255, 255, 0.3) !important; outline: none !important; -webkit-tap-highlight-color: transparent !important; }
 .skin-ios #calc-buttons button:nth-child(4),
 .skin-ios #calc-buttons button:nth-child(8),
 .skin-ios #calc-buttons button:nth-child(12),
@@ -500,13 +502,29 @@ details[open] summary:before { content:'▼'; }
 .skin-ios #calc-buttons button:nth-child(20) { background: #ff9f0a !important; color: #ffffff !important; }
 .skin-ios #calc-buttons button:nth-child(1) { background: #a5a5a5 !important; color: #000000 !important; }
 
+.skin-modern #calc-buttons button { border-radius: 12px !important; transition: transform 0.12s cubic-bezier(0.2, 0.8, 0.2, 1.2), box-shadow 0.12s ease, background 0.12s ease !important; -webkit-tap-highlight-color: transparent !important; outline: none !important; }
+.skin-modern #calc-buttons button:active, .skin-modern #calc-buttons button.key-pressed { transform: scale(0.91) translateY(1px) !important; box-shadow: 0 0 20px var(--color-accent), inset 0 0 10px rgba(255, 255, 255, 0.35) !important; border-color: var(--color-accent) !important; }
+
 .skin-neon #modal-calculator .modal-container { background: #0b0e14 !important; }
-.skin-neon #calc-buttons button { border-radius: 14px !important; background: rgba(0,242,254,0.08) !important; color: #00f2fe !important; border: 1px solid rgba(0,242,254,0.3) !important; -webkit-tap-highlight-color: transparent !important; }
+.skin-neon #calc-buttons button { border-radius: 14px !important; background: rgba(0,242,254,0.08) !important; color: #00f2fe !important; border: 1px solid rgba(0,242,254,0.3) !important; -webkit-tap-highlight-color: transparent !important; transition: transform 0.12s cubic-bezier(0.2, 0.8, 0.2, 1.2), box-shadow 0.12s ease, background 0.12s ease !important; }
+.skin-neon #calc-buttons button:active, .skin-neon #calc-buttons button.key-pressed { transform: scale(0.91) translateY(1px) !important; background: rgba(0,242,254,0.25) !important; box-shadow: 0 0 24px #00f2fe, 0 0 12px rgba(0,242,254,0.8), inset 0 0 12px rgba(0,242,254,0.5) !important; border-color: #00f2fe !important; }
 .skin-neon #calc-buttons button:nth-child(4),
 .skin-neon #calc-buttons button:nth-child(8),
 .skin-neon #calc-buttons button:nth-child(12),
 .skin-neon #calc-buttons button:nth-child(16) { background: rgba(255,0,127,0.15) !important; color: #ff007f !important; border-color: rgba(255,0,127,0.4) !important; }
+.skin-neon #calc-buttons button:nth-child(4):active, .skin-neon #calc-buttons button:nth-child(4).key-pressed,
+.skin-neon #calc-buttons button:nth-child(8):active, .skin-neon #calc-buttons button:nth-child(8).key-pressed,
+.skin-neon #calc-buttons button:nth-child(12):active, .skin-neon #calc-buttons button:nth-child(12).key-pressed,
+.skin-neon #calc-buttons button:nth-child(16):active, .skin-neon #calc-buttons button:nth-child(16).key-pressed { background: rgba(255,0,127,0.3) !important; box-shadow: 0 0 24px #ff007f, 0 0 12px rgba(255,0,127,0.8), inset 0 0 12px rgba(255,0,127,0.5) !important; border-color: #ff007f !important; }
 .skin-neon #calc-buttons button:nth-child(20) { background: linear-gradient(135deg, #00f2fe, #4facfe) !important; color: #000000 !important; border: none !important; font-weight: 800 !important; }
+.skin-neon #calc-buttons button:nth-child(20):active, .skin-neon #calc-buttons button:nth-child(20).key-pressed { transform: scale(0.91) translateY(1px) !important; box-shadow: 0 0 28px #00f2fe, 0 0 14px #4facfe !important; }
+
+@media (hover: hover) and (pointer: fine) {
+  .skin-samsung #calc-buttons button:hover { background: #3a3a3d !important; }
+  .skin-ios #calc-buttons button:hover { background: #555555 !important; }
+  .skin-modern #calc-buttons button:hover { border-color: var(--color-accent) !important; }
+  .skin-neon #calc-buttons button:hover { border-color: #00f2fe !important; box-shadow: 0 0 12px rgba(0,242,254,0.4) !important; }
+}
 
 html, body {
   overscroll-behavior: none !important;
@@ -575,15 +593,42 @@ body {
 .modal-header h3 { flex:0 0 auto; font-size:1.1rem; }
 .mode-heading-btn { cursor:pointer; padding:2px 6px; border-radius:6px; font-size:0.92rem; font-weight:700; letter-spacing:0.02em; white-space:nowrap; transition:all 0.15s; background:transparent; color:var(--text-primary); display:inline-flex; align-items:center; line-height:1.2; }
 .mode-heading-btn:hover { background:var(--border-color); }
-.mode-heading-btn.active { background:transparent; color:var(--color-accent); font-size:1.15rem; }
+.mode-heading-btn.active {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 20px !important;
+  padding: 0.3rem 0.82rem !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.35), inset 0 0 10px rgba(255, 255, 255, 0.05) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  font-size: 0.95rem !important;
+  font-weight: 700 !important;
+}
 #calc-heading { display:flex; gap:0.25rem; align-items:center; flex:1; justify-content:center; text-align:center; flex-wrap:wrap; min-width:0; margin:0; line-height:1; }
 @media (max-width:900px) {
-  .modal-overlay { padding: max(0.5rem, env(safe-area-inset-top)) 0.2rem 0.2rem 0.2rem; }
-  #modal-calculator .modal-container { max-width:100% !important; width:100% !important; }
+  .modal-overlay { padding: 0 0.2rem 0.2rem 0.2rem; }
+  #modal-calculator.modal-overlay { align-items: flex-start !important; padding: 0 !important; }
+  #modal-calculator .modal-container {
+    max-width: 100% !important;
+    width: 100% !important;
+    height: 100dvh !important;
+    max-height: 100dvh !important;
+    margin-top: 0 !important;
+    border-radius: 0 !important;
+    border: none !important;
+    display: flex;
+    flex-direction: column;
+  }
+  #modal-calculator .modal-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
 }
-@media (max-width:420px) { .mode-heading-btn { font-size:0.92rem; } .mode-heading-btn.active { font-size:1.2rem; } }
-.modal-header-left { position:absolute; left:0.8rem; top:0; bottom:0; display:flex; align-items:center; justify-content:center; }
-.modal-header-right { position:absolute; right:0.8rem; top:0; bottom:0; display:flex; align-items:center; justify-content:center; gap:0.6rem; }
+@media (max-width:420px) { .mode-heading-btn { font-size:0.92rem; } }
+.modal-header-left { position:relative; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.modal-header-right { position:relative; display:flex; align-items:center; justify-content:center; gap:0.4rem; flex-shrink:0; }
 .modal-body { padding:0.1rem 0.8rem 0.8rem 0.8rem; min-height:440px; max-height:calc(100dvh - 60px); overflow-y:auto; scrollbar-width:none; -ms-overflow-style:none; }
 #modal-calculator.is-mode .modal-body { min-height:auto; padding-bottom:0.6rem; }
 .modal-body::-webkit-scrollbar { display:none; }
@@ -632,16 +677,8 @@ body {
   cursor: pointer;
 }
 #calc-display::-webkit-scrollbar { display: none; }
-#calc-buttons { display:grid; grid-template-columns:repeat(4,1fr); gap:0.4rem; margin-top:0.75rem; }
-#calc-buttons button { touch-action:manipulation; }
-#calc-buttons button:active {
-  transform: scale(0.94);
-  background: var(--color-accent) !important;
-  color: #ffffff !important;
-}
-#calc-buttons button.sticky-on { box-shadow: 0 0 0 2px #fff, 0 0 12px var(--color-accent); }
-#modal-calculator.no-history-btn #calc-buttons { gap:0.65rem !important; margin-top:0.9rem !important; }
-#modal-calculator.no-history-btn #calc-buttons button { min-height:68px !important; font-size:1.55rem !important; padding:0.85rem 0 !important; }
+#calc-buttons { display:grid; grid-template-columns:repeat(4,1fr); gap:0.65rem !important; margin-top:0.9rem !important; }
+#calc-buttons button { touch-action:manipulation; min-height:68px !important; font-size:1.55rem !important; padding:0.85rem 0 !important; }
 #calc-history-btn {
   width:100%; margin-top:0.75rem; padding:0.6rem;
   background: var(--bg-tertiary);
@@ -1015,28 +1052,36 @@ body {
 
 <div class="modal-overlay active" id="modal-calculator">
   <div class="modal-container">
-    <div class="modal-header">
-      <div class="modal-header-left">
-        <button id="settings-btn" class="settings-btn" onclick="openSettingsModal()" title="Settings">⚙️</button>
+    <div class="modal-header" style="display:flex;align-items:center;padding:0.65rem 0.85rem;border-bottom:1px solid var(--border-color);position:relative;height:52px;box-sizing:border-box;">
+      <div class="modal-header-left" style="position:absolute;left:0.85rem;top:50%;transform:translateY(-50%);display:flex;align-items:center;gap:0.45rem;z-index:5;">
+        <button id="settings-btn" class="settings-btn" onclick="openSettingsModal()" title="Settings" style="border:1px solid var(--border-color);border-radius:8px;background:var(--bg-secondary);padding:0.3rem 0.5rem;font-size:1.1rem;cursor:pointer;">⚙️</button>
         <button id="calc-back-btn" class="settings-btn" onclick="setCalcMode('basic')" title="Back to Calculator" style="display:none;font-size:1.35rem;cursor:pointer;padding:0 2px;">⬅️</button>
+        <button id="calc-back-hist-btn" class="settings-btn" onclick="toggleCalcHistory()" title="Calculation History" style="display:none;border:none;background:none;font-size:1.3rem;cursor:pointer;padding:0 2px;align-items:center;justify-content:center;transition:all 0.15s;opacity:0.9;">🕒</button>
       </div>
-      <div id="calc-heading">
-        <span id="h-btn-expenses" class="mode-heading-btn" onclick="setCalcMode('expenses')">💸 EXPENSES</span>
-        <span id="h-btn-date" class="mode-heading-btn" onclick="setCalcMode('date')">🗓️</span>
-        <div id="modes-dropdown-wrap" class="modes-dropdown-wrap">
-          <span id="h-btn-modes" class="mode-heading-btn" onclick="toggleModesMenu(event)">🧮 MODES ▲</span>
-          <div id="modes-menu" class="modes-menu-popup" onclick="event.stopPropagation()">
-            <div class="modes-menu-item" onclick="selectModeFromMenu('splitter')">👥 Splitter</div>
-            <div class="modes-menu-item" onclick="selectModeFromMenu('gold')">🪙 Gold & Jewellery</div>
-            <div class="modes-menu-item" onclick="selectModeFromMenu('fuel')">⛽ Fuel & Trip</div>
-            <div class="modes-menu-item" onclick="selectModeFromMenu('emi')">📈 Loan EMI</div>
-            <div class="modes-menu-item" onclick="selectModeFromMenu('gst')">💰 GST & Tax</div>
-            <div class="modes-menu-item" onclick="selectModeFromMenu('converter')">📏 Unit Converter</div>
-            <div class="modes-menu-item" onclick="selectModeFromMenu('scientific')">📐 Scientific</div>
-          </div>
+
+      <div style="position:absolute;left:26.5%;top:50%;transform:translate(-50%,-50%);z-index:5;display:flex;align-items:center;justify-content:center;">
+        <button id="h-btn-expenses-icon" class="settings-btn" onclick="setCalcMode('expenses')" title="Expenses Tracker" style="border:none;background:none;font-size:1.3rem;cursor:pointer;padding:0 2px;display:inline-flex;align-items:center;justify-content:center;transition:all 0.15s;">💸</button>
+      </div>
+
+      <div id="modes-dropdown-wrap" class="modes-dropdown-wrap" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);pointer-events:auto;z-index:10;">
+        <span id="h-btn-modes" class="mode-heading-btn" onclick="toggleModesMenu(event)" style="padding:0.2rem 0.65rem;display:inline-flex;align-items:center;gap:4px;font-weight:700;font-size:1.45rem;font-family:'Caveat',cursive;letter-spacing:0.02em;">Lazy Calc ▾</span>
+        <div id="modes-menu" class="modes-menu-popup" onclick="event.stopPropagation()">
+          <div class="modes-menu-item" onclick="selectModeFromMenu('date')">🗓️ Date & Duration</div>
+          <div class="modes-menu-item" onclick="selectModeFromMenu('splitter')">👥 Splitter</div>
+          <div class="modes-menu-item" onclick="selectModeFromMenu('gold')">🪙 Gold & Jewellery</div>
+          <div class="modes-menu-item" onclick="selectModeFromMenu('fuel')">⛽ Fuel & Trip</div>
+          <div class="modes-menu-item" onclick="selectModeFromMenu('emi')">📈 Loan EMI</div>
+          <div class="modes-menu-item" onclick="selectModeFromMenu('gst')">💰 GST & Tax</div>
+          <div class="modes-menu-item" onclick="selectModeFromMenu('converter')">📏 Unit Converter</div>
+          <div class="modes-menu-item" onclick="selectModeFromMenu('scientific')">📐 Scientific</div>
         </div>
       </div>
-      <div class="modal-header-right">
+      
+      <div style="position:absolute;left:76.5%;top:50%;transform:translate(-50%,-50%);z-index:5;display:flex;align-items:center;justify-content:center;">
+        <button id="h-btn-history" class="settings-btn" onclick="toggleCalcHistory()" title="Calculation History" style="border:none;background:none;font-size:1.3rem;cursor:pointer;padding:0 2px;display:inline-flex;align-items:center;justify-content:center;transition:all 0.15s;opacity:0.9;">🕒</button>
+      </div>
+
+      <div class="modal-header-right" style="position:absolute;right:0.85rem;top:50%;transform:translateY(-50%);display:flex;align-items:center;gap:0.4rem;z-index:5;">
         <span id="exp-wa-btn-wrap" style="display:none"><button class="whatsapp-btn" onclick="shareExpensesWA()" title="Share Expenses on WhatsApp">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="#25D366">
             <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
@@ -1059,7 +1104,6 @@ body {
       </div>
       <div id="calc-buttons"></div>
       <div id="calc-mode-body" class="calc-mode-body" style="display:none"></div>
-      <button id="calc-history-btn" onclick="toggleCalcHistory()">Show History</button>
       <div id="calc-history"></div>
     </div>
   </div>
@@ -1114,18 +1158,20 @@ function updateNavPositionUI() {
   if (btn) btn.textContent = _navBottom ? '📌 NAV POSITION: BOTTOM' : '📌 NAV POSITION: TOP';
   var modesBtn = document.getElementById('h-btn-modes');
   if (modesBtn) {
-    var arrow = _navBottom ? '▲' : '▼';
-    var labels = {
-      basic: '🧮 MODES ' + arrow,
-      splitter: '👥 SPLITTER ' + arrow,
-      gold: '🪙 GOLD ' + arrow,
-      fuel: '⛽ FUEL ' + arrow,
-      emi: '📈 EMI ' + arrow,
-      gst: '💰 GST ' + arrow,
-      converter: '📏 CONVERT ' + arrow,
-      scientific: '📐 SCIENTIFIC ' + arrow
+    var titles = {
+      basic: 'Lazy Calc ▾',
+      expenses: '<span style="color:#25D366;text-shadow:0 0 10px rgba(37,211,102,0.6)">💸 Expenses ▾</span>',
+      date: '<span style="color:#f43f5e;text-shadow:0 0 10px rgba(244,63,94,0.6)">🗓️ Date & Duration ▾</span>',
+      splitter: '<span style="color:#c084fc;text-shadow:0 0 10px rgba(192,132,252,0.6)">👥 Splitter ▾</span>',
+      gold: '<span style="color:#fde047;text-shadow:0 0 10px rgba(253,224,71,0.6)">🪙 Gold & Jewellery ▾</span>',
+      fuel: '<span style="color:#fb923c;text-shadow:0 0 10px rgba(251,146,60,0.6)">⛽ Fuel & Trip ▾</span>',
+      emi: '<span style="color:#34d399;text-shadow:0 0 10px rgba(52,211,153,0.6)">📈 Loan EMI ▾</span>',
+      gst: '<span style="color:#fbbf24;text-shadow:0 0 10px rgba(251,191,36,0.6)">💰 GST & Tax ▾</span>',
+      converter: '<span style="color:#60a5fa;text-shadow:0 0 10px rgba(96,165,250,0.6)">📏 Unit Converter ▾</span>',
+      scientific: '<span style="color:#a78bfa;text-shadow:0 0 10px rgba(167,139,250,0.6)">📐 Scientific ▾</span>'
     };
-    modesBtn.textContent = labels[_calcMode] || ('🧮 MODES ' + arrow);
+    modesBtn.innerHTML = titles[_calcMode] || 'Lazy Calc ▾';
+    modesBtn.style.fontFamily = _calcMode === 'basic' ? "'Caveat', cursive" : 'inherit';
   }
   var mainCalc = document.getElementById('modal-calculator');
   if (mainCalc) {
@@ -1682,22 +1728,39 @@ function applyCalcMode(name) {
   var expWaBtn = document.getElementById('exp-wa-btn-wrap');
   var resArea = document.querySelector('.calc-result-area');
 
-  var arrow = _navBottom ? '▲' : '▼';
-  var modeLabels = {
-    basic: '🧮 MODES ' + arrow,
-    splitter: '👥 SPLITTER ' + arrow,
-    gold: '🪙 GOLD ' + arrow,
-    fuel: '⛽ FUEL ' + arrow,
-    emi: '📈 EMI ' + arrow,
-    gst: '💰 GST ' + arrow,
-    converter: '📏 CONVERT ' + arrow,
-    scientific: '📐 SCIENTIFIC ' + arrow
+  var modeTitles = {
+    basic: 'LAZY CALC ▾',
+    expenses: '💸 EXPENSES ▾',
+    date: '🗓️ DATE ▾',
+    splitter: '👥 SPLITTER ▾',
+    gold: '🪙 GOLD ▾',
+    fuel: '⛽ FUEL ▾',
+    emi: '📈 EMI ▾',
+    gst: '💰 GST ▾',
+    converter: '📏 CONVERT ▾',
+    scientific: '📐 SCIENTIFIC ▾'
   };
 
   var modalCalc = document.getElementById('modal-calculator');
   if (modalCalc) modalCalc.classList.toggle('is-mode', name !== 'basic');
 
   var backBtn = document.getElementById('calc-back-btn');
+  var expIconBtn = document.getElementById('h-btn-expenses-icon');
+  var backHistBtn = document.getElementById('calc-back-hist-btn');
+  var mainHistBtn = document.getElementById('h-btn-history');
+
+  var modeTitles = {
+    basic: 'Lazy Calc ▾',
+    expenses: '<span style="color:#25D366;text-shadow:0 0 10px rgba(37,211,102,0.6)">💸 Expenses ▾</span>',
+    date: '<span style="color:#f43f5e;text-shadow:0 0 10px rgba(244,63,94,0.6)">🗓️ Date & Duration ▾</span>',
+    splitter: '<span style="color:#c084fc;text-shadow:0 0 10px rgba(192,132,252,0.6)">👥 Splitter ▾</span>',
+    gold: '<span style="color:#fde047;text-shadow:0 0 10px rgba(253,224,71,0.6)">🪙 Gold & Jewellery ▾</span>',
+    fuel: '<span style="color:#fb923c;text-shadow:0 0 10px rgba(251,146,60,0.6)">⛽ Fuel & Trip ▾</span>',
+    emi: '<span style="color:#34d399;text-shadow:0 0 10px rgba(52,211,153,0.6)">📈 Loan EMI ▾</span>',
+    gst: '<span style="color:#fbbf24;text-shadow:0 0 10px rgba(251,191,36,0.6)">💰 GST & Tax ▾</span>',
+    converter: '<span style="color:#60a5fa;text-shadow:0 0 10px rgba(96,165,250,0.6)">📏 Unit Converter ▾</span>',
+    scientific: '<span style="color:#a78bfa;text-shadow:0 0 10px rgba(167,139,250,0.6)">📐 Scientific ▾</span>'
+  };
 
   if (name === 'basic') {
     if (modalBody) modalBody.classList.remove('sp-mode');
@@ -1713,10 +1776,17 @@ function applyCalcMode(name) {
     if (waBtn) waBtn.style.display = '';
     if (hDate) { hDate.classList.remove('active'); hDate.style.display = ''; hDate.textContent = '🗓️'; }
     if (hExpenses) { hExpenses.classList.remove('active'); hExpenses.style.display = ''; }
-    if (hModesBtn) { hModesBtn.classList.remove('active'); hModesBtn.style.display = ''; hModesBtn.textContent = modeLabels.basic; }
+    if (expIconBtn) { expIconBtn.style.display = ''; }
+    if (hModesBtn) {
+      hModesBtn.classList.remove('active');
+      hModesBtn.style.display = '';
+      hModesBtn.innerHTML = 'Lazy Calc ▾';
+      hModesBtn.style.fontFamily = "'Caveat', cursive";
+    }
     if (histBtn) histBtn.style.display = '';
     if (histContainer) histContainer.style.display = '';
     if (expWaBtn) expWaBtn.style.display = 'none';
+    updateCalcHistoryVisibility();
   } else {
     expr.style.display = 'none';
     editor.style.display = 'none';
@@ -1727,19 +1797,24 @@ function applyCalcMode(name) {
     var isExpOrDate = (name === 'expenses' || name === 'date');
     if (settingsBtn) settingsBtn.style.display = isExpOrDate ? 'none' : '';
     if (backBtn) backBtn.style.display = isExpOrDate ? '' : 'none';
+    if (backHistBtn) backHistBtn.style.display = (name === 'expenses' || name === 'splitter' || name === 'date') ? 'none' : 'inline-flex';
+    if (mainHistBtn) mainHistBtn.style.display = 'none';
     if (closeBtn) closeBtn.style.display = '';
     if (waBtn) waBtn.style.display = (name === 'date' || name === 'expenses') ? 'none' : '';
     if (hDate) { hDate.classList.toggle('active', name === 'date'); hDate.style.display = name === 'date' ? '' : 'none'; hDate.textContent = name === 'date' ? '🗓️ DATE CALCULATOR' : '🗓️'; }
     if (hExpenses) { hExpenses.classList.toggle('active', name === 'expenses'); hExpenses.style.display = name === 'expenses' ? '' : 'none'; hExpenses.textContent = '💸 EXPENSES'; }
+    if (expIconBtn) { expIconBtn.style.display = 'none'; }
     if (hModesBtn) {
-      var isSpecialized = ['splitter','gold','fuel','emi','gst','converter','scientific'].indexOf(name) !== -1;
+      var isSpecialized = ['splitter','gold','fuel','emi','gst','converter','scientific','expenses','date'].indexOf(name) !== -1;
       hModesBtn.classList.toggle('active', isSpecialized);
-      hModesBtn.style.display = (name === 'date' || name === 'expenses') ? 'none' : '';
-      hModesBtn.textContent = modeLabels[name] || '🛠️ MODES ▼';
+      hModesBtn.style.display = '';
+      hModesBtn.innerHTML = modeTitles[name] || 'Lazy Calc ▾';
+      hModesBtn.style.fontFamily = name === 'basic' ? "'Caveat', cursive" : 'inherit';
     }
     if (expWaBtn) expWaBtn.style.display = name === 'expenses' ? '' : 'none';
     if (histBtn) histBtn.style.display = (name === 'expenses' || name === 'splitter' || name === 'date') ? 'none' : '';
     if (histContainer) histContainer.style.display = (name === 'expenses' || name === 'splitter') ? 'none' : '';
+    updateCalcHistoryVisibility();
 
     if (name === 'date') { if (modalBody) modalBody.classList.remove('sp-mode'); renderDateMode(modeBody, display); }
     else if (name === 'expenses') { if (modalBody) modalBody.classList.add('sp-mode'); _expensesNewCount = 0; updateExpensesBadge(); renderExpensesMode(modeBody); }
@@ -1776,7 +1851,7 @@ function setCalcMode(name) {
     _calcSavedExpr = '';
     calcUpdateDisplay();
     _calcHistoryVisible = false;
-    document.getElementById('calc-history-btn').textContent = 'Show History';
+    var _hb1 = document.getElementById('calc-history-btn'); if (_hb1) _hb1.textContent = 'Show History';
     renderCalcHistory();
     return;
   }
@@ -1786,7 +1861,7 @@ function setCalcMode(name) {
   localStorage.setItem('calc_mode', name);
   applyCalcMode(name);
   _calcHistoryVisible = false;
-  document.getElementById('calc-history-btn').textContent = 'Show History';
+  var _hb2 = document.getElementById('calc-history-btn'); if (_hb2) _hb2.textContent = 'Show History';
   renderCalcHistory();
 }
 
@@ -1798,7 +1873,7 @@ function openCalculator() {
   _calcShowExpr = true;
   _calcSavedExpr = '';
   _calcSavedResult = 0;
-  document.getElementById('calc-history-btn').textContent = 'Show History';
+  var _hb3 = document.getElementById('calc-history-btn'); if (_hb3) _hb3.textContent = 'Show History';
   document.getElementById('calc-display').textContent = '0';
   openModal('modal-calculator');
   applyCalcSkin(_calcSkin);
@@ -1818,6 +1893,30 @@ function openCalculator() {
   }
 }
 
+function releaseKeyFeedback(el) {
+  if (!el) return;
+  if (el._pressTimer) {
+    clearTimeout(el._pressTimer);
+    el._pressTimer = null;
+  }
+  el.classList.remove('key-pressed');
+}
+
+function triggerKeyFeedback(el) {
+  if (!el) return;
+  if (el._pressTimer) {
+    clearTimeout(el._pressTimer);
+    el._pressTimer = null;
+  }
+  el.classList.remove('key-pressed');
+  void el.offsetWidth;
+  el.classList.add('key-pressed');
+  el._pressTimer = setTimeout(function() {
+    el.classList.remove('key-pressed');
+    el._pressTimer = null;
+  }, 100);
+}
+
 function renderCalcButtons() {
   var grid = document.getElementById('calc-buttons');
   var buttons = ['±','C','%','÷','7','8','9','×','4','5','6','-','1','2','3','+','.','0','⌫','='];
@@ -1829,9 +1928,9 @@ function renderCalcButtons() {
     var color = isEq ? '#fff' : 'var(--text-primary)';
     var oid = opIds[label];
     if (oid) {
-      return '<button id="sticky-btn-' + oid + '" onpointerdown="stickyOpDown(\'' + label + '\')" onpointerup="stickyOpUp()" onpointerleave="stickyOpLeave()" style="padding:1.2rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:' + bg + ';color:' + color + ';font-size:1.3rem;font-weight:600;cursor:pointer;">' + label + '</button>';
+      return '<button id="sticky-btn-' + oid + '" onpointerdown="triggerKeyFeedback(this);stickyOpDown(\'' + label + '\')" onpointerup="releaseKeyFeedback(this);stickyOpUp()" onpointercancel="releaseKeyFeedback(this)" onpointerleave="releaseKeyFeedback(this);stickyOpLeave()" style="padding:1.2rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:' + bg + ';color:' + color + ';font-size:1.3rem;font-weight:600;cursor:pointer;">' + label + '</button>';
     }
-    return '<button onpointerdown="calcBtn(\'' + label.replace(/'/g, "\\'") + '\')" style="padding:1.2rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:' + bg + ';color:' + color + ';font-size:1.3rem;font-weight:600;cursor:pointer;">' + label + '</button>';
+    return '<button onpointerdown="triggerKeyFeedback(this);calcBtn(\'' + label.replace(/'/g, "\\'") + '\')" onpointerup="releaseKeyFeedback(this)" onpointercancel="releaseKeyFeedback(this)" onpointerleave="releaseKeyFeedback(this)" style="padding:1.2rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:' + bg + ';color:' + color + ';font-size:1.3rem;font-weight:600;cursor:pointer;">' + label + '</button>';
   }).join('');
 }
 
@@ -5457,7 +5556,21 @@ function updateCalcHistoryBtnState() {
   }
 }
 
+function updateCalcHistoryVisibility() {
+  var mainHistBtn = document.getElementById('h-btn-history');
+  var backHistBtn = document.getElementById('calc-back-hist-btn');
+  var hasHistory = (typeof calcHistory !== 'undefined' && calcHistory && calcHistory.length > 0);
+  if (mainHistBtn) {
+    mainHistBtn.style.display = (_calcMode === 'basic' && hasHistory) ? '' : 'none';
+  }
+  if (backHistBtn) {
+    var isSuppressed = (_calcMode === 'expenses' || _calcMode === 'splitter' || _calcMode === 'date' || _calcMode === 'basic');
+    backHistBtn.style.display = (!isSuppressed && hasHistory) ? 'inline-flex' : 'none';
+  }
+}
+
 function renderCalcHistory() {
+  updateCalcHistoryVisibility();
   updateCalcHistoryBtnState();
   var container = document.getElementById('calc-history');
   if (!_calcHistoryVisible) {
@@ -5501,7 +5614,7 @@ function loadCalcEntry(idx) {
   var entry = calcHistory[idx];
   if (!entry) return;
   _calcHistoryVisible = false;
-  document.getElementById('calc-history-btn').textContent = 'Show History';
+  var _hb4 = document.getElementById('calc-history-btn'); if (_hb4) _hb4.textContent = 'Show History';
   renderCalcHistory();
 
   if (entry.mode === 'date') {
@@ -5617,7 +5730,7 @@ function loadCalcEntry(idx) {
   _editingCalcToken = -1;
   _calcShowExpr = true;
   _calcHistoryVisible = false;
-  document.getElementById('calc-history-btn').textContent = 'Show History';
+  var _hb5 = document.getElementById('calc-history-btn'); if (_hb5) _hb5.textContent = 'Show History';
   calcUpdateDisplay();
   renderCalcHistory();
 }
@@ -5685,6 +5798,10 @@ function toggleCalcHistory() {
   _calcHistoryVisible = !_calcHistoryVisible;
   var btn = document.getElementById('calc-history-btn');
   if (btn) btn.textContent = _calcHistoryVisible ? 'Hide History' : 'Show History';
+  var hBtn = document.getElementById('h-btn-history');
+  if (hBtn) {
+    hBtn.style.background = _calcHistoryVisible ? 'var(--color-accent)' : 'var(--bg-tertiary)';
+  }
   renderCalcHistory();
   if (_calcHistoryVisible) {
     setTimeout(function() {
