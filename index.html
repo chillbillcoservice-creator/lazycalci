@@ -184,7 +184,7 @@ html, body, .modal-container { touch-action: manipulation; }
 .calc-mode-body input { padding:0.7rem 0.6rem; border:1px solid var(--border-color); border-radius:var(--radius-sm); background:var(--bg-primary); color:var(--text-primary); font-size:1.05rem; width:140px; }
 .calc-mode-body select { padding:0.7rem 0.6rem; border:1px solid var(--border-color); border-radius:var(--radius-sm); background:var(--bg-primary); color:var(--text-primary); font-size:1rem; }
 .modes-dropdown-wrap { position: relative; display: inline-block; }
-.modes-menu-popup { display: none; position: absolute; top: 100%; right: 0; margin-top: 6px; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: var(--radius-sm); box-shadow: 0 6px 20px rgba(0,0,0,0.6); z-index: 1050; min-width: 210px; max-height: calc(100dvh - 100px); overflow-y: auto; }
+.modes-menu-popup { display: none; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); margin-top: 6px; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: var(--radius-sm); box-shadow: 0 6px 20px rgba(0,0,0,0.6); z-index: 1050; min-width: 210px; max-height: calc(100dvh - 100px); overflow-y: auto; }
 .modes-menu-popup.active { display: block; }
 .modes-menu-item { padding: 0.75rem 1.1rem; font-size: 0.95rem; font-weight: 600; color: var(--text-primary); cursor: pointer; border-bottom: 1px solid var(--border-color); transition: background 0.15s, color 0.15s; text-align: left; display: flex; align-items: center; min-height: 44px; touch-action: manipulation; }
 .modes-menu-item:last-child { border-bottom: none; }
@@ -200,19 +200,20 @@ html, body, .modal-container { touch-action: manipulation; }
   100% { transform: scale(1); }
 }
 @keyframes springMenuIn {
-  0% { opacity: 0; transform: scale(0.94) translateY(-8px); }
-  100% { opacity: 1; transform: scale(1) translateY(0); }
+  0% { opacity: 0; transform: translateX(-50%) scale(0.94) translateY(-8px); }
+  100% { opacity: 1; transform: translateX(-50%) scale(1) translateY(0); }
 }
 @keyframes springModalIn {
   0% { opacity: 0; transform: scale(0.92) translateY(12px); }
   100% { opacity: 1; transform: scale(1) translateY(0); }
 }
 button, .calc-btn, .calc-key, .mode-heading-btn, .theme-circle, .btn, .exp-btn-add, .accent-btn {
-  transition: transform 0.12s cubic-bezier(0.2, 0.8, 0.2, 1.2), box-shadow 0.15s ease, background 0.15s ease, color 0.15s ease !important;
+  transition: transform 0.04s cubic-bezier(0.2, 0.8, 0.2, 1.2), box-shadow 0.04s ease, background 0.1s ease, color 0.1s ease !important;
 }
 button:active, button.key-pressed, .calc-btn:active, .calc-btn.key-pressed, .calc-key:active, .mode-heading-btn:active, .exp-btn-add:active, .accent-btn:active {
-  transform: scale(0.92) translateY(1px) !important;
-  box-shadow: 0 0 20px var(--color-accent), inset 0 0 10px rgba(255, 255, 255, 0.35) !important;
+  transform: scale(0.91) translateY(1px) !important;
+  box-shadow: 0 0 22px var(--color-accent), inset 0 0 10px rgba(255, 255, 255, 0.4) !important;
+  transition-duration: 0.03s !important;
 }
 .theme-circle {
   transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.2s ease !important;
@@ -652,7 +653,7 @@ body {
   -webkit-user-select: none !important;
 }
 #calc-expression::-webkit-scrollbar { display: none; }
-#calc-label-editor { padding:0.5rem 0; font-size:1rem; min-height:2.2rem; }
+#calc-label-editor { padding:0.4rem 0; font-size:1rem; min-height:2.8rem; display:flex; align-items:center; }
 .calc-result-area {
   position: relative;
   margin-top: 0.5rem;
@@ -1312,7 +1313,11 @@ function triggerMobilePaste() {
 /* Smart Clipboard Paste & Drag-and-Drop Parser */
 function parsePastedCalcText(rawText) {
   if (!rawText || typeof rawText !== 'string') return false;
-  var text = rawText.trim();
+  var text = rawText
+    .replace(/[\u2013\u2014\u2212\u2796\u2011]/g, '-')
+    .replace(/[•·]\s*(\d)/g, '-$1')
+    .replace(/[•·]/g, '')
+    .trim();
   if (!text) return false;
 
   var cleaned = text.replace(/[₹$€£]/g, '');
@@ -1914,7 +1919,7 @@ function triggerKeyFeedback(el) {
   el._pressTimer = setTimeout(function() {
     el.classList.remove('key-pressed');
     el._pressTimer = null;
-  }, 100);
+  }, 50);
 }
 
 function renderCalcButtons() {
@@ -2355,10 +2360,10 @@ function renderCalcLabelEditor() {
     var currentVal = (curIdx >= 0 && calcTokens[curIdx]) ? calcTokens[curIdx].v : '';
     var currentLabel = (curIdx >= 0 && calcTokens[curIdx]) ? calcTokens[curIdx].label : '';
     
-    var html = '<div style="display:flex;align-items:center;gap:0.45rem;padding:0.1rem 0;width:100%;">';
-    html += '<input id="calc-bill-val-input" type="text" inputmode="decimal" placeholder="Amount" value="' + escHtml(currentVal) + '" oninput="updateBillTokenValue(this.value)" onkeydown="if(event.key===\'Enter\'||event.keyCode===13){this.blur();}" style="width:68px;padding:0.55rem 0.4rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-primary);color:var(--text-primary);font-size:1rem;font-weight:600;text-align:center;">';
-    html += '<input id="calc-bill-label-input" type="text" placeholder="Label (optional)" value="' + escHtml(currentLabel) + '" oninput="updateBillTokenLabel(this.value)" onkeydown="if(event.key===\'Enter\'||event.keyCode===13){this.blur();}" style="flex:1;min-width:0;padding:0.55rem 0.6rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-primary);color:var(--text-primary);font-size:1rem;">';
-    html += '<button onclick="printBill()" title="Print Bill / Receipt" style="padding:0.55rem 0.85rem;border:1px solid var(--color-accent);border-radius:var(--radius-sm);background:var(--color-accent);color:#fff;cursor:pointer;font-size:1rem;font-weight:600;display:flex;align-items:center;gap:4px;white-space:nowrap;touch-action:manipulation;">🖨️ Print</button>';
+    var html = '<div style="display:flex;align-items:center;flex-wrap:nowrap;gap:0.35rem;width:100%;box-sizing:border-box;">';
+    html += '<input id="calc-bill-val-input" type="text" inputmode="decimal" placeholder="Amount" value="' + escHtml(currentVal) + '" oninput="updateBillTokenValue(this.value)" onkeydown="if(event.key===\'Enter\'||event.keyCode===13){this.blur();}" style="width:70px;flex-shrink:0;padding:0.6rem 0.45rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-primary);color:var(--text-primary);font-size:1.05rem;font-weight:700;text-align:center;box-sizing:border-box;">';
+    html += '<input id="calc-bill-label-input" type="text" placeholder="Label (optional)" value="' + escHtml(currentLabel) + '" oninput="updateBillTokenLabel(this.value)" onkeydown="if(event.key===\'Enter\'||event.keyCode===13){this.blur();}" style="flex:1;min-width:70px;padding:0.6rem 0.55rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-primary);color:var(--text-primary);font-size:1rem;box-sizing:border-box;">';
+    html += '<button onclick="printBill()" title="Print Bill / Receipt" style="padding:0.6rem 0.85rem;flex-shrink:0;border:1px solid var(--color-accent);border-radius:var(--radius-sm);background:var(--color-accent);color:#fff;cursor:pointer;font-size:0.95rem;font-weight:700;display:flex;align-items:center;gap:4px;white-space:nowrap;touch-action:manipulation;">🖨️ Print</button>';
     html += '</div>';
     
     container.innerHTML = html;
@@ -2374,11 +2379,12 @@ function renderCalcLabelEditor() {
     return;
   }
   var token = calcTokens[_editingCalcToken];
-  container.innerHTML = '<div class="label-flex"><span style="font-weight:600;font-size:0.9rem">Edit:</span>' +
-    '<input id="calc-val-input" type="text" inputmode="decimal" value="' + escHtml(token.v) + '" oninput="liveUpdateTokenEdit()" onkeydown="if(event.key===\'Enter\')saveCalcTokenLabel()" style="padding:0.4rem 0.5rem;width:80px;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-primary);color:var(--text-primary);font-size:0.95rem;font-weight:600;">' +
-    '<input id="calc-label-input" type="text" placeholder="Label (optional)" value="' + escHtml(token.label) + '" oninput="liveUpdateTokenEdit()" onkeydown="if(event.key===\'Enter\')saveCalcTokenLabel()" style="padding:0.4rem 0.5rem;width:140px;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-primary);color:var(--text-primary);font-size:0.95rem;">' +
-    '<button onclick="saveCalcTokenLabel()" style="padding:0.4rem 0.7rem;border:1px solid var(--color-accent);border-radius:var(--radius-sm);background:var(--color-accent);color:#fff;cursor:pointer;font-size:0.95rem;font-weight:600;">OK</button>' +
-    '<button onclick="cancelCalcTokenLabel()" style="padding:0.4rem 0.7rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-tertiary);color:#fff;cursor:pointer;font-size:0.95rem;">✕</button></div>';
+  if (!token) return;
+  container.innerHTML = '<div class="label-flex" style="display:flex;align-items:center;flex-wrap:nowrap;gap:0.35rem;width:100%;box-sizing:border-box;"><span style="font-weight:700;font-size:0.92rem;color:var(--text-primary);white-space:nowrap;">Edit:</span>' +
+    '<input id="calc-val-input" type="text" inputmode="decimal" value="' + escHtml(token.v) + '" oninput="liveUpdateTokenEdit()" onkeydown="if(event.key===\'Enter\')saveCalcTokenLabel()" style="padding:0.6rem 0.45rem;width:70px;flex-shrink:0;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-primary);color:var(--text-primary);font-size:1.05rem;font-weight:700;box-sizing:border-box;">' +
+    '<input id="calc-label-input" type="text" placeholder="Label (optional)" value="' + escHtml(token.label) + '" oninput="liveUpdateTokenEdit()" onkeydown="if(event.key===\'Enter\')saveCalcTokenLabel()" style="padding:0.6rem 0.55rem;flex:1;min-width:70px;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-primary);color:var(--text-primary);font-size:1rem;box-sizing:border-box;">' +
+    '<button onclick="saveCalcTokenLabel()" style="padding:0.6rem 0.75rem;flex-shrink:0;border:1px solid var(--color-accent);border-radius:var(--radius-sm);background:var(--color-accent);color:#fff;cursor:pointer;font-size:0.95rem;font-weight:700;touch-action:manipulation;">OK</button>' +
+    '<button onclick="cancelCalcTokenLabel()" style="padding:0.6rem 0.65rem;flex-shrink:0;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-tertiary);color:#fff;cursor:pointer;font-size:0.95rem;touch-action:manipulation;">✕</button></div>';
   setTimeout(function() {
     var labelInp = document.getElementById('calc-label-input') || document.getElementById('calc-bill-label-input');
     if (labelInp) {
@@ -3898,9 +3904,9 @@ function setUrlParam(name, val) {
 /* expenses mode */
 var _expJustAdded = false;
 function updateExpensesBadge() {
-  var el = document.getElementById('h-btn-expenses');
+  var el = document.getElementById('h-btn-expenses-icon') || document.getElementById('h-btn-expenses');
   if (!el) return;
-  el.textContent = _expensesNewCount > 0 ? '💸 EXPENSES ('+_expensesNewCount+')' : '💸 EXPENSES';
+  el.textContent = _expensesNewCount > 0 ? '💸 (' + _expensesNewCount + ')' : '💸';
 }
 
 function getCategoryFromDesc(desc) {
@@ -4573,46 +4579,60 @@ function calcGoldTotal() {
   });
 }
 
+function setGoldWeight(g) {
+  var el = document.getElementById('gold-weight-input');
+  if (el) { el.value = g; calcGoldTotal(); }
+}
+
 function renderGoldMode(container) {
   if (!container) return;
-  var html = '<div style="padding:0.2rem 0.2rem;max-width:100%;box-sizing:border-box;">' +
-    '<div style="display:flex;align-items:center;justify-content:space-between;gap:0.4rem;margin-bottom:0.75rem;flex-wrap:wrap;max-width:100%;box-sizing:border-box;">' +
-      '<div style="display:flex;align-items:center;gap:0.4rem;flex:1;min-width:150px;">' +
-        '<span style="font-size:0.92rem;font-weight:600;color:var(--text-primary);white-space:nowrap;">Rate (₹/g):</span>' +
-        '<input id="gold-rate-input" type="text" inputmode="decimal" value="7250" oninput="calcGoldTotal()" style="flex:1;min-width:65px;max-width:95px;padding:0.5rem 0.4rem;font-size:1.05rem;font-weight:600;border-radius:var(--radius-sm);border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);">' +
+  var html = '<div style="padding:0.4rem 0.2rem;display:flex;flex-direction:column;gap:0.9rem;box-sizing:border-box;">' +
+    '<div style="display:flex;align-items:center;justify-content:space-between;gap:0.5rem;flex-wrap:wrap;">' +
+      '<div style="display:flex;align-items:center;gap:0.5rem;flex:1;min-width:160px;">' +
+        '<span style="font-size:1rem;font-weight:600;color:var(--text-primary);white-space:nowrap;">Rate (₹/g):</span>' +
+        '<input id="gold-rate-input" type="text" inputmode="decimal" value="7250" oninput="calcGoldTotal()" style="flex:1;min-width:75px;padding:0.65rem 0.6rem;font-size:1.15rem;font-weight:700;border-radius:var(--radius-sm);border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);">' +
       '</div>' +
-      '<button onclick="fetchLiveGoldRate()" style="padding:0.5rem 0.65rem;background:var(--color-accent);color:#fff;border:none;border-radius:var(--radius-sm);font-size:0.85rem;font-weight:600;cursor:pointer;white-space:nowrap;">⚡ Live Rate</button>' +
+      '<button onclick="fetchLiveGoldRate()" style="padding:0.65rem 0.85rem;background:var(--color-accent);color:#fff;border:none;border-radius:var(--radius-sm);font-size:0.9rem;font-weight:700;cursor:pointer;white-space:nowrap;">⚡ Live Rate</button>' +
     '</div>' +
-    '<div style="display:flex;align-items:center;justify-content:space-between;gap:0.4rem;margin-bottom:0.75rem;flex-wrap:wrap;max-width:100%;box-sizing:border-box;">' +
-      '<div style="display:flex;align-items:center;gap:0.3rem;">' +
-        '<span style="font-size:0.92rem;font-weight:600;color:var(--text-primary);white-space:nowrap;">Purity:</span>' +
-        '<select id="gold-carat-select" onchange="calcGoldTotal()" style="padding:0.5rem 0.25rem;font-size:0.88rem;font-weight:600;border-radius:var(--radius-sm);border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);max-width:115px;">' +
+    '<div style="display:flex;align-items:center;justify-content:space-between;gap:0.5rem;flex-wrap:wrap;">' +
+      '<div style="display:flex;align-items:center;gap:0.4rem;">' +
+        '<span style="font-size:1rem;font-weight:600;color:var(--text-primary);white-space:nowrap;">Purity:</span>' +
+        '<select id="gold-carat-select" onchange="calcGoldTotal()" style="padding:0.65rem 0.4rem;font-size:0.95rem;font-weight:700;border-radius:var(--radius-sm);border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);">' +
           '<option value="24">24K (99.9%)</option>' +
           '<option value="22" selected>22K (91.6%)</option>' +
           '<option value="18">18K (75.0%)</option>' +
         '</select>' +
       '</div>' +
-      '<div style="display:flex;align-items:center;gap:0.3rem;">' +
-        '<span style="font-size:0.92rem;font-weight:600;color:var(--text-primary);white-space:nowrap;">Weight:</span>' +
-        '<input id="gold-weight-input" type="text" inputmode="decimal" placeholder="Grams" value="10" oninput="calcGoldTotal()" style="width:50px;padding:0.5rem 0.35rem;font-size:1.05rem;font-weight:600;border-radius:var(--radius-sm);border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);">' +
-        '<span style="font-size:0.92rem;font-weight:700;color:var(--text-primary);">g</span>' +
+      '<div style="display:flex;align-items:center;gap:0.4rem;">' +
+        '<span style="font-size:1rem;font-weight:600;color:var(--text-primary);white-space:nowrap;">Weight:</span>' +
+        '<input id="gold-weight-input" type="text" inputmode="decimal" placeholder="Grams" value="10" oninput="calcGoldTotal()" style="width:65px;padding:0.65rem 0.5rem;font-size:1.15rem;font-weight:700;border-radius:var(--radius-sm);border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);">' +
+        '<span style="font-size:1rem;font-weight:700;color:var(--text-primary);">g</span>' +
       '</div>' +
     '</div>' +
-    '<div style="display:flex;align-items:center;justify-content:space-between;gap:0.4rem;margin-bottom:0.75rem;flex-wrap:wrap;max-width:100%;box-sizing:border-box;">' +
-      '<div style="display:flex;align-items:center;gap:0.3rem;">' +
-        '<span style="font-size:0.92rem;font-weight:600;color:var(--text-primary);white-space:nowrap;">Making:</span>' +
-        '<input id="gold-making-input" type="text" inputmode="decimal" value="8" oninput="calcGoldTotal()" style="width:48px;padding:0.5rem 0.35rem;font-size:1.05rem;font-weight:600;border-radius:var(--radius-sm);border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);">' +
-        '<select id="gold-making-type" onchange="calcGoldTotal()" style="padding:0.5rem 0.25rem;font-size:0.88rem;font-weight:600;border-radius:var(--radius-sm);border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);">' +
+    '<div style="display:flex;align-items:center;justify-content:space-between;gap:0.5rem;flex-wrap:wrap;">' +
+      '<div style="display:flex;align-items:center;gap:0.4rem;">' +
+        '<span style="font-size:1rem;font-weight:600;color:var(--text-primary);white-space:nowrap;">Making:</span>' +
+        '<input id="gold-making-input" type="text" inputmode="decimal" value="8" oninput="calcGoldTotal()" style="width:55px;padding:0.65rem 0.4rem;font-size:1.15rem;font-weight:700;border-radius:var(--radius-sm);border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);">' +
+        '<select id="gold-making-type" onchange="calcGoldTotal()" style="padding:0.65rem 0.4rem;font-size:0.95rem;font-weight:700;border-radius:var(--radius-sm);border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);">' +
           '<option value="percent">%</option>' +
           '<option value="per_gram">₹/g</option>' +
         '</select>' +
       '</div>' +
-      '<label style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.35rem 0.6rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-tertiary);cursor:pointer;user-select:none;">' +
-        '<input type="checkbox" id="gold-gst-check" checked onchange="calcGoldTotal()" style="accent-color:var(--color-accent);width:16px;height:16px;cursor:pointer;">' +
-        '<span style="font-size:0.9rem;font-weight:700;color:var(--text-primary);">3% GST</span>' +
+      '<label style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 0.75rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-tertiary);cursor:pointer;user-select:none;">' +
+        '<input type="checkbox" id="gold-gst-check" checked onchange="calcGoldTotal()" style="accent-color:var(--color-accent);width:18px;height:18px;cursor:pointer;">' +
+        '<span style="font-size:0.95rem;font-weight:700;color:var(--text-primary);">3% GST</span>' +
       '</label>' +
     '</div>' +
-    '<div id="gold-result" style="margin-top:0.8rem;padding:0.8rem;background:var(--bg-tertiary);border-radius:var(--radius-sm);border-left:4px solid var(--color-accent);font-size:0.95rem;line-height:1.6;"></div>' +
+    '<div>' +
+      '<div style="font-size:0.85rem;font-weight:700;color:var(--text-muted);margin-bottom:0.4rem;text-transform:uppercase;letter-spacing:0.04em;">⚡ Quick Weight Presets</div>' +
+      '<div style="display:flex;gap:0.5rem;flex-wrap:wrap;">' +
+        '<button onclick="setGoldWeight(1)" style="flex:1;min-width:60px;padding:0.55rem 0.5rem;font-size:0.9rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">1g</button>' +
+        '<button onclick="setGoldWeight(8)" style="flex:1;min-width:60px;padding:0.55rem 0.5rem;font-size:0.9rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">8g (1 Sov)</button>' +
+        '<button onclick="setGoldWeight(10)" style="flex:1;min-width:60px;padding:0.55rem 0.5rem;font-size:0.9rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">10g</button>' +
+        '<button onclick="setGoldWeight(100)" style="flex:1;min-width:60px;padding:0.55rem 0.5rem;font-size:0.9rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">100g</button>' +
+      '</div>' +
+    '</div>' +
+    '<div id="gold-result" style="margin-top:0.4rem;padding:1.1rem;background:var(--bg-tertiary);border-radius:12px;border-left:4px solid #fde047;font-size:1.05rem;line-height:1.6;box-shadow:0 4px 15px rgba(0,0,0,0.2);"></div>' +
   '</div>';
   container.innerHTML = html;
   calcGoldTotal();
@@ -4650,30 +4670,44 @@ function calcFuelTotal() {
   });
 }
 
+function setFuelDistance(dist) {
+  var el = document.getElementById('fuel-dist');
+  if (el) { el.value = dist; calcFuelTotal(); }
+}
+
 function renderFuelMode(container) {
   if (!container) return;
-  var html = '<div style="padding:0.2rem 0.2rem;">' +
-    '<div class="field-row" style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem;">' +
-      '<span class="field-label" style="font-size:0.95rem;min-width:90px;">Distance:</span>' +
-      '<input id="fuel-dist" type="text" inputmode="decimal" value="300" oninput="calcFuelTotal()" style="width:100px;padding:0.6rem 0.6rem;font-size:1.05rem;font-weight:600;border-radius:var(--radius-sm);border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);">' +
-      '<span style="font-size:0.9rem;color:var(--text-muted);">km</span>' +
+  var html = '<div style="padding:0.4rem 0.2rem;display:flex;flex-direction:column;gap:0.9rem;box-sizing:border-box;">' +
+    '<div class="field-row" style="display:flex;align-items:center;gap:0.6rem;">' +
+      '<span class="field-label" style="font-size:1rem;font-weight:600;min-width:105px;">Distance:</span>' +
+      '<input id="fuel-dist" type="text" inputmode="decimal" value="300" oninput="calcFuelTotal()" style="flex:1;max-width:130px;padding:0.65rem 0.75rem;font-size:1.15rem;font-weight:700;border-radius:var(--radius-sm);border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);">' +
+      '<span style="font-size:0.95rem;font-weight:700;color:var(--text-muted);">km</span>' +
     '</div>' +
-    '<div class="field-row" style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem;">' +
-      '<span class="field-label" style="font-size:0.95rem;min-width:90px;">Mileage:</span>' +
-      '<input id="fuel-mileage" type="text" inputmode="decimal" value="15" oninput="calcFuelTotal()" style="width:100px;padding:0.6rem 0.6rem;font-size:1.05rem;font-weight:600;border-radius:var(--radius-sm);border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);">' +
-      '<span style="font-size:0.9rem;color:var(--text-muted);">km/L</span>' +
+    '<div class="field-row" style="display:flex;align-items:center;gap:0.6rem;">' +
+      '<span class="field-label" style="font-size:1rem;font-weight:600;min-width:105px;">Mileage:</span>' +
+      '<input id="fuel-mileage" type="text" inputmode="decimal" value="15" oninput="calcFuelTotal()" style="flex:1;max-width:130px;padding:0.65rem 0.75rem;font-size:1.15rem;font-weight:700;border-radius:var(--radius-sm);border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);">' +
+      '<span style="font-size:0.95rem;font-weight:700;color:var(--text-muted);">km/L</span>' +
     '</div>' +
-    '<div class="field-row" style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem;">' +
-      '<span class="field-label" style="font-size:0.95rem;min-width:90px;">Fuel Rate:</span>' +
-      '<input id="fuel-rate" type="text" inputmode="decimal" value="100" oninput="calcFuelTotal()" style="width:100px;padding:0.6rem 0.6rem;font-size:1.05rem;font-weight:600;border-radius:var(--radius-sm);border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);">' +
-      '<span style="font-size:0.9rem;color:var(--text-muted);">₹/L</span>' +
+    '<div class="field-row" style="display:flex;align-items:center;gap:0.6rem;">' +
+      '<span class="field-label" style="font-size:1rem;font-weight:600;min-width:105px;">Fuel Rate:</span>' +
+      '<input id="fuel-rate" type="text" inputmode="decimal" value="100" oninput="calcFuelTotal()" style="flex:1;max-width:130px;padding:0.65rem 0.75rem;font-size:1.15rem;font-weight:700;border-radius:var(--radius-sm);border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);">' +
+      '<span style="font-size:0.95rem;font-weight:700;color:var(--text-muted);">₹/L</span>' +
     '</div>' +
-    '<div class="field-row" style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem;">' +
-      '<span class="field-label" style="font-size:0.95rem;min-width:90px;">Passengers:</span>' +
-      '<input id="fuel-people" type="text" inputmode="numeric" value="3" oninput="calcFuelTotal()" style="width:100px;padding:0.6rem 0.6rem;font-size:1.05rem;font-weight:600;border-radius:var(--radius-sm);border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);">' +
-      '<span style="font-size:0.9rem;color:var(--text-muted);">people</span>' +
+    '<div class="field-row" style="display:flex;align-items:center;gap:0.6rem;">' +
+      '<span class="field-label" style="font-size:1rem;font-weight:600;min-width:105px;">Passengers:</span>' +
+      '<input id="fuel-people" type="text" inputmode="numeric" value="3" oninput="calcFuelTotal()" style="flex:1;max-width:130px;padding:0.65rem 0.75rem;font-size:1.15rem;font-weight:700;border-radius:var(--radius-sm);border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);">' +
+      '<span style="font-size:0.95rem;font-weight:700;color:var(--text-muted);">people</span>' +
     '</div>' +
-    '<div id="fuel-result" style="margin-top:0.8rem;padding:0.8rem;background:var(--bg-tertiary);border-radius:var(--radius-sm);border-left:4px solid var(--color-accent);font-size:0.95rem;line-height:1.6;"></div>' +
+    '<div>' +
+      '<div style="font-size:0.85rem;font-weight:700;color:var(--text-muted);margin-bottom:0.4rem;text-transform:uppercase;letter-spacing:0.04em;">⚡ Quick Distance Presets</div>' +
+      '<div style="display:flex;gap:0.5rem;flex-wrap:wrap;">' +
+        '<button onclick="setFuelDistance(50)" style="flex:1;min-width:65px;padding:0.55rem 0.5rem;font-size:0.9rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">50 km</button>' +
+        '<button onclick="setFuelDistance(100)" style="flex:1;min-width:65px;padding:0.55rem 0.5rem;font-size:0.9rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">100 km</button>' +
+        '<button onclick="setFuelDistance(250)" style="flex:1;min-width:65px;padding:0.55rem 0.5rem;font-size:0.9rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">250 km</button>' +
+        '<button onclick="setFuelDistance(500)" style="flex:1;min-width:65px;padding:0.55rem 0.5rem;font-size:0.9rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">500 km</button>' +
+      '</div>' +
+    '</div>' +
+    '<div id="fuel-result" style="margin-top:0.4rem;padding:1.1rem;background:var(--bg-tertiary);border-radius:12px;border-left:4px solid #fb923c;font-size:1.05rem;line-height:1.6;box-shadow:0 4px 15px rgba(0,0,0,0.2);"></div>' +
   '</div>';
   container.innerHTML = html;
   calcFuelTotal();
@@ -4740,34 +4774,51 @@ function calcEmiTotal() {
   });
 }
 
+function setEmiTenure(t) {
+  var el = document.getElementById('emi-tenure');
+  if (el) { el.value = t; calcEmiTotal(); }
+}
+
 function renderEmiMode(container) {
   if (!container) return;
-  var html = '<div style="padding:0.2rem 0.2rem;">' +
-    '<div style="display:flex;gap:6px;margin-bottom:0.75rem;flex-wrap:wrap;">' +
-      '<button onclick="setEmiAmount(100000)" style="padding:0.4rem 0.65rem;font-size:0.85rem;font-weight:600;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">1 Lakh</button>' +
-      '<button onclick="setEmiAmount(500000)" style="padding:0.4rem 0.65rem;font-size:0.85rem;font-weight:600;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">5 Lakhs</button>' +
-      '<button onclick="setEmiAmount(1000000)" style="padding:0.4rem 0.65rem;font-size:0.85rem;font-weight:600;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">10 Lakhs</button>' +
-      '<button onclick="setEmiAmount(2500000)" style="padding:0.4rem 0.65rem;font-size:0.85rem;font-weight:600;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">25 Lakhs</button>' +
+  var html = '<div style="padding:0.4rem 0.2rem;display:flex;flex-direction:column;gap:0.9rem;box-sizing:border-box;">' +
+    '<div>' +
+      '<div style="font-size:0.85rem;font-weight:700;color:var(--text-muted);margin-bottom:0.4rem;text-transform:uppercase;letter-spacing:0.04em;">⚡ Quick Loan Amount Presets</div>' +
+      '<div style="display:flex;gap:0.5rem;flex-wrap:wrap;">' +
+        '<button onclick="setEmiAmount(100000)" style="flex:1;min-width:70px;padding:0.55rem 0.5rem;font-size:0.9rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">₹1 Lakh</button>' +
+        '<button onclick="setEmiAmount(500000)" style="flex:1;min-width:70px;padding:0.55rem 0.5rem;font-size:0.9rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">₹5 Lakhs</button>' +
+        '<button onclick="setEmiAmount(1000000)" style="flex:1;min-width:70px;padding:0.55rem 0.5rem;font-size:0.9rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">₹10 Lakhs</button>' +
+        '<button onclick="setEmiAmount(2500000)" style="flex:1;min-width:70px;padding:0.55rem 0.5rem;font-size:0.9rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">₹25 Lakhs</button>' +
+      '</div>' +
     '</div>' +
-    '<div class="field-row" style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem;">' +
-      '<span class="field-label" style="font-size:0.95rem;min-width:90px;">Amount:</span>' +
-      '<input id="emi-amount" type="text" inputmode="decimal" value="5,00,000" oninput="formatEmiInput(this)" style="width:125px;padding:0.6rem 0.6rem;font-size:1.05rem;font-weight:600;border-radius:var(--radius-sm);border:1px solid var(--border-color);background:var(--bg-primary);color:#fff;">' +
-      '<span style="font-size:0.9rem;color:var(--text-muted);">₹</span>' +
+    '<div class="field-row" style="display:flex;align-items:center;gap:0.6rem;">' +
+      '<span class="field-label" style="font-size:1rem;font-weight:600;min-width:115px;">Loan Amount:</span>' +
+      '<input id="emi-amount" type="text" inputmode="decimal" value="5,00,000" oninput="formatEmiInput(this)" style="flex:1;max-width:150px;padding:0.65rem 0.75rem;font-size:1.15rem;font-weight:700;border-radius:var(--radius-sm);border:1px solid var(--border-color);background:var(--bg-primary);color:#fff;">' +
+      '<span style="font-size:0.95rem;font-weight:700;color:var(--text-muted);">₹</span>' +
     '</div>' +
-    '<div class="field-row" style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem;">' +
-      '<span class="field-label" style="font-size:0.95rem;min-width:90px;">Interest Rate:</span>' +
-      '<input id="emi-rate" type="text" inputmode="decimal" value="8.5" oninput="calcEmiTotal()" style="width:80px;padding:0.6rem 0.6rem;font-size:1.05rem;font-weight:600;border-radius:var(--radius-sm);border:1px solid var(--border-color);background:var(--bg-primary);color:#fff;">' +
-      '<span style="font-size:0.9rem;color:var(--text-muted);">% p.a.</span>' +
+    '<div class="field-row" style="display:flex;align-items:center;gap:0.6rem;">' +
+      '<span class="field-label" style="font-size:1rem;font-weight:600;min-width:115px;">Interest Rate:</span>' +
+      '<input id="emi-rate" type="text" inputmode="decimal" value="8.5" oninput="calcEmiTotal()" style="flex:1;max-width:100px;padding:0.65rem 0.75rem;font-size:1.15rem;font-weight:700;border-radius:var(--radius-sm);border:1px solid var(--border-color);background:var(--bg-primary);color:#fff;">' +
+      '<span style="font-size:0.95rem;font-weight:700;color:var(--text-muted);">% p.a.</span>' +
     '</div>' +
-    '<div class="field-row" style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem;">' +
-      '<span class="field-label" style="font-size:0.95rem;min-width:90px;">Tenure:</span>' +
-      '<input id="emi-tenure" type="text" inputmode="numeric" value="5" oninput="calcEmiTotal()" style="width:70px;padding:0.6rem 0.6rem;font-size:1.05rem;font-weight:600;border-radius:var(--radius-sm);border:1px solid var(--border-color);background:var(--bg-primary);color:#fff;">' +
-      '<select id="emi-unit" onchange="calcEmiTotal()" style="padding:0.6rem 0.6rem;font-size:0.95rem;font-weight:600;border-radius:var(--radius-sm);border:1px solid var(--border-color);background:var(--bg-primary);color:#fff;">' +
+    '<div class="field-row" style="display:flex;align-items:center;gap:0.6rem;">' +
+      '<span class="field-label" style="font-size:1rem;font-weight:600;min-width:115px;">Tenure:</span>' +
+      '<input id="emi-tenure" type="text" inputmode="numeric" value="5" oninput="calcEmiTotal()" style="width:75px;padding:0.65rem 0.6rem;font-size:1.15rem;font-weight:700;border-radius:var(--radius-sm);border:1px solid var(--border-color);background:var(--bg-primary);color:#fff;">' +
+      '<select id="emi-unit" onchange="calcEmiTotal()" style="padding:0.65rem 0.6rem;font-size:0.95rem;font-weight:700;border-radius:var(--radius-sm);border:1px solid var(--border-color);background:var(--bg-primary);color:#fff;">' +
         '<option value="years">Years</option>' +
         '<option value="months">Months</option>' +
       '</select>' +
     '</div>' +
-    '<div id="emi-result" style="margin-top:0.8rem;padding:0.8rem;background:var(--bg-tertiary);border-radius:var(--radius-sm);border-left:4px solid var(--color-accent);font-size:0.95rem;line-height:1.6;"></div>' +
+    '<div>' +
+      '<div style="font-size:0.85rem;font-weight:700;color:var(--text-muted);margin-bottom:0.4rem;text-transform:uppercase;letter-spacing:0.04em;">⚡ Quick Tenure Presets</div>' +
+      '<div style="display:flex;gap:0.5rem;flex-wrap:wrap;">' +
+        '<button onclick="setEmiTenure(1)" style="flex:1;min-width:60px;padding:0.55rem 0.5rem;font-size:0.9rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">1 Yr</button>' +
+        '<button onclick="setEmiTenure(3)" style="flex:1;min-width:60px;padding:0.55rem 0.5rem;font-size:0.9rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">3 Yrs</button>' +
+        '<button onclick="setEmiTenure(5)" style="flex:1;min-width:60px;padding:0.55rem 0.5rem;font-size:0.9rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">5 Yrs</button>' +
+        '<button onclick="setEmiTenure(10)" style="flex:1;min-width:60px;padding:0.55rem 0.5rem;font-size:0.9rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">10 Yrs</button>' +
+      '</div>' +
+    '</div>' +
+    '<div id="emi-result" style="margin-top:0.4rem;padding:1.1rem;background:var(--bg-tertiary);border-radius:12px;border-left:4px solid #34d399;font-size:1.05rem;line-height:1.6;box-shadow:0 4px 15px rgba(0,0,0,0.2);"></div>' +
   '</div>';
   container.innerHTML = html;
   calcEmiTotal();
@@ -4823,29 +4874,46 @@ function calcGstTotal() {
   });
 }
 
+function setGstAmount(amt) {
+  var el = document.getElementById('gst-amount');
+  if (el) { el.value = amt; calcGstTotal(); }
+}
+
 function renderGstMode(container) {
   if (!container) return;
-  var html = '<div style="padding:0.2rem 0.2rem;">' +
-    '<div style="display:flex;gap:6px;margin-bottom:0.75rem;">' +
-      '<button onclick="setGstRate(5)" style="padding:0.4rem 0.65rem;font-size:0.85rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">5%</button>' +
-      '<button onclick="setGstRate(12)" style="padding:0.4rem 0.65rem;font-size:0.85rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">12%</button>' +
-      '<button onclick="setGstRate(18)" style="padding:0.4rem 0.65rem;font-size:0.85rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">18%</button>' +
-      '<button onclick="setGstRate(28)" style="padding:0.4rem 0.65rem;font-size:0.85rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">28%</button>' +
+  var html = '<div style="padding:0.4rem 0.2rem;display:flex;flex-direction:column;gap:0.9rem;box-sizing:border-box;">' +
+    '<div>' +
+      '<div style="font-size:0.85rem;font-weight:700;color:var(--text-muted);margin-bottom:0.4rem;text-transform:uppercase;letter-spacing:0.04em;">⚡ Quick Tax Rate Presets</div>' +
+      '<div style="display:flex;gap:0.5rem;flex-wrap:wrap;">' +
+        '<button onclick="setGstRate(5)" style="flex:1;min-width:60px;padding:0.55rem 0.5rem;font-size:0.9rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">5%</button>' +
+        '<button onclick="setGstRate(12)" style="flex:1;min-width:60px;padding:0.55rem 0.5rem;font-size:0.9rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">12%</button>' +
+        '<button onclick="setGstRate(18)" style="flex:1;min-width:60px;padding:0.55rem 0.5rem;font-size:0.9rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">18%</button>' +
+        '<button onclick="setGstRate(28)" style="flex:1;min-width:60px;padding:0.55rem 0.5rem;font-size:0.9rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">28%</button>' +
+      '</div>' +
     '</div>' +
-    '<div class="field-row" style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem;">' +
-      '<span class="field-label" style="font-size:0.95rem;min-width:90px;">Amount:</span>' +
-      '<input id="gst-amount" type="text" inputmode="decimal" value="1000" oninput="calcGstTotal()" style="width:120px;padding:0.6rem 0.6rem;font-size:1.05rem;font-weight:600;border-radius:var(--radius-sm);border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);">' +
-      '<span style="font-size:0.9rem;color:var(--text-muted);">₹</span>' +
+    '<div class="field-row" style="display:flex;align-items:center;gap:0.6rem;">' +
+      '<span class="field-label" style="font-size:1rem;font-weight:600;min-width:110px;">Amount:</span>' +
+      '<input id="gst-amount" type="text" inputmode="decimal" value="1000" oninput="calcGstTotal()" style="flex:1;max-width:140px;padding:0.65rem 0.75rem;font-size:1.15rem;font-weight:700;border-radius:var(--radius-sm);border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);">' +
+      '<span style="font-size:0.95rem;font-weight:700;color:var(--text-muted);">₹</span>' +
     '</div>' +
-    '<div class="field-row" style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem;">' +
-      '<span class="field-label" style="font-size:0.95rem;min-width:90px;">GST Rate %:</span>' +
-      '<input id="gst-rate" type="text" inputmode="decimal" value="18" oninput="calcGstTotal()" style="width:60px;padding:0.6rem 0.6rem;font-size:1.05rem;font-weight:600;border-radius:var(--radius-sm);border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);">' +
-      '<select id="gst-mode" onchange="calcGstTotal()" style="padding:0.6rem 0.6rem;font-size:0.95rem;font-weight:600;border-radius:var(--radius-sm);border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);">' +
+    '<div class="field-row" style="display:flex;align-items:center;gap:0.6rem;">' +
+      '<span class="field-label" style="font-size:1rem;font-weight:600;min-width:110px;">GST Rate %:</span>' +
+      '<input id="gst-rate" type="text" inputmode="decimal" value="18" oninput="calcGstTotal()" style="width:70px;padding:0.65rem 0.6rem;font-size:1.15rem;font-weight:700;border-radius:var(--radius-sm);border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);">' +
+      '<select id="gst-mode" onchange="calcGstTotal()" style="padding:0.65rem 0.5rem;font-size:0.95rem;font-weight:700;border-radius:var(--radius-sm);border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);flex:1;">' +
         '<option value="add">Add GST (Exclusive)</option>' +
         '<option value="remove">Remove GST (Inclusive)</option>' +
       '</select>' +
     '</div>' +
-    '<div id="gst-result" style="margin-top:0.8rem;padding:0.8rem;background:var(--bg-tertiary);border-radius:var(--radius-sm);border-left:4px solid var(--color-accent);font-size:0.95rem;line-height:1.6;"></div>' +
+    '<div>' +
+      '<div style="font-size:0.85rem;font-weight:700;color:var(--text-muted);margin-bottom:0.4rem;text-transform:uppercase;letter-spacing:0.04em;">⚡ Quick Amount Presets</div>' +
+      '<div style="display:flex;gap:0.5rem;flex-wrap:wrap;">' +
+        '<button onclick="setGstAmount(500)" style="flex:1;min-width:60px;padding:0.55rem 0.5rem;font-size:0.9rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">₹500</button>' +
+        '<button onclick="setGstAmount(1000)" style="flex:1;min-width:60px;padding:0.55rem 0.5rem;font-size:0.9rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">₹1,000</button>' +
+        '<button onclick="setGstAmount(5000)" style="flex:1;min-width:60px;padding:0.55rem 0.5rem;font-size:0.9rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">₹5,000</button>' +
+        '<button onclick="setGstAmount(10000)" style="flex:1;min-width:60px;padding:0.55rem 0.5rem;font-size:0.9rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">₹10,000</button>' +
+      '</div>' +
+    '</div>' +
+    '<div id="gst-result" style="margin-top:0.4rem;padding:1.1rem;background:var(--bg-tertiary);border-radius:12px;border-left:4px solid #fbbf24;font-size:1.05rem;line-height:1.6;box-shadow:0 4px 15px rgba(0,0,0,0.2);"></div>' +
   '</div>';
   container.innerHTML = html;
   calcGstTotal();
@@ -4946,26 +5014,41 @@ function calcConvTotal() {
   });
 }
 
+function setConvValue(v) {
+  var el = document.getElementById('conv-val');
+  if (el) { el.value = v; calcConvTotal(); }
+}
+
 function renderConverterMode(container) {
   if (!container) return;
-  var html = '<div style="padding:0.2rem 0.2rem;">' +
-    '<div class="field-row" style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem;">' +
-      '<span class="field-label" style="font-size:0.95rem;min-width:75px;">Category:</span>' +
-      '<select id="conv-cat" onchange="initConverterUnits()" style="padding:0.6rem 0.6rem;font-size:0.95rem;font-weight:600;border-radius:var(--radius-sm);border:1px solid var(--border-color);background:var(--bg-primary);color:#fff;flex:1;">' +
+  var html = '<div style="padding:0.4rem 0.2rem;display:flex;flex-direction:column;gap:1rem;box-sizing:border-box;">' +
+    '<div class="field-row" style="display:flex;align-items:center;gap:0.6rem;">' +
+      '<span class="field-label" style="font-size:1rem;font-weight:600;min-width:85px;">Category:</span>' +
+      '<select id="conv-cat" onchange="initConverterUnits()" style="padding:0.65rem 0.6rem;font-size:1.05rem;font-weight:700;border-radius:var(--radius-sm);border:1px solid var(--border-color);background:var(--bg-primary);color:#fff;flex:1;">' +
         '<option value="length">Length (km, m, ft, inch)</option>' +
         '<option value="weight">Weight (kg, g, lb, oz)</option>' +
         '<option value="volume">Volume (L, mL, gal)</option>' +
         '<option value="temp">Temperature (°C, °F, K)</option>' +
       '</select>' +
     '</div>' +
-    '<div class="field-row" style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem;">' +
-      '<input id="conv-val" type="text" inputmode="decimal" value="1" oninput="calcConvTotal()" style="width:90px;padding:0.6rem 0.6rem;font-size:1.05rem;font-weight:600;border-radius:var(--radius-sm);border:1px solid var(--border-color);background:var(--bg-primary);color:#fff;">' +
-      '<select id="conv-from" onchange="calcConvTotal()" style="padding:0.6rem 0.5rem;font-size:0.95rem;font-weight:600;border-radius:var(--radius-sm);border:1px solid var(--border-color);background:var(--bg-primary);color:#fff;flex:1;"></select>' +
+    '<div class="field-row" style="display:flex;align-items:center;gap:0.6rem;">' +
+      '<input id="conv-val" type="text" inputmode="decimal" value="1" oninput="calcConvTotal()" style="width:100px;padding:0.65rem 0.75rem;font-size:1.15rem;font-weight:700;border-radius:var(--radius-sm);border:1px solid var(--border-color);background:var(--bg-primary);color:#fff;">' +
+      '<select id="conv-from" onchange="calcConvTotal()" style="padding:0.65rem 0.5rem;font-size:1rem;font-weight:700;border-radius:var(--radius-sm);border:1px solid var(--border-color);background:var(--bg-primary);color:#fff;flex:1;"></select>' +
     '</div>' +
-    '<div class="field-row" style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem;">' +
-      '<span style="font-weight:700;font-size:1.2rem;color:var(--color-accent);padding:0 4px;">=</span>' +
-      '<input id="conv-res-val" type="text" readonly style="width:110px;padding:0.6rem 0.6rem;font-size:1.05rem;font-weight:700;border-radius:var(--radius-sm);border:1px solid var(--border-color);background:var(--bg-tertiary);color:var(--color-accent);">' +
-      '<select id="conv-to" onchange="calcConvTotal()" style="padding:0.6rem 0.5rem;font-size:0.95rem;font-weight:600;border-radius:var(--radius-sm);border:1px solid var(--border-color);background:var(--bg-primary);color:#fff;flex:1;"></select>' +
+    '<div class="field-row" style="display:flex;align-items:center;gap:0.6rem;">' +
+      '<span style="font-weight:700;font-size:1.3rem;color:#60a5fa;padding:0 4px;">=</span>' +
+      '<input id="conv-res-val" type="text" readonly style="width:130px;padding:0.65rem 0.75rem;font-size:1.2rem;font-weight:700;border-radius:var(--radius-sm);border:1px solid var(--border-color);background:var(--bg-tertiary);color:#60a5fa;">' +
+      '<select id="conv-to" onchange="calcConvTotal()" style="padding:0.65rem 0.5rem;font-size:1rem;font-weight:700;border-radius:var(--radius-sm);border:1px solid var(--border-color);background:var(--bg-primary);color:#fff;flex:1;"></select>' +
+    '</div>' +
+    '<div>' +
+      '<div style="font-size:0.85rem;font-weight:700;color:var(--text-muted);margin-bottom:0.4rem;text-transform:uppercase;letter-spacing:0.04em;">⚡ Quick Value Presets</div>' +
+      '<div style="display:flex;gap:0.5rem;flex-wrap:wrap;">' +
+        '<button onclick="setConvValue(1)" style="flex:1;min-width:60px;padding:0.55rem 0.5rem;font-size:0.9rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">1</button>' +
+        '<button onclick="setConvValue(10)" style="flex:1;min-width:60px;padding:0.55rem 0.5rem;font-size:0.9rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">10</button>' +
+        '<button onclick="setConvValue(50)" style="flex:1;min-width:60px;padding:0.55rem 0.5rem;font-size:0.9rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">50</button>' +
+        '<button onclick="setConvValue(100)" style="flex:1;min-width:60px;padding:0.55rem 0.5rem;font-size:0.9rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">100</button>' +
+        '<button onclick="setConvValue(1000)" style="flex:1;min-width:60px;padding:0.55rem 0.5rem;font-size:0.9rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">1,000</button>' +
+      '</div>' +
     '</div>' +
   '</div>';
   container.innerHTML = html;
@@ -5091,50 +5174,50 @@ function sciEvalExpr(expr) {
 
 function renderScientificMode(container) {
   if (!container) return;
-  var html = '<div style="display:flex;flex-direction:column;height:100%;padding:0.2rem 0;box-sizing:border-box;">' +
-    '<div style="font-weight:700;font-size:1.1rem;margin-bottom:0.6rem;color:var(--color-accent);display:flex;justify-content:flex-end;align-items:center;">' +
-      '<button id="sci-rad-deg-btn" onclick="toggleSciRadDeg()" style="padding:0.4rem 0.9rem;font-size:0.9rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">DEG</button>' +
+  var html = '<div style="display:flex;flex-direction:column;height:100%;padding:0.2rem 0;box-sizing:border-box;flex:1;">' +
+    '<div style="font-weight:700;font-size:1rem;margin-bottom:0.4rem;color:var(--color-accent);display:flex;justify-content:flex-end;align-items:center;">' +
+      '<button id="sci-rad-deg-btn" onclick="toggleSciRadDeg()" style="padding:0.4rem 0.95rem;font-size:0.9rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">DEG</button>' +
     '</div>' +
-    '<div style="background:var(--bg-primary);border:1px solid var(--border-color);border-radius:var(--radius-sm);padding:0.85rem 1rem;margin-bottom:0.85rem;text-align:right;">' +
-      '<div id="sci-expr-screen" style="font-size:1.1rem;color:var(--text-muted);min-height:26px;word-break:break-all;">' + (_sciExpr || '0') + '</div>' +
-      '<div id="sci-res-screen" style="font-size:2rem;font-weight:700;color:var(--color-accent);margin-top:4px;">= 0</div>' +
+    '<div style="background:var(--bg-primary);border:1px solid var(--border-color);border-radius:12px;padding:1rem 1.1rem;margin-bottom:0.65rem;text-align:right;min-height:95px;display:flex;flex-direction:column;justify-content:center;">' +
+      '<div id="sci-expr-screen" style="font-size:1.15rem;color:var(--text-muted);min-height:26px;word-break:break-all;">' + (_sciExpr || '0') + '</div>' +
+      '<div id="sci-res-screen" style="font-size:2.3rem;font-weight:700;color:var(--color-accent);margin-top:2px;">= 0</div>' +
     '</div>' +
-    '<div style="display:grid;grid-template-columns:repeat(5,1fr);grid-template-rows:repeat(6,1fr);gap:8px;flex:1;min-height:360px;">' +
-      '<button onclick="sciPress(\'sin\')" style="padding:0;font-size:1.05rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">sin</button>' +
-      '<button onclick="sciPress(\'cos\')" style="padding:0;font-size:1.05rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">cos</button>' +
-      '<button onclick="sciPress(\'tan\')" style="padding:0;font-size:1.05rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">tan</button>' +
-      '<button onclick="sciPress(\'AC\')" style="padding:0;font-size:1.1rem;font-weight:700;background:#d32f2f;border:none;color:#fff;border-radius:var(--radius-sm);cursor:pointer;">AC</button>' +
-      '<button onclick="sciPress(\'DEL\')" style="padding:0;font-size:1.1rem;font-weight:700;background:#f57c00;border:none;color:#fff;border-radius:var(--radius-sm);cursor:pointer;">⌫</button>' +
+    '<div style="display:grid;grid-template-columns:repeat(5,1fr);grid-template-rows:repeat(6,1fr);gap:8px;flex:1;min-height:410px;">' +
+      '<button onclick="sciPress(\'sin\')" style="padding:0;font-size:1.1rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:10px;cursor:pointer;min-height:54px;">sin</button>' +
+      '<button onclick="sciPress(\'cos\')" style="padding:0;font-size:1.1rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:10px;cursor:pointer;min-height:54px;">cos</button>' +
+      '<button onclick="sciPress(\'tan\')" style="padding:0;font-size:1.1rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:10px;cursor:pointer;min-height:54px;">tan</button>' +
+      '<button onclick="sciPress(\'AC\')" style="padding:0;font-size:1.15rem;font-weight:700;background:#d32f2f;border:none;color:#fff;border-radius:10px;cursor:pointer;min-height:54px;">AC</button>' +
+      '<button onclick="sciPress(\'DEL\')" style="padding:0;font-size:1.15rem;font-weight:700;background:#f57c00;border:none;color:#fff;border-radius:10px;cursor:pointer;min-height:54px;">⌫</button>' +
 
-      '<button onclick="sciPress(\'sqrt\')" style="padding:0;font-size:1.05rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">√</button>' +
-      '<button onclick="sciPress(\'log\')" style="padding:0;font-size:1.05rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">log</button>' +
-      '<button onclick="sciPress(\'ln\')" style="padding:0;font-size:1.05rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">ln</button>' +
-      '<button onclick="sciPress(\'(\')" style="padding:0;font-size:1.15rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">(</button>' +
-      '<button onclick="sciPress(\')\')" style="padding:0;font-size:1.15rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">)</button>' +
+      '<button onclick="sciPress(\'sqrt\')" style="padding:0;font-size:1.1rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:10px;cursor:pointer;min-height:54px;">√</button>' +
+      '<button onclick="sciPress(\'log\')" style="padding:0;font-size:1.1rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:10px;cursor:pointer;min-height:54px;">log</button>' +
+      '<button onclick="sciPress(\'ln\')" style="padding:0;font-size:1.1rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:10px;cursor:pointer;min-height:54px;">ln</button>' +
+      '<button onclick="sciPress(\'(\')" style="padding:0;font-size:1.2rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:10px;cursor:pointer;min-height:54px;">(</button>' +
+      '<button onclick="sciPress(\')\')" style="padding:0;font-size:1.2rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:10px;cursor:pointer;min-height:54px;">)</button>' +
 
-      '<button onclick="sciPress(\'pow\')" style="padding:0;font-size:1.05rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">x^y</button>' +
-      '<button onclick="sciPress(\'7\')" style="padding:0;font-size:1.35rem;font-weight:700;background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">7</button>' +
-      '<button onclick="sciPress(\'8\')" style="padding:0;font-size:1.35rem;font-weight:700;background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">8</button>' +
-      '<button onclick="sciPress(\'9\')" style="padding:0;font-size:1.35rem;font-weight:700;background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">9</button>' +
-      '<button onclick="sciPress(\'÷\')" style="padding:0;font-size:1.3rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--color-accent);border-radius:var(--radius-sm);cursor:pointer;">÷</button>' +
+      '<button onclick="sciPress(\'pow\')" style="padding:0;font-size:1.1rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:10px;cursor:pointer;min-height:54px;">x^y</button>' +
+      '<button onclick="sciPress(\'7\')" style="padding:0;font-size:1.4rem;font-weight:700;background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:10px;cursor:pointer;min-height:54px;">7</button>' +
+      '<button onclick="sciPress(\'8\')" style="padding:0;font-size:1.4rem;font-weight:700;background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:10px;cursor:pointer;min-height:54px;">8</button>' +
+      '<button onclick="sciPress(\'9\')" style="padding:0;font-size:1.4rem;font-weight:700;background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:10px;cursor:pointer;min-height:54px;">9</button>' +
+      '<button onclick="sciPress(\'÷\')" style="padding:0;font-size:1.35rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--color-accent);border-radius:10px;cursor:pointer;min-height:54px;">÷</button>' +
 
-      '<button onclick="sciPress(\'pi\')" style="padding:0;font-size:1.15rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">π</button>' +
-      '<button onclick="sciPress(\'4\')" style="padding:0;font-size:1.35rem;font-weight:700;background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">4</button>' +
-      '<button onclick="sciPress(\'5\')" style="padding:0;font-size:1.35rem;font-weight:700;background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">5</button>' +
-      '<button onclick="sciPress(\'6\')" style="padding:0;font-size:1.35rem;font-weight:700;background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">6</button>' +
-      '<button onclick="sciPress(\'×\')" style="padding:0;font-size:1.3rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--color-accent);border-radius:var(--radius-sm);cursor:pointer;">×</button>' +
+      '<button onclick="sciPress(\'pi\')" style="padding:0;font-size:1.2rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:10px;cursor:pointer;min-height:54px;">π</button>' +
+      '<button onclick="sciPress(\'4\')" style="padding:0;font-size:1.4rem;font-weight:700;background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:10px;cursor:pointer;min-height:54px;">4</button>' +
+      '<button onclick="sciPress(\'5\')" style="padding:0;font-size:1.4rem;font-weight:700;background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:10px;cursor:pointer;min-height:54px;">5</button>' +
+      '<button onclick="sciPress(\'6\')" style="padding:0;font-size:1.4rem;font-weight:700;background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:10px;cursor:pointer;min-height:54px;">6</button>' +
+      '<button onclick="sciPress(\'×\')" style="padding:0;font-size:1.35rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--color-accent);border-radius:10px;cursor:pointer;min-height:54px;">×</button>' +
 
-      '<button onclick="sciPress(\'e\')" style="padding:0;font-size:1.15rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">e</button>' +
-      '<button onclick="sciPress(\'1\')" style="padding:0;font-size:1.35rem;font-weight:700;background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">1</button>' +
-      '<button onclick="sciPress(\'2\')" style="padding:0;font-size:1.35rem;font-weight:700;background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">2</button>' +
-      '<button onclick="sciPress(\'3\')" style="padding:0;font-size:1.35rem;font-weight:700;background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">3</button>' +
-      '<button onclick="sciPress(\'-\')" style="padding:0;font-size:1.3rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--color-accent);border-radius:var(--radius-sm);cursor:pointer;">-</button>' +
+      '<button onclick="sciPress(\'e\')" style="padding:0;font-size:1.2rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:10px;cursor:pointer;min-height:54px;">e</button>' +
+      '<button onclick="sciPress(\'1\')" style="padding:0;font-size:1.4rem;font-weight:700;background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:10px;cursor:pointer;min-height:54px;">1</button>' +
+      '<button onclick="sciPress(\'2\')" style="padding:0;font-size:1.4rem;font-weight:700;background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:10px;cursor:pointer;min-height:54px;">2</button>' +
+      '<button onclick="sciPress(\'3\')" style="padding:0;font-size:1.4rem;font-weight:700;background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:10px;cursor:pointer;min-height:54px;">3</button>' +
+      '<button onclick="sciPress(\'-\')" style="padding:0;font-size:1.35rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--color-accent);border-radius:10px;cursor:pointer;min-height:54px;">-</button>' +
 
-      '<button onclick="sciPress(\'fact\')" style="padding:0;font-size:1.1rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">n!</button>' +
-      '<button onclick="sciPress(\'0\')" style="padding:0;font-size:1.35rem;font-weight:700;background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">0</button>' +
-      '<button onclick="sciPress(\'.\')" style="padding:0;font-size:1.35rem;font-weight:700;background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">.</button>' +
-      '<button onclick="sciPress(\'=\')" style="padding:0;font-size:1.4rem;font-weight:700;background:var(--color-accent);border:none;color:#fff;border-radius:var(--radius-sm);cursor:pointer;">=</button>' +
-      '<button onclick="sciPress(\'+\')" style="padding:0;font-size:1.3rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--color-accent);border-radius:var(--radius-sm);cursor:pointer;">+</button>' +
+      '<button onclick="sciPress(\'fact\')" style="padding:0;font-size:1.15rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:10px;cursor:pointer;min-height:54px;">n!</button>' +
+      '<button onclick="sciPress(\'0\')" style="padding:0;font-size:1.4rem;font-weight:700;background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:10px;cursor:pointer;min-height:54px;">0</button>' +
+      '<button onclick="sciPress(\'.\')" style="padding:0;font-size:1.4rem;font-weight:700;background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:10px;cursor:pointer;min-height:54px;">.</button>' +
+      '<button onclick="sciPress(\'=\')" style="padding:0;font-size:1.45rem;font-weight:700;background:var(--color-accent);border:none;color:#fff;border-radius:10px;cursor:pointer;min-height:54px;">=</button>' +
+      '<button onclick="sciPress(\'+\')" style="padding:0;font-size:1.35rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--color-accent);border-radius:10px;cursor:pointer;min-height:54px;">+</button>' +
     '</div>' +
   '</div>';
   container.innerHTML = html;
