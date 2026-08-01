@@ -215,6 +215,14 @@ button:active, button.key-pressed, .calc-btn:active, .calc-btn.key-pressed, .cal
   box-shadow: 0 0 22px var(--color-accent), inset 0 0 10px rgba(255, 255, 255, 0.4) !important;
   transition-duration: 0.03s !important;
 }
+button.sticky-on, .sticky-on {
+  background: var(--bg-tertiary) !important;
+  color: var(--color-accent) !important;
+  border: 2px solid var(--color-accent) !important;
+  box-shadow: 0 0 16px var(--color-accent), inset 0 0 8px rgba(230, 81, 0, 0.3) !important;
+  transform: scale(1.05) !important;
+  font-weight: 800 !important;
+}
 .theme-circle {
   transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.2s ease !important;
 }
@@ -1060,7 +1068,7 @@ body {
         <button id="calc-back-hist-btn" class="settings-btn" onclick="toggleCalcHistory()" title="Calculation History" style="display:none;border:none;background:none;font-size:1.3rem;cursor:pointer;padding:0 2px;align-items:center;justify-content:center;transition:all 0.15s;opacity:0.9;">🕒</button>
       </div>
 
-      <div style="position:absolute;left:26.5%;top:50%;transform:translate(-50%,-50%);z-index:5;display:flex;align-items:center;justify-content:center;">
+      <div style="position:absolute;left:26%;top:50%;transform:translate(-50%,-50%);z-index:5;display:flex;align-items:center;justify-content:center;">
         <button id="h-btn-expenses-icon" class="settings-btn" onclick="setCalcMode('expenses')" title="Expenses Tracker" style="border:none;background:none;font-size:1.3rem;cursor:pointer;padding:0 2px;display:inline-flex;align-items:center;justify-content:center;transition:all 0.15s;">💸</button>
       </div>
 
@@ -1078,8 +1086,12 @@ body {
         </div>
       </div>
       
-      <div style="position:absolute;left:76.5%;top:50%;transform:translate(-50%,-50%);z-index:5;display:flex;align-items:center;justify-content:center;">
-        <button id="h-btn-history" class="settings-btn" onclick="toggleCalcHistory()" title="Calculation History" style="border:none;background:none;font-size:1.3rem;cursor:pointer;padding:0 2px;display:inline-flex;align-items:center;justify-content:center;transition:all 0.15s;opacity:0.9;">🕒</button>
+      <div style="position:absolute;left:72%;top:50%;transform:translate(-50%,-50%);z-index:5;display:flex;align-items:center;justify-content:center;">
+        <button id="h-btn-history" class="settings-btn" onclick="toggleCalcHistory()" title="Calculation History" style="display:none;border:none;background:none;font-size:1.3rem;cursor:pointer;padding:0 2px;align-items:center;justify-content:center;transition:all 0.15s;opacity:0.9;">🕒</button>
+      </div>
+
+      <div style="position:absolute;left:83%;top:50%;transform:translate(-50%,-50%);z-index:5;display:flex;align-items:center;justify-content:center;">
+        <button id="calc-voice-btn" class="settings-btn" onclick="toggleVoiceCalc()" title="Voice Calculator (Bol ke Calculate karo)" style="border:none;background:none;font-size:1.25rem;cursor:pointer;padding:0 2px;display:inline-flex;align-items:center;justify-content:center;transition:all 0.15s;opacity:0.9;">🎙️</button>
       </div>
 
       <div class="modal-header-right" style="position:absolute;right:0.85rem;top:50%;transform:translateY(-50%);display:flex;align-items:center;gap:0.4rem;z-index:5;">
@@ -1307,6 +1319,193 @@ function triggerMobilePaste() {
     });
   } else {
     hidePasteButton();
+  }
+}
+
+/* Voice Calculator Web Speech API Engine */
+var _voiceRecognition = null;
+var _isVoiceListening = false;
+var _lastVoiceTranscript = '';
+
+function toggleVoiceCalc() {
+  if (_isVoiceListening) {
+    stopVoiceCalc();
+  } else {
+    startVoiceCalc();
+  }
+}
+
+function startVoiceCalc() {
+  var SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRec) {
+    showToast('⚠️ Voice recognition not supported on this browser');
+    return;
+  }
+
+  try {
+    if (!_voiceRecognition) {
+      _voiceRecognition = new SpeechRec();
+      _voiceRecognition.continuous = false;
+      _voiceRecognition.interimResults = true;
+      _voiceRecognition.lang = 'en-IN';
+
+      _voiceRecognition.onstart = function() {
+        _isVoiceListening = true;
+        _lastVoiceTranscript = '';
+        var btn = document.getElementById('calc-voice-btn');
+        if (btn) {
+          btn.style.background = '#ef4444';
+          btn.style.color = '#fff';
+          btn.style.borderColor = '#ef4444';
+          btn.style.boxShadow = '0 0 15px rgba(239,68,68,0.6)';
+          btn.innerHTML = '🔴';
+        }
+        renderCalcLabelEditor();
+      };
+
+      _voiceRecognition.onresult = function(event) {
+        var liveSpeech = '';
+        for (var i = 0; i < event.results.length; i++) {
+          liveSpeech += event.results[i][0].transcript + ' ';
+        }
+        var trimmed = liveSpeech.trim();
+        _lastVoiceTranscript = trimmed;
+        var vTxt = document.getElementById('voice-help-txt');
+        if (vTxt) vTxt.textContent = trimmed ? '"' + trimmed + '"' : 'Speak to Calculate... (Listening)';
+      };
+
+      _voiceRecognition.onerror = function(event) {
+        stopVoiceCalc();
+      };
+
+      _voiceRecognition.onend = function() {
+        if (_lastVoiceTranscript) {
+          parseVoiceSpeechToTokens(_lastVoiceTranscript);
+        }
+        stopVoiceCalc();
+      };
+    }
+    _voiceRecognition.start();
+  } catch(e) {
+    showToast('🎙️ Could not start voice recognition');
+    stopVoiceCalc();
+  }
+}
+
+function stopVoiceCalc() {
+  _isVoiceListening = false;
+  _lastVoiceTranscript = '';
+  if (_voiceRecognition) {
+    try { _voiceRecognition.stop(); } catch(e) {}
+  }
+  var btn = document.getElementById('calc-voice-btn');
+  if (btn) {
+    btn.style.background = 'none';
+    btn.style.borderColor = 'transparent';
+    btn.style.boxShadow = 'none';
+    btn.innerHTML = '🎙️';
+  }
+  renderCalcLabelEditor();
+}
+
+function parseVoiceSpeechToTokens(transcript) {
+  if (!transcript || typeof transcript !== 'string') return;
+  var text = transcript.toLowerCase().trim();
+  if (!text) return;
+
+  text = text
+    .replace(/[\u2013\u2014\u2212\u2796\u2011]/g, '-')
+    .replace(/[•·]/g, '')
+    .replace(/\b(twenty|bees)\s+(one|two|three|four|five|six|seven|eight|nine)\b/g, function(m, t, u) {
+      var nums = {'one':'1','two':'2','three':'3','four':'4','five':'5','six':'6','seven':'7','eight':'8','nine':'9'};
+      return '2' + nums[u];
+    })
+    .replace(/\b(thirty|tees)\s+(one|two|three|four|five|six|seven|eight|nine)\b/g, function(m, t, u) {
+      var nums = {'one':'1','two':'2','three':'3','four':'4','five':'5','six':'6','seven':'7','eight':'8','nine':'9'};
+      return '3' + nums[u];
+    })
+    .replace(/\b(forty|chalis)\s+(one|two|three|four|five|six|seven|eight|nine)\b/g, function(m, t, u) {
+      var nums = {'one':'1','two':'2','three':'3','four':'4','five':'5','six':'6','seven':'7','eight':'8','nine':'9'};
+      return '4' + nums[u];
+    })
+    .replace(/\b(fifty|pachaas)\s+(one|two|three|four|five|six|seven|eight|nine)\b/g, function(m, t, u) {
+      var nums = {'one':'1','two':'2','three':'3','four':'4','five':'5','six':'6','seven':'7','eight':'8','nine':'9'};
+      return '5' + nums[u];
+    })
+    .replace(/\b(sixty|saath)\s+(one|two|three|four|five|six|seven|eight|nine)\b/g, function(m, t, u) {
+      var nums = {'one':'1','two':'2','three':'3','four':'4','five':'5','six':'6','seven':'7','eight':'8','nine':'9'};
+      return '6' + nums[u];
+    })
+    .replace(/\b(seventy|sattar)\s+(one|two|three|four|five|six|seven|eight|nine)\b/g, function(m, t, u) {
+      var nums = {'one':'1','two':'2','three':'3','four':'4','five':'5','six':'6','seven':'7','eight':'8','nine':'9'};
+      return '7' + nums[u];
+    })
+    .replace(/\b(eighty|assi)\s+(one|two|three|four|five|six|seven|eight|nine)\b/g, function(m, t, u) {
+      var nums = {'one':'1','two':'2','three':'3','four':'4','five':'5','six':'6','seven':'7','eight':'8','nine':'9'};
+      return '8' + nums[u];
+    })
+    .replace(/\b(ninety|nabbe)\s+(one|two|three|four|five|six|seven|eight|nine)\b/g, function(m, t, u) {
+      var nums = {'one':'1','two':'2','three':'3','four':'4','five':'5','six':'6','seven':'7','eight':'8','nine':'9'};
+      return '9' + nums[u];
+    })
+    .replace(/\b(ninety|nabbe)\b/g, '90')
+    .replace(/\b(eighty|assi)\b/g, '80')
+    .replace(/\b(seventy|sattar)\b/g, '70')
+    .replace(/\b(sixty|saath)\b/g, '60')
+    .replace(/\b(fifty|pachaas)\b/g, '50')
+    .replace(/\b(forty|chalis)\b/g, '40')
+    .replace(/\b(thirty|tees)\b/g, '30')
+    .replace(/\b(twenty|bees)\b/g, '20')
+    .replace(/\b(ten|das)\b/g, '10')
+    .replace(/\b(douso|two hundred)\b/g, '200')
+    .replace(/\b(so|one hundred|hundred)\b/g, '100')
+    .replace(/\b(hazaar|thousand)\b/g, '1000')
+    .replace(/\b(plus|aur|add|jod|jodo|\+)\b/g, ' + ')
+    .replace(/\b(minus|ghatao|sub|\-)\b/g, ' - ')
+    .replace(/\b(into|times|multiply|guna|×|\*)\b/g, ' * ')
+    .replace(/\b(divide|divided by|bhag|bhaag|\/|÷)\b/g, ' / ');
+
+  // Strip connecting filler words: "10 ka milk" ──► "10 milk", "10 for milk" ──► "10 milk"
+  text = text.replace(/\b(ka|ki|ke|ko|se|par|for|of|on)\b/gi, ' ');
+
+  // Split into words and parse tokens cleanly
+  var words = text.split(/\s+/).filter(Boolean);
+  var tokens = [];
+  var isInitialZero = (calcTokens && calcTokens.length === 1 && (calcTokens[0].v === '0' || calcTokens[0].v === ''));
+  if (calcTokens && calcTokens.length > 0 && !isInitialZero) {
+    tokens = calcTokens.slice();
+    var lastT = tokens[tokens.length - 1];
+    if (lastT && ['+','-','*','/','%'].indexOf(lastT.v) === -1) {
+      tokens.push({ v: '+', label: '' });
+    }
+  }
+  var ignoreWords = ['plus','minus','into','divide','times','and','aur','jod','ghatao','ka','ki','ke','ko','for','of','on','+','-','*','/'];
+
+  for (var i = 0; i < words.length; i++) {
+    var w = words[i];
+    if (['+','-','*','/'].indexOf(w) !== -1) {
+      tokens.push({ v: w, label: '' });
+    } else if (/^\d+\.?\d*$/.test(w)) {
+      var label = '';
+      if (i + 1 < words.length && !/^\d+\.?\d*$/.test(words[i+1]) && ignoreWords.indexOf(words[i+1]) === -1) {
+        label = words[i+1];
+        i++;
+      }
+      if (tokens.length > 0 && ['+','-','*','/'].indexOf(tokens[tokens.length - 1].v) === -1) {
+        tokens.push({ v: '+', label: '' });
+      }
+      tokens.push({ v: w, label: label });
+    }
+  }
+
+  if (tokens.length > 0) {
+    calcTokens = tokens;
+    _calcSavedExpr = '';
+    _calcShowExpr = true;
+    calcUpdateDisplay();
+    triggerResultPulse();
+  } else {
+    parsePastedCalcText(text);
   }
 }
 
@@ -2113,13 +2312,14 @@ function updateStickyDisplay() {
   }
 }
 function updateStickyOpHighlight() {
-  var ids = {'×':'mul','÷':'div','-':'minus','+':'plus'};
+  var ids = {'×':'mul','÷':'div','-':'minus','+':'plus','*':'mul','/':'div'};
   ['mul','div','minus','plus'].forEach(function(id) {
     var el = document.getElementById('sticky-btn-' + id);
     if (el) el.classList.remove('sticky-on');
   });
   if (_stickyActive && _stickyOp) {
-    var el = document.getElementById('sticky-btn-' + ids[_stickyOp]);
+    var id = ids[_stickyOp] || 'plus';
+    var el = document.getElementById('sticky-btn-' + id);
     if (el) el.classList.add('sticky-on');
   }
 }
@@ -2371,7 +2571,12 @@ function renderCalcLabelEditor() {
   }
 
   if (_editingCalcToken === -1) {
-    container.innerHTML = '<div style="font-size:0.75rem;color:var(--text-muted);padding:0.3rem 0">' + (_recordExpenses ? 'Tap a digit above to edit amount or label, tap label to record in Expenses' : 'Tap a digit above to edit amount or label') + '</div>';
+    if (_isVoiceListening) {
+      var vTxt = _lastVoiceTranscript ? '"' + escHtml(_lastVoiceTranscript) + '"' : 'Speak to Calculate... (Listening)';
+      container.innerHTML = '<div style="font-size:0.85rem;color:#ef4444;font-weight:700;padding:0.3rem 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">🔴 <span id="voice-help-txt">' + vTxt + '</span></div>';
+    } else {
+      container.innerHTML = '<div style="font-size:0.75rem;color:var(--text-muted);padding:0.3rem 0">' + (_recordExpenses ? 'Tap a digit above to edit amount or label, tap label to record in Expenses' : 'Tap a digit above to edit amount or label') + '</div>';
+    }
     return;
   }
   if (['+','-','*','/'].indexOf(calcTokens[_editingCalcToken].v) !== -1) {
