@@ -109,6 +109,51 @@ html, body, .modal-container { touch-action: manipulation; }
   font-weight: 800 !important;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5) !important;
 }
+
+.pos-action-btn {
+  height: 38px !important;
+  min-height: 38px !important;
+  max-height: 38px !important;
+  padding: 0 0.5rem !important;
+  font-size: 0.8rem !important;
+  font-weight: 800 !important;
+  border-radius: 8px !important;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: center !important;
+  white-space: nowrap !important;
+  gap: 5px !important;
+  line-height: 1 !important;
+  box-shadow: none !important;
+  margin: 0 !important;
+  width: 100% !important;
+  cursor: pointer !important;
+}
+.pos-action-btn-print {
+  background: var(--color-accent) !important;
+  color: #ffffff !important;
+  border: none !important;
+}
+.pos-action-btn-wa {
+  background: #25D366 !important;
+  color: #ffffff !important;
+  border: none !important;
+}
+
+body.mode-pos #h-btn-history,
+body.mode-pos #calc-history-btn,
+body.mode-pos #exp-wa-btn-wrap,
+body.mode-pos #wa-btn-wrap,
+body.mode-pos #calc-voice-btn,
+.is-pos-mode #h-btn-history,
+.is-pos-mode #calc-history-btn,
+.is-pos-mode #exp-wa-btn-wrap,
+.is-pos-mode #wa-btn-wrap,
+.is-pos-mode #calc-voice-btn {
+  display: none !important;
+}
+
 .theme-silver {
   --color-accent: #cbd5e1;
   --bg-primary: #1b2028;
@@ -478,6 +523,8 @@ details[open] summary:before { content:'▼'; }
 .sp-result-line { font-size:0.85rem; color:var(--text-primary); padding:0.2rem 0; }
 .sp-result-owed { font-size:0.85rem; color:var(--color-accent); padding:0.15rem 0; }
 .sp-split-badge { font-size:0.68rem; font-weight:700; color:var(--color-accent); padding:3px 8px; border-radius:6px; border:1px solid var(--color-accent); background:var(--bg-tertiary); text-transform:uppercase; letter-spacing:0.5px; }
+@keyframes posLinePulse { 0% { background: rgba(56, 189, 248, 0.45); transform: scale(1.02); } 100% { background: rgba(255, 255, 255, 0.03); transform: scale(1); } }
+.pos-line-pulse { animation: posLinePulse 0.6s ease-out; }
 .skin-option-btn {
   padding: 0.55rem 0.4rem;
   border-radius: 8px;
@@ -573,11 +620,18 @@ body {
   position: fixed; inset: 0;
   display: none;
   align-items: center; justify-content: center;
-  background: rgba(0,0,0,0.6);
+  background: rgba(10, 10, 14, 0.96) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
   z-index: 1000;
   padding: 0.5rem;
   overscroll-behavior: contain !important;
   overscroll-behavior-y: contain !important;
+}
+#modal-calculator.modal-overlay {
+  background: rgba(0, 0, 0, 0.75) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
 }
 .modal-overlay.active { display: flex; }
 
@@ -972,6 +1026,7 @@ body {
         </div>
       </div>
       <button onclick="openBillCustomizationModal()" style="display:block;width:100%;padding:0.65rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-secondary);color:var(--color-accent);font-size:0.85rem;cursor:pointer;font-weight:700;text-align:center;text-transform:uppercase;margin-top:0.6rem;margin-bottom:0.4rem;">📝 TEXT ON BILL PRINT / BILL HISTORY</button>
+      <button onclick="openCustomerDataModal()" style="display:block;width:100%;padding:0.65rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-secondary);color:#38bdf8;font-size:0.85rem;cursor:pointer;font-weight:700;text-align:center;text-transform:uppercase;margin-top:0.4rem;margin-bottom:0.4rem;">👥 CUSTOMER DATA</button>
       <div style="border-bottom:1px solid var(--border-color);margin:0.75rem 0;"></div>
       <button onclick="openGuideModal()" style="display:block;width:100%;padding:0.6rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-tertiary);color:var(--text-primary);font-size:0.85rem;cursor:pointer;font-weight:600;text-align:center;text-transform:uppercase;margin-top:0.4rem;margin-bottom:0.4rem">HOW TO USE THE APP</button>
       <button id="nav-pos-btn" onclick="toggleNavPosition()" style="display:block;width:100%;padding:0.6rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-tertiary);color:var(--text-primary);font-size:0.85rem;cursor:pointer;font-weight:600;text-align:center;text-transform:uppercase;margin-bottom:0.4rem">📌 NAV POSITION: TOP</button>
@@ -989,6 +1044,9 @@ body {
     <div style="display:flex;flex-direction:column;gap:0.65rem;">
       <button onclick="printCurrentReceiptBT()" style="width:100%;padding:0.85rem;border:none;border-radius:12px;background:#22c55e;color:#ffffff;font-weight:800;font-size:0.98rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 14px rgba(34,197,94,0.4);">
         🖨️ Print Receipt
+      </button>
+      <button onclick="openPosWhatsAppModal()" style="width:100%;padding:0.85rem;border:none;border-radius:12px;background:#25D366;color:#ffffff;font-weight:800;font-size:0.98rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 14px rgba(37,211,102,0.4);">
+        💬 Send on WhatsApp
       </button>
       <button onclick="printCurrentReceiptPDF()" style="width:100%;padding:0.7rem;border:1px solid rgba(255,255,255,0.15);border-radius:12px;background:rgba(255,255,255,0.08);color:#ffffff;font-weight:700;font-size:0.88rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;">
         💾 Save & Close
@@ -1104,6 +1162,167 @@ body {
       <button onclick="saveQuickItemFromModal()" style="flex:2;padding:0.75rem;border:none;border-radius:10px;background:var(--color-accent);color:#fff;font-weight:800;font-size:0.9rem;cursor:pointer;">💾 Save Item</button>
       <button onclick="deleteQuickItemFromModal()" style="flex:1;padding:0.75rem;border:1px solid var(--border-color);border-radius:10px;background:rgba(255,107,107,0.15);color:#ff6b6b;font-weight:700;font-size:0.85rem;cursor:pointer;">🗑️ Delete</button>
       <button onclick="closeModal('modal-quick-item-edit')" style="padding:0.75rem 0.6rem;border:1px solid var(--border-color);border-radius:10px;background:var(--bg-secondary);color:var(--text-primary);font-weight:600;font-size:0.85rem;cursor:pointer;">✕</button>
+    </div>
+  </div>
+</div>
+
+<div id="modal-pos-qty-edit" class="modal-overlay" onclick="dismissModalOnBackdrop(event, 'modal-pos-qty-edit')" style="z-index:9999 !important;">
+  <div class="modal-card" style="max-width:340px;text-align:center;">
+    <div class="modal-header" style="justify-content:space-between;">
+      <h3 id="pos-qty-modal-title" style="margin:0;font-size:1.05rem;font-weight:800;">✏️ Edit Item Quantity</h3>
+      <button onclick="closeModal('modal-pos-qty-edit')" class="close-btn">✕</button>
+    </div>
+    <input type="hidden" id="pos-qty-line-idx" value="" />
+    <div style="padding:0.75rem 0;">
+      <div id="pos-qty-item-subtitle" style="font-size:0.88rem;font-weight:700;color:var(--text-muted);margin-bottom:1rem;"></div>
+      
+      <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:1rem;">
+        <button onclick="stepPosModalQty(-1)" style="width:44px;height:44px;border-radius:10px;border:1px solid var(--border-color);background:var(--bg-tertiary);color:var(--text-primary);font-size:1.4rem;font-weight:800;cursor:pointer;">-</button>
+        <input type="number" id="pos-modal-qty-input" value="1" min="1" style="width:75px;height:44px;text-align:center;font-size:1.3rem;font-weight:800;border-radius:10px;border:1px solid var(--border-color);background:var(--bg-secondary);color:var(--color-accent);" />
+        <button onclick="stepPosModalQty(1)" style="width:44px;height:44px;border-radius:10px;border:1px solid var(--border-color);background:var(--bg-tertiary);color:var(--text-primary);font-size:1.4rem;font-weight:800;cursor:pointer;">+</button>
+      </div>
+
+      <div style="display:flex;justify-content:center;gap:6px;margin-bottom:1.1rem;">
+        <button onclick="setPosModalQtyVal(1)" style="padding:0.3rem 0.6rem;border-radius:6px;border:1px solid var(--border-color);background:var(--bg-tertiary);color:var(--text-primary);font-weight:700;font-size:0.82rem;cursor:pointer;">1</button>
+        <button onclick="setPosModalQtyVal(2)" style="padding:0.3rem 0.6rem;border-radius:6px;border:1px solid var(--border-color);background:var(--bg-tertiary);color:var(--text-primary);font-weight:700;font-size:0.82rem;cursor:pointer;">2</button>
+        <button onclick="setPosModalQtyVal(3)" style="padding:0.3rem 0.6rem;border-radius:6px;border:1px solid var(--border-color);background:var(--bg-tertiary);color:var(--text-primary);font-weight:700;font-size:0.82rem;cursor:pointer;">3</button>
+        <button onclick="setPosModalQtyVal(5)" style="padding:0.3rem 0.6rem;border-radius:6px;border:1px solid var(--border-color);background:var(--bg-tertiary);color:var(--text-primary);font-weight:700;font-size:0.82rem;cursor:pointer;">5</button>
+        <button onclick="setPosModalQtyVal(10)" style="padding:0.3rem 0.6rem;border-radius:6px;border:1px solid var(--border-color);background:var(--bg-tertiary);color:var(--text-primary);font-weight:700;font-size:0.82rem;cursor:pointer;">10</button>
+      </div>
+
+      <div style="display:flex;gap:8px;">
+        <button onclick="deletePosLineFromModal()" style="flex:1;padding:0.75rem;border-radius:10px;border:1px solid var(--border-color);background:rgba(255,107,107,0.15);color:#ff6b6b;font-weight:800;font-size:0.88rem;cursor:pointer;">🗑️ Remove</button>
+        <button onclick="savePosLineQtyFromModal()" style="flex:1.5;padding:0.75rem;border-radius:10px;border:none;background:var(--color-accent);color:#fff;font-weight:800;font-size:0.88rem;cursor:pointer;">✅ Save Qty</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-bill-onboarding-prompt" onclick="dismissModalOnBackdrop(event, 'modal-bill-onboarding-prompt')" style="z-index:9999 !important;">
+  <div class="modal-card" style="max-width:360px;width:90%;text-align:center;padding:1.5rem 1.2rem;border-radius:16px;">
+    <div style="font-size:2.8rem;margin-bottom:0.5rem;">🧾</div>
+    <div style="font-size:1.2rem;font-weight:800;color:var(--text-primary);margin-bottom:0.6rem;">Setup Business & Receipt Details</div>
+    <div style="font-size:0.88rem;color:var(--text-muted);line-height:1.45;margin-bottom:1.4rem;">
+      Welcome to Bill Mode! Add your store name, phone number, address, and GSTIN so your printed receipts & WhatsApp bills look official and professional.
+    </div>
+    <div style="display:flex;flex-direction:column;gap:0.6rem;">
+      <button onclick="closeModal('modal-bill-onboarding-prompt');openBillCustomizationModal();" style="width:100%;padding:0.75rem;border-radius:10px;border:none;background:var(--color-accent);color:#fff;font-weight:800;font-size:0.95rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;">⚙️ Fill Store Details</button>
+      <button onclick="closeModal('modal-bill-onboarding-prompt')" style="width:100%;padding:0.65rem;border-radius:10px;border:1px solid var(--border-color);background:transparent;color:var(--text-muted);font-weight:600;font-size:0.88rem;cursor:pointer;">Skip for Now</button>
+    </div>
+  </div>
+</div>
+
+<div id="modal-customer-data" class="modal-overlay" onclick="dismissModalOnBackdrop(event, 'modal-customer-data')" style="z-index:9999 !important;">
+  <div class="modal-card" style="max-width:440px;width:94%;max-height:85vh;display:flex;flex-direction:column;border-radius:18px;">
+    <div class="modal-header" style="justify-content:space-between;padding-bottom:0.75rem;border-bottom:1px solid var(--border-color);">
+      <h3 style="margin:0;font-size:1.1rem;font-weight:800;color:#38bdf8;display:flex;align-items:center;gap:6px;">
+        👥 Customer Directory & Data
+      </h3>
+      <button onclick="closeModal('modal-customer-data')" class="close-btn">✕</button>
+    </div>
+    <div style="padding:0.75rem 0 0.5rem 0;">
+      <input type="text" id="cust-data-search" placeholder="🔍 Search by name or phone number..." oninput="filterCustomerDataList()" style="width:100%;padding:0.6rem 0.75rem;border-radius:10px;border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);font-size:0.9rem;box-sizing:border-box;">
+    </div>
+    <div id="cust-data-summary" style="padding:0.5rem 0.75rem;background:rgba(56,189,248,0.1);border-radius:10px;margin-bottom:0.5rem;font-size:0.82rem;font-weight:700;color:var(--text-primary);display:flex;justify-content:space-between;align-items:center;">
+      <span>Total Customers: <strong id="cust-total-count">0</strong></span>
+      <span>Total Billed: <strong id="cust-total-billed" style="color:#25D366;">₹0</strong></span>
+    </div>
+    <div id="cust-data-list-body" style="padding:0.25rem 0;overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:8px;"></div>
+    <div style="padding-top:0.75rem;border-top:1px solid var(--border-color);display:flex;gap:8px;margin-top:auto;">
+      <button onclick="exportCustomerDataCSV()" style="flex:1;padding:0.65rem;border-radius:10px;border:1px solid var(--border-color);background:var(--bg-tertiary);color:var(--text-primary);font-weight:700;font-size:0.85rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;">📥 Export CSV</button>
+      <button onclick="clearAllCustomerDataRecords()" style="padding:0.65rem 0.85rem;border-radius:10px;border:1px solid rgba(255,107,107,0.3);background:rgba(255,107,107,0.12);color:#ff6b6b;font-weight:700;font-size:0.82rem;cursor:pointer;">🗑️ Clear</button>
+    </div>
+  </div>
+</div>
+
+<div id="modal-stock-status-confirm" class="modal-overlay" onclick="dismissModalOnBackdrop(event, 'modal-stock-status-confirm')" style="z-index:9999 !important;">
+  <div class="modal-card" style="max-width:340px;width:90%;text-align:center;border-radius:18px;padding:1.25rem;">
+    <div id="stock-confirm-item-name" style="font-size:1.15rem;font-weight:800;color:var(--text-primary);margin-bottom:0.3rem;">Item Name</div>
+    <div id="stock-confirm-status-text" style="font-size:0.85rem;color:var(--text-muted);margin-bottom:1.25rem;">Select an action for this menu item:</div>
+    <input type="hidden" id="stock-confirm-item-idx" value="-1">
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <button id="btn-toggle-stock-action" onclick="confirmToggleStockStatus()" style="width:100%;padding:0.75rem;border-radius:10px;border:none;background:#ff6b6b;color:#fff;font-weight:800;font-size:0.92rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;">
+        🚫 Mark Out of Stock
+      </button>
+      <button onclick="closeModal('modal-stock-status-confirm');openQuickItemEditModal(parseInt(document.getElementById('stock-confirm-item-idx').value));" style="width:100%;padding:0.65rem;border-radius:10px;border:1px solid var(--border-color);background:var(--bg-secondary);color:var(--text-primary);font-weight:700;font-size:0.88rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;">
+        ✏️ Edit Item Details
+      </button>
+      <button onclick="closeModal('modal-stock-status-confirm')" style="width:100%;padding:0.55rem;border-radius:10px;border:none;background:transparent;color:var(--text-muted);font-weight:600;font-size:0.85rem;cursor:pointer;">
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>
+
+<div id="modal-held-bills-picker" class="modal-overlay" onclick="dismissModalOnBackdrop(event, 'modal-held-bills-picker')" style="z-index:9999 !important;">
+  <div class="modal-card" style="max-width:360px;width:92%;max-height:80vh;display:flex;flex-direction:column;">
+    <div class="modal-header" style="justify-content:space-between;">
+      <h3 style="margin:0;font-size:1.05rem;font-weight:800;color:var(--color-accent);display:flex;align-items:center;gap:6px;">
+        📋 Held Bills List
+      </h3>
+      <button onclick="closeModal('modal-held-bills-picker')" class="close-btn">✕</button>
+    </div>
+    <div id="held-bills-list-body" style="padding:0.75rem 0;overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:8px;"></div>
+  </div>
+</div>
+
+<div id="modal-held-bills-picker" class="modal-overlay" onclick="dismissModalOnBackdrop(event, 'modal-held-bills-picker')" style="z-index:9999 !important;">
+  <div class="modal-card" style="max-width:360px;width:92%;max-height:80vh;display:flex;flex-direction:column;">
+    <div class="modal-header" style="justify-content:space-between;">
+      <h3 style="margin:0;font-size:1.05rem;font-weight:800;color:var(--color-accent);display:flex;align-items:center;gap:6px;">
+        📋 Held Bills List
+      </h3>
+      <button onclick="closeModal('modal-held-bills-picker')" class="close-btn">✕</button>
+    </div>
+    <div id="held-bills-list-body" style="padding:0.75rem 0;overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:8px;"></div>
+  </div>
+</div>
+
+<div id="modal-held-bills-picker" class="modal-overlay" onclick="dismissModalOnBackdrop(event, 'modal-held-bills-picker')" style="z-index:9999 !important;">
+  <div class="modal-card" style="max-width:360px;width:92%;max-height:80vh;display:flex;flex-direction:column;">
+    <div class="modal-header" style="justify-content:space-between;">
+      <h3 style="margin:0;font-size:1.05rem;font-weight:800;color:var(--color-accent);display:flex;align-items:center;gap:6px;">
+        📋 Held Bills List
+      </h3>
+      <button onclick="closeModal('modal-held-bills-picker')" class="close-btn">✕</button>
+    </div>
+    <div id="held-bills-list-body" style="padding:0.75rem 0;overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:8px;"></div>
+  </div>
+</div>
+
+<div id="modal-held-bills-picker" class="modal-overlay" onclick="dismissModalOnBackdrop(event, 'modal-held-bills-picker')" style="z-index:9999 !important;">
+  <div class="modal-card" style="max-width:360px;width:92%;max-height:80vh;display:flex;flex-direction:column;">
+    <div class="modal-header" style="justify-content:space-between;">
+      <h3 style="margin:0;font-size:1.05rem;font-weight:800;color:var(--color-accent);display:flex;align-items:center;gap:6px;">
+        📋 Held Bills List
+      </h3>
+      <button onclick="closeModal('modal-held-bills-picker')" class="close-btn">✕</button>
+    </div>
+    <div id="held-bills-list-body" style="padding:0.75rem 0;overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:8px;"></div>
+  </div>
+</div>
+
+<div id="modal-pos-whatsapp" class="modal-overlay" onclick="dismissModalOnBackdrop(event, 'modal-pos-whatsapp')" style="z-index:9999 !important;">
+  <div class="modal-card" style="max-width:340px;text-align:center;">
+    <div class="modal-header" style="justify-content:space-between;">
+      <h3 style="margin:0;font-size:1.05rem;font-weight:800;color:#25D366;display:flex;align-items:center;gap:6px;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Send Bill on WhatsApp
+      </h3>
+      <button onclick="closeModal('modal-pos-whatsapp')" class="close-btn">✕</button>
+    </div>
+    <div style="padding:0.75rem 0;text-align:left;">
+      <div style="margin-bottom:0.85rem;">
+        <label style="font-size:0.78rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">Customer Mobile Number *</label>
+        <input type="tel" inputmode="tel" id="pos-wa-phone" placeholder="e.g. 9876543210" style="width:100%;padding:0.7rem;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-secondary);color:var(--text-primary);font-size:0.95rem;outline:none;box-sizing:border-box;">
+      </div>
+      <div style="margin-bottom:1.1rem;">
+        <label style="font-size:0.78rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">Customer Name (Optional)</label>
+        <input type="text" id="pos-wa-name" placeholder="e.g. Rahul Sharma" style="width:100%;padding:0.7rem;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-secondary);color:var(--text-primary);font-size:0.95rem;outline:none;box-sizing:border-box;">
+      </div>
+      <button onclick="sendPosBillOnWhatsApp()" style="width:100%;padding:0.75rem;border:none;border-radius:10px;background:#25D366;color:#fff;font-weight:800;font-size:0.92rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;box-shadow:0 4px 12px rgba(37,211,102,0.3);">
+        🚀 Send Bill to WhatsApp
+      </button>
     </div>
   </div>
 </div>
@@ -1330,7 +1549,7 @@ body {
         <span id="h-btn-modes" class="mode-heading-btn" onclick="toggleModesMenu(event)" style="padding:0.25rem 0.65rem;display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:1.25rem;font-family:'Caveat',cursive;letter-spacing:0.02em;background:transparent;border:1px solid var(--border-color);border-radius:10px;cursor:pointer;">Lazy Calc <span class="hdr-chevron-svg" style="display:inline-flex;align-items:center;justify-content:center;transition:transform 0.25s ease;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span></span>
         <div id="modes-menu" class="modes-menu-popup" onclick="event.stopPropagation()">
           <div class="modes-menu-item" onclick="selectModeFromMenu('date')">🗓️ Date & Duration</div>
-          <div class="modes-menu-item" onclick="selectModeFromMenu('quickbilling')">🛒 Quick Billing (POS Grid)</div>
+          <div class="modes-menu-item" onclick="selectModeFromMenu('quickbilling')">🛒 Billing - POS</div>
           <div class="modes-menu-item" onclick="selectModeFromMenu('splitter')">👥 Splitter</div>
           <div class="modes-menu-item" onclick="selectModeFromMenu('fuel')">⛽ Fuel & Trip</div>
           <div class="modes-menu-item" onclick="selectModeFromMenu('emi')">📈 Loan EMI</div>
@@ -1358,13 +1577,22 @@ body {
             <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
           </svg>
         </button></span>
+        <button id="pos-edit-toggle-btn" onclick="toggleQbEditMode()" style="display:none;background:none;border:none !important;outline:none !important;border-radius:8px;font-size:0.95rem;cursor:pointer;padding:0.2rem 0.45rem;transition:all 0.2s;align-items:center;justify-content:center;" title="Toggle Menu Edit Mode">✏️</button>
         <button id="mode-close-btn" onclick="setCalcMode('basic')" style="display:none;background:none;border:none;font-size:1.35rem;cursor:pointer;padding:0 2px;" title="Close">✖️</button>
       </div>
     </div>
     <div class="modal-body">
       <div id="calc-expression"></div>
       <div id="calc-label-editor"></div>
-      <div id="pos-live-screen" style="display:none;background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:12px;padding:0.65rem 0.85rem;margin-bottom:0.6rem;"></div>
+      <div id="pos-live-screen" style="display:none;background:linear-gradient(180deg, #11141c 0%, #080b0f 100%);border:2px solid rgba(255,255,255,0.16);border-radius:14px;box-shadow:inset 0 3px 12px rgba(0,0,0,0.85), 0 4px 16px rgba(0,0,0,0.4);padding:0.75rem 0.85rem;margin-top:0.45rem;margin-bottom:0.45rem;height:220px;min-height:220px;box-sizing:border-box;"></div>
+      <div id="pos-action-bar" style="display:none;gap:6px;margin-bottom:0.45rem;width:100%;box-sizing:border-box;">
+        <button onclick="window.printQuickBillingOrder()" style="flex:1;height:40px;min-height:40px;max-height:40px;padding:0 0.5rem;border-radius:8px;background:var(--color-accent);color:#fff;border:none;font-weight:800;font-size:0.85rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,0.2);">
+          🖨️ Print Receipt
+        </button>
+        <button onclick="window.openPosWhatsAppModal()" style="flex:1;height:40px;min-height:40px;max-height:40px;padding:0 0.5rem;border-radius:8px;background:#25D366;color:#fff;border:none;font-weight:800;font-size:0.85rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;white-space:nowrap;box-shadow:0 2px 8px rgba(37,211,102,0.25);">
+          💬 WhatsApp Bill
+        </button>
+      </div>
       <div class="calc-result-area">
         <div id="calc-display" onclick="toggleResultExpr()">0</div>
         <div id="calc-display-words" style="min-height:1.25rem;line-height:1.25rem;font-size:0.80rem;color:var(--text-primary);text-align:right;margin-top:0.25rem;font-style:italic;font-weight:600;opacity:0.95;visibility:hidden;transition:opacity 0.15s ease;"></div>
@@ -2080,11 +2308,22 @@ function printCurrentReceiptBT() {
   data.set(feedCut, pos);
 
   sendESCPOSToPrinter(data);
+  if (_calcMode === 'quickbilling' && _quickBillingOrder.length > 0) {
+    _quickBillingOrder = [];
+    renderQuickBillingScreen();
+    showToast('✅ Bill printed & cleared for next customer!');
+  }
 }
 
 function printCurrentReceiptPDF() {
   closeThermalReceiptModal();
-  showToast('✅ Bill Saved! Access & view anytime in ⚙️ Settings > 🏷️ Customize Bill > 📂 Saved Bills Archive');
+  if (_calcMode === 'quickbilling' && _quickBillingOrder.length > 0) {
+    _quickBillingOrder = [];
+    renderQuickBillingScreen();
+    showToast('✅ Bill saved & cleared for next customer!');
+  } else {
+    showToast('✅ Bill Saved! Access & view anytime in ⚙️ Settings > 🏷️ Customize Bill > 📂 Saved Bills Archive');
+  }
 }
 var _kMode = localStorage.getItem('calc_k_mode') === 'true';
 var _shareMode = localStorage.getItem('calc_share_mode') || 'whatsapp';
@@ -2787,6 +3026,16 @@ function toggleBillMode(v) {
   _billMode = v;
   localStorage.setItem('calc_bill_mode', v);
   calcUpdateDisplay();
+
+  if (v) {
+    var shown = localStorage.getItem('calc_bill_mode_onboarding_shown');
+    if (!shown) {
+      localStorage.setItem('calc_bill_mode_onboarding_shown', 'true');
+      setTimeout(function() {
+        openModal('modal-bill-onboarding-prompt');
+      }, 200);
+    }
+  }
 }
 function updateShareIconUI() {
   var expWrap = document.getElementById('exp-wa-btn-wrap');
@@ -2867,21 +3116,14 @@ function applyCalcMode(name) {
   var expWaBtn = document.getElementById('exp-wa-btn-wrap');
   var resArea = document.querySelector('.calc-result-area');
 
-  var modeTitles = {
-    basic: 'LAZY CALC ▾',
-    expenses: '💸 EXPENSES ▾',
-    date: '🗓️ DATE ▾',
-    splitter: '👥 SPLITTER ▾',
-    gold: '🪙 GOLD ▾',
-    fuel: '⛽ FUEL ▾',
-    emi: '📈 EMI ▾',
-    gst: '💰 GST ▾',
-    converter: '📏 CONVERT ▾',
-    scientific: '📐 SCIENTIFIC ▾'
-  };
-
   var modalCalc = document.getElementById('modal-calculator');
-  if (modalCalc) modalCalc.classList.toggle('is-mode', name !== 'basic');
+  if (modalCalc) {
+    modalCalc.classList.toggle('is-mode', name !== 'basic');
+    modalCalc.classList.toggle('is-pos-mode', name === 'quickbilling');
+  }
+  if (document.body) {
+    document.body.classList.toggle('mode-pos', name === 'quickbilling');
+  }
 
   var backBtn = document.getElementById('calc-back-btn');
   var expIconBtn = document.getElementById('h-btn-expenses-icon');
@@ -2893,6 +3135,7 @@ function applyCalcMode(name) {
   var chev = getHeaderChevronSvg();
   var modeTitles = isMono ? {
     basic: 'Lazy Calc ' + chev,
+    quickbilling: '<span style="color:#fff;display:inline-flex;align-items:center;gap:4px;">🛒 Billing - POS</span> ' + chev,
     expenses: '<span style="color:#fff;display:inline-flex;align-items:center;gap:4px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg> Expenses</span> ' + chev,
     date: '<span style="color:#fff;display:inline-flex;align-items:center;gap:4px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg> Date & Duration</span> ' + chev,
     splitter: '<span style="color:#fff;display:inline-flex;align-items:center;gap:4px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg> Splitter</span> ' + chev,
@@ -2902,6 +3145,7 @@ function applyCalcMode(name) {
     scientific: '<span style="color:#fff;display:inline-flex;align-items:center;gap:4px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg> Scientific</span> ' + chev
   } : {
     basic: 'Lazy Calc ' + chev,
+    quickbilling: '<span style="color:#eab308;text-shadow:0 0 10px rgba(234,179,8,0.6)">🛒 Billing - POS</span> ' + chev,
     expenses: '<span style="color:#25D366;text-shadow:0 0 10px rgba(37,211,102,0.6)">💸 Expenses</span> ' + chev,
     date: '<span style="color:#f43f5e;text-shadow:0 0 10px rgba(244,63,94,0.6)">🗓️ Date & Duration</span> ' + chev,
     splitter: '<span style="color:#c084fc;text-shadow:0 0 10px rgba(192,132,252,0.6)">👥 Splitter</span> ' + chev,
@@ -2911,14 +3155,35 @@ function applyCalcMode(name) {
     scientific: '<span style="color:#a78bfa;text-shadow:0 0 10px rgba(167,139,250,0.6)">📐 Scientific</span> ' + chev
   };
 
+  var posScreen = document.getElementById('pos-live-screen');
+  var posActionBar = document.getElementById('pos-action-bar');
+  var posEditBtn = document.getElementById('pos-edit-toggle-btn');
+  if (posScreen) posScreen.style.display = (name === 'quickbilling') ? 'block' : 'none';
+  if (posActionBar) posActionBar.style.display = (name === 'quickbilling') ? 'flex' : 'none';
+  if (posEditBtn) {
+    posEditBtn.style.display = (name === 'quickbilling') ? 'inline-flex' : 'none';
+    if (name !== 'quickbilling') {
+      _qbEditMode = false;
+      updatePosEditToggleBtnUI();
+    }
+  }
+
+  if (buttons) {
+    if (name === 'quickbilling' || name === 'basic') {
+      buttons.style.display = 'grid';
+    } else {
+      buttons.style.display = 'none';
+    }
+  }
+
   if (name === 'basic') {
     if (modalBody) modalBody.classList.remove('sp-mode');
     expr.style.display = '';
     editor.style.display = '';
-    buttons.style.display = '';
     modeBody.style.display = 'none';
     if (display) display.style.display = '';
     if (resArea) resArea.style.display = '';
+    renderCalcButtons();
     if (settingsBtn) settingsBtn.style.display = '';
     if (backBtn) backBtn.style.display = 'none';
     if (closeBtn) closeBtn.style.display = 'none';
@@ -2981,9 +3246,11 @@ function applyCalcMode(name) {
       editor.style.display = 'none';
       if (display) display.style.display = 'none';
       if (resArea) resArea.style.display = 'none';
-      var posScreen = document.getElementById('pos-live-screen');
-      if (posScreen) posScreen.style.display = 'block';
+      modeBody.style.display = 'none';
       buttons.style.display = 'grid';
+      if (mainHistBtn) mainHistBtn.style.display = 'none';
+      if (voiceBtn) voiceBtn.style.display = 'none';
+      if (expWaBtn) expWaBtn.style.display = 'none';
       renderQuickBillingScreen();
       renderQuickBillingGrid();
     }
@@ -3082,11 +3349,12 @@ function triggerKeyFeedback(el) {
 }
 
 function renderCalcButtons() {
+  var grid = document.getElementById('calc-buttons');
   if (_calcMode === 'quickbilling') {
     renderQuickBillingGrid();
     return;
   }
-  var grid = document.getElementById('calc-buttons');
+  grid.style.gridTemplateColumns = '';
   var buttons = ['±','C','%','÷','7','8','9','×','4','5','6','-','1','2','3','+','.','0','⌫','='];
   var opIds = {'×':'mul','÷':'div','-':'minus','+':'plus'};
   grid.innerHTML = buttons.map(function(label) {
@@ -3133,8 +3401,16 @@ function saveQuickBillingItems() {
 }
 
 function addQuickBillingItemToBill(idx) {
+  playKeyClickSound();
+  triggerKeyVibration();
+
   var item = _quickBillingItems[idx];
   if (!item || !item.name) return;
+
+  if (item.outOfStock) {
+    showToast('⚠️ ' + item.name + ' is OUT OF STOCK!');
+    return;
+  }
 
   var addQty = _quickBillingQty;
   var unitPrice = parseFloat(item.price) || 0;
@@ -3143,8 +3419,10 @@ function addQuickBillingItemToBill(idx) {
     return o.name === item.name && o.price === unitPrice;
   });
 
+  var targetOrderIdx = -1;
   if (existing) {
     existing.qty += addQty;
+    targetOrderIdx = _quickBillingOrder.indexOf(existing);
   } else {
     _quickBillingOrder.push({
       name: item.name,
@@ -3152,9 +3430,10 @@ function addQuickBillingItemToBill(idx) {
       icon: item.icon || '',
       qty: addQty
     });
+    targetOrderIdx = _quickBillingOrder.length - 1;
   }
 
-  renderQuickBillingScreen();
+  renderQuickBillingScreen(targetOrderIdx);
   showToast('➕ Added ' + addQty + 'x ' + item.name);
 }
 
@@ -3171,14 +3450,118 @@ function clearQuickBillingOrder() {
   showToast('🗑️ POS Bill Cleared');
 }
 
-function renderQuickBillingScreen() {
+var _heldPosBills = [];
+
+function openHeldBillsPickerModal() {
+  if (_heldPosBills.length === 0) {
+    showToast('⚠️ No held bills');
+    return;
+  }
+  renderHeldBillsList();
+  var modal = document.getElementById('modal-held-bills-picker');
+  if (modal) modal.classList.add('active');
+}
+
+function renderHeldBillsList() {
+  var listEl = document.getElementById('held-bills-list-body');
+  if (!listEl) return;
+
+  if (_heldPosBills.length === 0) {
+    listEl.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:1rem;">No held bills</div>';
+    closeModal('modal-held-bills-picker');
+    return;
+  }
+
+  var html = '';
+  _heldPosBills.forEach(function(bill, idx) {
+    var totalAmt = 0;
+    var summaryLines = [];
+    bill.items.forEach(function(it) {
+      totalAmt += (it.price * it.qty);
+      summaryLines.push((it.icon ? (it.icon + ' ') : '') + it.name + ' x' + it.qty);
+    });
+
+    html += '<div style="background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:10px;padding:0.75rem;display:flex;flex-direction:column;gap:6px;">' +
+      '<div style="display:flex;justify-content:space-between;align-items:center;">' +
+        '<span style="font-weight:800;font-size:0.95rem;color:#eab308;">Bill #' + bill.id + ' <span style="font-size:0.75rem;color:var(--text-muted);font-weight:600;">(' + (bill.time || 'Held') + ')</span></span>' +
+        '<span style="font-weight:800;font-size:1.05rem;color:var(--color-accent);">₹' + totalAmt.toLocaleString('en-IN') + '</span>' +
+      '</div>' +
+      '<div style="font-size:0.8rem;color:var(--text-muted);line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' +
+        escHtml(summaryLines.join(', ')) +
+      '</div>' +
+      '<div style="display:flex;gap:6px;margin-top:4px;">' +
+        '<button onclick="restoreSpecificHeldBill(' + idx + ')" style="flex:2;padding:0.5rem;border:none;border-radius:8px;background:var(--color-accent);color:#fff;font-weight:800;font-size:0.82rem;cursor:pointer;">📂 Restore Bill</button>' +
+        '<button onclick="deleteSpecificHeldBill(' + idx + ')" style="flex:1;padding:1px 0.5rem;border:1px solid var(--border-color);border-radius:8px;background:rgba(255,107,107,0.15);color:#ff6b6b;font-weight:700;font-size:0.8rem;cursor:pointer;">🗑️ Delete</button>' +
+      '</div>' +
+    '</div>';
+  });
+
+  listEl.innerHTML = html;
+}
+
+function restoreSpecificHeldBill(idx) {
+  if (idx >= 0 && idx < _heldPosBills.length) {
+    var restored = _heldPosBills.splice(idx, 1)[0];
+    _quickBillingOrder = restored.items;
+    closeModal('modal-held-bills-picker');
+    renderQuickBillingScreen();
+    showToast('📋 Restored Bill #' + restored.id);
+  }
+}
+
+function deleteSpecificHeldBill(idx) {
+  if (idx >= 0 && idx < _heldPosBills.length) {
+    var removed = _heldPosBills.splice(idx, 1)[0];
+    renderHeldBillsList();
+    renderQuickBillingScreen();
+    showToast('🗑️ Deleted Bill #' + removed.id);
+  }
+}
+
+function holdCurrentPosBill() {
+  if (_quickBillingOrder.length === 0) {
+    if (_heldPosBills.length > 0) {
+      openHeldBillsPickerModal();
+    } else {
+      showToast('⚠️ No items to hold');
+    }
+    return;
+  }
+
+  var billId = _heldPosBills.length + 1;
+  _heldPosBills.push({
+    id: billId,
+    items: JSON.parse(JSON.stringify(_quickBillingOrder)),
+    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+  });
+
+  _quickBillingOrder = [];
+  renderQuickBillingScreen();
+  showToast('⏸️ Bill #' + billId + ' Held! Screen cleared.');
+}
+
+function renderQuickBillingScreen(targetOrderIdx) {
   var screenEl = document.getElementById('pos-live-screen');
   if (!screenEl) return;
 
+  var posHeader = document.querySelector('.calc-header-controls');
+  if (posHeader) {
+    posHeader.style.display = (_calcMode === 'quickbilling') ? 'none' : 'flex';
+  }
+
+  var prevScrollTop = 0;
+  var existingContainer = document.getElementById('pos-order-list');
+  if (existingContainer) {
+    prevScrollTop = existingContainer.scrollTop;
+  }
+
   if (_quickBillingOrder.length === 0) {
+    var emptyBtn = _heldPosBills.length > 0 ? 
+      '<button onclick="openHeldBillsPickerModal()" style="margin-top:8px;padding:5px 12px;border-radius:8px;border:1px solid rgba(234,179,8,0.5);background:rgba(234,179,8,0.2);color:#eab308;font-size:0.82rem;font-weight:800;cursor:pointer;">📋 View & Restore Held Bills (' + _heldPosBills.length + ')</button>' : '';
     screenEl.innerHTML =
-      '<div style="text-align:center;padding:0.75rem 0;color:var(--text-muted);font-size:0.85rem;font-weight:600;">' +
-        '🛒 Tap items below to add to POS Bill' +
+      '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:var(--text-muted);font-size:0.92rem;font-weight:700;">' +
+        '<div>🛒 Tap item tiles below to add to POS Bill</div>' +
+        emptyBtn +
       '</div>';
     return;
   }
@@ -3186,7 +3569,7 @@ function renderQuickBillingScreen() {
   var totalAmt = 0;
   var totalItems = 0;
 
-  var html = '<div style="max-height:115px;overflow-y:auto;padding-right:4px;margin-bottom:6px;display:flex;flex-direction:column;gap:4px;">';
+  var html = '<div id="pos-order-list" style="height:165px;overflow-y:auto;padding-right:2px;display:flex;flex-direction:column;gap:4px;">';
 
   _quickBillingOrder.forEach(function(item, i) {
     var itemTotal = item.price * item.qty;
@@ -3194,24 +3577,315 @@ function renderQuickBillingScreen() {
     totalItems += item.qty;
 
     var iconStr = item.icon ? (item.icon + ' ') : '';
-    html += '<div style="display:flex;align-items:center;justify-content:space-between;font-size:0.88rem;font-weight:700;padding:2px 0;border-bottom:1px dashed rgba(255,255,255,0.08);">' +
+    html += '<div id="pos-line-item-' + i + '" onclick="window.openPosQtyEditModal(' + i + ')" style="display:flex;align-items:center;justify-content:space-between;font-size:0.92rem;font-weight:700;padding:3px 6px;border-bottom:1px dashed rgba(255,255,255,0.08);cursor:pointer;border-radius:6px;background:rgba(255,255,255,0.03);transition:all 0.15s ease;" onmouseover="this.style.background=\'rgba(255,255,255,0.08)\'" onmouseout="this.style.background=\'rgba(255,255,255,0.03)\'">' +
       '<span>' + escHtml(iconStr + item.name) + ' <span style="color:var(--color-accent);font-weight:800;margin-left:4px;">x ' + item.qty + '</span></span>' +
       '<div style="display:flex;align-items:center;gap:6px;">' +
-        '<span style="font-weight:800;">₹' + itemTotal.toLocaleString('en-IN') + '</span>' +
-        '<span onclick="event.stopPropagation();removeQuickBillingOrderLine(' + i + ')" style="color:#ff6b6b;font-size:0.75rem;cursor:pointer;opacity:0.7;padding:0 2px;">✕</span>' +
+        '<span style="font-weight:800;font-size:0.95rem;">₹' + itemTotal.toLocaleString('en-IN') + '</span>' +
+        '<span onclick="event.stopPropagation();removeQuickBillingOrderLine(' + i + ')" style="color:#ff6b6b;font-size:0.85rem;cursor:pointer;opacity:0.8;padding:2px 4px;" title="Remove Item">✕</span>' +
       '</div>' +
     '</div>';
   });
 
   html += '</div>';
 
-  html += '<div style="display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border-color);padding-top:6px;font-weight:800;">' +
-    '<span style="font-size:0.82rem;color:var(--text-muted);">TOTAL (' + totalItems + ' items):</span>' +
-    '<span style="font-size:1.15rem;color:var(--color-accent);">₹' + totalAmt.toLocaleString('en-IN') + '</span>' +
+  var actionBtns = '<button onclick="holdCurrentPosBill()" style="padding:3px 8px;border-radius:6px;border:1px solid rgba(234,179,8,0.4);background:rgba(234,179,8,0.15);color:#eab308;font-size:0.75rem;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:4px;" title="Hold active bill for next customer">⏸️ Hold</button>';
+  if (_heldPosBills.length > 0) {
+    actionBtns += '<button onclick="openHeldBillsPickerModal()" style="padding:3px 8px;border-radius:6px;border:1px solid rgba(234,179,8,0.6);background:rgba(234,179,8,0.25);color:#eab308;font-size:0.75rem;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:4px;" title="View held bills">📋 Held (' + _heldPosBills.length + ')</button>';
+  }
+
+  html += '<div style="display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border-color);padding-top:6px;margin-top:auto;font-weight:800;">' +
+    '<span style="font-size:0.82rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;">TOTAL (' + totalItems + ' ITEMS):</span>' +
+    '<div style="display:flex;gap:4px;align-items:center;">' + actionBtns + '</div>' +
+    '<span style="font-size:1.35rem;color:var(--color-accent);">₹' + totalAmt.toLocaleString('en-IN') + '</span>' +
   '</div>';
 
   screenEl.innerHTML = html;
+
+  var listContainer = document.getElementById('pos-order-list');
+  if (listContainer) {
+    if (typeof targetOrderIdx === 'number' && targetOrderIdx >= 0) {
+      setTimeout(function() {
+        var lineEl = document.getElementById('pos-line-item-' + targetOrderIdx);
+        if (lineEl) {
+          lineEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          lineEl.classList.add('pos-line-pulse');
+          setTimeout(function() { lineEl.classList.remove('pos-line-pulse'); }, 600);
+        } else {
+          listContainer.scrollTop = listContainer.scrollHeight;
+        }
+      }, 20);
+    } else {
+      listContainer.scrollTop = prevScrollTop;
+    }
+  }
 }
+
+function openPosQtyEditModal(idx) {
+  var item = _quickBillingOrder[idx];
+  if (!item) return;
+  document.getElementById('pos-qty-line-idx').value = idx;
+  var iconStr = item.icon ? (item.icon + ' ') : '';
+  document.getElementById('pos-qty-modal-title').textContent = '✏️ ' + iconStr + item.name;
+  document.getElementById('pos-qty-item-subtitle').textContent = 'Rate: ₹' + item.price + ' per unit';
+  document.getElementById('pos-modal-qty-input').value = item.qty || 1;
+  var modal = document.getElementById('modal-pos-qty-edit');
+  if (modal) modal.classList.add('active');
+}
+
+function stepPosModalQty(delta) {
+  var input = document.getElementById('pos-modal-qty-input');
+  if (!input) return;
+  var cur = parseInt(input.value) || 1;
+  input.value = Math.max(1, cur + delta);
+}
+
+function setPosModalQtyVal(val) {
+  var input = document.getElementById('pos-modal-qty-input');
+  if (input) input.value = val;
+}
+
+function savePosLineQtyFromModal() {
+  var idx = parseInt(document.getElementById('pos-qty-line-idx').value);
+  var newQty = parseInt(document.getElementById('pos-modal-qty-input').value) || 1;
+  if (!isNaN(idx) && idx >= 0 && idx < _quickBillingOrder.length) {
+    _quickBillingOrder[idx].qty = Math.max(1, newQty);
+    renderQuickBillingScreen();
+    closeModal('modal-pos-qty-edit');
+    showToast('✅ Quantity updated to ' + _quickBillingOrder[idx].qty);
+  }
+}
+
+function deletePosLineFromModal() {
+  var idx = parseInt(document.getElementById('pos-qty-line-idx').value);
+  if (!isNaN(idx) && idx >= 0 && idx < _quickBillingOrder.length) {
+    _quickBillingOrder.splice(idx, 1);
+    renderQuickBillingScreen();
+    closeModal('modal-pos-qty-edit');
+    showToast('🗑️ Line item removed');
+  }
+}
+
+function openPosWhatsAppModal() {
+  if (_quickBillingOrder.length === 0 && (!_activeReceiptData || !_activeReceiptData.items || _activeReceiptData.items.length === 0)) {
+    showToast('⚠️ No receipt items to send!');
+    return;
+  }
+  var modal = document.getElementById('modal-pos-whatsapp');
+  if (modal) modal.classList.add('active');
+}
+
+function sendPosBillOnWhatsApp() {
+  var phoneEl = document.getElementById('pos-wa-phone');
+  var nameEl = document.getElementById('pos-wa-name');
+  var rawPhone = phoneEl ? phoneEl.value.trim().replace(/\D/g, '') : '';
+  var custName = nameEl ? nameEl.value.trim() : '';
+
+  if (!rawPhone || rawPhone.length < 10) {
+    showToast('⚠️ Please enter valid 10-digit mobile number');
+    return;
+  }
+
+  var fullPhone = (rawPhone.length === 10) ? ('91' + rawPhone) : rawPhone;
+
+  var bsnsName = _billProfile.bsnsName || 'LAZY CALC POS';
+  var storeHeader = '🧾 *' + bsnsName.toUpperCase() + '*\n';
+  if (custName) storeHeader += 'Customer: *' + custName + '*\n';
+  storeHeader += '-------------------------\n';
+
+  var totalAmt = 0;
+  var lines = [];
+
+  if (_quickBillingOrder.length > 0) {
+    _quickBillingOrder.forEach(function(o) {
+      var lineTotal = o.price * o.qty;
+      totalAmt += lineTotal;
+      var iconStr = o.icon ? (o.icon + ' ') : '';
+      lines.push(iconStr + o.name + ' x' + o.qty + ' : ₹' + lineTotal.toFixed(2));
+    });
+  } else if (_activeReceiptData && Array.isArray(_activeReceiptData.items)) {
+    totalAmt = _activeReceiptData.total || 0;
+    _activeReceiptData.items.forEach(function(o) {
+      var q = o.qty || 1;
+      var label = o.label || o.desc || 'Item';
+      var val = o.val || (o.unitPrice ? (o.unitPrice * q) : 0);
+      lines.push(label + ' x' + q + ' : ₹' + Number(val).toFixed(2));
+    });
+  }
+
+  var footerStr = _billProfile.footer || 'Thank you for shopping with us! 🙏';
+  var msg = storeHeader + lines.join('\n') + '\n-------------------------\n';
+  msg += '*TOTAL AMOUNT: ₹' + Number(totalAmt).toFixed(2) + '*\n\n' + footerStr;
+
+  var waUrl = 'https://api.whatsapp.com/send?phone=' + fullPhone + '&text=' + encodeURIComponent(msg);
+  window.open(waUrl, '_blank');
+  closeModal('modal-pos-whatsapp');
+
+  saveCustomerDataRecord(custName, rawPhone, totalAmt);
+
+  if (_quickBillingOrder.length > 0) {
+    _quickBillingOrder = [];
+    renderQuickBillingScreen();
+    showToast('📲 POS Bill sent on WhatsApp & customer data saved!');
+  } else {
+    closeThermalReceiptModal();
+    showToast('📲 Thermal Receipt sent on WhatsApp & customer data saved!');
+  }
+}
+
+function saveCustomerDataRecord(name, phone, amount) {
+  if (!phone) return;
+  var rawPhone = phone.replace(/\D/g, '');
+  if (!rawPhone || rawPhone.length < 10) return;
+  var keyPhone = (rawPhone.length === 10) ? ('91' + rawPhone) : rawPhone;
+
+  var saved = localStorage.getItem('calc_customer_directory');
+  var directory = saved ? JSON.parse(saved) : [];
+
+  var existing = directory.find(function(c) { return c.phone === keyPhone || c.rawPhone === rawPhone; });
+  var amt = parseFloat(amount) || 0;
+  var nowStr = new Date().toLocaleString();
+
+  if (existing) {
+    if (name && (!existing.name || existing.name === 'Customer')) existing.name = name;
+    existing.totalBilled = (parseFloat(existing.totalBilled) || 0) + amt;
+    existing.visitCount = (parseInt(existing.visitCount) || 1) + 1;
+    existing.lastVisit = nowStr;
+  } else {
+    directory.unshift({
+      name: name || 'Customer',
+      phone: keyPhone,
+      rawPhone: rawPhone,
+      totalBilled: amt,
+      visitCount: 1,
+      lastVisit: nowStr
+    });
+  }
+
+  localStorage.setItem('calc_customer_directory', JSON.stringify(directory));
+}
+
+function openCustomerDataModal() {
+  renderCustomerDataList();
+  openModal('modal-customer-data');
+}
+
+function renderCustomerDataList(filterText) {
+  var container = document.getElementById('cust-data-list-body');
+  var countEl = document.getElementById('cust-total-count');
+  var billedEl = document.getElementById('cust-total-billed');
+  if (!container) return;
+
+  var saved = localStorage.getItem('calc_customer_directory');
+  var directory = saved ? JSON.parse(saved) : [];
+
+  if (filterText) {
+    var q = filterText.toLowerCase().trim();
+    directory = directory.filter(function(c) {
+      return (c.name && c.name.toLowerCase().indexOf(q) !== -1) ||
+             (c.phone && c.phone.indexOf(q) !== -1) ||
+             (c.rawPhone && c.rawPhone.indexOf(q) !== -1);
+    });
+  }
+
+  var totalAllBilled = directory.reduce(function(acc, c){ return acc + (parseFloat(c.totalBilled) || 0); }, 0);
+  if (countEl) countEl.textContent = directory.length;
+  if (billedEl) billedEl.textContent = '₹' + totalAllBilled.toFixed(2);
+
+  if (directory.length === 0) {
+    container.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--text-muted);font-size:0.9rem;">No customer data saved yet.<br><span style="font-size:0.8rem;">Customers are saved automatically when sending WhatsApp bills!</span></div>';
+    return;
+  }
+
+  var html = '';
+  directory.forEach(function(c) {
+    var displayName = c.name || 'Customer';
+    var displayPhone = c.rawPhone || c.phone;
+    var visits = c.visitCount || 1;
+    var total = parseFloat(c.totalBilled) || 0;
+    var dateStr = c.lastVisit || '';
+
+    html += '<div style="background:var(--bg-primary);border:1px solid var(--border-color);border-radius:12px;padding:0.75rem;display:flex;flex-direction:column;gap:4px;">' +
+      '<div style="display:flex;justify-content:space-between;align-items:center;">' +
+        '<span style="font-weight:800;font-size:0.95rem;color:var(--text-primary);">' + escHtml(displayName) + '</span>' +
+        '<span style="font-weight:800;font-size:0.9rem;color:#25D366;">₹' + total.toFixed(2) + '</span>' +
+      '</div>' +
+      '<div style="display:flex;justify-content:space-between;align-items:center;font-size:0.8rem;color:var(--text-muted);">' +
+        '<span>📞 ' + escHtml(displayPhone) + ' • (' + visits + ' bill' + (visits > 1 ? 's' : '') + ')</span>' +
+        '<span style="font-size:0.75rem;">' + escHtml(dateStr) + '</span>' +
+      '</div>' +
+      '<div style="display:flex;gap:6px;margin-top:6px;padding-top:6px;border-top:1px dashed var(--border-color);">' +
+        '<button onclick="window.open(\'https://api.whatsapp.com/send?phone=' + c.phone + '\', \'_blank\')" style="flex:1;padding:0.35rem 0.5rem;border-radius:6px;border:none;background:rgba(37,211,102,0.15);color:#25D366;font-size:0.78rem;font-weight:700;cursor:pointer;">💬 WhatsApp</button>' +
+        '<button onclick="navigator.clipboard.writeText(\'' + c.rawPhone + '\');showToast(\'📋 Copied ' + c.rawPhone + '\')" style="padding:0.35rem 0.6rem;border-radius:6px;border:1px solid var(--border-color);background:var(--bg-secondary);color:var(--text-primary);font-size:0.78rem;font-weight:600;cursor:pointer;">📋 Copy</button>' +
+        '<button onclick="deleteCustomerDataRecord(\'' + c.phone + '\')" style="padding:0.35rem 0.6rem;border-radius:6px;border:1px solid rgba(255,107,107,0.3);background:rgba(255,107,107,0.15);color:#ff6b6b;font-size:0.78rem;font-weight:600;cursor:pointer;">🗑️ Delete</button>' +
+      '</div>' +
+    '</div>';
+  });
+
+  container.innerHTML = html;
+}
+
+function filterCustomerDataList() {
+  var inp = document.getElementById('cust-data-search');
+  renderCustomerDataList(inp ? inp.value : '');
+}
+
+function deleteCustomerDataRecord(phoneKey) {
+  var saved = localStorage.getItem('calc_customer_directory');
+  var directory = saved ? JSON.parse(saved) : [];
+  directory = directory.filter(function(c) { return c.phone !== phoneKey; });
+  localStorage.setItem('calc_customer_directory', JSON.stringify(directory));
+  filterCustomerDataList();
+  showToast('🗑️ Customer entry deleted');
+}
+
+function clearAllCustomerDataRecords() {
+  if (confirm('Are you sure you want to clear all saved customer data?')) {
+    localStorage.removeItem('calc_customer_directory');
+    filterCustomerDataList();
+    showToast('🗑️ All customer data cleared');
+  }
+}
+
+function exportCustomerDataCSV() {
+  var saved = localStorage.getItem('calc_customer_directory');
+  var directory = saved ? JSON.parse(saved) : [];
+  if (directory.length === 0) {
+    showToast('⚠️ No customer data to export');
+    return;
+  }
+
+  var csvRows = ['Name,Mobile Number,Total Bills,Total Spend (INR),Last Visit Date'];
+  directory.forEach(function(c) {
+    var name = '"' + (c.name || 'Customer').replace(/"/g, '""') + '"';
+    var phone = '"' + (c.rawPhone || c.phone) + '"';
+    var visits = c.visitCount || 1;
+    var total = (parseFloat(c.totalBilled) || 0).toFixed(2);
+    var dateStr = '"' + (c.lastVisit || '').replace(/"/g, '""') + '"';
+    csvRows.push([name, phone, visits, total, dateStr].join(','));
+  });
+
+  var csvString = csvRows.join('\n');
+  var blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'Customer_Data_' + new Date().toISOString().slice(0, 10) + '.csv';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  showToast('📥 Customer Data exported as CSV!');
+}
+
+window.openCustomerDataModal = openCustomerDataModal;
+window.filterCustomerDataList = filterCustomerDataList;
+window.deleteCustomerDataRecord = deleteCustomerDataRecord;
+window.clearAllCustomerDataRecords = clearAllCustomerDataRecords;
+window.exportCustomerDataCSV = exportCustomerDataCSV;
+
+window.openPosWhatsAppModal = openPosWhatsAppModal;
+window.sendPosBillOnWhatsApp = sendPosBillOnWhatsApp;
+window.printQuickBillingOrder = printQuickBillingOrder;
+window.openPosQtyEditModal = openPosQtyEditModal;
 
 function openQuickItemEditModal(idx) {
   var item = _quickBillingItems[idx] || { name: '', price: '', icon: '' };
@@ -3260,6 +3934,125 @@ function deleteQuickItemFromModal() {
   }
 }
 
+function addNewQuickBillingTileRow() {
+  var count = _quickBillingItems ? _quickBillingItems.length : 0;
+  if (count >= 2) {
+    var prevSlotItem = _quickBillingItems[count - 2];
+    var isAddMoreUnlocked = Boolean(prevSlotItem && prevSlotItem.name && prevSlotItem.name.trim() !== '');
+    if (!isAddMoreUnlocked) {
+      showToast('⚠️ Fill previous item slots first to add more rows!');
+      return;
+    }
+  }
+
+  for (var k = 0; k < 3; k++) {
+    _quickBillingItems.push({ name: '', price: '', icon: '' });
+  }
+  saveQuickBillingItems();
+  renderQuickBillingGrid();
+  showToast('✨ Added 3 new item slots!');
+
+  setTimeout(function() {
+    var buttons = document.getElementById('calc-buttons');
+    if (buttons && buttons.lastElementChild) {
+      buttons.lastElementChild.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    }
+  }, 60);
+}
+
+var _qbEditMode = false;
+
+function toggleQbEditMode() {
+  _qbEditMode = !_qbEditMode;
+  updatePosEditToggleBtnUI();
+  renderQuickBillingGrid();
+
+  if (_qbEditMode) {
+    showToast('✏️ Menu Edit Mode ON: Tap any item card to edit name & price!');
+  } else {
+    showToast('✅ Billing Mode Active');
+  }
+}
+
+function updatePosEditToggleBtnUI() {
+  var btn = document.getElementById('pos-edit-toggle-btn');
+  if (!btn) return;
+  btn.style.border = 'none';
+  if (_qbEditMode) {
+    btn.style.background = 'rgba(234,179,8,0.25)';
+    btn.style.color = '#eab308';
+    btn.innerHTML = '✏️';
+  } else {
+    btn.style.background = 'none';
+    btn.style.color = 'var(--text-primary)';
+    btn.innerHTML = '✏️';
+  }
+}
+
+var _itemLongPressTimer = null;
+var _isItemLongPressTriggered = false;
+
+function startItemLongPress(e, idx) {
+  _isItemLongPressTriggered = false;
+  if (_itemLongPressTimer) clearTimeout(_itemLongPressTimer);
+  _itemLongPressTimer = setTimeout(function() {
+    _isItemLongPressTriggered = true;
+    if (window.navigator && window.navigator.vibrate) {
+      window.navigator.vibrate(50);
+    }
+    openStockConfirmModal(idx);
+  }, 500);
+}
+
+function cancelItemLongPress(e, idx) {
+  if (_itemLongPressTimer) {
+    clearTimeout(_itemLongPressTimer);
+    _itemLongPressTimer = null;
+  }
+}
+
+function openStockConfirmModal(idx) {
+  var item = _quickBillingItems[idx];
+  if (!item || !item.name) return;
+  document.getElementById('stock-confirm-item-idx').value = idx;
+  var iconStr = item.icon ? (item.icon + ' ') : '';
+  document.getElementById('stock-confirm-item-name').textContent = iconStr + item.name;
+  
+  var btn = document.getElementById('btn-toggle-stock-action');
+  var subtext = document.getElementById('stock-confirm-status-text');
+  if (item.outOfStock) {
+    subtext.textContent = 'This item is currently marked OUT OF STOCK.';
+    btn.style.background = '#22c55e';
+    btn.innerHTML = '🟢 Mark In Stock';
+  } else {
+    subtext.textContent = 'Select an action for this menu item:';
+    btn.style.background = '#ef4444';
+    btn.innerHTML = '🚫 Mark Out of Stock';
+  }
+  openModal('modal-stock-status-confirm');
+}
+
+function confirmToggleStockStatus() {
+  var idx = parseInt(document.getElementById('stock-confirm-item-idx').value);
+  if (idx >= 0 && idx < _quickBillingItems.length) {
+    var item = _quickBillingItems[idx];
+    item.outOfStock = !item.outOfStock;
+    saveQuickBillingItems();
+    closeModal('modal-stock-status-confirm');
+    renderQuickBillingGrid();
+    if (item.outOfStock) {
+      showToast('🚫 Marked ' + item.name + ' as Out of Stock');
+    } else {
+      showToast('🟢 Marked ' + item.name + ' as In Stock');
+    }
+  }
+}
+
+window.startItemLongPress = startItemLongPress;
+window.cancelItemLongPress = cancelItemLongPress;
+window.openStockConfirmModal = openStockConfirmModal;
+window.confirmToggleStockStatus = confirmToggleStockStatus;
+
 function renderQuickBillingGrid() {
   var buttons = document.getElementById('calc-buttons');
   if (!buttons) return;
@@ -3269,40 +4062,85 @@ function renderQuickBillingGrid() {
   var tileBorder = isLight ? '1px solid #cbd5e1' : '1px solid var(--border-color)';
   var textCol = isLight ? '#0f172a' : 'var(--text-primary)';
 
-  var html = '<div style="grid-column:span 4;display:flex;align-items:center;justify-content:space-between;padding:0.25rem 0.5rem;background:' + tileBg + ';border-radius:8px;margin-bottom:2px;border:' + tileBorder + ';">' +
-    '<div style="display:flex;align-items:center;gap:4px;">' +
-      '<span style="font-size:0.75rem;font-weight:700;color:var(--text-muted);">Qty:</span>' +
-      '<button onclick="setQuickBillingQty(-1)" style="width:24px;height:24px;border-radius:4px;border:1px solid var(--border-color);background:var(--bg-tertiary);color:' + textCol + ';font-size:0.85rem;font-weight:800;cursor:pointer;padding:0;">-</button>' +
-      '<span id="qb-qty-val" style="font-size:0.88rem;font-weight:800;color:var(--color-accent);min-width:18px;text-align:center;">' + _quickBillingQty + '</span>' +
-      '<button onclick="setQuickBillingQty(1)" style="width:24px;height:24px;border-radius:4px;border:1px solid var(--border-color);background:var(--bg-tertiary);color:' + textCol + ';font-size:0.85rem;font-weight:800;cursor:pointer;padding:0;">+</button>' +
-    '</div>' +
-    '<button onclick="clearQuickBillingOrder()" style="padding:0.25rem 0.5rem;border-radius:6px;border:1px solid var(--border-color);background:rgba(255,107,107,0.15);color:#ff6b6b;font-size:0.72rem;font-weight:700;cursor:pointer;">🗑️ Clear Bill</button>' +
-  '</div>';
+  if (_qbEditMode) {
+    tileBg = isLight ? 'rgba(234,179,8,0.12)' : 'rgba(234,179,8,0.08)';
+    tileBorder = '1.5px dashed #eab308';
+  }
 
-  for (var i = 0; i < 20; i++) {
-    var item = _quickBillingItems[i];
-    if (item && item.name) {
-      var icon = item.icon ? (item.icon + ' ') : '';
-      var priceStr = '₹' + parseFloat(item.price || 0).toLocaleString('en-IN');
-      html += '<button onclick="addQuickBillingItemToBill(' + i + ')" style="min-height:52px;padding:0.35rem 0.25rem;border-radius:10px;background:' + tileBg + ';border:' + tileBorder + ';color:' + textCol + ';display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;cursor:pointer;position:relative;transition:transform 0.04s ease;overflow:hidden;">' +
-        '<div style="font-size:0.8rem;font-weight:800;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:90%;">' + escHtml(icon + item.name) + '</div>' +
-        '<div style="font-size:0.72rem;font-weight:700;color:var(--color-accent);">' + priceStr + '</div>' +
-        '<span onclick="event.stopPropagation();openQuickItemEditModal(' + i + ')" style="position:absolute;right:2px;top:1px;font-size:0.65rem;opacity:0.6;padding:2px;" title="Edit Item">⚙️</span>' +
-      '</button>';
-    } else {
-      html += '<button onclick="openQuickItemEditModal(' + i + ')" style="min-height:52px;padding:0.35rem 0.25rem;border-radius:10px;background:' + tileBg + ';border:1.5px dashed var(--border-color);color:var(--text-muted);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;cursor:pointer;opacity:0.85;">' +
-        '<div style="font-size:1.1rem;font-weight:800;color:var(--color-accent);line-height:1;">+</div>' +
-        '<div style="font-size:0.65rem;font-weight:700;letter-spacing:0.3px;">Add Item</div>' +
-      '</button>';
+  _quickBillingItems = _quickBillingItems || [];
+
+  var lastFilledIdx = -1;
+  for (var idx = 0; idx < _quickBillingItems.length; idx++) {
+    if (_quickBillingItems[idx] && _quickBillingItems[idx].name && _quickBillingItems[idx].name.trim() !== '') {
+      lastFilledIdx = idx;
     }
   }
 
-  html += '<button onclick="printQuickBillingOrder()" style="grid-column:span 4;min-height:44px;padding:0.6rem;border-radius:10px;background:var(--color-accent);color:#fff;border:none;font-weight:800;font-size:0.92rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;box-shadow:0 4px 14px rgba(0,0,0,0.3);margin-top:2px;">' +
-    '🖨️ PRINT POS RECEIPT' +
-  '</button>';
+  var targetSlots = 12;
+  if (lastFilledIdx >= 10) {
+    targetSlots = Math.ceil((lastFilledIdx + 2) / 3) * 3;
+  }
 
+  if (_quickBillingItems.length !== targetSlots) {
+    if (_quickBillingItems.length > targetSlots) {
+      _quickBillingItems = _quickBillingItems.slice(0, targetSlots);
+    } else {
+      while (_quickBillingItems.length < targetSlots) {
+        _quickBillingItems.push({ name: '', price: '', icon: '' });
+      }
+    }
+    saveQuickBillingItems();
+  }
+
+  var count = _quickBillingItems.length;
+  var prevSlotItem = _quickBillingItems[count - 2];
+  var isAddMoreUnlocked = Boolean(prevSlotItem && prevSlotItem.name && prevSlotItem.name.trim() !== '');
+
+  var html = '';
+
+  for (var i = 0; i < count; i++) {
+    if (i === count - 1) {
+      if (isAddMoreUnlocked) {
+        html += '<button onclick="addNewQuickBillingTileRow()" style="min-height:52px;height:52px;padding:0.35rem 0.25rem;border-radius:10px;background:rgba(234,179,8,0.16) !important;border:1px solid #eab308 !important;color:#eab308 !important;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;cursor:pointer;font-weight:800;" title="Add 3 More Item Slots">' +
+          '<div style="font-size:1.1rem;font-weight:800;line-height:1;color:#eab308 !important;">➕</div>' +
+          '<div style="font-size:0.65rem;font-weight:800;letter-spacing:0.3px;color:#eab308 !important;">Add More Items</div>' +
+        '</button>';
+      } else {
+        html += '<button onclick="showToast(\'⚠️ Fill previous item slots first to add more rows!\')" style="min-height:52px;height:52px;padding:0.35rem 0.25rem;border-radius:10px;background:rgba(255,255,255,0.03) !important;border:1px solid rgba(255,255,255,0.08) !important;color:var(--text-muted) !important;opacity:0.45 !important;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;cursor:not-allowed;font-weight:700;" title="Fill previous slots first">' +
+          '<div style="font-size:1.1rem;font-weight:800;line-height:1;opacity:0.6;">➕</div>' +
+          '<div style="font-size:0.65rem;font-weight:700;letter-spacing:0.3px;opacity:0.7;">Add More Items</div>' +
+        '</button>';
+      }
+    } else {
+      var item = _quickBillingItems[i];
+      if (item && item.name) {
+        var icon = item.icon ? (item.icon + ' ') : '';
+        var priceStr = '₹' + parseFloat(item.price || 0).toLocaleString('en-IN');
+        var clickAction = 'if(!_isItemLongPressTriggered){ ' + (_qbEditMode ? ('openQuickItemEditModal(' + i + ')') : ('addQuickBillingItemToBill(' + i + ')')) + ' }';
+        var editBadge = _qbEditMode ? '<span style="position:absolute;right:3px;top:2px;font-size:0.65rem;color:#eab308;">✏️</span>' : '';
+        var cardOpacity = item.outOfStock ? '0.45' : '1.0';
+        var oosBadge = item.outOfStock ? '<div style="position:absolute;bottom:0;left:0;right:0;background:rgba(239,68,68,0.92);color:#fff;font-size:0.52rem;font-weight:900;letter-spacing:0.3px;padding:1px 0;text-transform:uppercase;text-align:center;">OUT OF STOCK</div>' : '';
+
+        html += '<button onclick="' + clickAction + '" onpointerdown="startItemLongPress(event, ' + i + ')" onpointerup="cancelItemLongPress(event, ' + i + ')" onpointerleave="cancelItemLongPress(event, ' + i + ')" oncontextmenu="event.preventDefault();" style="min-height:52px;height:52px;padding:0.35rem 0.25rem;border-radius:10px;background:' + tileBg + ';border:' + tileBorder + ';color:' + textCol + ';display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;cursor:pointer;position:relative;transition:all 0.15s ease;overflow:hidden;opacity:' + cardOpacity + ';">' +
+          '<div style="font-size:0.85rem;font-weight:800;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:92%;">' + escHtml(icon + item.name) + '</div>' +
+          '<div style="font-size:0.75rem;font-weight:700;color:var(--color-accent);">' + priceStr + '</div>' +
+          editBadge +
+          oosBadge +
+        '</button>';
+      } else {
+        html += '<button onclick="openQuickItemEditModal(' + i + ')" style="min-height:52px;height:52px;padding:0.35rem 0.25rem;border-radius:10px;background:' + tileBg + ';border:1.5px dashed var(--border-color);color:var(--text-muted);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;cursor:pointer;opacity:0.85;">' +
+          '<div style="font-size:1.1rem;font-weight:800;color:var(--color-accent);line-height:1;">+</div>' +
+          '<div style="font-size:0.65rem;font-weight:700;letter-spacing:0.3px;">Add Item</div>' +
+        '</button>';
+      }
+    }
+  }
+
+  buttons.style.gridTemplateColumns = 'repeat(3, 1fr)';
   buttons.innerHTML = html;
 }
+
+window.toggleQbEditMode = toggleQbEditMode;
 
 function printQuickBillingOrder() {
   if (_quickBillingOrder.length === 0) {
@@ -3325,6 +4163,9 @@ function printQuickBillingOrder() {
   });
 
   openThermalReceiptModal(items, totalAmt);
+  _quickBillingOrder = [];
+  renderQuickBillingScreen();
+  showToast('🖨️ Receipt opened & POS screen cleared!');
 }
 
 function calcBtn(label) {
@@ -3722,7 +4563,7 @@ function renderCalcLabelEditor() {
     var currentLabel = (curIdx >= 0 && calcTokens[curIdx]) ? calcTokens[curIdx].label : '';
     
     var html = '<div style="display:flex;align-items:center;flex-wrap:nowrap;gap:0.35rem;width:100%;box-sizing:border-box;">';
-    html += '<input id="calc-bill-qty-input" type="text" inputmode="decimal" placeholder="Qty" value="' + escHtml(currentQty) + '" oninput="updateBillTokenQty(this.value)" onkeydown="if(event.key===\'Enter\'||event.keyCode===13){this.blur();}" style="width:65px;flex-shrink:0;padding:0.6rem 0.35rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-primary);color:var(--text-primary);font-size:1rem;font-weight:800;text-align:center;box-sizing:border-box;">';
+    html += '<input id="calc-bill-qty-input" type="text" inputmode="none" placeholder="Qty" value="' + escHtml(currentQty) + '" oninput="updateBillTokenQty(this.value)" onkeydown="if(event.key===\'Enter\'||event.keyCode===13){this.blur();}" style="width:65px;flex-shrink:0;padding:0.6rem 0.35rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-primary);color:var(--text-primary);font-size:1rem;font-weight:800;text-align:center;box-sizing:border-box;">';
     html += '<input id="calc-bill-label-input" type="text" placeholder="Label (optional)" value="' + escHtml(currentLabel) + '" oninput="updateBillTokenLabel(this.value)" onkeydown="if(event.key===\'Enter\'||event.keyCode===13){this.blur();}" style="flex:1;min-width:70px;padding:0.6rem 0.55rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-primary);color:var(--text-primary);font-size:1rem;box-sizing:border-box;">';
     html += '<button onclick="printBill()" title="Print Bill / Receipt" style="padding:0.6rem 0.85rem;flex-shrink:0;border:1px solid var(--color-accent);border-radius:var(--radius-sm);background:var(--color-accent);color:#fff;cursor:pointer;font-size:0.95rem;font-weight:700;display:flex;align-items:center;gap:4px;white-space:nowrap;touch-action:manipulation;">🖨️ Print</button>';
     html += '</div>';
@@ -3852,6 +4693,22 @@ function cancelCalcTokenLabel() {
 function calcInput(val) {
   var map = { '×': '*', '÷': '/' };
   var mapped = map[val] || val;
+
+  var activeEl = document.activeElement;
+  if (activeEl && activeEl.id === 'calc-bill-qty-input') {
+    if (['+','-','*','/','%','='].indexOf(val) === -1 && ['+','-','*','/','%','='].indexOf(mapped) === -1) {
+      if (val === '.') {
+        if (activeEl.value.indexOf('.') === -1) activeEl.value += '.';
+      } else if (!isNaN(val)) {
+        activeEl.value = (activeEl.value === '0') ? val : (activeEl.value + val);
+      }
+      updateBillTokenQty(activeEl.value);
+      return;
+    } else {
+      activeEl.blur();
+    }
+  }
+
   if (!_calcShowExpr) {
     _calcShowExpr = true;
     _calcSavedExpr = '';
@@ -3930,6 +4787,12 @@ function calcEqual() {
 }
 
 function calcClear() {
+  var activeEl = document.activeElement;
+  if (activeEl && activeEl.id === 'calc-bill-qty-input') {
+    activeEl.value = '';
+    updateBillTokenQty('');
+    return;
+  }
   deactivateSticky();
   _calcSavedTokens = null;
   if (!_calcSavedExpr || _calcSavedExpr === '0') {
@@ -3963,6 +4826,14 @@ function calcClear() {
 }
 
 function calcBackspace() {
+  var activeEl = document.activeElement;
+  if (activeEl && activeEl.id === 'calc-bill-qty-input') {
+    if (activeEl.value.length > 0) {
+      activeEl.value = activeEl.value.slice(0, -1);
+      updateBillTokenQty(activeEl.value);
+    }
+    return;
+  }
   if (!_calcShowExpr) {
     calcTokens = [{v: '0', label: ''}];
     _calcShowExpr = true;
@@ -5397,7 +6268,7 @@ function updateMonochromeIcons() {
   if (modesMenu) {
     if (isMono) {
       modesMenu.innerHTML =
-        '<div class="modes-menu-item" onclick="selectModeFromMenu(\'quickbilling\')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:6px"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg> Quick Billing (POS Grid)</div>' +
+        '<div class="modes-menu-item" onclick="selectModeFromMenu(\'quickbilling\')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:6px"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg> Billing - POS</div>' +
         '<div class="modes-menu-item" onclick="selectModeFromMenu(\'date\')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:6px"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg> Date & Duration</div>' +
         '<div class="modes-menu-item" onclick="selectModeFromMenu(\'splitter\')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:6px"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg> Splitter</div>' +
         '<div class="modes-menu-item" onclick="selectModeFromMenu(\'fuel\')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:6px"><line x1="12" y1="20" x2="12" y2="10"></line><line x1="18" y1="20" x2="18" y2="4"></line><line x1="6" y1="20" x2="6" y2="16"></line></svg> Fuel & Trip</div>' +
@@ -5406,7 +6277,7 @@ function updateMonochromeIcons() {
         '<div class="modes-menu-item" onclick="selectModeFromMenu(\'scientific\')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:6px"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg> Scientific</div>';
     } else {
       modesMenu.innerHTML =
-        '<div class="modes-menu-item" onclick="selectModeFromMenu(\'quickbilling\')">🛒 Quick Billing (POS Grid)</div>' +
+        '<div class="modes-menu-item" onclick="selectModeFromMenu(\'quickbilling\')">🛒 Billing - POS</div>' +
         '<div class="modes-menu-item" onclick="selectModeFromMenu(\'date\')">🗓️ Date & Duration</div>' +
         '<div class="modes-menu-item" onclick="selectModeFromMenu(\'splitter\')">👥 Splitter</div>' +
         '<div class="modes-menu-item" onclick="selectModeFromMenu(\'fuel\')">⛽ Fuel & Trip</div>' +
@@ -7152,10 +8023,10 @@ function updateCalcHistoryVisibility() {
   var backHistBtn = document.getElementById('calc-back-hist-btn');
   var hasHistory = (typeof calcHistory !== 'undefined' && calcHistory && calcHistory.length > 0);
   if (mainHistBtn) {
-    mainHistBtn.style.display = (_calcMode === 'basic' && hasHistory) ? '' : 'none';
+    mainHistBtn.style.display = (_calcMode === 'basic' && hasHistory && _calcMode !== 'quickbilling') ? '' : 'none';
   }
   if (backHistBtn) {
-    var isSuppressed = (_calcMode === 'expenses' || _calcMode === 'splitter' || _calcMode === 'date' || _calcMode === 'basic');
+    var isSuppressed = (_calcMode === 'expenses' || _calcMode === 'splitter' || _calcMode === 'date' || _calcMode === 'basic' || _calcMode === 'quickbilling');
     backHistBtn.style.display = (!isSuppressed && hasHistory) ? 'inline-flex' : 'none';
   }
 }
