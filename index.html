@@ -69,6 +69,16 @@ html, body, .modal-container { touch-action: manipulation; }
 .theme-monochrome h1, .theme-monochrome h2, .theme-monochrome h3 {
   color: #ffffff !important;
 }
+.theme-monochrome svg {
+  stroke: #ffffff !important;
+  color: #ffffff !important;
+  fill: none;
+}
+.theme-monochrome .settings-btn svg,
+.theme-monochrome .modes-menu-item svg {
+  stroke: #ffffff !important;
+  color: #ffffff !important;
+}
 .theme-monochrome .mode-heading-btn.active {
   text-shadow: 0 0 12px rgba(255, 255, 255, 0.7) !important;
 }
@@ -491,8 +501,15 @@ details[open] summary:before { content:'▼'; }
 /* Skins */
 .skin-samsung #modal-calculator .modal-container { background: #000000 !important; }
 .skin-samsung #calc-display-wrap { background: #000000 !important; }
-.skin-samsung #calc-buttons button { border-radius: 50% !important; background: #1c1c1e !important; color: #ffffff !important; border: none !important; font-size: 1.4rem !important; overflow: hidden !important; -webkit-tap-highlight-color: transparent !important; outline: none !important; transition: transform 0.12s cubic-bezier(0.2, 0.8, 0.2, 1.2), box-shadow 0.12s ease, background 0.12s ease !important; }
-.skin-samsung #calc-buttons button:active, .skin-samsung #calc-buttons button.key-pressed { border-radius: 50% !important; transform: scale(0.91) !important; background: #4a4a4d !important; color: #ffffff !important; box-shadow: 0 0 22px rgba(255, 255, 255, 0.55), inset 0 0 10px rgba(255, 255, 255, 0.3) !important; outline: none !important; -webkit-tap-highlight-color: transparent !important; }
+#calc-buttons button:active, #calc-buttons button.key-pressed {
+  border-color: var(--color-accent) !important;
+}
+.theme-monochrome #calc-buttons button:active, .theme-monochrome #calc-buttons button.key-pressed {
+  border-color: #ffffff !important;
+}
+
+.skin-samsung #calc-buttons button { border-radius: 50% !important; background: #1c1c1e !important; color: #ffffff !important; border: 1.5px solid transparent !important; font-size: 1.4rem !important; overflow: hidden !important; -webkit-tap-highlight-color: transparent !important; outline: none !important; transition: transform 0.04s ease, border-color 0.04s ease !important; }
+.skin-samsung #calc-buttons button:active, .skin-samsung #calc-buttons button.key-pressed { border-radius: 50% !important; transform: scale(0.94) !important; background: #3a3a3d !important; color: #ffffff !important; border-color: var(--color-accent) !important; box-shadow: none !important; outline: none !important; -webkit-tap-highlight-color: transparent !important; }
 .skin-samsung #calc-buttons button:nth-child(4),
 .skin-samsung #calc-buttons button:nth-child(8),
 .skin-samsung #calc-buttons button:nth-child(12),
@@ -502,8 +519,8 @@ details[open] summary:before { content:'▼'; }
 
 .skin-ios #modal-calculator .modal-container { background: #000000 !important; }
 .skin-ios #calc-display-wrap { background: #000000 !important; }
-.skin-ios #calc-buttons button { border-radius: 50% !important; background: #333333 !important; color: #ffffff !important; border: none !important; font-size: 1.4rem !important; overflow: hidden !important; -webkit-tap-highlight-color: transparent !important; outline: none !important; transition: transform 0.12s cubic-bezier(0.2, 0.8, 0.2, 1.2), box-shadow 0.12s ease, background 0.12s ease !important; }
-.skin-ios #calc-buttons button:active, .skin-ios #calc-buttons button.key-pressed { border-radius: 50% !important; transform: scale(0.91) !important; background: #666666 !important; color: #ffffff !important; box-shadow: 0 0 22px rgba(255, 255, 255, 0.55), inset 0 0 10px rgba(255, 255, 255, 0.3) !important; outline: none !important; -webkit-tap-highlight-color: transparent !important; }
+.skin-ios #calc-buttons button { border-radius: 50% !important; background: #333333 !important; color: #ffffff !important; border: 1.5px solid transparent !important; font-size: 1.4rem !important; overflow: hidden !important; -webkit-tap-highlight-color: transparent !important; outline: none !important; transition: transform 0.04s ease, border-color 0.04s ease !important; }
+.skin-ios #calc-buttons button:active, .skin-ios #calc-buttons button.key-pressed { border-radius: 50% !important; transform: scale(0.94) !important; background: #555555 !important; color: #ffffff !important; border-color: #ff9f0a !important; box-shadow: none !important; outline: none !important; -webkit-tap-highlight-color: transparent !important; }
 .skin-ios #calc-buttons button:nth-child(4),
 .skin-ios #calc-buttons button:nth-child(8),
 .skin-ios #calc-buttons button:nth-child(12),
@@ -511,12 +528,12 @@ details[open] summary:before { content:'▼'; }
 .skin-ios #calc-buttons button:nth-child(20) { background: #ff9f0a !important; color: #ffffff !important; }
 .skin-ios #calc-buttons button:nth-child(1) { background: #a5a5a5 !important; color: #000000 !important; }
 
-.skin-modern #calc-buttons button { border-radius: 12px !important; transition: transform 0.12s cubic-bezier(0.2, 0.8, 0.2, 1.2), box-shadow 0.12s ease, background 0.12s ease !important; -webkit-tap-highlight-color: transparent !important; outline: none !important; }
-.skin-modern #calc-buttons button:active, .skin-modern #calc-buttons button.key-pressed { transform: scale(0.91) translateY(1px) !important; box-shadow: 0 0 20px var(--color-accent), inset 0 0 10px rgba(255, 255, 255, 0.35) !important; border-color: var(--color-accent) !important; }
+.skin-modern #calc-buttons button { border-radius: 12px !important; border: 1.5px solid var(--border-color) !important; transition: transform 0.04s ease, border-color 0.04s ease !important; -webkit-tap-highlight-color: transparent !important; outline: none !important; }
+.skin-modern #calc-buttons button:active, .skin-modern #calc-buttons button.key-pressed { transform: scale(0.94) !important; border-color: var(--color-accent) !important; box-shadow: none !important; opacity: 0.85 !important; }
 
 .skin-neon #modal-calculator .modal-container { background: #0b0e14 !important; }
-.skin-neon #calc-buttons button { border-radius: 14px !important; background: rgba(0,242,254,0.08) !important; color: #00f2fe !important; border: 1px solid rgba(0,242,254,0.3) !important; -webkit-tap-highlight-color: transparent !important; transition: transform 0.12s cubic-bezier(0.2, 0.8, 0.2, 1.2), box-shadow 0.12s ease, background 0.12s ease !important; }
-.skin-neon #calc-buttons button:active, .skin-neon #calc-buttons button.key-pressed { transform: scale(0.91) translateY(1px) !important; background: rgba(0,242,254,0.25) !important; box-shadow: 0 0 24px #00f2fe, 0 0 12px rgba(0,242,254,0.8), inset 0 0 12px rgba(0,242,254,0.5) !important; border-color: #00f2fe !important; }
+.skin-neon #calc-buttons button { border-radius: 14px !important; background: rgba(0,242,254,0.08) !important; color: #00f2fe !important; border: 1.5px solid rgba(0,242,254,0.3) !important; -webkit-tap-highlight-color: transparent !important; transition: transform 0.04s ease, border-color 0.04s ease !important; }
+.skin-neon #calc-buttons button:active, .skin-neon #calc-buttons button.key-pressed { transform: scale(0.94) !important; background: rgba(0,242,254,0.25) !important; border-color: #00f2fe !important; box-shadow: none !important; }
 .skin-neon #calc-buttons button:nth-child(4),
 .skin-neon #calc-buttons button:nth-child(8),
 .skin-neon #calc-buttons button:nth-child(12),
@@ -524,9 +541,9 @@ details[open] summary:before { content:'▼'; }
 .skin-neon #calc-buttons button:nth-child(4):active, .skin-neon #calc-buttons button:nth-child(4).key-pressed,
 .skin-neon #calc-buttons button:nth-child(8):active, .skin-neon #calc-buttons button:nth-child(8).key-pressed,
 .skin-neon #calc-buttons button:nth-child(12):active, .skin-neon #calc-buttons button:nth-child(12).key-pressed,
-.skin-neon #calc-buttons button:nth-child(16):active, .skin-neon #calc-buttons button:nth-child(16).key-pressed { background: rgba(255,0,127,0.3) !important; box-shadow: 0 0 24px #ff007f, 0 0 12px rgba(255,0,127,0.8), inset 0 0 12px rgba(255,0,127,0.5) !important; border-color: #ff007f !important; }
+.skin-neon #calc-buttons button:nth-child(16):active, .skin-neon #calc-buttons button:nth-child(16).key-pressed { background: rgba(255,0,127,0.3) !important; border-color: #ff007f !important; box-shadow: none !important; }
 .skin-neon #calc-buttons button:nth-child(20) { background: linear-gradient(135deg, #00f2fe, #4facfe) !important; color: #000000 !important; border: none !important; font-weight: 800 !important; }
-.skin-neon #calc-buttons button:nth-child(20):active, .skin-neon #calc-buttons button:nth-child(20).key-pressed { transform: scale(0.91) translateY(1px) !important; box-shadow: 0 0 28px #00f2fe, 0 0 14px #4facfe !important; }
+.skin-neon #calc-buttons button:nth-child(20):active, .skin-neon #calc-buttons button:nth-child(20).key-pressed { transform: scale(0.94) !important; border-color: #00f2fe !important; box-shadow: none !important; }
 
 @media (hover: hover) and (pointer: fine) {
   .skin-samsung #calc-buttons button:hover { background: #3a3a3d !important; }
@@ -563,6 +580,33 @@ body {
   overscroll-behavior-y: contain !important;
 }
 .modal-overlay.active { display: flex; }
+
+@keyframes btCardGlowPulse {
+  0% {
+    border-color: var(--color-accent) !important;
+    box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.7), inset 0 0 10px rgba(255, 107, 107, 0.3) !important;
+    transform: scale(1);
+  }
+  30% {
+    border-color: var(--color-accent) !important;
+    box-shadow: 0 0 25px var(--color-accent), inset 0 0 15px var(--color-accent) !important;
+    transform: scale(1.02);
+  }
+  70% {
+    border-color: var(--color-accent) !important;
+    box-shadow: 0 0 30px var(--color-accent), inset 0 0 20px var(--color-accent) !important;
+    transform: scale(1.02);
+  }
+  100% {
+    border-color: var(--border-color);
+    box-shadow: none;
+    transform: scale(1);
+  }
+}
+.bt-card-highlight {
+  border: 2px solid var(--color-accent) !important;
+  animation: btCardGlowPulse 2.8s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
+}
 #modal-add-expense, #modal-create-group, #modal-join-group { z-index:1001; }
 #modal-add-expense .modal-container { max-width:340px; }
 #modal-add-expense .field-row { display:flex; flex-direction:column; gap:0.25rem; margin-bottom:0.7rem; }
@@ -575,6 +619,39 @@ body {
 .aep-sc { font-size:0.88rem; font-weight:600; padding:0.5rem 0.85rem; border-radius:6px; border:1px solid var(--border-color); cursor:pointer; color:var(--text-muted); background:transparent; white-space:nowrap; }
 .aep-sc:hover { color:#fff; border-color:var(--color-accent); }
 .aep-sc.on { color:#fff; border-color:var(--color-accent); background:var(--color-accent); }
+@media print {
+  @page { size: auto; margin: 8mm; }
+  body * {
+    visibility: hidden !important;
+  }
+  #receipt-preview-content, #receipt-preview-content * {
+    visibility: visible !important;
+  }
+  #receipt-preview-content {
+    position: relative !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 auto !important;
+    padding: 10px !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+    box-shadow: none !important;
+    border: none !important;
+    font-size: 16px !important;
+    line-height: 1.5 !important;
+    border-radius: 0 !important;
+  }
+  .modal-overlay, .modal-container, button, .modal-header {
+    background: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+}
+
 .modal-container {
   background: var(--bg-secondary);
   border-radius: 10px;
@@ -762,10 +839,26 @@ body {
       <div style="margin-top:0.35rem;margin-bottom:1rem;background:var(--bg-tertiary);padding:0.75rem;border-radius:12px;border:1px solid var(--border-color);">
         <div style="font-size:0.8rem;font-weight:700;color:var(--color-accent);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.55rem;text-align:center;">🎨 APPEARANCE & THEMES</div>
         <div class="skin-picker-row" style="display:flex;gap:0.35rem;overflow-x:auto;margin-bottom:0.75rem;padding-bottom:2px;">
-          <button class="skin-option-btn" id="skin-btn-samsung" onclick="setCalcSkin('samsung')" style="flex:1;white-space:nowrap;">📱 Samsung</button>
-          <button class="skin-option-btn" id="skin-btn-ios" onclick="setCalcSkin('ios')" style="flex:1;white-space:nowrap;">🍎 iOS</button>
-          <button class="skin-option-btn" id="skin-btn-modern" onclick="setCalcSkin('modern')" style="flex:1;white-space:nowrap;">🔲 Modern</button>
-          <button class="skin-option-btn" id="skin-btn-neon" onclick="setCalcSkin('neon')" style="flex:1;white-space:nowrap;">✨ Neon</button>
+          <button class="skin-option-btn" id="skin-btn-samsung" onclick="previewSkinGlimpse('samsung')" style="flex:1;white-space:nowrap;">📱 Samsung</button>
+          <button class="skin-option-btn" id="skin-btn-ios" onclick="previewSkinGlimpse('ios')" style="flex:1;white-space:nowrap;">🍎 iOS</button>
+          <button class="skin-option-btn" id="skin-btn-modern" onclick="previewSkinGlimpse('modern')" style="flex:1;white-space:nowrap;">🔲 Modern</button>
+          <button class="skin-option-btn" id="skin-btn-neon" onclick="previewSkinGlimpse('neon')" style="flex:1;white-space:nowrap;">✨ Neon</button>
+        </div>
+        
+        <div id="skin-preview-card" style="display:none;margin-bottom:0.75rem;padding:0.6rem;background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:10px;text-align:center;">
+          <div style="font-size:0.75rem;font-weight:700;color:var(--color-accent);margin-bottom:0.4rem;" id="skin-preview-title">📱 SAMSUNG SKIN PREVIEW</div>
+          <div id="skin-preview-mini-calc" style="background:#000;padding:0.5rem;border-radius:8px;font-family:sans-serif;margin-bottom:0.5rem;">
+            <div style="text-align:right;color:#fff;font-size:1.1rem;font-weight:700;margin-bottom:6px;padding:2px 4px;border-bottom:1px solid #333;">12,450.00</div>
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:3px;">
+              <span style="background:#333;color:#fff;padding:4px;border-radius:4px;font-size:0.75rem;">7</span>
+              <span style="background:#333;color:#fff;padding:4px;border-radius:4px;font-size:0.75rem;">8</span>
+              <span style="background:#333;color:#fff;padding:4px;border-radius:4px;font-size:0.75rem;">9</span>
+              <span style="background:var(--color-accent);color:#fff;padding:4px;border-radius:4px;font-size:0.75rem;">÷</span>
+              <span style="background:#333;color:#fff;padding:4px;border-radius:4px;font-size:0.75rem;">4</span>
+              <span style="background:#333;color:#fff;padding:4px;border-radius:4px;font-size:0.75rem;">5</span>
+              <span style="background:#333;color:#fff;padding:4px;border-radius:4px;font-size:0.75rem;">6</span>
+            </div>
+          </div>
         </div>
         <div style="text-align:center;margin-bottom:0.35rem;font-size:0.75rem;color:var(--text-muted);font-weight:600;">COLOR ACCENT THEMES</div>
         <div style="display:flex;gap:0.45rem;justify-content:center;flex-wrap:wrap;">
@@ -777,6 +870,26 @@ body {
           <div class="theme-circle" data-theme="silver" style="background:#1b2028;border:2px solid #cbd5e1" onclick="setTheme('silver')" title="Metallic Silver"></div>
           <div class="theme-circle" data-theme="gold" style="background:#18150c;border:2px solid #facc15" onclick="setTheme('gold')" title="Subtle Cyber Gold"></div>
         </div>
+      </div>
+      <div class="toggle-row">
+        <div>
+          <span class="toggle-label">📳 HAPTIC VIBRATION</span>
+          <span class="toggle-desc">Subtle tactile vibration feedback on button press</span>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" id="vibe-mode-toggle" onchange="toggleVibeSetting(this.checked)">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+      <div class="toggle-row">
+        <div>
+          <span class="toggle-label">🔊 KEY CLICK SOUND</span>
+          <span class="toggle-desc">Subtle audio click feedback on button press</span>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" id="sound-mode-toggle" onchange="toggleSoundSetting(this.checked)">
+          <span class="toggle-slider"></span>
+        </label>
       </div>
       <div class="toggle-row">
         <div>
@@ -848,8 +961,123 @@ body {
           <span class="toggle-slider"></span>
         </label>
       </div>
-      <button onclick="openGuideModal()" style="display:block;width:100%;padding:0.6rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-tertiary);color:var(--text-primary);font-size:0.85rem;cursor:pointer;font-weight:600;text-align:center;text-transform:uppercase;margin-top:0.85rem;margin-bottom:0.4rem">How to use</button>
+      <div id="bt-printer-card" style="margin-top:0.75rem;margin-bottom:0.75rem;background:var(--bg-tertiary);padding:0.75rem;border-radius:12px;border:1px solid var(--border-color);transition:all 0.3s ease;">
+        <div style="font-size:0.8rem;font-weight:700;color:var(--color-accent);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.4rem;display:flex;align-items:center;justify-content:space-between;">
+          <span>🛜 BLUETOOTH PRINTER</span>
+          <span id="bt-printer-status" style="font-size:0.7rem;font-weight:600;color:var(--text-muted);">Not Paired</span>
+        </div>
+        <div style="display:flex;gap:0.4rem;">
+          <button onclick="connectBluetoothPrinter()" style="flex:1;padding:0.55rem 0.65rem;border:1px solid var(--border-color);border-radius:8px;background:var(--bg-secondary);color:var(--text-primary);font-size:0.82rem;font-weight:700;cursor:pointer;">🛜 Pair Bluetooth Printer</button>
+          <button onclick="printTestReceipt()" style="padding:0.55rem 0.65rem;border:1px solid var(--border-color);border-radius:8px;background:var(--bg-secondary);color:var(--text-primary);font-size:0.82rem;font-weight:700;cursor:pointer;" title="Test Thermal Print">🧪 Test</button>
+        </div>
+      </div>
+      <button onclick="openBillCustomizationModal()" style="display:block;width:100%;padding:0.65rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-secondary);color:var(--color-accent);font-size:0.85rem;cursor:pointer;font-weight:700;text-align:center;text-transform:uppercase;margin-top:0.6rem;margin-bottom:0.4rem;">📝 TEXT ON BILL PRINT / BILL HISTORY</button>
+      <div style="border-bottom:1px solid var(--border-color);margin:0.75rem 0;"></div>
+      <button onclick="openGuideModal()" style="display:block;width:100%;padding:0.6rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-tertiary);color:var(--text-primary);font-size:0.85rem;cursor:pointer;font-weight:600;text-align:center;text-transform:uppercase;margin-top:0.4rem;margin-bottom:0.4rem">HOW TO USE THE APP</button>
       <button id="nav-pos-btn" onclick="toggleNavPosition()" style="display:block;width:100%;padding:0.6rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-tertiary);color:var(--text-primary);font-size:0.85rem;cursor:pointer;font-weight:600;text-align:center;text-transform:uppercase;margin-bottom:0.4rem">📌 NAV POSITION: TOP</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-thermal-receipt" onclick="closeThermalReceiptModal(event)" style="z-index:1005;">
+  <div class="modal-container" onclick="event.stopPropagation()" style="max-width:380px;width:92%;padding:1.25rem;border-radius:18px;position:relative;background:var(--bg-secondary);border:1px solid var(--border-color);">
+    <button onclick="closeThermalReceiptModal()" style="position:absolute;right:14px;top:14px;width:32px;height:32px;border-radius:50%;background:#ffffff;color:#000000;border:2px solid #000000;font-size:1.1rem;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:99 !important;box-shadow:0 4px 14px rgba(0,0,0,0.5);">✕</button>
+    
+    <div id="receipt-preview-content" style="background:#ffffff;color:#000000;padding:1.4rem 1.1rem;font-family:'Courier New',Courier,monospace;font-size:0.88rem;border-radius:12px;margin-bottom:1.1rem;text-align:left;box-shadow:0 8px 24px rgba(0,0,0,0.3);line-height:1.35;">
+    </div>
+    
+    <div style="display:flex;flex-direction:column;gap:0.65rem;">
+      <button onclick="printCurrentReceiptBT()" style="width:100%;padding:0.85rem;border:none;border-radius:12px;background:#22c55e;color:#ffffff;font-weight:800;font-size:0.98rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 14px rgba(34,197,94,0.4);">
+        🖨️ Print Receipt
+      </button>
+      <button onclick="printCurrentReceiptPDF()" style="width:100%;padding:0.7rem;border:1px solid rgba(255,255,255,0.15);border-radius:12px;background:rgba(255,255,255,0.08);color:#ffffff;font-weight:700;font-size:0.88rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;">
+        💾 Save & Close
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-bill-customization" onclick="closeBillCustomizationModal(event)" style="z-index:1010;background:rgba(0,0,0,0.88);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);">
+  <div class="modal-container" onclick="event.stopPropagation()" style="max-width:96%;width:96%;max-height:88vh;overflow-y:auto;padding:1.25rem 1rem;border-radius:16px;box-sizing:border-box;position:relative;">
+    <button onclick="closeBillCustomizationModal()" style="position:absolute;right:14px;top:14px;width:30px;height:30px;border-radius:50%;background:var(--bg-tertiary);color:var(--text-primary);border:1px solid var(--border-color);font-size:0.95rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;" title="Close">✕</button>
+    <div class="modal-header" style="margin-bottom:1.2rem;">
+      <h3 style="font-size:0.9rem;font-weight:800;text-align:left;padding-right:48px;margin:0;line-height:1.35;">📝 TEXT ON BILL PRINT / BILL HISTORY</h3>
+    </div>
+    <div class="modal-body" style="padding:0;">
+      <div style="font-size:0.8rem;font-weight:800;color:var(--color-accent);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:0.85rem;">📝 BILL HEADER & FOOTER DETAILS</div>
+      
+      <div style="display:flex;flex-direction:column;gap:0.85rem;margin-bottom:1.2rem;">
+        <div>
+          <label style="font-size:0.78rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">Business / Store Name</label>
+          <input id="bill-bsns-name" placeholder="e.g. Krishna Traders" style="width:100%;padding:0.75rem 0.9rem;min-height:44px;border-radius:10px;border:1px solid var(--border-color);background:var(--bg-secondary);color:var(--text-primary);font-size:0.95rem;outline:none;box-sizing:border-box;">
+        </div>
+        <div>
+          <label style="font-size:0.78rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">Mobile / Contact Number (Optional)</label>
+          <input type="tel" inputmode="tel" id="bill-phone" placeholder="e.g. +91 9876543210" style="width:100%;padding:0.75rem 0.9rem;min-height:44px;border-radius:10px;border:1px solid var(--border-color);background:var(--bg-secondary);color:var(--text-primary);font-size:0.95rem;outline:none;box-sizing:border-box;">
+        </div>
+        <div>
+          <label style="font-size:0.78rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">Business / Store Address (Optional)</label>
+          <input id="bill-address" placeholder="e.g. Shop #12, Main Market, New Delhi" style="width:100%;padding:0.75rem 0.9rem;min-height:44px;border-radius:10px;border:1px solid var(--border-color);background:var(--bg-secondary);color:var(--text-primary);font-size:0.95rem;outline:none;box-sizing:border-box;">
+        </div>
+        <div>
+          <label style="font-size:0.78rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">GSTIN / Tax ID Number (Optional)</label>
+          <input id="bill-gstin" placeholder="e.g. 07AAAAA0000A1Z5" style="width:100%;padding:0.75rem 0.9rem;min-height:44px;border-radius:10px;border:1px solid var(--border-color);background:var(--bg-secondary);color:var(--text-primary);font-size:0.95rem;outline:none;box-sizing:border-box;">
+        </div>
+        <div style="display:flex;gap:0.5rem;">
+          <div style="flex:1;">
+            <label style="font-size:0.78rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">Tax / Charge % (Optional)</label>
+            <input type="number" inputmode="decimal" id="bill-tax-rate" placeholder="e.g. 12 for 12%" style="width:100%;padding:0.75rem 0.9rem;min-height:44px;border-radius:10px;border:1px solid var(--border-color);background:var(--bg-secondary);color:var(--text-primary);font-size:0.95rem;outline:none;box-sizing:border-box;">
+          </div>
+          <div style="flex:1;">
+            <label style="font-size:0.78rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">Tax / Charge Name</label>
+            <input id="bill-tax-label" placeholder="e.g. GST or Service Charge" style="width:100%;padding:0.75rem 0.9rem;min-height:44px;border-radius:10px;border:1px solid var(--border-color);background:var(--bg-secondary);color:var(--text-primary);font-size:0.95rem;outline:none;box-sizing:border-box;">
+          </div>
+        </div>
+        <div>
+          <label style="font-size:0.78rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">Header Tagline / Slogan (Optional)</label>
+          <input id="bill-header" placeholder="e.g. Quality Goods & Services" style="width:100%;padding:0.75rem 0.9rem;min-height:44px;border-radius:10px;border:1px solid var(--border-color);background:var(--bg-secondary);color:var(--text-primary);font-size:0.95rem;outline:none;box-sizing:border-box;">
+        </div>
+        <div>
+          <label style="font-size:0.78rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">Footer Thank You Message (Optional)</label>
+          <input id="bill-footer" placeholder="e.g. Thank You! Visit Again 🙏" style="width:100%;padding:0.75rem 0.9rem;min-height:44px;border-radius:10px;border:1px solid var(--border-color);background:var(--bg-secondary);color:var(--text-primary);font-size:0.95rem;outline:none;box-sizing:border-box;">
+        </div>
+
+        <div style="border-top:1px solid var(--border-color);padding-top:0.85rem;margin-top:0.25rem;">
+          <div style="font-size:0.8rem;font-weight:800;color:var(--color-accent);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:0.6rem;">📱 SOCIAL MEDIA LINKS</div>
+          <div id="social-links-container" style="display:flex;flex-direction:column;gap:0.5rem;margin-bottom:0.5rem;"></div>
+          <button onclick="addSocialLinkRow()" style="width:100%;padding:0.55rem;border:1px dashed var(--color-accent);border-radius:8px;background:none;color:var(--color-accent);font-size:0.82rem;font-weight:700;cursor:pointer;">➕ Add Social / Web Link</button>
+        </div>
+
+        <div style="border-top:1px solid var(--border-color);padding-top:0.85rem;margin-top:0.25rem;">
+          <div style="font-size:0.8rem;font-weight:800;color:var(--color-accent);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:0.6rem;">💳 UPI PAYMENT & QR CODE</div>
+          <div>
+            <label style="font-size:0.78rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">UPI ID / VPA (Optional)</label>
+            <input id="bill-upi-id" placeholder="e.g. shop@upi or 9876543210@paytm" style="width:100%;padding:0.75rem 0.9rem;min-height:44px;border-radius:10px;border:1px solid var(--border-color);background:var(--bg-secondary);color:var(--text-primary);font-size:0.95rem;outline:none;box-sizing:border-box;margin-bottom:0.65rem;">
+          </div>
+          <div>
+            <label style="font-size:0.78rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">Payment QR Code Image (Optional)</label>
+            <input type="file" id="bill-qr-file" accept="image/*" onchange="handleQRImageUpload(this)" style="display:none">
+            <div style="display:flex;gap:0.5rem;align-items:center;">
+              <button onclick="document.getElementById('bill-qr-file').click()" style="flex:1;padding:0.65rem;border:1px solid var(--border-color);border-radius:8px;background:var(--bg-tertiary);color:var(--text-primary);font-size:0.85rem;font-weight:700;cursor:pointer;">📷 Upload QR Code Image</button>
+              <button id="bill-qr-remove-btn" onclick="removeQRImage()" style="display:none;padding:0.65rem 0.85rem;border:none;border-radius:8px;background:#ff6b6b;color:#fff;font-size:0.82rem;font-weight:700;cursor:pointer;">Remove</button>
+            </div>
+            <div id="bill-qr-preview-wrap" style="display:none;margin-top:0.6rem;text-align:center;background:#fff;padding:0.5rem;border-radius:8px;border:1px solid #ccc;">
+              <img id="bill-qr-preview-img" style="max-width:140px;max-height:140px;object-fit:contain;">
+            </div>
+          </div>
+        </div>
+
+        <button onclick="saveBillProfile()" style="width:100%;padding:0.85rem;border:none;border-radius:10px;background:var(--color-accent);color:#fff;font-weight:800;font-size:0.95rem;cursor:pointer;margin-top:0.5rem;">💾 SAVE BILL PROFILE</button>
+      </div>
+
+      <div style="border-top:1px solid var(--border-color);padding-top:0.85rem;margin-top:0.85rem;">
+        <div onclick="toggleSavedBillsArchiveCollapse()" style="font-size:0.78rem;font-weight:700;color:var(--color-accent);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.6rem;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;">
+          <span>📂 SAVED BILLS & PDF ARCHIVE <span id="archive-toggle-caret" style="font-size:0.75rem;margin-left:4px;">▼</span></span>
+          <button onclick="event.stopPropagation();clearSavedBillsArchive()" style="background:none;border:none;color:#ff6b6b;font-size:0.72rem;cursor:pointer;font-weight:700;">Clear All</button>
+        </div>
+        <div id="saved-bills-archive-list" style="display:none;flex-direction:column;gap:0.45rem;max-height:220px;overflow-y:auto;">
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -1069,18 +1297,16 @@ body {
       </div>
 
       <div style="position:absolute;left:26%;top:50%;transform:translate(-50%,-50%);z-index:5;display:flex;align-items:center;justify-content:center;">
-        <button id="h-btn-expenses-icon" class="settings-btn" onclick="setCalcMode('expenses')" title="Expenses Tracker" style="border:none;background:none;font-size:1.3rem;cursor:pointer;padding:0 2px;display:inline-flex;align-items:center;justify-content:center;transition:all 0.15s;">💸</button>
+        <button id="h-btn-expenses-icon" class="settings-btn" onclick="setCalcMode('expenses')" title="Expenses Tracker" style="border:none;background:none;font-size:1.3rem;cursor:pointer;padding:0 2px;display:inline-flex;align-items:center;justify-content:center;transition:all 0.15s;color:var(--text-primary);">💸</button>
       </div>
 
       <div id="modes-dropdown-wrap" class="modes-dropdown-wrap" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);pointer-events:auto;z-index:10;">
-        <span id="h-btn-modes" class="mode-heading-btn" onclick="toggleModesMenu(event)" style="padding:0.2rem 0.65rem;display:inline-flex;align-items:center;gap:4px;font-weight:700;font-size:1.45rem;font-family:'Caveat',cursive;letter-spacing:0.02em;">Lazy Calc ▾</span>
+        <span id="h-btn-modes" class="mode-heading-btn" onclick="toggleModesMenu(event)" style="padding:0.25rem 0.65rem;display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:1.25rem;font-family:'Caveat',cursive;letter-spacing:0.02em;background:transparent;border:1px solid var(--border-color);border-radius:10px;cursor:pointer;">Lazy Calc <span class="hdr-chevron-svg" style="display:inline-flex;align-items:center;justify-content:center;transition:transform 0.25s ease;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span></span>
         <div id="modes-menu" class="modes-menu-popup" onclick="event.stopPropagation()">
           <div class="modes-menu-item" onclick="selectModeFromMenu('date')">🗓️ Date & Duration</div>
           <div class="modes-menu-item" onclick="selectModeFromMenu('splitter')">👥 Splitter</div>
-          <div class="modes-menu-item" onclick="selectModeFromMenu('gold')">🪙 Gold & Jewellery</div>
           <div class="modes-menu-item" onclick="selectModeFromMenu('fuel')">⛽ Fuel & Trip</div>
           <div class="modes-menu-item" onclick="selectModeFromMenu('emi')">📈 Loan EMI</div>
-          <div class="modes-menu-item" onclick="selectModeFromMenu('gst')">💰 GST & Tax</div>
           <div class="modes-menu-item" onclick="selectModeFromMenu('converter')">📏 Unit Converter</div>
           <div class="modes-menu-item" onclick="selectModeFromMenu('scientific')">📐 Scientific</div>
         </div>
@@ -1160,30 +1386,707 @@ var _fastInput = true;
 var _fastLazy = localStorage.getItem('fast_lazy') === 'true';
 var _recordExpenses = localStorage.getItem('calc_record_expenses') !== 'false';
 var _showWords = localStorage.getItem('calc_show_words') !== 'false';
+var _vibeEnabled = localStorage.getItem('calc_vibe_enabled') !== 'false';
+var _soundEnabled = localStorage.getItem('calc_sound_enabled') !== 'false';
+var _audioCtx = null;
+
+function unlockAudioContext() {
+  try {
+    if (!_audioCtx) {
+      _audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (_audioCtx && _audioCtx.state === 'suspended') {
+      _audioCtx.resume();
+    }
+  } catch(e){}
+}
+document.addEventListener('touchstart', unlockAudioContext, { passive: true });
+document.addEventListener('pointerdown', unlockAudioContext, { passive: true });
+document.addEventListener('click', unlockAudioContext, { passive: true });
+
+function playKeyClickSound() {
+  if (!_soundEnabled) return;
+  try {
+    unlockAudioContext();
+    if (!_audioCtx) return;
+    var t = _audioCtx.currentTime;
+    var osc = _audioCtx.createOscillator();
+    var gain = _audioCtx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(900, t);
+    osc.frequency.exponentialRampToValueAtTime(250, t + 0.035);
+    gain.gain.setValueAtTime(0.35, t);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.035);
+    osc.connect(gain);
+    gain.connect(_audioCtx.destination);
+    osc.start(t);
+    osc.stop(t + 0.035);
+  } catch(e){}
+}
+
+function triggerKeyVibration() {
+  if (!_vibeEnabled) return;
+  try {
+    if (navigator.vibrate) {
+      navigator.vibrate(10);
+    }
+  } catch(e){}
+}
+
+function toggleVibeSetting(v) {
+  _vibeEnabled = v;
+  localStorage.setItem('calc_vibe_enabled', v);
+}
+
+function toggleSoundSetting(v) {
+  _soundEnabled = v;
+  localStorage.setItem('calc_sound_enabled', v);
+}
+
+var _btDevice = null;
+
+async function connectBluetoothPrinter() {
+  if (!navigator.bluetooth) {
+    showToast('⚠️ Web Bluetooth API not supported in this browser. Use Chrome on Android/Desktop.');
+    return false;
+  }
+  try {
+    showToast('🔍 Scanning for Bluetooth Printers...');
+    var device = await navigator.bluetooth.requestDevice({
+      acceptAllDevices: true,
+      optionalServices: [
+        '00001101-0000-1000-8000-00805f9b34fb',
+        '000018f0-0000-1000-8000-00805f9b34fb'
+      ]
+    });
+    _btDevice = device;
+    var statusEl = document.getElementById('bt-printer-status');
+    if (statusEl) statusEl.textContent = 'Paired: ' + (device.name || 'Bluetooth Printer');
+    showToast('✅ Paired with ' + (device.name || 'Bluetooth Printer'));
+    localStorage.setItem('bt_printer_name', device.name || 'Bluetooth Printer');
+    return true;
+  } catch (err) {
+    if (err.name !== 'NotFoundError') {
+      showToast('⚠️ Bluetooth pairing failed: ' + err.message);
+    }
+    return false;
+  }
+}
+
+async function sendESCPOSToPrinter(uint8Array) {
+  if (!_btDevice) {
+    var connected = await connectBluetoothPrinter();
+    if (!connected || !_btDevice) return false;
+  }
+  try {
+    var server = await _btDevice.gatt.connect();
+    var services = await server.getPrimaryServices();
+    var characteristic = null;
+    
+    for (var i = 0; i < services.length; i++) {
+      var chars = await services[i].getCharacteristics();
+      for (var j = 0; j < chars.length; j++) {
+        if (chars[j].properties.write || chars[j].properties.writeWithoutResponse) {
+          characteristic = chars[j];
+          break;
+        }
+      }
+      if (characteristic) break;
+    }
+
+    if (!characteristic) {
+      showToast('⚠️ Printer write service not found');
+      return false;
+    }
+
+    var chunkSize = 100;
+    for (var offset = 0; offset < uint8Array.length; offset += chunkSize) {
+      var chunk = uint8Array.slice(offset, offset + chunkSize);
+      if (characteristic.properties.writeWithoutResponse) {
+        await characteristic.writeValueWithoutResponse(chunk);
+      } else {
+        await characteristic.writeValue(chunk);
+      }
+    }
+    showToast('🖨️ Sent to Bluetooth Printer!');
+    return true;
+  } catch (e) {
+    showToast('⚠️ Thermal print failed: ' + e.message);
+    return false;
+  }
+}
+
+function printTestReceipt() {
+  var encoder = new TextEncoder();
+  var init = new Uint8Array([0x1B, 0x40]);
+  var alignCenter = new Uint8Array([0x1B, 0x61, 0x01]);
+  var textBold = new Uint8Array([0x1B, 0x45, 0x01]);
+  var feedCut = new Uint8Array([0x0A, 0x0A, 0x0A, 0x1D, 0x56, 0x00]);
+
+  var str = "LAZY CALC POS\n--------------------------------\nTEST PRINT SUCCESSFUL!\nBluetooth Thermal Printer Ready\n--------------------------------\nDate: " + new Date().toLocaleString() + "\n\n";
+
+  var data = new Uint8Array(init.length + alignCenter.length + textBold.length + encoder.encode(str).length + feedCut.length);
+  var pos = 0;
+  data.set(init, pos); pos += init.length;
+  data.set(alignCenter, pos); pos += alignCenter.length;
+  data.set(textBold, pos); pos += textBold.length;
+  data.set(encoder.encode(str), pos); pos += encoder.encode(str).length;
+  data.set(feedCut, pos);
+
+  sendESCPOSToPrinter(data);
+}
+
+var _selectedPreviewSkin = 'samsung';
+
+function previewSkinGlimpse(skin) {
+  var card = document.getElementById('skin-preview-card');
+  var title = document.getElementById('skin-preview-title');
+  var miniCalc = document.getElementById('skin-preview-mini-calc');
+  if (!card || !title || !miniCalc) return;
+
+  if (_selectedPreviewSkin === skin && card.style.display === 'block') {
+    card.style.display = 'none';
+    _selectedPreviewSkin = null;
+    ['samsung', 'ios', 'modern', 'neon'].forEach(function(s) {
+      var b = document.getElementById('skin-btn-' + s);
+      if (b) {
+        b.classList.remove('active');
+        b.style.background = 'var(--bg-secondary)';
+        b.style.color = 'var(--text-primary)';
+      }
+    });
+    return;
+  }
+
+  _selectedPreviewSkin = skin;
+  setCalcSkin(skin);
+  card.style.display = 'block';
+
+  ['samsung', 'ios', 'modern', 'neon'].forEach(function(s) {
+    var b = document.getElementById('skin-btn-' + s);
+    if (b) {
+      if (s === skin) {
+        b.classList.add('active');
+        b.style.background = '#ffffff';
+        b.style.color = '#000000';
+      } else {
+        b.classList.remove('active');
+        b.style.background = 'var(--bg-secondary)';
+        b.style.color = 'var(--text-primary)';
+      }
+    }
+  });
+
+  var titles = {
+    samsung: '📱 SAMSUNG ONE-UI SKIN GLIMPSE',
+    ios: '🍎 iOS CIRCULAR FLAT SKIN GLIMPSE',
+    modern: '🔲 MODERN SLATE TILE SKIN GLIMPSE',
+    neon: '✨ NEON CYBER GLOW SKIN GLIMPSE'
+  };
+  title.textContent = titles[skin] || (skin.toUpperCase() + ' SKIN PREVIEW');
+
+  var isLight = document.body.classList.contains('theme-light');
+  var isMono = document.body.classList.contains('theme-monochrome');
+  var keyW = '34px';
+  var keyH = '34px';
+  var keyRadius = '6px';
+  var keyBg = '#333344';
+  var keyTextColor = '#ffffff';
+  var opBg = 'var(--color-accent)';
+  var opTextColor = '#ffffff';
+  var eqBg = 'var(--color-accent)';
+  var eqTextColor = '#ffffff';
+  var bg = '#0f172a';
+  var cardBorder = '1px solid var(--border-color)';
+  var keyShadow = 'none';
+
+  if (skin === 'samsung') {
+    bg = '#0a0d14';
+    keyW = '48px';
+    keyH = '30px';
+    keyRadius = '16px';
+    keyBg = '#1c2230';
+    keyTextColor = '#ffffff';
+    opBg = '#2c2c2e';
+    opTextColor = '#ffffff';
+    eqBg = '#048671';
+    eqTextColor = '#ffffff';
+  } else if (skin === 'ios') {
+    bg = '#000000';
+    keyW = '34px';
+    keyH = '34px';
+    keyRadius = '50%';
+    keyBg = '#333333';
+    keyTextColor = '#ffffff';
+    opBg = '#ff9f0a';
+    opTextColor = '#ffffff';
+    eqBg = '#ff9f0a';
+    eqTextColor = '#ffffff';
+  } else if (skin === 'neon') {
+    bg = '#0d021a';
+    keyW = '34px';
+    keyH = '34px';
+    keyRadius = '8px';
+    keyBg = '#18092a';
+    keyTextColor = '#00f3ff';
+    opBg = '#ff007f';
+    opTextColor = '#ffffff';
+    eqBg = 'linear-gradient(135deg, #00f2fe, #4facfe)';
+    eqTextColor = '#000000';
+    cardBorder = '1px solid #00f3ff';
+    keyShadow = '0 0 8px #00f3ff';
+  } else {
+    bg = isLight ? '#f8fafc' : 'var(--bg-primary)';
+    keyW = '34px';
+    keyH = '34px';
+    keyRadius = '6px';
+    keyBg = isLight ? '#e2e8f0' : 'var(--bg-secondary)';
+    keyTextColor = isLight ? '#0f172a' : 'var(--text-primary)';
+    opBg = isLight ? '#cbd5e1' : 'var(--bg-tertiary)';
+    opTextColor = isLight ? '#0f172a' : 'var(--text-primary)';
+    eqBg = isMono ? '#ffffff' : 'var(--color-accent)';
+    eqTextColor = (isMono || isLight) ? '#000000' : '#ffffff';
+  }
+
+  miniCalc.style.background = bg;
+  miniCalc.style.border = cardBorder;
+
+  var displayTextColor = isLight ? '#0f172a' : '#ffffff';
+
+  var html = '<div style="text-align:right;color:' + displayTextColor + ';font-size:1.15rem;font-weight:800;margin-bottom:8px;padding:4px 8px;background:rgba(128,128,128,0.12);border-radius:8px;">12,450.00</div>' +
+    '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;justify-items:center;">' +
+      '<span style="display:flex;align-items:center;justify-content:center;width:' + keyW + ';height:' + keyH + ';background:' + keyBg + ';color:' + keyTextColor + ';border-radius:' + keyRadius + ';font-size:0.85rem;font-weight:800;box-shadow:' + keyShadow + ';">7</span>' +
+      '<span style="display:flex;align-items:center;justify-content:center;width:' + keyW + ';height:' + keyH + ';background:' + keyBg + ';color:' + keyTextColor + ';border-radius:' + keyRadius + ';font-size:0.85rem;font-weight:800;box-shadow:' + keyShadow + ';">8</span>' +
+      '<span style="display:flex;align-items:center;justify-content:center;width:' + keyW + ';height:' + keyH + ';background:' + keyBg + ';color:' + keyTextColor + ';border-radius:' + keyRadius + ';font-size:0.85rem;font-weight:800;box-shadow:' + keyShadow + ';">9</span>' +
+      '<span style="display:flex;align-items:center;justify-content:center;width:' + keyW + ';height:' + keyH + ';background:' + opBg + ';color:' + opTextColor + ';border-radius:' + keyRadius + ';font-size:0.85rem;font-weight:800;box-shadow:' + keyShadow + ';">÷</span>' +
+      '<span style="display:flex;align-items:center;justify-content:center;width:' + keyW + ';height:' + keyH + ';background:' + keyBg + ';color:' + keyTextColor + ';border-radius:' + keyRadius + ';font-size:0.85rem;font-weight:800;box-shadow:' + keyShadow + ';">4</span>' +
+      '<span style="display:flex;align-items:center;justify-content:center;width:' + keyW + ';height:' + keyH + ';background:' + keyBg + ';color:' + keyTextColor + ';border-radius:' + keyRadius + ';font-size:0.85rem;font-weight:800;box-shadow:' + keyShadow + ';">5</span>' +
+      '<span style="display:flex;align-items:center;justify-content:center;width:' + keyW + ';height:' + keyH + ';background:' + keyBg + ';color:' + keyTextColor + ';border-radius:' + keyRadius + ';font-size:0.85rem;font-weight:800;box-shadow:' + keyShadow + ';">6</span>' +
+      '<span style="display:flex;align-items:center;justify-content:center;width:' + keyW + ';height:' + keyH + ';background:' + eqBg + ';color:' + eqTextColor + ';border-radius:' + keyRadius + ';font-size:0.85rem;font-weight:800;box-shadow:' + keyShadow + ';">=</span>' +
+    '</div>';
+
+  miniCalc.innerHTML = html;
+
+  miniCalc.innerHTML = html;
+}
+
+function applyPreviewedSkin() {
+  if (_selectedPreviewSkin) {
+    setCalcSkin(_selectedPreviewSkin);
+    closeSettingsModal();
+    showToast('✨ Applied ' + _selectedPreviewSkin.toUpperCase() + ' Skin!');
+  }
+}
+
+var _billProfile = (function() {
+  try {
+    var saved = localStorage.getItem('calc_bill_profile');
+    if (saved) return JSON.parse(saved);
+  } catch(e){}
+  return { bsnsName: '', phone: '', address: '', gstin: '', taxRate: '', taxLabel: 'GST', header: '', footer: 'Thank You for your Business!', upiId: '', qrImageData: '', socialLinks: [] };
+})();
+
+function handleQRImageUpload(input) {
+  if (input.files && input.files[0]) {
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      _billProfile.qrImageData = e.target.result;
+      updateQRPreviewUI();
+      showToast('📷 QR Code Image Uploaded!');
+    };
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+
+function removeQRImage() {
+  _billProfile.qrImageData = '';
+  updateQRPreviewUI();
+}
+
+function updateQRPreviewUI() {
+  var wrap = document.getElementById('bill-qr-preview-wrap');
+  var img = document.getElementById('bill-qr-preview-img');
+  var removeBtn = document.getElementById('bill-qr-remove-btn');
+  if (_billProfile.qrImageData) {
+    if (img) img.src = _billProfile.qrImageData;
+    if (wrap) wrap.style.display = 'block';
+    if (removeBtn) removeBtn.style.display = 'inline-block';
+  } else {
+    if (wrap) wrap.style.display = 'none';
+    if (removeBtn) removeBtn.style.display = 'none';
+  }
+}
+
+function addSocialLinkRow(platform, handle) {
+  var container = document.getElementById('social-links-container');
+  if (!container) return;
+  var row = document.createElement('div');
+  row.className = 'social-link-row';
+  row.style.display = 'flex';
+  row.style.flexWrap = 'wrap';
+  row.style.gap = '6px';
+  row.style.alignItems = 'center';
+  row.style.width = '100%';
+  row.style.maxWidth = '100%';
+  row.style.boxSizing = 'border-box';
+  row.style.marginBottom = '6px';
+  row.innerHTML =
+    '<select class="social-platform-sel" style="flex:1;min-width:110px;padding:0.55rem 0.4rem;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-secondary);color:var(--text-primary);font-size:0.85rem;outline:none;box-sizing:border-box;">' +
+      '<option value="Instagram"' + (platform === 'Instagram' ? ' selected' : '') + '>Instagram</option>' +
+      '<option value="WhatsApp"' + (platform === 'WhatsApp' ? ' selected' : '') + '>WhatsApp</option>' +
+      '<option value="Website"' + (platform === 'Website' ? ' selected' : '') + '>Website</option>' +
+      '<option value="Twitter/X"' + (platform === 'Twitter/X' ? ' selected' : '') + '>Twitter/X</option>' +
+      '<option value="Facebook"' + (platform === 'Facebook' ? ' selected' : '') + '>Facebook</option>' +
+    '</select>' +
+    '<input class="social-handle-inp" value="' + escHtml(handle || '') + '" placeholder="@shop / link" style="flex:2;min-width:130px;max-width:100%;padding:0.55rem 0.65rem;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-secondary);color:var(--text-primary);font-size:0.85rem;outline:none;box-sizing:border-box;">' +
+    '<button onclick="this.parentElement.remove()" style="padding:0.4rem 0.6rem;border:none;background:none;color:#ff6b6b;font-size:0.9rem;cursor:pointer;">🗑️</button>';
+  container.appendChild(row);
+}
+
+function renderSocialLinkRows() {
+  var container = document.getElementById('social-links-container');
+  if (!container) return;
+  container.innerHTML = '';
+  if (Array.isArray(_billProfile.socialLinks) && _billProfile.socialLinks.length) {
+    _billProfile.socialLinks.forEach(function(l) {
+      addSocialLinkRow(l.platform, l.handle);
+    });
+  } else {
+    addSocialLinkRow('Instagram', '');
+  }
+}
+
+function collectSocialLinks() {
+  var rows = document.querySelectorAll('.social-link-row');
+  var links = [];
+  rows.forEach(function(r) {
+    var sel = r.querySelector('.social-platform-sel');
+    var inp = r.querySelector('.social-handle-inp');
+    if (sel && inp && inp.value.trim()) {
+      links.push({ platform: sel.value, handle: inp.value.trim() });
+    }
+  });
+  return links;
+}
+
+function openBillCustomizationModal() {
+  var modal = document.getElementById('modal-bill-customization');
+  if (!modal) return;
+  document.getElementById('bill-bsns-name').value = _billProfile.bsnsName || '';
+  document.getElementById('bill-phone').value = _billProfile.phone || '';
+  document.getElementById('bill-address').value = _billProfile.address || '';
+  document.getElementById('bill-gstin').value = _billProfile.gstin || '';
+  document.getElementById('bill-tax-rate').value = _billProfile.taxRate || '';
+  document.getElementById('bill-tax-label').value = _billProfile.taxLabel || 'GST';
+  document.getElementById('bill-header').value = _billProfile.header || '';
+  document.getElementById('bill-footer').value = _billProfile.footer || 'Thank You for your Business!';
+  document.getElementById('bill-upi-id').value = _billProfile.upiId || '';
+  renderSocialLinkRows();
+  updateQRPreviewUI();
+  renderSavedBillsArchive();
+  modal.classList.add('active');
+}
+
+function saveBillProfile() {
+  _billProfile.bsnsName = document.getElementById('bill-bsns-name').value.trim();
+  _billProfile.phone = document.getElementById('bill-phone').value.trim();
+  _billProfile.address = document.getElementById('bill-address').value.trim();
+  _billProfile.gstin = document.getElementById('bill-gstin').value.trim();
+  _billProfile.taxRate = document.getElementById('bill-tax-rate').value.trim();
+  _billProfile.taxLabel = document.getElementById('bill-tax-label').value.trim() || 'GST';
+  _billProfile.header = document.getElementById('bill-header').value.trim();
+  _billProfile.footer = document.getElementById('bill-footer').value.trim();
+  _billProfile.upiId = document.getElementById('bill-upi-id').value.trim();
+  _billProfile.socialLinks = collectSocialLinks();
+  localStorage.setItem('calc_bill_profile', JSON.stringify(_billProfile));
+  closeBillCustomizationModal();
+  showToast('✅ Bill & Receipt Profile Saved!');
+}
+
+var _savedBillsArchive = (function() {
+  try {
+    var saved = localStorage.getItem('calc_saved_bills_archive');
+    if (saved) return JSON.parse(saved);
+  } catch(e){}
+  return [];
+})();
+
+var _archiveCollapsed = true;
+
+function toggleSavedBillsArchiveCollapse() {
+  _archiveCollapsed = !_archiveCollapsed;
+  var listEl = document.getElementById('saved-bills-archive-list');
+  var caretEl = document.getElementById('archive-toggle-caret');
+  if (caretEl) caretEl.textContent = _archiveCollapsed ? '▼' : '▲';
+  if (listEl) {
+    if (_archiveCollapsed) {
+      listEl.style.display = 'none';
+    } else {
+      renderSavedBillsArchive();
+      listEl.style.display = 'flex';
+      setTimeout(function() {
+        listEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+    }
+  }
+}
+
+function closeBillCustomizationModal(e) {
+  if (e && e.target !== e.currentTarget) return;
+  var modal = document.getElementById('modal-bill-customization');
+  if (modal) modal.classList.remove('active');
+}
+
+function saveBillToArchive(items, totalAmt, dateStr) {
+  var billId = Date.now();
+  _savedBillsArchive.unshift({
+    id: billId,
+    date: dateStr,
+    items: items,
+    total: totalAmt
+  });
+  if (_savedBillsArchive.length > 50) _savedBillsArchive.pop();
+  localStorage.setItem('calc_saved_bills_archive', JSON.stringify(_savedBillsArchive));
+}
+
+function renderSavedBillsArchive() {
+  var listEl = document.getElementById('saved-bills-archive-list');
+  if (!listEl) return;
+  if (!_savedBillsArchive.length) {
+    listEl.innerHTML = '<div style="font-size:0.78rem;color:var(--text-muted);text-align:center;padding:0.75rem;">No saved bills yet. Generate or print any receipt to save automatically here!</div>';
+    return;
+  }
+  var html = '';
+  _savedBillsArchive.forEach(function(b, idx) {
+    var amtStr = '₹' + Number(b.total || 0).toLocaleString('en-IN');
+    html += '<div style="background:var(--bg-secondary);padding:0.55rem 0.65rem;border-radius:8px;border:1px solid var(--border-color);display:flex;align-items:center;justify-content:space-between;gap:6px;">' +
+      '<div>' +
+        '<div style="font-size:0.82rem;font-weight:700;color:var(--text-primary);">Bill #' + (b.id % 10000) + ' • <span style="color:var(--color-accent);">' + amtStr + '</span></div>' +
+        '<div style="font-size:0.7rem;color:var(--text-muted);">' + b.date + '</div>' +
+      '</div>' +
+      '<div style="display:flex;gap:4px;">' +
+        '<button onclick="reopenArchivedBill(' + idx + ')" style="padding:0.3rem 0.5rem;font-size:0.75rem;border:1px solid var(--border-color);border-radius:6px;background:var(--bg-tertiary);color:var(--text-primary);cursor:pointer;font-weight:600;">📄 View</button>' +
+        '<button onclick="deleteArchivedBill(' + idx + ')" style="padding:0.3rem 0.4rem;font-size:0.75rem;border:none;border-radius:6px;background:none;color:#ff6b6b;cursor:pointer;">🗑️</button>' +
+      '</div>' +
+    '</div>';
+  });
+  listEl.innerHTML = html;
+}
+
+function reopenArchivedBill(idx) {
+  var b = _savedBillsArchive[idx];
+  if (!b) return;
+  closeBillCustomizationModal();
+  openThermalReceiptModal(b.items, b.total);
+}
+
+function deleteArchivedBill(idx) {
+  _savedBillsArchive.splice(idx, 1);
+  localStorage.setItem('calc_saved_bills_archive', JSON.stringify(_savedBillsArchive));
+  renderSavedBillsArchive();
+}
+
+function clearSavedBillsArchive() {
+  if (confirm('Clear all saved bills archive?')) {
+    _savedBillsArchive = [];
+    localStorage.setItem('calc_saved_bills_archive', JSON.stringify(_savedBillsArchive));
+    renderSavedBillsArchive();
+  }
+}
+
+var _activeReceiptData = null;
+
+function openThermalReceiptModal(items, totalAmt) {
+  var modal = document.getElementById('modal-thermal-receipt');
+  var content = document.getElementById('receipt-preview-content');
+  if (!modal || !content) return;
+
+  try {
+    var savedP = localStorage.getItem('calc_bill_profile');
+    if (savedP) _billProfile = JSON.parse(savedP);
+  } catch(e){}
+
+  var now = new Date();
+  var dateStr = now.toLocaleDateString('en-IN');
+  var timeStr = now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+  _activeReceiptData = { items: items, total: totalAmt, date: dateStr + ' ' + timeStr };
+  saveBillToArchive(items, totalAmt, dateStr + ' ' + timeStr);
+
+  var bsnsName = _billProfile.bsnsName || 'LAZY CALC POS';
+  var phoneStr = _billProfile.phone ? ('Mob: ' + _billProfile.phone) : '';
+  var addressStr = _billProfile.address || '';
+  var gstinStr = _billProfile.gstin ? ('GSTIN: ' + _billProfile.gstin) : '';
+  var headerStr = _billProfile.header || '';
+  var footerStr = _billProfile.footer || 'Thank You for your Business!';
+  var upiStr = _billProfile.upiId ? ('Pay UPI: ' + _billProfile.upiId) : '';
+
+  var html = '<div style="text-align:center;font-weight:800;font-size:1.15rem;margin-bottom:2px;">' + escHtml(bsnsName) + '</div>';
+  if (addressStr) html += '<div style="text-align:center;font-size:0.74rem;color:#444;">' + escHtml(addressStr) + '</div>';
+  if (phoneStr) html += '<div style="text-align:center;font-size:0.75rem;color:#444;">' + escHtml(phoneStr) + '</div>';
+  if (gstinStr) html += '<div style="text-align:center;font-size:0.75rem;font-weight:700;color:#333;margin-top:1px;">' + escHtml(gstinStr) + '</div>';
+  if (headerStr) html += '<div style="text-align:center;font-size:0.72rem;color:#555;margin-top:2px;">' + escHtml(headerStr) + '</div>';
+  
+  html += '<div style="display:flex;justify-content:space-between;font-size:0.75rem;color:#444;margin-top:8px;margin-bottom:6px;">' +
+    '<span>Date: ' + dateStr + '</span>' +
+    '<span>Time: ' + timeStr + '</span>' +
+  '</div>' +
+  '<div style="border-bottom:1px dashed #666;margin-bottom:8px;"></div>';
+
+  var subtotal = Number(totalAmt || 0);
+  var taxRate = parseFloat(_billProfile.taxRate) || 0;
+  var taxLabel = _billProfile.taxLabel || 'GST';
+  var taxAmt = taxRate > 0 ? (subtotal * (taxRate / 100)) : 0;
+  var grandTotal = subtotal + taxAmt;
+
+  if (Array.isArray(items) && items.length) {
+    items.forEach(function(item) {
+      var label = item.label || item.desc || 'Item';
+      var q = item.qty || 1;
+      var unitPrice = item.unitPrice !== undefined ? item.unitPrice : item.val;
+      var val = item.val || 0;
+      var amtStr = '₹' + Number(val).toLocaleString('en-IN');
+      var itemLine = q > 1 ? (q + ' x ' + escHtml(label) + ' (@ ₹' + unitPrice + ')') : (q + ' x ' + escHtml(label));
+      html += '<div style="display:flex;justify-content:space-between;margin-bottom:4px;font-size:0.85rem;">' +
+        '<span>' + itemLine + '</span>' +
+        '<span style="font-weight:700;">' + amtStr + '</span>' +
+      '</div>';
+    });
+  } else {
+    html += '<div style="margin-bottom:4px;font-size:0.85rem;">1 x Calculation Total</div>';
+  }
+
+  if (taxRate > 0) {
+    html += '<div style="border-top:1px dashed #aaa;margin-top:6px;padding-top:6px;display:flex;justify-content:space-between;font-size:0.85rem;color:#444;">' +
+      '<span>Subtotal:</span>' +
+      '<span>₹' + subtotal.toLocaleString('en-IN') + '</span>' +
+    '</div>' +
+    '<div style="display:flex;justify-content:space-between;font-size:0.85rem;color:#444;margin-top:2px;">' +
+      '<span>' + escHtml(taxLabel) + ' (' + taxRate + '%):</span>' +
+      '<span>₹' + taxAmt.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '</span>' +
+    '</div>';
+  }
+
+  html += '<div style="border-top:1px dashed #666;margin-top:8px;padding-top:8px;display:flex;justify-content:space-between;font-weight:800;font-size:0.98rem;">' +
+    '<span>TOTAL AMOUNT:</span>' +
+    '<span>₹' + grandTotal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '</span>' +
+  '</div>';
+
+  if (_billProfile.qrImageData || upiStr) {
+    html += '<div style="text-align:center;margin-top:10px;padding-top:6px;border-top:1px dashed #aaa;">';
+    if (_billProfile.qrImageData) {
+      html += '<img src="' + _billProfile.qrImageData + '" style="max-width:110px;max-height:110px;object-fit:contain;margin-bottom:4px;"><br>';
+    }
+    if (upiStr) html += '<span style="font-size:0.75rem;font-weight:700;color:#222;">' + escHtml(upiStr) + '</span>';
+    html += '</div>';
+  }
+
+  if (Array.isArray(_billProfile.socialLinks) && _billProfile.socialLinks.length) {
+    html += '<div style="text-align:center;font-size:0.72rem;color:#444;margin-top:6px;">';
+    _billProfile.socialLinks.forEach(function(s) {
+      html += escHtml(s.platform + ': ' + s.handle) + '  ';
+    });
+    html += '</div>';
+  }
+
+  html += '<div style="text-align:center;font-size:0.8rem;font-weight:700;color:#222;margin-top:10px;">* ' + escHtml(footerStr) + ' *</div>';
+
+  content.innerHTML = html;
+  modal.classList.add('active');
+}
+
+function closeThermalReceiptModal(e) {
+  if (e && e.target !== e.currentTarget) return;
+  var modal = document.getElementById('modal-thermal-receipt');
+  if (modal) modal.classList.remove('active');
+}
+
+function printCurrentReceiptBT() {
+  if (!_btDevice) {
+    closeThermalReceiptModal();
+    showToast('🛜 Printer Not Connected! Opening Settings...');
+    openSettingsModal();
+    setTimeout(function() {
+      var card = document.getElementById('bt-printer-card');
+      if (card) {
+        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        card.classList.remove('bt-card-highlight');
+        void card.offsetWidth;
+        card.classList.add('bt-card-highlight');
+      }
+    }, 280);
+    return;
+  }
+  if (!_activeReceiptData) return;
+
+  var encoder = new TextEncoder();
+  var init = new Uint8Array([0x1B, 0x40]);
+  var alignCenter = new Uint8Array([0x1B, 0x61, 0x01]);
+  var textBold = new Uint8Array([0x1B, 0x45, 0x01]);
+  var feedCut = new Uint8Array([0x0A, 0x0A, 0x0A, 0x1D, 0x56, 0x00]);
+
+  var bsnsName = _billProfile.bsnsName || 'LAZY CALC POS';
+  var phoneStr = _billProfile.phone ? ('Mob: ' + _billProfile.phone) : '';
+  var headerStr = _billProfile.header || '';
+  var footerStr = _billProfile.footer || 'Thank You for your Business!';
+  var socialStr = _billProfile.social || '';
+
+  var str = bsnsName + "\n";
+  if (phoneStr) str += phoneStr + "\n";
+  if (headerStr) str += headerStr + "\n";
+  str += "--------------------------------\nDate: " + _activeReceiptData.date + "\n--------------------------------\n";
+  if (Array.isArray(_activeReceiptData.items)) {
+    _activeReceiptData.items.forEach(function(it) {
+      str += (it.label || it.desc || 'Item') + ": Rs " + (it.val || it.amount || 0) + "\n";
+    });
+  }
+  str += "--------------------------------\nTOTAL: Rs " + _activeReceiptData.total + "\n--------------------------------\n" + footerStr + "\n";
+  if (socialStr) str += socialStr + "\n";
+  str += "\n\n";
+
+  var data = new Uint8Array(init.length + alignCenter.length + textBold.length + encoder.encode(str).length + feedCut.length);
+  var pos = 0;
+  data.set(init, pos); pos += init.length;
+  data.set(alignCenter, pos); pos += alignCenter.length;
+  data.set(textBold, pos); pos += textBold.length;
+  data.set(encoder.encode(str), pos); pos += encoder.encode(str).length;
+  data.set(feedCut, pos);
+
+  sendESCPOSToPrinter(data);
+}
+
+function printCurrentReceiptPDF() {
+  closeThermalReceiptModal();
+  showToast('✅ Bill Saved! Access & view anytime in ⚙️ Settings > 🏷️ Customize Bill > 📂 Saved Bills Archive');
+}
 var _kMode = localStorage.getItem('calc_k_mode') === 'true';
 var _shareMode = localStorage.getItem('calc_share_mode') || 'whatsapp';
 var _billMode = localStorage.getItem('calc_bill_mode') === 'true';
 var _navBottom = localStorage.getItem('calc_nav_bottom') === 'true';
 var _expensesNewCount = 0;
 
+function getHeaderChevronSvg() {
+  return '<span class="hdr-chevron-svg" style="display:inline-flex;align-items:center;justify-content:center;transition:transform 0.25s ease;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span>';
+}
+
 function updateNavPositionUI() {
   var btn = document.getElementById('nav-pos-btn');
   if (btn) btn.textContent = _navBottom ? '📌 NAV POSITION: BOTTOM' : '📌 NAV POSITION: TOP';
   var modesBtn = document.getElementById('h-btn-modes');
   if (modesBtn) {
+    var chev = getHeaderChevronSvg();
     var titles = {
-      basic: 'Lazy Calc ▾',
-      expenses: '<span style="color:#25D366;text-shadow:0 0 10px rgba(37,211,102,0.6)">💸 Expenses ▾</span>',
-      date: '<span style="color:#f43f5e;text-shadow:0 0 10px rgba(244,63,94,0.6)">🗓️ Date & Duration ▾</span>',
-      splitter: '<span style="color:#c084fc;text-shadow:0 0 10px rgba(192,132,252,0.6)">👥 Splitter ▾</span>',
-      gold: '<span style="color:#fde047;text-shadow:0 0 10px rgba(253,224,71,0.6)">🪙 Gold & Jewellery ▾</span>',
-      fuel: '<span style="color:#fb923c;text-shadow:0 0 10px rgba(251,146,60,0.6)">⛽ Fuel & Trip ▾</span>',
-      emi: '<span style="color:#34d399;text-shadow:0 0 10px rgba(52,211,153,0.6)">📈 Loan EMI ▾</span>',
-      gst: '<span style="color:#fbbf24;text-shadow:0 0 10px rgba(251,191,36,0.6)">💰 GST & Tax ▾</span>',
-      converter: '<span style="color:#60a5fa;text-shadow:0 0 10px rgba(96,165,250,0.6)">📏 Unit Converter ▾</span>',
-      scientific: '<span style="color:#a78bfa;text-shadow:0 0 10px rgba(167,139,250,0.6)">📐 Scientific ▾</span>'
+      basic: 'Lazy Calc ' + chev,
+      expenses: '<span style="color:#25D366;text-shadow:0 0 10px rgba(37,211,102,0.6)">💸 Expenses</span> ' + chev,
+      date: '<span style="color:#f43f5e;text-shadow:0 0 10px rgba(244,63,94,0.6)">🗓️ Date & Duration</span> ' + chev,
+      splitter: '<span style="color:#c084fc;text-shadow:0 0 10px rgba(192,132,252,0.6)">👥 Splitter</span> ' + chev,
+      gold: '<span style="color:#fde047;text-shadow:0 0 10px rgba(253,224,71,0.6)">🪙 Gold & Jewellery</span> ' + chev,
+      fuel: '<span style="color:#fb923c;text-shadow:0 0 10px rgba(251,146,60,0.6)">⛽ Fuel & Trip</span> ' + chev,
+      emi: '<span style="color:#34d399;text-shadow:0 0 10px rgba(52,211,153,0.6)">📈 Loan EMI</span> ' + chev,
+      gst: '<span style="color:#fbbf24;text-shadow:0 0 10px rgba(251,191,36,0.6)">💰 GST & Tax</span> ' + chev,
+      converter: '<span style="color:#60a5fa;text-shadow:0 0 10px rgba(96,165,250,0.6)">📏 Unit Converter</span> ' + chev,
+      scientific: '<span style="color:#a78bfa;text-shadow:0 0 10px rgba(167,139,250,0.6)">📐 Scientific</span> ' + chev
     };
-    modesBtn.innerHTML = titles[_calcMode] || 'Lazy Calc ▾';
+    modesBtn.innerHTML = titles[_calcMode] || ('Lazy Calc ' + chev);
     modesBtn.style.fontFamily = _calcMode === 'basic' ? "'Caveat', cursive" : 'inherit';
   }
   var mainCalc = document.getElementById('modal-calculator');
@@ -1780,7 +2683,6 @@ function applyCalcSkin(skin) {
 
 function setCalcSkin(skin) {
   applyCalcSkin(skin);
-  showToast('🎨 Skin updated: ' + skin.toUpperCase());
 }
 
 function openSettingsModal() {
@@ -1823,6 +2725,7 @@ function setTheme(name) {
   var dot = document.querySelector('.theme-circle[data-theme="' + name + '"]');
   if (dot) dot.classList.add('active');
   document.querySelector('meta[name="theme-color"]').content = getComputedStyle(body).getPropertyValue('--color-accent').trim();
+  updateMonochromeIcons();
 }
 
 function toggleFastInput(v) {
@@ -1893,17 +2796,21 @@ function doShare(text, title) {
 function toggleModesMenu(e) {
   if (e) e.stopPropagation();
   var menu = document.getElementById('modes-menu');
+  var btn = document.getElementById('h-btn-modes');
   if (menu) {
-    menu.classList.toggle('active');
+    var isOpen = menu.classList.toggle('active');
+    if (btn) btn.classList.toggle('menu-open', isOpen);
   }
 }
 
 document.addEventListener('click', function(e) {
   var menu = document.getElementById('modes-menu');
+  var btn = document.getElementById('h-btn-modes');
   if (menu && menu.classList.contains('active')) {
     var wrap = document.getElementById('modes-dropdown-wrap');
     if (wrap && !wrap.contains(e.target)) {
       menu.classList.remove('active');
+      if (btn) btn.classList.remove('menu-open');
     }
   }
 });
@@ -1952,18 +2859,28 @@ function applyCalcMode(name) {
   var expIconBtn = document.getElementById('h-btn-expenses-icon');
   var backHistBtn = document.getElementById('calc-back-hist-btn');
   var mainHistBtn = document.getElementById('h-btn-history');
+  var voiceBtn = document.getElementById('calc-voice-btn');
 
-  var modeTitles = {
-    basic: 'Lazy Calc ▾',
-    expenses: '<span style="color:#25D366;text-shadow:0 0 10px rgba(37,211,102,0.6)">💸 Expenses ▾</span>',
-    date: '<span style="color:#f43f5e;text-shadow:0 0 10px rgba(244,63,94,0.6)">🗓️ Date & Duration ▾</span>',
-    splitter: '<span style="color:#c084fc;text-shadow:0 0 10px rgba(192,132,252,0.6)">👥 Splitter ▾</span>',
-    gold: '<span style="color:#fde047;text-shadow:0 0 10px rgba(253,224,71,0.6)">🪙 Gold & Jewellery ▾</span>',
-    fuel: '<span style="color:#fb923c;text-shadow:0 0 10px rgba(251,146,60,0.6)">⛽ Fuel & Trip ▾</span>',
-    emi: '<span style="color:#34d399;text-shadow:0 0 10px rgba(52,211,153,0.6)">📈 Loan EMI ▾</span>',
-    gst: '<span style="color:#fbbf24;text-shadow:0 0 10px rgba(251,191,36,0.6)">💰 GST & Tax ▾</span>',
-    converter: '<span style="color:#60a5fa;text-shadow:0 0 10px rgba(96,165,250,0.6)">📏 Unit Converter ▾</span>',
-    scientific: '<span style="color:#a78bfa;text-shadow:0 0 10px rgba(167,139,250,0.6)">📐 Scientific ▾</span>'
+  var isMono = (_calcTheme === 'monochrome');
+  var chev = getHeaderChevronSvg();
+  var modeTitles = isMono ? {
+    basic: 'Lazy Calc ' + chev,
+    expenses: '<span style="color:#fff;display:inline-flex;align-items:center;gap:4px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg> Expenses</span> ' + chev,
+    date: '<span style="color:#fff;display:inline-flex;align-items:center;gap:4px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg> Date & Duration</span> ' + chev,
+    splitter: '<span style="color:#fff;display:inline-flex;align-items:center;gap:4px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg> Splitter</span> ' + chev,
+    fuel: '<span style="color:#fff;display:inline-flex;align-items:center;gap:4px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"></line><line x1="18" y1="20" x2="18" y2="4"></line><line x1="6" y1="20" x2="6" y2="16"></line></svg> Fuel & Trip</span> ' + chev,
+    emi: '<span style="color:#fff;display:inline-flex;align-items:center;gap:4px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg> Loan EMI</span> ' + chev,
+    converter: '<span style="color:#fff;display:inline-flex;align-items:center;gap:4px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg> Unit Converter</span> ' + chev,
+    scientific: '<span style="color:#fff;display:inline-flex;align-items:center;gap:4px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg> Scientific</span> ' + chev
+  } : {
+    basic: 'Lazy Calc ' + chev,
+    expenses: '<span style="color:#25D366;text-shadow:0 0 10px rgba(37,211,102,0.6)">💸 Expenses</span> ' + chev,
+    date: '<span style="color:#f43f5e;text-shadow:0 0 10px rgba(244,63,94,0.6)">🗓️ Date & Duration</span> ' + chev,
+    splitter: '<span style="color:#c084fc;text-shadow:0 0 10px rgba(192,132,252,0.6)">👥 Splitter</span> ' + chev,
+    fuel: '<span style="color:#fb923c;text-shadow:0 0 10px rgba(251,146,60,0.6)">⛽ Fuel & Trip</span> ' + chev,
+    emi: '<span style="color:#34d399;text-shadow:0 0 10px rgba(52,211,153,0.6)">📈 Loan EMI</span> ' + chev,
+    converter: '<span style="color:#60a5fa;text-shadow:0 0 10px rgba(96,165,250,0.6)">📏 Unit Converter</span> ' + chev,
+    scientific: '<span style="color:#a78bfa;text-shadow:0 0 10px rgba(167,139,250,0.6)">📐 Scientific</span> ' + chev
   };
 
   if (name === 'basic') {
@@ -1981,10 +2898,11 @@ function applyCalcMode(name) {
     if (hDate) { hDate.classList.remove('active'); hDate.style.display = ''; hDate.textContent = '🗓️'; }
     if (hExpenses) { hExpenses.classList.remove('active'); hExpenses.style.display = ''; }
     if (expIconBtn) { expIconBtn.style.display = ''; }
+    if (voiceBtn) { voiceBtn.style.display = ''; }
     if (hModesBtn) {
       hModesBtn.classList.remove('active');
       hModesBtn.style.display = '';
-      hModesBtn.innerHTML = 'Lazy Calc ▾';
+      hModesBtn.innerHTML = 'Lazy Calc ' + chev;
       hModesBtn.style.fontFamily = "'Caveat', cursive";
     }
     if (histBtn) histBtn.style.display = '';
@@ -1992,6 +2910,7 @@ function applyCalcMode(name) {
     if (expWaBtn) expWaBtn.style.display = 'none';
     updateCalcHistoryVisibility();
   } else {
+    if (_isVoiceListening) stopVoiceCalc();
     expr.style.display = 'none';
     editor.style.display = 'none';
     buttons.style.display = 'none';
@@ -2008,6 +2927,7 @@ function applyCalcMode(name) {
     if (hDate) { hDate.classList.toggle('active', name === 'date'); hDate.style.display = name === 'date' ? '' : 'none'; hDate.textContent = name === 'date' ? '🗓️ DATE CALCULATOR' : '🗓️'; }
     if (hExpenses) { hExpenses.classList.toggle('active', name === 'expenses'); hExpenses.style.display = name === 'expenses' ? '' : 'none'; hExpenses.textContent = '💸 EXPENSES'; }
     if (expIconBtn) { expIconBtn.style.display = 'none'; }
+    if (voiceBtn) { voiceBtn.style.display = 'none'; }
     if (hModesBtn) {
       var isSpecialized = ['splitter','gold','fuel','emi','gst','converter','scientific','expenses','date'].indexOf(name) !== -1;
       hModesBtn.classList.toggle('active', isSpecialized);
@@ -2023,10 +2943,8 @@ function applyCalcMode(name) {
     if (name === 'date') { if (modalBody) modalBody.classList.remove('sp-mode'); renderDateMode(modeBody, display); }
     else if (name === 'expenses') { if (modalBody) modalBody.classList.add('sp-mode'); _expensesNewCount = 0; updateExpensesBadge(); renderExpensesMode(modeBody); }
     else if (name === 'splitter') { if (modalBody) modalBody.classList.add('sp-mode'); renderSplitterMode(modeBody); }
-    else if (name === 'gold') { if (modalBody) modalBody.classList.remove('sp-mode'); renderGoldMode(modeBody); }
     else if (name === 'fuel') { if (modalBody) modalBody.classList.remove('sp-mode'); renderFuelMode(modeBody); }
     else if (name === 'emi') { if (modalBody) modalBody.classList.remove('sp-mode'); renderEmiMode(modeBody); }
-    else if (name === 'gst') { if (modalBody) modalBody.classList.remove('sp-mode'); renderGstMode(modeBody); }
     else if (name === 'converter') { if (modalBody) modalBody.classList.remove('sp-mode'); renderConverterMode(modeBody); }
     else if (name === 'scientific') { if (modalBody) modalBody.classList.add('sp-mode'); renderScientificMode(modeBody); }
   }
@@ -2059,7 +2977,7 @@ function setCalcMode(name) {
     renderCalcHistory();
     return;
   }
-  if (['date','expenses','splitter','gold','fuel','emi','gst','converter','scientific'].indexOf(name) !== -1 && _calcMode === name) { setCalcMode('basic'); return; }
+  if (['date','expenses','splitter','fuel','emi','converter','scientific'].indexOf(name) !== -1 && _calcMode === name) { setCalcMode('basic'); return; }
   if (_calcMode === name) return;
   _calcMode = name;
   localStorage.setItem('calc_mode', name);
@@ -2108,6 +3026,8 @@ function releaseKeyFeedback(el) {
 
 function triggerKeyFeedback(el) {
   if (!el) return;
+  triggerKeyVibration();
+  playKeyClickSound();
   if (el._pressTimer) {
     clearTimeout(el._pressTimer);
     el._pressTimer = null;
@@ -2118,7 +3038,7 @@ function triggerKeyFeedback(el) {
   el._pressTimer = setTimeout(function() {
     el.classList.remove('key-pressed');
     el._pressTimer = null;
-  }, 50);
+  }, 25);
 }
 
 function renderCalcButtons() {
@@ -2458,6 +3378,17 @@ function updateOutputWords(num) {
   el.style.visibility = 'hidden';
 }
 
+function updateBillTokenQty(val) {
+  var curIdx = _editingCalcToken !== -1 ? _editingCalcToken : calcTokens.length - 1;
+  while (curIdx >= 0 && ['+','-','*','/','%'].indexOf(calcTokens[curIdx].v) !== -1) {
+    curIdx--;
+  }
+  if (curIdx >= 0 && calcTokens[curIdx]) {
+    calcTokens[curIdx].qty = val;
+    calcUpdateDisplay(true);
+  }
+}
+
 function updateBillTokenValue(val) {
   var curIdx = _editingCalcToken !== -1 ? _editingCalcToken : calcTokens.length - 1;
   while (curIdx >= 0 && ['+','-','*','/','%'].indexOf(calcTokens[curIdx].v) !== -1) {
@@ -2481,73 +3412,34 @@ function updateBillTokenLabel(val) {
 }
 
 function printBill() {
-  var str = calcExprFromTokens();
-  var result = _calcShowExpr ? evalExpr(str) : _calcSavedResult;
-  if (!isFinite(result) || calcTokens.length === 0) {
+  if (calcTokens.length === 0) {
     showToast('No items to print');
     return;
   }
 
-  var now = new Date();
-  var dateStr = now.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) + ', ' + now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
-
-  var itemsHtml = '';
+  var items = [];
+  var subtotal = 0;
   calcTokens.forEach(function(t, i) {
     if (['+','-','*','/','%'].indexOf(t.v) !== -1) return;
-    var itemVal = fmtTokenVal(t.v);
-    var itemLabel = t.label ? escHtml(t.label) : 'Item #' + (i+1);
-    itemsHtml += '<tr><td style="text-align:left;padding:3px 0;">' + itemLabel + '</td><td style="text-align:right;padding:3px 0;">₹' + itemVal + '</td></tr>';
+    var unitPrice = parseFloat(t.v) || 0;
+    var q = parseFloat(t.qty);
+    if (isNaN(q) || q <= 0) q = 1;
+    var itemTotal = unitPrice * q;
+    subtotal += itemTotal;
+    items.push({
+      label: t.label ? t.label : ('Item #' + (items.length + 1)),
+      qty: q,
+      unitPrice: unitPrice,
+      val: itemTotal
+    });
   });
 
-  var totalFormatted = fmtNum(result);
-  var valForWords = _kMode ? result * 1000 : result;
-  var wordsStr = numToWords(valForWords);
-
-  var receiptContent = '' +
-    '<!DOCTYPE html><html><head><title>Receipt - Lazy Calc</title>' +
-    '<style>' +
-    '@media print { @page { margin: 0; size: auto; } body { margin: 0.5cm; } }' +
-    'body { font-family: "Courier New", Courier, monospace; width: 280px; margin: 0 auto; padding: 10px; color: #000; background: #fff; font-size: 13px; line-height: 1.4; }' +
-    '.center { text-align: center; }' +
-    '.title { font-size: 16px; font-weight: bold; margin-bottom: 2px; text-transform: uppercase; }' +
-    '.subtitle { font-size: 11px; margin-bottom: 8px; color: #555; }' +
-    '.line { border-bottom: 1px dashed #000; margin: 6px 0; }' +
-    '.table { width: 100%; border-collapse: collapse; margin: 6px 0; }' +
-    '.total-row { font-size: 15px; font-weight: bold; margin-top: 6px; }' +
-    '.words-row { font-size: 11px; font-style: italic; margin-top: 4px; text-align: right; }' +
-    '.footer { font-size: 11px; margin-top: 12px; text-align: center; }' +
-    '</style></head><body>' +
-    '<div class="center title">LAZY CALC</div>' +
-    '<div class="center subtitle">BILL RECEIPT • ' + dateStr + '</div>' +
-    '<div class="line"></div>' +
-    '<table class="table"><thead><tr><th style="text-align:left;">ITEM</th><th style="text-align:right;">AMOUNT</th></tr></thead><tbody>' +
-    itemsHtml +
-    '</tbody></table>' +
-    '<div class="line"></div>' +
-    '<div style="display:flex;justify-content:space-between;" class="total-row"><span>TOTAL:</span><span>₹' + totalFormatted + '</span></div>' +
-    (wordsStr ? '<div class="words-row">' + escHtml(wordsStr) + '</div>' : '') +
-    '<div class="line"></div>' +
-    '<div class="footer">Thank You! Have a great day! 🙏</div>' +
-    '</body></html>';
-
-  var printFrame = document.getElementById('print-iframe');
-  if (!printFrame) {
-    printFrame = document.createElement('iframe');
-    printFrame.id = 'print-iframe';
-    printFrame.style.cssText = 'position:fixed;right:0;bottom:0;width:0;height:0;border:none;visibility:hidden;';
-    document.body.appendChild(printFrame);
+  if (items.length === 0) {
+    showToast('No valid items to print');
+    return;
   }
 
-  var doc = printFrame.contentWindow || printFrame.contentDocument;
-  if (doc.document) doc = doc.document;
-  doc.open();
-  doc.write(receiptContent);
-  doc.close();
-
-  setTimeout(function() {
-    printFrame.contentWindow.focus();
-    printFrame.contentWindow.print();
-  }, 300);
+  openThermalReceiptModal(items, subtotal);
 }
 
 function renderCalcLabelEditor() {
@@ -2557,11 +3449,11 @@ function renderCalcLabelEditor() {
     while (curIdx >= 0 && ['+','-','*','/','%'].indexOf(calcTokens[curIdx].v) !== -1) {
       curIdx--;
     }
-    var currentVal = (curIdx >= 0 && calcTokens[curIdx]) ? calcTokens[curIdx].v : '';
+    var currentQty = (curIdx >= 0 && calcTokens[curIdx] && calcTokens[curIdx].qty !== undefined) ? calcTokens[curIdx].qty : '';
     var currentLabel = (curIdx >= 0 && calcTokens[curIdx]) ? calcTokens[curIdx].label : '';
     
     var html = '<div style="display:flex;align-items:center;flex-wrap:nowrap;gap:0.35rem;width:100%;box-sizing:border-box;">';
-    html += '<input id="calc-bill-val-input" type="text" inputmode="decimal" placeholder="Amount" value="' + escHtml(currentVal) + '" oninput="updateBillTokenValue(this.value)" onkeydown="if(event.key===\'Enter\'||event.keyCode===13){this.blur();}" style="width:70px;flex-shrink:0;padding:0.6rem 0.45rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-primary);color:var(--text-primary);font-size:1.05rem;font-weight:700;text-align:center;box-sizing:border-box;">';
+    html += '<input id="calc-bill-qty-input" type="text" inputmode="decimal" placeholder="Qty" value="' + escHtml(currentQty) + '" oninput="updateBillTokenQty(this.value)" onkeydown="if(event.key===\'Enter\'||event.keyCode===13){this.blur();}" style="width:65px;flex-shrink:0;padding:0.6rem 0.35rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-primary);color:var(--text-primary);font-size:1rem;font-weight:800;text-align:center;box-sizing:border-box;">';
     html += '<input id="calc-bill-label-input" type="text" placeholder="Label (optional)" value="' + escHtml(currentLabel) + '" oninput="updateBillTokenLabel(this.value)" onkeydown="if(event.key===\'Enter\'||event.keyCode===13){this.blur();}" style="flex:1;min-width:70px;padding:0.6rem 0.55rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-primary);color:var(--text-primary);font-size:1rem;box-sizing:border-box;">';
     html += '<button onclick="printBill()" title="Print Bill / Receipt" style="padding:0.6rem 0.85rem;flex-shrink:0;border:1px solid var(--color-accent);border-radius:var(--radius-sm);background:var(--color-accent);color:#fff;cursor:pointer;font-size:0.95rem;font-weight:700;display:flex;align-items:center;gap:4px;white-space:nowrap;touch-action:manipulation;">🖨️ Print</button>';
     html += '</div>';
@@ -2874,81 +3766,92 @@ function fmtDateInput(isoStr) {
   return String(d.getDate()).padStart(2,'0')+' '+_months[d.getMonth()]+' '+d.getFullYear();
 }
 var _calViewDate = new Date();
-var _calSelectedDate = new Date();
+var _calFromDate = new Date();
+var _calToDate = new Date();
+var _calActiveTarget = 'from';
 
 function renderDateMode(container, display) {
   _calViewDate = new Date();
-  _calSelectedDate = new Date();
+  _calFromDate = new Date(); _calFromDate.setHours(0,0,0,0);
+  _calToDate = new Date(); _calToDate.setHours(0,0,0,0);
+  _calActiveTarget = 'from';
   
   var html =
     '<div style="padding:0.2rem 0.1rem;box-sizing:border-box;">' +
-      '<div style="font-weight:700;font-size:1.05rem;margin-bottom:0.75rem;color:var(--color-accent);display:flex;align-items:center;justify-content:space-between;">' +
-        '<span>🗓️ Interactive Date Calculator</span>' +
-        '<button onclick="calGoToday()" style="padding:0.3rem 0.65rem;font-size:0.8rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">🎯 Today</button>' +
+      '<div style="font-weight:700;font-size:1.05rem;margin-bottom:0.6rem;color:var(--color-accent);display:flex;align-items:center;justify-content:space-between;">' +
+        '<span>🗓️ Flexible Date Calculator</span>' +
+        '<button onclick="calGoToday()" style="padding:0.3rem 0.65rem;font-size:0.82rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">🎯 Today</button>' +
       '</div>' +
 
       /* OPEN VISUAL CALENDAR BOX */
-      '<div style="background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:var(--radius-sm);padding:0.75rem;margin-bottom:0.85rem;">' +
-        '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.6rem;">' +
-          '<button onclick="calPrevMonth()" style="padding:0.35rem 0.65rem;font-size:0.9rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">◀</button>' +
+      '<div style="background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:var(--radius-sm);padding:0.7rem;margin-bottom:0.7rem;">' +
+        '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem;">' +
+          '<button onclick="calPrevMonth()" style="padding:0.32rem 0.65rem;font-size:0.9rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">◀</button>' +
           '<span id="cal-month-year" style="font-size:1rem;font-weight:700;color:var(--text-primary);letter-spacing:0.5px;"></span>' +
-          '<button onclick="calNextMonth()" style="padding:0.35rem 0.65rem;font-size:0.9rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">▶</button>' +
+          '<button onclick="calNextMonth()" style="padding:0.32rem 0.65rem;font-size:0.9rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">▶</button>' +
         '</div>' +
         '<div class="cal-grid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;">' +
-          '<div style="font-size:0.8rem;font-weight:700;color:var(--text-primary);padding:4px 0;">Sun</div>' +
-          '<div style="font-size:0.8rem;font-weight:700;color:var(--text-primary);padding:4px 0;">Mon</div>' +
-          '<div style="font-size:0.8rem;font-weight:700;color:var(--text-primary);padding:4px 0;">Tue</div>' +
-          '<div style="font-size:0.8rem;font-weight:700;color:var(--text-primary);padding:4px 0;">Wed</div>' +
-          '<div style="font-size:0.8rem;font-weight:700;color:var(--text-primary);padding:4px 0;">Thu</div>' +
-          '<div style="font-size:0.8rem;font-weight:700;color:var(--text-primary);padding:4px 0;">Fri</div>' +
-          '<div style="font-size:0.8rem;font-weight:700;color:var(--text-primary);padding:4px 0;">Sat</div>' +
+          '<div style="font-size:0.8rem;font-weight:700;color:var(--text-primary);padding:3px 0;">Sun</div>' +
+          '<div style="font-size:0.8rem;font-weight:700;color:var(--text-primary);padding:3px 0;">Mon</div>' +
+          '<div style="font-size:0.8rem;font-weight:700;color:var(--text-primary);padding:3px 0;">Tue</div>' +
+          '<div style="font-size:0.8rem;font-weight:700;color:var(--text-primary);padding:3px 0;">Wed</div>' +
+          '<div style="font-size:0.8rem;font-weight:700;color:var(--text-primary);padding:3px 0;">Thu</div>' +
+          '<div style="font-size:0.8rem;font-weight:700;color:var(--text-primary);padding:3px 0;">Fri</div>' +
+          '<div style="font-size:0.8rem;font-weight:700;color:var(--text-primary);padding:3px 0;">Sat</div>' +
         '</div>' +
         '<div id="cal-days-grid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:4px;"></div>' +
       '</div>' +
 
-      /* RESULT CARD */
-      '<div id="date-result-card" style="padding:0.9rem;background:var(--bg-tertiary);border-radius:var(--radius-sm);border-left:4px solid var(--color-accent);margin-bottom:0.85rem;display:flex;flex-direction:column;gap:0.45rem;">' +
-        '<div style="display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border-color);padding-bottom:0.45rem;gap:0.5rem;">' +
-          '<span style="font-size:0.85rem;font-weight:700;color:var(--text-primary);opacity:0.85;letter-spacing:0.5px;flex-shrink:0;">FROM</span>' +
-          '<span id="cal-from-text" style="color:var(--color-accent);font-weight:700;font-size:0.92rem;text-align:right;"></span>' +
+      /* RESULT CARD (INTERACTIVE FROM / TO SELECTION) */
+      '<div id="date-result-card" style="padding:0.75rem 0.85rem;background:var(--bg-tertiary);border-radius:var(--radius-sm);border-left:4px solid var(--color-accent);margin-bottom:0.7rem;display:flex;flex-direction:column;gap:0.4rem;">' +
+        '<div id="cal-row-from" onclick="setCalActiveTarget(\'from\')" style="display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border-color);padding:0.25rem 0.4rem;border-radius:6px;cursor:pointer;gap:0.5rem;transition:background 0.15s;">' +
+          '<span style="font-size:0.82rem;font-weight:700;color:var(--text-primary);opacity:0.85;letter-spacing:0.5px;flex-shrink:0;display:inline-flex;align-items:center;gap:4px;">🟢 FROM</span>' +
+          '<span id="cal-from-text" style="color:var(--color-accent);font-weight:700;font-size:0.9rem;text-align:right;"></span>' +
         '</div>' +
-        '<div style="display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border-color);padding-bottom:0.45rem;gap:0.5rem;">' +
-          '<span style="font-size:0.85rem;font-weight:700;color:var(--text-primary);opacity:0.85;letter-spacing:0.5px;flex-shrink:0;">TO</span>' +
-          '<span id="cal-to-text" style="color:var(--color-accent);font-weight:700;font-size:0.92rem;text-align:right;"></span>' +
+        '<div id="cal-row-to" onclick="setCalActiveTarget(\'to\')" style="display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border-color);padding:0.25rem 0.4rem;border-radius:6px;cursor:pointer;gap:0.5rem;transition:background 0.15s;">' +
+          '<span style="font-size:0.82rem;font-weight:700;color:var(--text-primary);opacity:0.85;letter-spacing:0.5px;flex-shrink:0;display:inline-flex;align-items:center;gap:4px;">🔴 TO</span>' +
+          '<span id="cal-to-text" style="color:var(--color-accent);font-weight:700;font-size:0.9rem;text-align:right;"></span>' +
         '</div>' +
         '<div style="display:flex;align-items:center;justify-content:space-between;padding-top:0.1rem;gap:0.5rem;">' +
-          '<span style="font-size:0.9rem;font-weight:700;color:var(--text-primary);opacity:0.85;flex-shrink:0;">Difference</span>' +
-          '<span id="cal-diff-text" style="font-size:1.15rem;font-weight:800;color:var(--color-accent);text-align:right;">0 days</span>' +
+          '<span style="font-size:0.88rem;font-weight:700;color:var(--text-primary);opacity:0.85;flex-shrink:0;">Difference</span>' +
+          '<span id="cal-diff-text" style="font-size:1.1rem;font-weight:800;color:var(--color-accent);text-align:right;">0 days</span>' +
         '</div>' +
-        '<div style="display:flex;align-items:center;justify-content:space-between;font-size:0.82rem;color:var(--text-muted);gap:0.5rem;">' +
+        '<div style="display:flex;align-items:center;justify-content:space-between;font-size:0.8rem;color:var(--text-muted);gap:0.5rem;">' +
           '<span style="flex-shrink:0;">Breakdown</span>' +
           '<span id="cal-breakdown-text" style="font-weight:600;color:var(--text-primary);text-align:right;">0y 0m 0d</span>' +
         '</div>' +
       '</div>' +
 
       /* PRESET BUTTONS */
-      '<div style="display:flex;gap:6px;margin-bottom:0.85rem;flex-wrap:wrap;">' +
-        '<button class="date-preset" onclick="setDatePreset(\'1w\')" style="padding:0.4rem 0.75rem;font-size:0.85rem;font-weight:600;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">+1W</button>' +
-        '<button class="date-preset" onclick="setDatePreset(\'2w\')" style="padding:0.4rem 0.75rem;font-size:0.85rem;font-weight:600;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">+2W</button>' +
-        '<button class="date-preset" onclick="setDatePreset(\'1m\')" style="padding:0.4rem 0.75rem;font-size:0.85rem;font-weight:600;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">+1M</button>' +
-        '<button class="date-preset" onclick="setDatePreset(\'3m\')" style="padding:0.4rem 0.75rem;font-size:0.85rem;font-weight:600;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">+3M</button>' +
-        '<button class="date-preset" onclick="setDatePreset(\'6m\')" style="padding:0.4rem 0.75rem;font-size:0.85rem;font-weight:600;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">+6M</button>' +
+      '<div style="display:flex;gap:6px;margin-bottom:0.7rem;flex-wrap:wrap;">' +
+        '<button class="date-preset" onclick="setDatePreset(\'1w\')" style="flex:1;min-width:50px;padding:0.38rem 0.6rem;font-size:0.82rem;font-weight:600;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">+1W</button>' +
+        '<button class="date-preset" onclick="setDatePreset(\'2w\')" style="flex:1;min-width:50px;padding:0.38rem 0.6rem;font-size:0.82rem;font-weight:600;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">+2W</button>' +
+        '<button class="date-preset" onclick="setDatePreset(\'1m\')" style="flex:1;min-width:50px;padding:0.38rem 0.6rem;font-size:0.82rem;font-weight:600;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">+1M</button>' +
+        '<button class="date-preset" onclick="setDatePreset(\'3m\')" style="flex:1;min-width:50px;padding:0.38rem 0.6rem;font-size:0.82rem;font-weight:600;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">+3M</button>' +
+        '<button class="date-preset" onclick="setDatePreset(\'6m\')" style="flex:1;min-width:50px;padding:0.38rem 0.6rem;font-size:0.82rem;font-weight:600;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">+6M</button>' +
       '</div>' +
 
-      '<div style="border-top:1px solid var(--border-color);margin:0.75rem 0"></div>' +
+      '<div style="border-top:1px solid var(--border-color);margin:0.6rem 0"></div>' +
 
-      /* ADD DAYS STEPPER */
-      '<div style="display:flex;align-items:center;justify-content:center;gap:0.35rem;margin-bottom:0.4rem;flex-wrap:nowrap;max-width:100%;box-sizing:border-box;">' +
-        '<span style="font-size:0.92rem;font-weight:600;color:var(--text-primary);flex-shrink:0;">Add</span>' +
-        '<button onclick="stepCalDays(-1)" style="padding:0.3rem 0.6rem;font-size:0.9rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">-</button>' +
-        '<input id="d-add" type="number" inputmode="numeric" placeholder="Days" value="2" style="width:55px;height:34px;padding:0 0.3rem;text-align:center;font-size:0.95rem;font-weight:600;border-radius:var(--radius-sm);border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);outline:none;flex-shrink:0;" oninput="calcDateAdd()">' +
-        '<button onclick="stepCalDays(1)" style="padding:0.3rem 0.6rem;font-size:0.9rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">+</button>' +
-        '<span style="color:var(--text-primary);font-size:0.9rem;font-weight:600;white-space:nowrap;flex-shrink:0;">days to Today</span>' +
+      /* ADD DAYS STEPPER - POLISHED SINGLE ROW PILL CARD */
+      '<div style="display:flex;align-items:center;justify-content:center;margin-bottom:0.25rem;box-sizing:border-box;">' +
+        '<div style="display:inline-flex;align-items:center;justify-content:center;gap:0.45rem;padding:0.4rem 0.85rem;background:var(--bg-tertiary);border:1px solid var(--border-color);border-radius:30px;box-shadow:0 2px 10px rgba(0,0,0,0.2);white-space:nowrap;flex-wrap:nowrap;">' +
+          '<span style="font-size:0.88rem;font-weight:700;color:var(--text-primary);display:inline-flex;align-items:center;gap:3px;">⚡ Add</span>' +
+          '<button onclick="stepCalDays(-1)" style="width:28px;height:28px;padding:0;display:inline-flex;align-items:center;justify-content:center;font-size:0.85rem;font-weight:800;background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:50%;cursor:pointer;transition:all 0.1s;" title="Subtract Day">➖</button>' +
+          '<input id="d-add" type="number" inputmode="numeric" placeholder="Days" value="2" style="width:48px;height:28px;padding:0;text-align:center;font-size:1.05rem;font-weight:800;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-primary);color:var(--color-accent);outline:none;box-shadow:inset 0 1px 3px rgba(0,0,0,0.3);" oninput="calcDateAdd()">' +
+          '<button onclick="stepCalDays(1)" style="width:28px;height:28px;padding:0;display:inline-flex;align-items:center;justify-content:center;font-size:0.85rem;font-weight:800;background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:50%;cursor:pointer;transition:all 0.1s;" title="Add Day">➕</button>' +
+          '<span style="color:var(--text-primary);font-size:0.88rem;font-weight:700;">days to FROM date</span>' +
+        '</div>' +
       '</div>' +
     '</div>';
 
   container.innerHTML = html;
   if (display) display.textContent = '';
+  updateVisualCalendar();
+}
+
+function setCalActiveTarget(target) {
+  _calActiveTarget = target;
   updateVisualCalendar();
 }
 
@@ -2966,31 +3869,44 @@ function updateVisualCalendar() {
   var totalDays = new Date(year, month + 1, 0).getDate();
   var prevMonthDays = new Date(year, month, 0).getDate();
 
-  var today = new Date();
+  var today = new Date(); today.setHours(0,0,0,0);
   var isCurrentMonth = today.getFullYear() === year && today.getMonth() === month;
   var todayDateNum = today.getDate();
 
-  var selYear = _calSelectedDate.getFullYear();
-  var selMonth = _calSelectedDate.getMonth();
-  var selDateNum = _calSelectedDate.getDate();
+  var fromTime = _calFromDate.getTime();
+  var toTime = _calToDate.getTime();
+  var startTime = Math.min(fromTime, toTime);
+  var endTime = Math.max(fromTime, toTime);
 
   var html = '';
 
   /* Previous Month Padding Days */
   for (var p = firstDay - 1; p >= 0; p--) {
     var dayNum = prevMonthDays - p;
-    html += '<div style="padding:0.45rem 0;font-size:0.85rem;color:var(--text-muted);opacity:0.35;text-align:center;">' + dayNum + '</div>';
+    html += '<div style="padding:0.38rem 0;font-size:0.82rem;color:var(--text-muted);opacity:0.35;text-align:center;">' + dayNum + '</div>';
   }
 
   /* Current Month Days */
   for (var d = 1; d <= totalDays; d++) {
-    var isToday = isCurrentMonth && d === todayDateNum;
-    var isSel = selYear === year && selMonth === month && d === selDateNum;
+    var currDate = new Date(year, month, d); currDate.setHours(0,0,0,0);
+    var currTime = currDate.getTime();
 
-    var style = 'padding:0.45rem 0;font-size:0.9rem;font-weight:600;border-radius:var(--radius-sm);cursor:pointer;text-align:center;transition:all 0.15s;';
-    if (isSel) {
-      var selTextColor = (_calcTheme === 'monochrome' || _calcTheme === 'light') ? '#121216' : '#ffffff';
+    var isToday = isCurrentMonth && d === todayDateNum;
+    var isFrom = currTime === fromTime;
+    var isTo = currTime === toTime;
+    var isInRange = currTime > startTime && currTime < endTime;
+
+    var style = 'padding:0.38rem 0;font-size:0.88rem;font-weight:600;border-radius:var(--radius-sm);cursor:pointer;text-align:center;transition:all 0.15s;';
+    var selTextColor = (_calcTheme === 'monochrome' || _calcTheme === 'light') ? '#121216' : '#ffffff';
+
+    if (isFrom && isTo) {
       style += 'background:var(--color-accent);color:' + selTextColor + ';font-weight:800;box-shadow:0 2px 8px rgba(0,0,0,0.3);';
+    } else if (isFrom) {
+      style += 'background:#10b981;color:#ffffff;font-weight:800;box-shadow:0 2px 8px rgba(16,185,129,0.4);';
+    } else if (isTo) {
+      style += 'background:var(--color-accent);color:' + selTextColor + ';font-weight:800;box-shadow:0 2px 8px rgba(0,0,0,0.3);';
+    } else if (isInRange) {
+      style += 'background:rgba(244,63,94,0.22);color:var(--text-primary);font-weight:700;border-radius:0;';
     } else if (isToday) {
       style += 'border:2px solid var(--color-accent);color:var(--color-accent);background:var(--bg-tertiary);font-weight:700;';
     } else {
@@ -3005,15 +3921,32 @@ function updateVisualCalendar() {
 }
 
 function selectCalDate(y, m, d) {
-  _calSelectedDate = new Date(y, m, d);
+  var picked = new Date(y, m, d); picked.setHours(0,0,0,0);
+  
+  if (_calActiveTarget === 'from') {
+    _calFromDate = picked;
+    if (_calToDate < _calFromDate) {
+      _calToDate = new Date(_calFromDate);
+    }
+    _calActiveTarget = 'to';
+  } else {
+    if (picked < _calFromDate) {
+      _calToDate = new Date(_calFromDate);
+      _calFromDate = picked;
+    } else {
+      _calToDate = picked;
+    }
+    _calActiveTarget = 'from';
+  }
   updateVisualCalendar();
 }
 
 function updateCalResultDisplay() {
   var now = new Date(); now.setHours(0,0,0,0);
-  var sel = new Date(_calSelectedDate); sel.setHours(0,0,0,0);
+  var from = new Date(_calFromDate); from.setHours(0,0,0,0);
+  var to = new Date(_calToDate); to.setHours(0,0,0,0);
 
-  var diffTime = sel.getTime() - now.getTime();
+  var diffTime = to.getTime() - from.getTime();
   var diffDays = Math.round(diffTime / (1000 * 3600 * 24));
   var absDays = Math.abs(diffDays);
 
@@ -3021,22 +3954,29 @@ function updateCalResultDisplay() {
   var toEl = document.getElementById('cal-to-text');
   var diffTextEl = document.getElementById('cal-diff-text');
   var breakdownTextEl = document.getElementById('cal-breakdown-text');
+  var rowFrom = document.getElementById('cal-row-from');
+  var rowTo = document.getElementById('cal-row-to');
 
-  var todayStr = formatDate(now).toUpperCase() + ' (TODAY)';
-
-  if (diffDays >= 0) {
-    if (fromEl) fromEl.textContent = todayStr;
-    if (toEl) toEl.textContent = formatDate(sel).toUpperCase() + (diffDays === 0 ? ' (TODAY)' : '');
-  } else {
-    if (fromEl) fromEl.textContent = formatDate(sel).toUpperCase();
-    if (toEl) toEl.textContent = todayStr;
+  if (rowFrom) {
+    rowFrom.style.background = _calActiveTarget === 'from' ? 'rgba(16,185,129,0.2)' : 'transparent';
+    rowFrom.style.borderLeft = _calActiveTarget === 'from' ? '3px solid #10b981' : 'none';
   }
+  if (rowTo) {
+    rowTo.style.background = _calActiveTarget === 'to' ? 'rgba(244,63,94,0.2)' : 'transparent';
+    rowTo.style.borderLeft = _calActiveTarget === 'to' ? '3px solid var(--color-accent)' : 'none';
+  }
+
+  var isFromToday = from.getTime() === now.getTime();
+  var isToToday = to.getTime() === now.getTime();
+
+  if (fromEl) fromEl.textContent = formatDate(from).toUpperCase() + (isFromToday ? ' (TODAY)' : '');
+  if (toEl) toEl.textContent = formatDate(to).toUpperCase() + (isToToday ? ' (TODAY)' : '');
 
   if (diffTextEl) {
     if (diffDays === 0) {
-      diffTextEl.textContent = '0 days (Today)';
+      diffTextEl.textContent = '0 days (Same Day)';
     } else {
-      diffTextEl.textContent = absDays.toLocaleString() + ' days';
+      diffTextEl.textContent = absDays.toLocaleString() + (absDays === 1 ? ' day' : ' days');
     }
   }
 
@@ -3047,6 +3987,24 @@ function updateCalResultDisplay() {
     var w = Math.floor(absDays / 7);
     breakdownTextEl.textContent = y + 'y ' + m + 'm ' + d + 'd' + (w > 0 ? ' (' + w + ' weeks)' : '');
   }
+
+  saveCalcHistory({
+    mode: 'date',
+    expression: '🗓️ ' + formatDate(from) + ' → ' + formatDate(to),
+    result: absDays + ' days',
+    dateData: { from: from.toISOString(), to: to.toISOString() }
+  });
+}
+
+function setDatePreset(preset) {
+  _calToDate = new Date(_calFromDate);
+  if (preset === '1w') _calToDate.setDate(_calToDate.getDate() + 7);
+  else if (preset === '2w') _calToDate.setDate(_calToDate.getDate() + 14);
+  else if (preset === '1m') _calToDate.setMonth(_calToDate.getMonth() + 1);
+  else if (preset === '3m') _calToDate.setMonth(_calToDate.getMonth() + 3);
+  else if (preset === '6m') _calToDate.setMonth(_calToDate.getMonth() + 6);
+  _calActiveTarget = 'to';
+  updateVisualCalendar();
 }
 
 function calPrevMonth() {
@@ -3061,14 +4019,16 @@ function calNextMonth() {
 
 function calGoToday() {
   _calViewDate = new Date();
-  _calSelectedDate = new Date();
+  _calFromDate = new Date(); _calFromDate.setHours(0,0,0,0);
+  _calToDate = new Date(); _calToDate.setHours(0,0,0,0);
+  _calActiveTarget = 'from';
   updateVisualCalendar();
 }
 
 function stepCalDays(delta) {
   var inp = document.getElementById('d-add');
   if (!inp) return;
-  var current = parseInt(inp.value) || 0;
+  var current = parseInt(inp.value, 10) || 0;
   var next = current + delta;
   inp.value = next;
   calcDateAdd();
@@ -3077,11 +4037,12 @@ function stepCalDays(delta) {
 function calcDateAdd() {
   var inp = document.getElementById('d-add');
   if (!inp) return;
-  var days = parseInt(inp.value) || 0;
-  var target = new Date();
+  var days = parseInt(inp.value, 10) || 0;
+  var target = new Date(_calFromDate);
   target.setDate(target.getDate() + days);
-  _calSelectedDate = target;
+  _calToDate = target;
   _calViewDate = new Date(target.getFullYear(), target.getMonth(), 1);
+  _calActiveTarget = 'to';
   updateVisualCalendar();
 }
 
@@ -4111,7 +5072,78 @@ var _expJustAdded = false;
 function updateExpensesBadge() {
   var el = document.getElementById('h-btn-expenses-icon') || document.getElementById('h-btn-expenses');
   if (!el) return;
-  el.textContent = _expensesNewCount > 0 ? '💸 (' + _expensesNewCount + ')' : '💸';
+  var isMono = (_calcTheme === 'monochrome');
+  var walletIcon = isMono ? 
+    '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;"><rect x="2" y="5" width="20" height="14" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>' : 
+    '💸';
+  if (_expensesNewCount > 0) {
+    el.innerHTML = walletIcon + ' <span style="font-size:0.85rem;font-weight:800;color:var(--color-accent);vertical-align:middle;text-shadow:0 1px 4px rgba(0,0,0,0.5);">(' + _expensesNewCount + ')</span>';
+  } else {
+    el.innerHTML = walletIcon;
+  }
+}
+
+function updateMonochromeIcons() {
+  var isMono = (_calcTheme === 'monochrome');
+  
+  var setBtn = document.getElementById('settings-btn');
+  if (setBtn) {
+    setBtn.innerHTML = isMono ? 
+      '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>' : 
+      '⚙️';
+  }
+
+  var backBtn = document.getElementById('calc-back-btn');
+  if (backBtn) {
+    backBtn.innerHTML = isMono ?
+      '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 8 8 12 12 16"></polyline><line x1="16" y1="12" x2="8" y2="12"></line></svg>' :
+      '⬅️';
+  }
+
+  var backHistBtn = document.getElementById('calc-back-hist-btn');
+  var mainHistBtn = document.getElementById('h-btn-history');
+  var clockSvg = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>';
+  if (backHistBtn) backHistBtn.innerHTML = isMono ? clockSvg : '🕒';
+  if (mainHistBtn) mainHistBtn.innerHTML = isMono ? clockSvg : '🕒';
+
+  var voiceBtn = document.getElementById('calc-voice-btn');
+  if (voiceBtn) {
+    voiceBtn.innerHTML = isMono ?
+      '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>' :
+      '🎙️';
+  }
+
+  var closeBtn = document.getElementById('mode-close-btn');
+  if (closeBtn) {
+    closeBtn.innerHTML = isMono ?
+      '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;display:block;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>' :
+      '✖️';
+    closeBtn.style.padding = '2px 4px';
+    closeBtn.style.marginLeft = '2px';
+  }
+
+  updateExpensesBadge();
+
+  var modesMenu = document.getElementById('modes-menu');
+  if (modesMenu) {
+    if (isMono) {
+      modesMenu.innerHTML =
+        '<div class="modes-menu-item" onclick="selectModeFromMenu(\'date\')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:6px"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg> Date & Duration</div>' +
+        '<div class="modes-menu-item" onclick="selectModeFromMenu(\'splitter\')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:6px"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg> Splitter</div>' +
+        '<div class="modes-menu-item" onclick="selectModeFromMenu(\'fuel\')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:6px"><line x1="12" y1="20" x2="12" y2="10"></line><line x1="18" y1="20" x2="18" y2="4"></line><line x1="6" y1="20" x2="6" y2="16"></line></svg> Fuel & Trip</div>' +
+        '<div class="modes-menu-item" onclick="selectModeFromMenu(\'emi\')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:6px"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg> Loan EMI</div>' +
+        '<div class="modes-menu-item" onclick="selectModeFromMenu(\'converter\')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:6px"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg> Unit Converter</div>' +
+        '<div class="modes-menu-item" onclick="selectModeFromMenu(\'scientific\')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:6px"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg> Scientific</div>';
+    } else {
+      modesMenu.innerHTML =
+        '<div class="modes-menu-item" onclick="selectModeFromMenu(\'date\')">🗓️ Date & Duration</div>' +
+        '<div class="modes-menu-item" onclick="selectModeFromMenu(\'splitter\')">👥 Splitter</div>' +
+        '<div class="modes-menu-item" onclick="selectModeFromMenu(\'fuel\')">⛽ Fuel & Trip</div>' +
+        '<div class="modes-menu-item" onclick="selectModeFromMenu(\'emi\')">📈 Loan EMI</div>' +
+        '<div class="modes-menu-item" onclick="selectModeFromMenu(\'converter\')">📏 Unit Converter</div>' +
+        '<div class="modes-menu-item" onclick="selectModeFromMenu(\'scientific\')">📐 Scientific</div>';
+    }
+  }
 }
 
 function getCategoryFromDesc(desc) {
@@ -4535,8 +5567,8 @@ function renderExpensesMode(container) {
   var html = '';
   html += '<div class="budget-card-hero animated-card" onclick="scrollToExpAccordions()" style="margin-bottom:0.85rem;cursor:pointer;display:flex;justify-content:space-between;align-items:center;" title="Tap to view list">' +
     '<div>' +
-      '<span id="exp-hero-title" class="hero-text-anim" style="font-size:0.72rem;text-transform:uppercase;color:var(--text-muted);font-weight:700;letter-spacing:0.5px;display:block;">' + heroTitle + '</span>' +
-      '<div id="exp-hero-val" class="hero-text-anim" style="font-size:1.35rem;font-weight:800;color:var(--color-accent);margin-top:2px;">₹' + fmtNum(heroTot) + ' <span style="font-size:0.75rem;font-weight:600;color:var(--text-muted);">• ' + heroCnt + ' Items</span></div>' +
+      '<span id="exp-hero-title" class="hero-text-anim" style="font-size:0.72rem;text-transform:uppercase;color:var(--text-primary);opacity:0.85;font-weight:700;letter-spacing:0.5px;display:block;">' + heroTitle + '</span>' +
+      '<div id="exp-hero-val" class="hero-text-anim" style="font-size:1.35rem;font-weight:800;color:var(--color-accent);margin-top:2px;">₹' + fmtNum(heroTot) + ' <span style="font-size:0.75rem;font-weight:600;color:var(--text-primary);opacity:0.85;">• ' + heroCnt + ' Items</span></div>' +
     '</div>' +
     '<button onclick="event.stopPropagation();setExpView(_expViewMode===\'pie\'?\'bar\':\'pie\')" title="Switch Chart View" style="padding:0.4rem 0.7rem;border:1px solid var(--border-color);border-radius:10px;background:rgba(255,255,255,0.08);color:var(--text-primary);cursor:pointer;font-size:1.15rem;font-weight:700;display:inline-flex;align-items:center;justify-content:center;transition:all 0.15s;">' +
       (_expViewMode === 'pie' ? '📈' : '📊') +
@@ -6232,6 +7264,7 @@ document.body.classList.add('theme-' + _calcTheme);
 var td = document.querySelector('.theme-circle[data-theme="' + _calcTheme + '"]');
 if (td) td.classList.add('active');
 document.querySelector('meta[name="theme-color"]').content = getComputedStyle(document.body).getPropertyValue('--color-accent').trim();
+updateMonochromeIcons();
 var el;
 el = document.getElementById('record-expenses-toggle'); if (el) el.checked = _recordExpenses;
 el = document.getElementById('fast-lazy-toggle'); if (el) el.checked = _fastLazy;
@@ -6239,6 +7272,8 @@ el = document.getElementById('show-words-toggle'); if (el) el.checked = _showWor
 el = document.getElementById('k-mode-toggle'); if (el) el.checked = _kMode;
 el = document.getElementById('share-mode-toggle'); if (el) el.checked = _shareMode === 'system';
 el = document.getElementById('bill-mode-toggle'); if (el) el.checked = _billMode;
+el = document.getElementById('vibe-mode-toggle'); if (el) el.checked = _vibeEnabled;
+el = document.getElementById('sound-mode-toggle'); if (el) el.checked = _soundEnabled;
 updateShareIconUI();
 updateExpensesBadge();
 updateNavPositionUI();
