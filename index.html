@@ -1364,6 +1364,7 @@ body {
     <div class="modal-body">
       <div id="calc-expression"></div>
       <div id="calc-label-editor"></div>
+      <div id="pos-live-screen" style="display:none;background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:12px;padding:0.65rem 0.85rem;margin-bottom:0.6rem;"></div>
       <div class="calc-result-area">
         <div id="calc-display" onclick="toggleResultExpr()">0</div>
         <div id="calc-display-words" style="min-height:1.25rem;line-height:1.25rem;font-size:0.80rem;color:var(--text-primary);text-align:right;margin-top:0.25rem;font-style:italic;font-weight:600;opacity:0.95;visibility:hidden;transition:opacity 0.15s ease;"></div>
@@ -2976,11 +2977,14 @@ function applyCalcMode(name) {
     else if (name === 'scientific') { if (modalBody) modalBody.classList.add('sp-mode'); renderScientificMode(modeBody); }
     else if (name === 'quickbilling') {
       if (modalBody) modalBody.classList.remove('sp-mode');
-      expr.style.display = 'block';
-      editor.style.display = 'block';
+      expr.style.display = 'none';
+      editor.style.display = 'none';
+      if (display) display.style.display = 'none';
+      if (resArea) resArea.style.display = 'none';
+      var posScreen = document.getElementById('pos-live-screen');
+      if (posScreen) posScreen.style.display = 'block';
       buttons.style.display = 'grid';
-      if (display) display.style.display = 'block';
-      if (resArea) resArea.style.display = 'flex';
+      renderQuickBillingScreen();
       renderQuickBillingGrid();
     }
   }
@@ -3112,6 +3116,7 @@ var _quickBillingItems = (function() {
 })();
 
 var _quickBillingQty = 1;
+var _quickBillingOrder = [];
 
 function setQuickBillingQty(deltaOrVal) {
   if (typeof deltaOrVal === 'number') {
@@ -3131,24 +3136,81 @@ function addQuickBillingItemToBill(idx) {
   var item = _quickBillingItems[idx];
   if (!item || !item.name) return;
 
-  var qty = _quickBillingQty;
+  var addQty = _quickBillingQty;
   var unitPrice = parseFloat(item.price) || 0;
-  var itemTotal = unitPrice * qty;
 
-  if (calcTokens.length === 1 && (calcTokens[0].v === '0' || calcTokens[0].v === 0)) {
-    calcTokens = [];
-  } else if (calcTokens.length > 0 && ['+','-','*','/','%'].indexOf(calcTokens[calcTokens.length-1].v) === -1) {
-    calcTokens.push({ v: '+', label: '' });
-  }
-
-  calcTokens.push({
-    v: unitPrice.toString(),
-    qty: qty,
-    label: (item.icon ? (item.icon + ' ') : '') + item.name
+  var existing = _quickBillingOrder.find(function(o) {
+    return o.name === item.name && o.price === unitPrice;
   });
 
-  calcUpdateDisplay(true);
-  showToast('➕ Added ' + qty + 'x ' + item.name + ' (₹' + itemTotal + ')');
+  if (existing) {
+    existing.qty += addQty;
+  } else {
+    _quickBillingOrder.push({
+      name: item.name,
+      price: unitPrice,
+      icon: item.icon || '',
+      qty: addQty
+    });
+  }
+
+  renderQuickBillingScreen();
+  showToast('➕ Added ' + addQty + 'x ' + item.name);
+}
+
+function removeQuickBillingOrderLine(i) {
+  if (i >= 0 && i < _quickBillingOrder.length) {
+    _quickBillingOrder.splice(i, 1);
+    renderQuickBillingScreen();
+  }
+}
+
+function clearQuickBillingOrder() {
+  _quickBillingOrder = [];
+  renderQuickBillingScreen();
+  showToast('🗑️ POS Bill Cleared');
+}
+
+function renderQuickBillingScreen() {
+  var screenEl = document.getElementById('pos-live-screen');
+  if (!screenEl) return;
+
+  if (_quickBillingOrder.length === 0) {
+    screenEl.innerHTML =
+      '<div style="text-align:center;padding:0.75rem 0;color:var(--text-muted);font-size:0.85rem;font-weight:600;">' +
+        '🛒 Tap items below to add to POS Bill' +
+      '</div>';
+    return;
+  }
+
+  var totalAmt = 0;
+  var totalItems = 0;
+
+  var html = '<div style="max-height:115px;overflow-y:auto;padding-right:4px;margin-bottom:6px;display:flex;flex-direction:column;gap:4px;">';
+
+  _quickBillingOrder.forEach(function(item, i) {
+    var itemTotal = item.price * item.qty;
+    totalAmt += itemTotal;
+    totalItems += item.qty;
+
+    var iconStr = item.icon ? (item.icon + ' ') : '';
+    html += '<div style="display:flex;align-items:center;justify-content:space-between;font-size:0.88rem;font-weight:700;padding:2px 0;border-bottom:1px dashed rgba(255,255,255,0.08);">' +
+      '<span>' + escHtml(iconStr + item.name) + ' <span style="color:var(--color-accent);font-weight:800;margin-left:4px;">x ' + item.qty + '</span></span>' +
+      '<div style="display:flex;align-items:center;gap:6px;">' +
+        '<span style="font-weight:800;">₹' + itemTotal.toLocaleString('en-IN') + '</span>' +
+        '<span onclick="event.stopPropagation();removeQuickBillingOrderLine(' + i + ')" style="color:#ff6b6b;font-size:0.75rem;cursor:pointer;opacity:0.7;padding:0 2px;">✕</span>' +
+      '</div>' +
+    '</div>';
+  });
+
+  html += '</div>';
+
+  html += '<div style="display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border-color);padding-top:6px;font-weight:800;">' +
+    '<span style="font-size:0.82rem;color:var(--text-muted);">TOTAL (' + totalItems + ' items):</span>' +
+    '<span style="font-size:1.15rem;color:var(--color-accent);">₹' + totalAmt.toLocaleString('en-IN') + '</span>' +
+  '</div>';
+
+  screenEl.innerHTML = html;
 }
 
 function openQuickItemEditModal(idx) {
@@ -3207,16 +3269,14 @@ function renderQuickBillingGrid() {
   var tileBorder = isLight ? '1px solid #cbd5e1' : '1px solid var(--border-color)';
   var textCol = isLight ? '#0f172a' : 'var(--text-primary)';
 
-  var html = '<div style="grid-column:span 4;display:flex;align-items:center;justify-content:space-between;padding:0.4rem 0.65rem;background:' + tileBg + ';border-radius:10px;margin-bottom:4px;border:' + tileBorder + ';">' +
-    '<div style="display:flex;align-items:center;gap:6px;">' +
-      '<span style="font-size:0.8rem;font-weight:700;color:var(--text-muted);">Qty:</span>' +
-      '<button onclick="setQuickBillingQty(-1)" style="width:28px;height:28px;border-radius:6px;border:1px solid var(--border-color);background:var(--bg-tertiary);color:' + textCol + ';font-size:0.9rem;font-weight:800;cursor:pointer;">-</button>' +
-      '<span id="qb-qty-val" style="font-size:0.95rem;font-weight:800;color:var(--color-accent);min-width:22px;text-align:center;">' + _quickBillingQty + '</span>' +
-      '<button onclick="setQuickBillingQty(1)" style="width:28px;height:28px;border-radius:6px;border:1px solid var(--border-color);background:var(--bg-tertiary);color:' + textCol + ';font-size:0.9rem;font-weight:800;cursor:pointer;">+</button>' +
+  var html = '<div style="grid-column:span 4;display:flex;align-items:center;justify-content:space-between;padding:0.25rem 0.5rem;background:' + tileBg + ';border-radius:8px;margin-bottom:2px;border:' + tileBorder + ';">' +
+    '<div style="display:flex;align-items:center;gap:4px;">' +
+      '<span style="font-size:0.75rem;font-weight:700;color:var(--text-muted);">Qty:</span>' +
+      '<button onclick="setQuickBillingQty(-1)" style="width:24px;height:24px;border-radius:4px;border:1px solid var(--border-color);background:var(--bg-tertiary);color:' + textCol + ';font-size:0.85rem;font-weight:800;cursor:pointer;padding:0;">-</button>' +
+      '<span id="qb-qty-val" style="font-size:0.88rem;font-weight:800;color:var(--color-accent);min-width:18px;text-align:center;">' + _quickBillingQty + '</span>' +
+      '<button onclick="setQuickBillingQty(1)" style="width:24px;height:24px;border-radius:4px;border:1px solid var(--border-color);background:var(--bg-tertiary);color:' + textCol + ';font-size:0.85rem;font-weight:800;cursor:pointer;padding:0;">+</button>' +
     '</div>' +
-    '<div style="display:flex;gap:6px;">' +
-      '<button onclick="clearCalcTokens();calcUpdateDisplay();" style="padding:0.35rem 0.6rem;border-radius:6px;border:1px solid var(--border-color);background:rgba(255,107,107,0.15);color:#ff6b6b;font-size:0.75rem;font-weight:700;cursor:pointer;">🗑️ Clear Bill</button>' +
-    '</div>' +
+    '<button onclick="clearQuickBillingOrder()" style="padding:0.25rem 0.5rem;border-radius:6px;border:1px solid var(--border-color);background:rgba(255,107,107,0.15);color:#ff6b6b;font-size:0.72rem;font-weight:700;cursor:pointer;">🗑️ Clear Bill</button>' +
   '</div>';
 
   for (var i = 0; i < 20; i++) {
@@ -3224,24 +3284,47 @@ function renderQuickBillingGrid() {
     if (item && item.name) {
       var icon = item.icon ? (item.icon + ' ') : '';
       var priceStr = '₹' + parseFloat(item.price || 0).toLocaleString('en-IN');
-      html += '<button onclick="addQuickBillingItemToBill(' + i + ')" style="min-height:56px;padding:0.4rem 0.3rem;border-radius:12px;background:' + tileBg + ';border:' + tileBorder + ';color:' + textCol + ';display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer;position:relative;transition:transform 0.04s ease;overflow:hidden;">' +
-        '<div style="font-size:0.82rem;font-weight:800;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:90%;">' + escHtml(icon + item.name) + '</div>' +
-        '<div style="font-size:0.75rem;font-weight:700;color:var(--color-accent);">' + priceStr + '</div>' +
-        '<span onclick="event.stopPropagation();openQuickItemEditModal(' + i + ')" style="position:absolute;right:3px;top:2px;font-size:0.68rem;opacity:0.6;padding:2px;" title="Edit Item">⚙️</span>' +
+      html += '<button onclick="addQuickBillingItemToBill(' + i + ')" style="min-height:52px;padding:0.35rem 0.25rem;border-radius:10px;background:' + tileBg + ';border:' + tileBorder + ';color:' + textCol + ';display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;cursor:pointer;position:relative;transition:transform 0.04s ease;overflow:hidden;">' +
+        '<div style="font-size:0.8rem;font-weight:800;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:90%;">' + escHtml(icon + item.name) + '</div>' +
+        '<div style="font-size:0.72rem;font-weight:700;color:var(--color-accent);">' + priceStr + '</div>' +
+        '<span onclick="event.stopPropagation();openQuickItemEditModal(' + i + ')" style="position:absolute;right:2px;top:1px;font-size:0.65rem;opacity:0.6;padding:2px;" title="Edit Item">⚙️</span>' +
       '</button>';
     } else {
-      html += '<button onclick="openQuickItemEditModal(' + i + ')" style="min-height:56px;padding:0.4rem 0.3rem;border-radius:12px;background:' + tileBg + ';border:1.5px dashed var(--border-color);color:var(--text-muted);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;cursor:pointer;opacity:0.85;">' +
-        '<div style="font-size:1.2rem;font-weight:800;color:var(--color-accent);line-height:1;">+</div>' +
-        '<div style="font-size:0.68rem;font-weight:700;letter-spacing:0.3px;">Add Item</div>' +
+      html += '<button onclick="openQuickItemEditModal(' + i + ')" style="min-height:52px;padding:0.35rem 0.25rem;border-radius:10px;background:' + tileBg + ';border:1.5px dashed var(--border-color);color:var(--text-muted);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;cursor:pointer;opacity:0.85;">' +
+        '<div style="font-size:1.1rem;font-weight:800;color:var(--color-accent);line-height:1;">+</div>' +
+        '<div style="font-size:0.65rem;font-weight:700;letter-spacing:0.3px;">Add Item</div>' +
       '</button>';
     }
   }
 
-  html += '<button onclick="printBill()" style="grid-column:span 4;min-height:46px;padding:0.65rem;border-radius:12px;background:var(--color-accent);color:#fff;border:none;font-weight:800;font-size:0.95rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;box-shadow:0 4px 14px rgba(0,0,0,0.3);margin-top:2px;">' +
+  html += '<button onclick="printQuickBillingOrder()" style="grid-column:span 4;min-height:44px;padding:0.6rem;border-radius:10px;background:var(--color-accent);color:#fff;border:none;font-weight:800;font-size:0.92rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;box-shadow:0 4px 14px rgba(0,0,0,0.3);margin-top:2px;">' +
     '🖨️ PRINT POS RECEIPT' +
   '</button>';
 
   buttons.innerHTML = html;
+}
+
+function printQuickBillingOrder() {
+  if (_quickBillingOrder.length === 0) {
+    showToast('⚠️ POS Bill is empty! Tap items to add.');
+    return;
+  }
+
+  var items = [];
+  var totalAmt = 0;
+
+  _quickBillingOrder.forEach(function(o) {
+    var val = o.price * o.qty;
+    totalAmt += val;
+    items.push({
+      label: (o.icon ? (o.icon + ' ') : '') + o.name,
+      qty: o.qty,
+      unitPrice: o.price,
+      val: val
+    });
+  });
+
+  openThermalReceiptModal(items, totalAmt);
 }
 
 function calcBtn(label) {
