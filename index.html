@@ -1082,6 +1082,32 @@ body {
   </div>
 </div>
 
+<div class="modal-overlay" id="modal-quick-item-edit" onclick="closeModal('modal-quick-item-edit')" style="z-index:1010;">
+  <div class="modal-container" onclick="event.stopPropagation()" style="max-width:340px;width:90%;padding:1.2rem;border-radius:16px;">
+    <div style="font-size:1.05rem;font-weight:800;color:var(--color-accent);margin-bottom:0.85rem;text-align:center;">🛒 EDIT QUICK POS ITEM</div>
+    <input type="hidden" id="qb-item-idx">
+    <div style="display:flex;flex-direction:column;gap:0.75rem;margin-bottom:1.1rem;">
+      <div>
+        <label style="font-size:0.78rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">Item Name (e.g. Maggi, Chai)</label>
+        <input id="qb-item-name" placeholder="Item Name" style="width:100%;padding:0.7rem;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-secondary);color:var(--text-primary);font-size:0.95rem;outline:none;box-sizing:border-box;">
+      </div>
+      <div>
+        <label style="font-size:0.78rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">Price / Rate (₹)</label>
+        <input type="number" inputmode="decimal" id="qb-item-price" placeholder="Rate e.g. 50" style="width:100%;padding:0.7rem;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-secondary);color:var(--text-primary);font-size:0.95rem;outline:none;box-sizing:border-box;">
+      </div>
+      <div>
+        <label style="font-size:0.78rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">Emoji / Icon (Optional)</label>
+        <input id="qb-item-icon" placeholder="e.g. 🍜 or ☕" style="width:100%;padding:0.7rem;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-secondary);color:var(--text-primary);font-size:0.95rem;outline:none;box-sizing:border-box;">
+      </div>
+    </div>
+    <div style="display:flex;gap:0.5rem;">
+      <button onclick="saveQuickItemFromModal()" style="flex:2;padding:0.75rem;border:none;border-radius:10px;background:var(--color-accent);color:#fff;font-weight:800;font-size:0.9rem;cursor:pointer;">💾 Save Item</button>
+      <button onclick="deleteQuickItemFromModal()" style="flex:1;padding:0.75rem;border:1px solid var(--border-color);border-radius:10px;background:rgba(255,107,107,0.15);color:#ff6b6b;font-weight:700;font-size:0.85rem;cursor:pointer;">🗑️ Delete</button>
+      <button onclick="closeModal('modal-quick-item-edit')" style="padding:0.75rem 0.6rem;border:1px solid var(--border-color);border-radius:10px;background:var(--bg-secondary);color:var(--text-primary);font-weight:600;font-size:0.85rem;cursor:pointer;">✕</button>
+    </div>
+  </div>
+</div>
+
 <div class="modal-overlay" id="modal-guide" onclick="closeGuideModal(event)">
   <div class="modal-container modal-guide-box" onclick="event.stopPropagation()">
     <div style="font-size:1.1rem;font-weight:700;margin-bottom:0.8rem;text-transform:uppercase;color:var(--color-accent);text-align:center;">✨ What Makes Lazy Calc Different?</div>
@@ -1304,6 +1330,7 @@ body {
         <span id="h-btn-modes" class="mode-heading-btn" onclick="toggleModesMenu(event)" style="padding:0.25rem 0.65rem;display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:1.25rem;font-family:'Caveat',cursive;letter-spacing:0.02em;background:transparent;border:1px solid var(--border-color);border-radius:10px;cursor:pointer;">Lazy Calc <span class="hdr-chevron-svg" style="display:inline-flex;align-items:center;justify-content:center;transition:transform 0.25s ease;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span></span>
         <div id="modes-menu" class="modes-menu-popup" onclick="event.stopPropagation()">
           <div class="modes-menu-item" onclick="selectModeFromMenu('date')">🗓️ Date & Duration</div>
+          <div class="modes-menu-item" onclick="selectModeFromMenu('quickbilling')">🛒 Quick Billing (POS Grid)</div>
           <div class="modes-menu-item" onclick="selectModeFromMenu('splitter')">👥 Splitter</div>
           <div class="modes-menu-item" onclick="selectModeFromMenu('fuel')">⛽ Fuel & Trip</div>
           <div class="modes-menu-item" onclick="selectModeFromMenu('emi')">📈 Loan EMI</div>
@@ -2947,6 +2974,15 @@ function applyCalcMode(name) {
     else if (name === 'emi') { if (modalBody) modalBody.classList.remove('sp-mode'); renderEmiMode(modeBody); }
     else if (name === 'converter') { if (modalBody) modalBody.classList.remove('sp-mode'); renderConverterMode(modeBody); }
     else if (name === 'scientific') { if (modalBody) modalBody.classList.add('sp-mode'); renderScientificMode(modeBody); }
+    else if (name === 'quickbilling') {
+      if (modalBody) modalBody.classList.remove('sp-mode');
+      expr.style.display = 'block';
+      editor.style.display = 'block';
+      buttons.style.display = 'grid';
+      if (display) display.style.display = 'block';
+      if (resArea) resArea.style.display = 'flex';
+      renderQuickBillingGrid();
+    }
   }
 }
 
@@ -2977,7 +3013,7 @@ function setCalcMode(name) {
     renderCalcHistory();
     return;
   }
-  if (['date','expenses','splitter','fuel','emi','converter','scientific'].indexOf(name) !== -1 && _calcMode === name) { setCalcMode('basic'); return; }
+  if (['date','expenses','splitter','fuel','emi','converter','scientific','quickbilling'].indexOf(name) !== -1 && _calcMode === name) { setCalcMode('basic'); return; }
   if (_calcMode === name) return;
   _calcMode = name;
   localStorage.setItem('calc_mode', name);
@@ -3042,6 +3078,10 @@ function triggerKeyFeedback(el) {
 }
 
 function renderCalcButtons() {
+  if (_calcMode === 'quickbilling') {
+    renderQuickBillingGrid();
+    return;
+  }
   var grid = document.getElementById('calc-buttons');
   var buttons = ['±','C','%','÷','7','8','9','×','4','5','6','-','1','2','3','+','.','0','⌫','='];
   var opIds = {'×':'mul','÷':'div','-':'minus','+':'plus'};
@@ -3056,6 +3096,152 @@ function renderCalcButtons() {
     }
     return '<button onpointerdown="triggerKeyFeedback(this);calcBtn(\'' + label.replace(/'/g, "\\'") + '\')" onpointerup="releaseKeyFeedback(this)" onpointercancel="releaseKeyFeedback(this)" onpointerleave="releaseKeyFeedback(this)" style="padding:1.2rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:' + bg + ';color:' + color + ';font-size:1.3rem;font-weight:600;cursor:pointer;">' + label + '</button>';
   }).join('');
+}
+
+var _quickBillingItems = (function() {
+  try {
+    var saved = localStorage.getItem('calc_quick_items');
+    if (saved) return JSON.parse(saved);
+  } catch(e){}
+  return [
+    { name: 'Chai', price: 20, icon: '☕' },
+    { name: 'Samosa', price: 15, icon: '🥟' },
+    { name: 'Maggi', price: 50, icon: '🍜' },
+    { name: 'Sandwich', price: 60, icon: '🥪' }
+  ];
+})();
+
+var _quickBillingQty = 1;
+
+function setQuickBillingQty(deltaOrVal) {
+  if (typeof deltaOrVal === 'number') {
+    _quickBillingQty = Math.max(1, _quickBillingQty + deltaOrVal);
+  } else {
+    _quickBillingQty = Math.max(1, parseInt(deltaOrVal) || 1);
+  }
+  var qEl = document.getElementById('qb-qty-val');
+  if (qEl) qEl.textContent = _quickBillingQty;
+}
+
+function saveQuickBillingItems() {
+  localStorage.setItem('calc_quick_items', JSON.stringify(_quickBillingItems));
+}
+
+function addQuickBillingItemToBill(idx) {
+  var item = _quickBillingItems[idx];
+  if (!item || !item.name) return;
+
+  var qty = _quickBillingQty;
+  var unitPrice = parseFloat(item.price) || 0;
+  var itemTotal = unitPrice * qty;
+
+  if (calcTokens.length === 1 && (calcTokens[0].v === '0' || calcTokens[0].v === 0)) {
+    calcTokens = [];
+  } else if (calcTokens.length > 0 && ['+','-','*','/','%'].indexOf(calcTokens[calcTokens.length-1].v) === -1) {
+    calcTokens.push({ v: '+', label: '' });
+  }
+
+  calcTokens.push({
+    v: unitPrice.toString(),
+    qty: qty,
+    label: (item.icon ? (item.icon + ' ') : '') + item.name
+  });
+
+  calcUpdateDisplay(true);
+  showToast('➕ Added ' + qty + 'x ' + item.name + ' (₹' + itemTotal + ')');
+}
+
+function openQuickItemEditModal(idx) {
+  var item = _quickBillingItems[idx] || { name: '', price: '', icon: '' };
+  var modal = document.getElementById('modal-quick-item-edit');
+  if (!modal) return;
+  document.getElementById('qb-item-idx').value = idx;
+  document.getElementById('qb-item-name').value = item.name || '';
+  document.getElementById('qb-item-price').value = item.price !== undefined ? item.price : '';
+  document.getElementById('qb-item-icon').value = item.icon || '';
+  modal.classList.add('active');
+}
+
+function saveQuickItemFromModal() {
+  var idx = parseInt(document.getElementById('qb-item-idx').value);
+  var name = document.getElementById('qb-item-name').value.trim();
+  var price = parseFloat(document.getElementById('qb-item-price').value) || 0;
+  var icon = document.getElementById('qb-item-icon').value.trim();
+
+  if (!name) {
+    showToast('⚠️ Please enter Item Name');
+    return;
+  }
+
+  var itemData = { name: name, price: price, icon: icon };
+
+  if (!isNaN(idx) && idx >= 0) {
+    _quickBillingItems[idx] = itemData;
+  } else {
+    _quickBillingItems.push(itemData);
+  }
+
+  saveQuickBillingItems();
+  closeModal('modal-quick-item-edit');
+  renderQuickBillingGrid();
+  showToast('✅ Quick Item Saved!');
+}
+
+function deleteQuickItemFromModal() {
+  var idx = parseInt(document.getElementById('qb-item-idx').value);
+  if (!isNaN(idx) && idx >= 0 && idx < _quickBillingItems.length) {
+    _quickBillingItems.splice(idx, 1);
+    saveQuickBillingItems();
+    closeModal('modal-quick-item-edit');
+    renderQuickBillingGrid();
+    showToast('🗑️ Quick Item Deleted!');
+  }
+}
+
+function renderQuickBillingGrid() {
+  var buttons = document.getElementById('calc-buttons');
+  if (!buttons) return;
+
+  var isLight = document.body.classList.contains('theme-light');
+  var tileBg = isLight ? '#f1f5f9' : 'var(--bg-secondary)';
+  var tileBorder = isLight ? '1px solid #cbd5e1' : '1px solid var(--border-color)';
+  var textCol = isLight ? '#0f172a' : 'var(--text-primary)';
+
+  var html = '<div style="grid-column:span 4;display:flex;align-items:center;justify-content:space-between;padding:0.4rem 0.65rem;background:' + tileBg + ';border-radius:10px;margin-bottom:4px;border:' + tileBorder + ';">' +
+    '<div style="display:flex;align-items:center;gap:6px;">' +
+      '<span style="font-size:0.8rem;font-weight:700;color:var(--text-muted);">Qty:</span>' +
+      '<button onclick="setQuickBillingQty(-1)" style="width:28px;height:28px;border-radius:6px;border:1px solid var(--border-color);background:var(--bg-tertiary);color:' + textCol + ';font-size:0.9rem;font-weight:800;cursor:pointer;">-</button>' +
+      '<span id="qb-qty-val" style="font-size:0.95rem;font-weight:800;color:var(--color-accent);min-width:22px;text-align:center;">' + _quickBillingQty + '</span>' +
+      '<button onclick="setQuickBillingQty(1)" style="width:28px;height:28px;border-radius:6px;border:1px solid var(--border-color);background:var(--bg-tertiary);color:' + textCol + ';font-size:0.9rem;font-weight:800;cursor:pointer;">+</button>' +
+    '</div>' +
+    '<div style="display:flex;gap:6px;">' +
+      '<button onclick="clearCalcTokens();calcUpdateDisplay();" style="padding:0.35rem 0.6rem;border-radius:6px;border:1px solid var(--border-color);background:rgba(255,107,107,0.15);color:#ff6b6b;font-size:0.75rem;font-weight:700;cursor:pointer;">🗑️ Clear Bill</button>' +
+    '</div>' +
+  '</div>';
+
+  for (var i = 0; i < 20; i++) {
+    var item = _quickBillingItems[i];
+    if (item && item.name) {
+      var icon = item.icon ? (item.icon + ' ') : '';
+      var priceStr = '₹' + parseFloat(item.price || 0).toLocaleString('en-IN');
+      html += '<button onclick="addQuickBillingItemToBill(' + i + ')" style="min-height:56px;padding:0.4rem 0.3rem;border-radius:12px;background:' + tileBg + ';border:' + tileBorder + ';color:' + textCol + ';display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer;position:relative;transition:transform 0.04s ease;overflow:hidden;">' +
+        '<div style="font-size:0.82rem;font-weight:800;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:90%;">' + escHtml(icon + item.name) + '</div>' +
+        '<div style="font-size:0.75rem;font-weight:700;color:var(--color-accent);">' + priceStr + '</div>' +
+        '<span onclick="event.stopPropagation();openQuickItemEditModal(' + i + ')" style="position:absolute;right:3px;top:2px;font-size:0.68rem;opacity:0.6;padding:2px;" title="Edit Item">⚙️</span>' +
+      '</button>';
+    } else {
+      html += '<button onclick="openQuickItemEditModal(' + i + ')" style="min-height:56px;padding:0.4rem 0.3rem;border-radius:12px;background:' + tileBg + ';border:1.5px dashed var(--border-color);color:var(--text-muted);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;cursor:pointer;opacity:0.85;">' +
+        '<div style="font-size:1.2rem;font-weight:800;color:var(--color-accent);line-height:1;">+</div>' +
+        '<div style="font-size:0.68rem;font-weight:700;letter-spacing:0.3px;">Add Item</div>' +
+      '</button>';
+    }
+  }
+
+  html += '<button onclick="printBill()" style="grid-column:span 4;min-height:46px;padding:0.65rem;border-radius:12px;background:var(--color-accent);color:#fff;border:none;font-weight:800;font-size:0.95rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;box-shadow:0 4px 14px rgba(0,0,0,0.3);margin-top:2px;">' +
+    '🖨️ PRINT POS RECEIPT' +
+  '</button>';
+
+  buttons.innerHTML = html;
 }
 
 function calcBtn(label) {
