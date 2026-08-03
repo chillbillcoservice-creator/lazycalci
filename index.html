@@ -1665,18 +1665,24 @@ body {
         </div>
       </div>
 
-      <div style="display:flex;gap:0.5rem;">
-        <div style="flex:1;">
-          <label style="font-size:0.78rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:0.25rem;">Shift Timings</label>
-          <div style="display:flex;align-items:center;gap:3px;">
-            <input type="time" id="staff-shift-start" value="09:00" style="flex:1;padding:0.4rem;border-radius:6px;border:1px solid var(--border-color);background:var(--bg-tertiary);color:var(--text-primary);font-size:0.78rem;box-sizing:border-box;">
-            <span style="font-size:0.75rem;color:var(--text-muted);">-</span>
-            <input type="time" id="staff-shift-end" value="18:00" style="flex:1;padding:0.4rem;border-radius:6px;border:1px solid var(--border-color);background:var(--bg-tertiary);color:var(--text-primary);font-size:0.78rem;box-sizing:border-box;">
-          </div>
+      <div>
+        <label style="font-size:0.78rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:0.25rem;">Shift Hours & Working Days</label>
+        <div style="display:flex;align-items:center;gap:4px;margin-bottom:0.4rem;">
+          <input type="time" id="staff-shift-start" value="09:00" style="flex:1;padding:0.4rem;border-radius:6px;border:1px solid var(--border-color);background:var(--bg-tertiary);color:var(--text-primary);font-size:0.78rem;box-sizing:border-box;">
+          <span style="font-size:0.75rem;color:var(--text-muted);">-</span>
+          <input type="time" id="staff-shift-end" value="18:00" style="flex:1;padding:0.4rem;border-radius:6px;border:1px solid var(--border-color);background:var(--bg-tertiary);color:var(--text-primary);font-size:0.78rem;box-sizing:border-box;">
         </div>
+        <div id="staff-roster-chips" style="display:flex;gap:3px;justify-content:space-between;"></div>
+      </div>
+
+      <div style="display:flex;gap:0.5rem;">
         <div style="flex:1;">
           <label style="font-size:0.78rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:0.25rem;">Advance Taken (₹)</label>
           <input type="number" id="staff-advance-input" placeholder="0" style="width:100%;padding:0.55rem;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-tertiary);color:var(--text-primary);font-size:0.88rem;box-sizing:border-box;">
+        </div>
+        <div style="flex:1;">
+          <label style="font-size:0.78rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:0.25rem;">Notes / Remarks</label>
+          <input type="text" id="staff-notes-input" placeholder="e.g. Night Shift" style="width:100%;padding:0.55rem;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-tertiary);color:var(--text-primary);font-size:0.88rem;box-sizing:border-box;">
         </div>
       </div>
 
@@ -8590,16 +8596,34 @@ function renderStaffMode(container) {
     filtered.forEach(function(emp) {
       var initial = emp.name ? emp.name[0].toUpperCase() : 'E';
       var avatarBg = 'linear-gradient(135deg, #38bdf8, #818cf8)';
-      html += '<div onclick="openStaffEditModal(' + emp.id + ')" style="display:flex;align-items:center;gap:0.75rem;padding:0.75rem 0.85rem;background:var(--bg-tertiary);border:1px solid var(--border-color);border-radius:12px;cursor:pointer;touch-action:manipulation;transition:all 0.15s;position:relative;">' +
-                '<div style="width:42px;height:42px;border-radius:50%;background:' + avatarBg + ';color:#000;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.1rem;flex-shrink:0;box-shadow:0 2px 8px rgba(56,189,248,0.25);">' + initial + '</div>' +
-                '<div style="flex:1;min-width:0;">' +
-                  '<div style="display:flex;align-items:center;justify-content:space-between;">' +
-                    '<div style="font-size:0.92rem;font-weight:800;color:var(--text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + escHtml(emp.name) + '</div>' +
-                    '<div style="font-size:0.85rem;font-weight:800;color:#38bdf8;">₹' + fmtNum(emp.salary) + '<span style="font-size:0.68rem;color:var(--text-muted);font-weight:600;">/mo</span></div>' +
+      var netSalary = Math.max(0, (emp.salary || 0) - (emp.advance || 0));
+
+      html += '<div onclick="openStaffEditModal(' + emp.id + ')" style="padding:0.8rem 0.85rem;background:var(--bg-tertiary);border:1px solid var(--border-color);border-radius:12px;cursor:pointer;touch-action:manipulation;transition:all 0.15s;position:relative;">' +
+                '<div style="display:flex;align-items:center;gap:0.75rem;">' +
+                  '<div style="width:42px;height:42px;border-radius:50%;background:' + avatarBg + ';color:#000;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.1rem;flex-shrink:0;box-shadow:0 2px 8px rgba(56,189,248,0.25);">' + initial + '</div>' +
+                  '<div style="flex:1;min-width:0;">' +
+                    '<div style="display:flex;align-items:center;justify-content:space-between;">' +
+                      '<div style="font-size:0.92rem;font-weight:800;color:var(--text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + escHtml(emp.name) + '</div>' +
+                      '<div style="font-size:0.85rem;font-weight:800;color:#38bdf8;">₹' + fmtNum(emp.salary) + '<span style="font-size:0.68rem;color:var(--text-muted);font-weight:600;">/mo</span></div>' +
+                    '</div>' +
+                    '<div style="display:flex;align-items:center;justify-content:space-between;margin-top:0.25rem;">' +
+                      '<div style="font-size:0.78rem;color:var(--text-muted);">📞 ' + escHtml(emp.phone) + '</div>' +
+                      '<div style="font-size:0.75rem;font-weight:700;color:#22c55e;background:rgba(34,197,94,0.12);padding:1px 6px;border-radius:6px;">' + (emp.attendance || 0) + '/26 Days</div>' +
+                    '</div>' +
                   '</div>' +
-                  '<div style="display:flex;align-items:center;justify-content:space-between;margin-top:0.25rem;">' +
-                    '<div style="font-size:0.78rem;color:var(--text-muted);">📞 ' + escHtml(emp.phone) + '</div>' +
-                    '<div style="font-size:0.75rem;font-weight:700;color:#22c55e;background:rgba(34,197,94,0.12);padding:1px 6px;border-radius:6px;">' + (emp.attendance || 0) + '/26 Days</div>' +
+                '</div>' +
+
+                /* Sub-row: Net Payable & Quick Attendance Buttons */
+                '<div style="display:flex;align-items:center;justify-content:space-between;margin-top:0.6rem;padding-top:0.5rem;border-top:1px solid var(--border-color);">' +
+                  '<div style="font-size:0.75rem;color:var(--text-muted);">' +
+                    'Net Pay: <span style="color:#22c55e;font-weight:800;">₹' + fmtNum(netSalary) + '</span>' +
+                    (emp.advance ? ' <span style="color:#ef4444;font-size:0.7rem;">(Adv: ₹' + fmtNum(emp.advance) + ')</span>' : '') +
+                  '</div>' +
+                  '<div style="display:flex;align-items:center;gap:4px;" onclick="event.stopPropagation()">' +
+                    '<span style="font-size:0.7rem;color:var(--text-muted);font-weight:700;margin-right:2px;">Today:</span>' +
+                    '<button onclick="recordStaffAttendance(' + emp.id + ', \'P\', event)" style="padding:2px 7px;border-radius:6px;background:#22c55e;color:#fff;border:none;font-weight:800;font-size:0.72rem;cursor:pointer;">P</button>' +
+                    '<button onclick="recordStaffAttendance(' + emp.id + ', \'H\', event)" style="padding:2px 7px;border-radius:6px;background:#eab308;color:#000;border:none;font-weight:800;font-size:0.72rem;cursor:pointer;">H</button>' +
+                    '<button onclick="recordStaffAttendance(' + emp.id + ', \'A\', event)" style="padding:2px 7px;border-radius:6px;background:#ef4444;color:#fff;border:none;font-weight:800;font-size:0.72rem;cursor:pointer;">A</button>' +
                   '</div>' +
                 '</div>' +
               '</div>';
@@ -8619,6 +8643,53 @@ function renderStaffMode(container) {
 
 var _editingStaffId = null;
 var _currentAadhaarData = null;
+var _selectedRosterDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+function toggleRosterDay(day) {
+  var idx = _selectedRosterDays.indexOf(day);
+  if (idx !== -1) {
+    _selectedRosterDays.splice(idx, 1);
+  } else {
+    _selectedRosterDays.push(day);
+  }
+  renderRosterChips();
+}
+
+function renderRosterChips() {
+  var wrap = document.getElementById('staff-roster-chips');
+  if (!wrap) return;
+  var days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  var html = '';
+  days.forEach(function(d) {
+    var isOn = _selectedRosterDays.indexOf(d) !== -1;
+    html += '<span onclick="toggleRosterDay(\'' + d + '\')" style="padding:3px 6px;border-radius:6px;font-size:0.72rem;font-weight:700;cursor:pointer;' +
+            (isOn ? 'background:#38bdf8;color:#000;' : 'background:var(--bg-tertiary);color:var(--text-muted);border:1px solid var(--border-color);') + '">' + d + '</span>';
+  });
+  wrap.innerHTML = html;
+}
+
+function recordStaffAttendance(empId, status, event) {
+  if (event) event.stopPropagation();
+  var emp = _staffList.find(function(x) { return x.id === empId; });
+  if (!emp) return;
+  if (!emp.attendanceLog) emp.attendanceLog = [];
+  
+  var today = new Date().toISOString().split('T')[0];
+  var existing = emp.attendanceLog.find(function(l) { return l.date === today; });
+  if (existing) {
+    existing.status = status;
+  } else {
+    emp.attendanceLog.push({ date: today, status: status });
+  }
+
+  var presentDays = emp.attendanceLog.filter(function(l) { return l.status === 'P'; }).length;
+  var halfDays = emp.attendanceLog.filter(function(l) { return l.status === 'H'; }).length;
+  emp.attendance = presentDays + (halfDays * 0.5);
+
+  localStorage.setItem('staff_tracker_list', JSON.stringify(_staffList));
+  renderStaffMode(document.getElementById('calc-mode-body'));
+  showToast('Marked ' + status + ' for ' + emp.name + '! 📋');
+}
 
 function openStaffEditModal(id) {
   _editingStaffId = id;
@@ -8630,6 +8701,7 @@ function openStaffEditModal(id) {
   var advanceIn = document.getElementById('staff-advance-input');
   var shiftStartIn = document.getElementById('staff-shift-start');
   var shiftEndIn = document.getElementById('staff-shift-end');
+  var notesIn = document.getElementById('staff-notes-input');
   var delBtn = document.getElementById('staff-delete-btn');
   var statusDiv = document.getElementById('staff-aadhaar-status');
   if (statusDiv) statusDiv.textContent = '';
@@ -8644,7 +8716,9 @@ function openStaffEditModal(id) {
       if (advanceIn) advanceIn.value = emp.advance || '';
       if (shiftStartIn) shiftStartIn.value = emp.shiftStart || '09:00';
       if (shiftEndIn) shiftEndIn.value = emp.shiftEnd || '18:00';
+      if (notesIn) notesIn.value = emp.notes || '';
       if (delBtn) delBtn.style.display = 'block';
+      if (emp.rosterDays) _selectedRosterDays = emp.rosterDays.slice();
       if (emp.aadhaar && statusDiv) statusDiv.textContent = '✅ Aadhaar Document Attached';
     }
   } else {
@@ -8655,8 +8729,11 @@ function openStaffEditModal(id) {
     if (advanceIn) advanceIn.value = '';
     if (shiftStartIn) shiftStartIn.value = '09:00';
     if (shiftEndIn) shiftEndIn.value = '18:00';
+    if (notesIn) notesIn.value = '';
     if (delBtn) delBtn.style.display = 'none';
+    _selectedRosterDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   }
+  renderRosterChips();
   openModal('modal-staff-edit');
 }
 
@@ -8685,6 +8762,7 @@ function saveStaffMember(e) {
   var advance = parseFloat(document.getElementById('staff-advance-input').value) || 0;
   var shiftStart = document.getElementById('staff-shift-start').value;
   var shiftEnd = document.getElementById('staff-shift-end').value;
+  var notes = (document.getElementById('staff-notes-input').value || '').trim();
 
   if (!name || !phone || phone.length !== 10) {
     alert('Please enter a valid employee name and 10-digit mobile number.');
@@ -8700,6 +8778,8 @@ function saveStaffMember(e) {
       emp.advance = advance;
       emp.shiftStart = shiftStart;
       emp.shiftEnd = shiftEnd;
+      emp.notes = notes;
+      emp.rosterDays = _selectedRosterDays.slice();
       if (_currentAadhaarData) emp.aadhaar = _currentAadhaarData;
     }
   } else {
@@ -8711,6 +8791,8 @@ function saveStaffMember(e) {
       advance: advance,
       shiftStart: shiftStart,
       shiftEnd: shiftEnd,
+      notes: notes,
+      rosterDays: _selectedRosterDays.slice(),
       attendance: 26,
       status: 'active',
       aadhaar: _currentAadhaarData || null
