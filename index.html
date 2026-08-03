@@ -1614,39 +1614,24 @@ body {
     
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.85rem;border-bottom:1px solid rgba(255,255,255,0.08);padding-bottom:0.6rem;">
       <h3 style="margin:0;font-size:1.05rem;font-weight:900;color:#eab308;display:flex;align-items:center;gap:6px;">
-        💳 Complete Payment
+        💳 Confirm Plan Upgrade
       </h3>
       <button onclick="closeModal('modal-payment-checkout')" class="close-btn" style="background:none;border:none;color:var(--text-primary);font-size:1.2rem;cursor:pointer;">✕</button>
     </div>
 
-    <div style="font-size:0.85rem;color:var(--text-primary);margin-bottom:0.85rem;font-weight:700;">
-      Selected Plan: <span id="checkout-selected-plan" style="color:#eab308;font-weight:900;">ALL-ACCESS POS (₹29)</span>
+    <div style="font-size:0.88rem;color:var(--text-primary);margin-bottom:0.85rem;font-weight:700;">
+      Selected Plan: <span id="checkout-selected-plan" style="color:#eab308;font-weight:900;">👑 All-Access POS (₹29)</span>
     </div>
 
-    <div style="background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:12px;padding:0.85rem;margin-bottom:0.85rem;">
-      <div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:0.6rem;line-height:1.4;">
-        Pay securely via Razorpay UPI (GPay, PhonePe, Paytm, BHIM or Cards)
-      </div>
-      <button onclick="openRazorpayPaymentPage()" style="width:100%;padding:0.75rem;border-radius:10px;background:#eab308;color:#000;border:none;font-weight:900;font-size:0.92rem;cursor:pointer;box-shadow:0 4px 14px rgba(234,179,8,0.4);margin-bottom:0.6rem;">
-        💳 Pay Now on Razorpay
+    <div style="background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:12px;padding:0.85rem;">
+      <button id="checkout-pay-now-btn" onclick="openRazorpayPaymentPage()" style="width:100%;padding:0.8rem;border-radius:10px;background:#eab308;color:#000;border:none;font-weight:900;font-size:0.95rem;cursor:pointer;box-shadow:0 4px 14px rgba(234,179,8,0.4);display:flex;align-items:center;justify-content:center;gap:6px;touch-action:manipulation;">
+        ⚡ Pay Now
       </button>
     </div>
 
-    <div style="border-top:1px solid var(--border-color);padding-top:0.85rem;">
-      <div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:0.5rem;">After completing payment on Razorpay:</div>
-      <button onclick="confirmCompletedPayment()" style="width:100%;padding:0.7rem;border-radius:10px;background:#22c55e;color:#fff;border:none;font-weight:800;font-size:0.88rem;cursor:pointer;box-shadow:0 3px 10px rgba(34,197,94,0.3);">
-        ✅ I Have Paid — Activate Plan Now
-      </button>
+    <div style="text-align:center;font-size:0.72rem;color:var(--text-muted);margin-top:0.75rem;">
+      🔒 100% Secure Instant UPI (GPay, PhonePe, Paytm, BHIM or Cards)
     </div>
-
-    <div style="margin-top:0.85rem;padding-top:0.6rem;border-top:1px solid rgba(255,255,255,0.06);">
-      <div onclick="toggleRazorpayKeyInput()" style="font-size:0.72rem;color:var(--color-accent);cursor:pointer;font-weight:700;">🔑 Have a Razorpay Key ID? Click to Connect</div>
-      <div id="razorpay-key-wrap" style="display:none;margin-top:0.5rem;">
-        <input id="razorpay-key-input" placeholder="e.g. rzp_live_xxxxxxxx" style="width:100%;padding:0.55rem;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);font-size:0.8rem;outline:none;box-sizing:border-box;margin-bottom:0.4rem;">
-        <button onclick="saveRazorpayKey()" style="width:100%;padding:0.45rem;border-radius:6px;background:var(--color-accent);color:#fff;border:none;font-size:0.78rem;font-weight:700;cursor:pointer;">Save Key & Enable 1-Click Popup</button>
-      </div>
-    </div>
-
   </div>
 </div>
 
@@ -4966,44 +4951,42 @@ var _selectedAmount = 29;
 function triggerPaymentTier(tier, amount) {
   _selectedTier = tier || 'all_access';
   _selectedAmount = amount || 29;
-  
-  var rzpKey = localStorage.getItem('calc_razorpay_key_id');
-
-  if (typeof Razorpay !== 'undefined' && rzpKey && rzpKey.startsWith('rzp_')) {
-    showToast('💳 Opening Razorpay Checkout for ₹' + amount + '...');
-    try {
-      var options = {
-        "key": rzpKey,
-        "amount": amount * 100,
-        "currency": "INR",
-        "name": "LAZY CALC POS",
-        "description": "Unlock " + tier.toUpperCase() + " Plan (Lifetime Access)",
-        "image": "https://lazy-calc-peach.vercel.app/icon-192.png",
-        "handler": function (response) {
-          setSecurePlan(tier);
-          closeModal('modal-plan-upgrade');
-          closeModal('modal-payment-checkout');
-          updatePaywallUI();
-          showToast('🎉 Payment Verified! ' + tier.toUpperCase() + ' Unlocked Permanent Access!');
-        },
-        "theme": { "color": "#eab308" }
-      };
-      var rzp = new Razorpay(options);
-      rzp.open();
-      return;
-    } catch(e) {}
-  }
-
-  var planLabel = (tier === 'basic') ? '🌱 Basic App (₹9)' : (tier === 'pro') ? '⭐ Pro App (₹19)' : '👑 All-Access POS (₹29)';
-  var labelEl = document.getElementById('checkout-selected-plan');
-  if (labelEl) labelEl.textContent = planLabel;
-
-  openModal('modal-payment-checkout');
+  openRazorpayPaymentPage();
 }
 
 function openRazorpayPaymentPage() {
-  showToast('💳 Opening Razorpay Payment Page...');
-  window.open('https://razorpay.me/@krishnamadnani', '_blank');
+  var keyId = 'rzp_live_TLErKJOgPF0o4n';
+  var amt = (_selectedAmount || 29) * 100;
+  var planTitle = _selectedTier ? _selectedTier.toUpperCase() : 'PRO';
+
+  showToast('💳 Opening Payment...');
+
+  function launchRzp() {
+    try {
+      var options = {
+        key: keyId,
+        amount: amt,
+        currency: "INR",
+        name: "Lazy Calc Pro",
+        description: planTitle + " Subscription Plan",
+        image: "https://lazy-calc-peach.vercel.app/icon-192.png",
+        handler: function (response) {
+          confirmCompletedPayment(response.razorpay_payment_id);
+        },
+        theme: { color: "#eab308" }
+      };
+      var rzp1 = new Razorpay(options);
+      rzp1.open();
+    } catch(err) {
+      window.location.href = 'https://razorpay.me/@krishnamadnani';
+    }
+  }
+
+  if (typeof Razorpay !== 'undefined') {
+    launchRzp();
+  } else {
+    window.location.href = 'https://razorpay.me/@krishnamadnani';
+  }
 }
 
 function confirmCompletedPayment() {
