@@ -203,7 +203,7 @@ body.mode-pos #calc-voice-btn,
   font-size:1.1rem; display:flex; align-items:center;
 }
 .settings-btn:hover { background:var(--bg-tertiary); }
-#modal-settings { z-index: 1001; }
+#modal-settings { z-index: 10000 !important; }
 #modal-onboarding { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.88) !important; backdrop-filter: blur(10px) !important; -webkit-backdrop-filter: blur(10px) !important; z-index: 1004; padding: 0.5rem !important; display: none; align-items: center; justify-content: center; }
 #modal-onboarding.active { display: flex !important; }
 #modal-onboarding .modal-container { width: 94vw !important; max-width: 440px !important; max-height: 90vh !important; border-radius: var(--radius-md, 14px) !important; border: 1px solid var(--border-color) !important; background: var(--bg-secondary) !important; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6) !important; padding: 1.1rem 1rem !important; box-sizing: border-box; overflow-y: auto !important; margin: auto !important; display: block !important; -ms-overflow-style: none !important; scrollbar-width: none !important; }
@@ -635,6 +635,24 @@ body {
   -webkit-backdrop-filter: blur(8px) !important;
 }
 .modal-overlay.active { display: flex; }
+
+#modal-quick-item-edit,
+#modal-pos-whatsapp,
+#modal-create-group {
+  align-items: flex-start !important;
+  padding-top: max(16px, env(safe-area-inset-top)) !important;
+  overflow-y: auto !important;
+}
+#modal-quick-item-edit .modal-container,
+#modal-quick-item-edit .modal-card,
+#modal-pos-whatsapp .modal-container,
+#modal-pos-whatsapp .modal-card,
+#modal-create-group .modal-container,
+#modal-create-group .modal-card {
+  max-height: calc(100vh - 35px) !important;
+  overflow-y: auto !important;
+  margin-top: 8px !important;
+}
 
 @keyframes btCardGlowPulse {
   0% {
@@ -1160,16 +1178,27 @@ body {
     <input type="hidden" id="qb-item-idx">
     <div style="display:flex;flex-direction:column;gap:0.75rem;margin-bottom:1.1rem;">
       <div>
-        <label style="font-size:0.78rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">Item Name (e.g. Maggi, Chai)</label>
-        <input id="qb-item-name" placeholder="Item Name" style="width:100%;padding:0.7rem;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-secondary);color:var(--text-primary);font-size:0.95rem;outline:none;box-sizing:border-box;">
+        <label style="font-size:0.78rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">Item Name (e.g. Pasta, Chai)</label>
+        <input id="qb-item-name" oninput="handleQbItemNameInput()" placeholder="Item Name" style="width:100%;padding:0.7rem;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-secondary);color:var(--text-primary);font-size:0.95rem;outline:none;box-sizing:border-box;">
       </div>
       <div>
         <label style="font-size:0.78rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">Price / Rate (₹)</label>
         <input type="number" inputmode="decimal" id="qb-item-price" placeholder="Rate e.g. 50" style="width:100%;padding:0.7rem;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-secondary);color:var(--text-primary);font-size:0.95rem;outline:none;box-sizing:border-box;">
       </div>
       <div>
-        <label style="font-size:0.78rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">Emoji / Icon (Optional)</label>
-        <input id="qb-item-icon" placeholder="e.g. 🍜 or ☕" style="width:100%;padding:0.7rem;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-secondary);color:var(--text-primary);font-size:0.95rem;outline:none;box-sizing:border-box;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+          <label style="font-size:0.78rem;font-weight:700;color:var(--text-muted);">Emoji / Icon</label>
+          <button onclick="triggerAutoEmoji()" style="background:none;border:none;color:var(--color-accent);font-size:0.75rem;font-weight:800;cursor:pointer;padding:0;" title="Auto Detect Food Emoji">✨ Auto Detect</button>
+        </div>
+        <input id="qb-item-icon" placeholder="e.g. 🍝 or ☕" style="width:100%;padding:0.7rem;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-secondary);color:var(--text-primary);font-size:0.95rem;outline:none;box-sizing:border-box;">
+      </div>
+      <div>
+        <label style="font-size:0.78rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">Food Type Indicator</label>
+        <input type="hidden" id="qb-item-food-type" value="veg">
+        <div style="display:flex;gap:0.4rem;">
+          <button type="button" id="food-pill-veg" onclick="setFoodTypePill('veg')" style="flex:1;padding:0.55rem;border-radius:8px;border:1.5px solid #22c55e;background:rgba(34,197,94,0.18);color:#22c55e;font-weight:800;font-size:0.85rem;cursor:pointer;transition:all 0.15s ease;">🟢 Pure Veg</button>
+          <button type="button" id="food-pill-nonveg" onclick="setFoodTypePill('nonveg')" style="flex:1;padding:0.55rem;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-secondary);color:var(--text-muted);font-weight:700;font-size:0.85rem;cursor:pointer;transition:all 0.15s ease;">🔴 Non-Veg</button>
+        </div>
       </div>
     </div>
     <div style="display:flex;gap:0.5rem;">
@@ -2120,6 +2149,7 @@ function collectSocialLinks() {
 }
 
 function openBillCustomizationModal() {
+  closeSettingsModal();
   var modal = document.getElementById('modal-bill-customization');
   if (!modal) return;
   document.getElementById('bill-bsns-name').value = _billProfile.bsnsName || '';
@@ -3047,9 +3077,14 @@ function setCalcSkin(skin) {
 }
 
 function openSettingsModal() {
-  applyCalcSkin(_calcSkin);
-  if (typeof updatePaywallUI === 'function') updatePaywallUI();
-  document.getElementById('modal-settings').classList.add('active');
+  var modal = document.getElementById('modal-settings');
+  if (modal) {
+    modal.classList.add('active');
+    try {
+      if (typeof applyCalcSkin === 'function') applyCalcSkin(_calcSkin);
+      if (typeof updatePaywallUI === 'function') updatePaywallUI();
+    } catch(e) {}
+  }
 }
 
 function closeSettingsModal(e) {
@@ -3860,6 +3895,7 @@ function saveCustomerDataRecord(name, phone, amount) {
 }
 
 function openCustomerDataModal() {
+  closeSettingsModal();
   renderCustomerDataList();
   openModal('modal-customer-data');
 }
@@ -3982,14 +4018,100 @@ window.sendPosBillOnWhatsApp = sendPosBillOnWhatsApp;
 window.printQuickBillingOrder = printQuickBillingOrder;
 window.openPosQtyEditModal = openPosQtyEditModal;
 
+window.handleQbItemNameInput = handleQbItemNameInput;
+window.triggerAutoEmoji = triggerAutoEmoji;
+window.setFoodTypePill = setFoodTypePill;
+
+function getAutoFoodEmoji(name) {
+  if (!name || typeof name !== 'string') return '';
+  var n = name.toLowerCase().trim();
+  if (n.includes('pasta') || n.includes('macaroni') || n.includes('spaghetti')) return '🍝';
+  if (n.includes('chai') || n.includes('tea') || n.includes('cutting')) return '☕';
+  if (n.includes('coffee') || n.includes('cappuccino') || n.includes('latte') || n.includes('espresso')) return '☕';
+  if (n.includes('pizza')) return '🍕';
+  if (n.includes('burger')) return '🍔';
+  if (n.includes('samosa') || n.includes('kachori') || n.includes('pakoda') || n.includes('bhajia')) return '🥟';
+  if (n.includes('maggi') || n.includes('noodle') || n.includes('chowmein') || n.includes('ramen')) return '🍜';
+  if (n.includes('biryani') || n.includes('pulao') || n.includes('fried rice') || n.includes('rice')) return '🍲';
+  if (n.includes('dosa') || n.includes('idli') || n.includes('uttapam')) return '🥞';
+  if (n.includes('momo') || n.includes('dimsum') || n.includes('dumpling')) return '🥟';
+  if (n.includes('sandwich') || n.includes('toast') || n.includes('garlic bread')) return '🥪';
+  if (n.includes('ice cream') || n.includes('sundae') || n.includes('kulfi') || n.includes('scoop')) return '🍨';
+  if (n.includes('cake') || n.includes('pastry') || n.includes('brownie') || n.includes('muffin')) return '🍰';
+  if (n.includes('cold drink') || n.includes('soda') || n.includes('coke') || n.includes('pepsi') || n.includes('thumsup') || n.includes('sprite')) return '🥤';
+  if (n.includes('shake') || n.includes('smoothie') || n.includes('lassi') || n.includes('milk')) return '🥛';
+  if (n.includes('beer') || n.includes('whisky') || n.includes('wine') || n.includes('cocktail') || n.includes('rum')) return '🍺';
+  if (n.includes('chicken') || n.includes('mutton') || n.includes('fish') || n.includes('egg') || n.includes('kabab') || n.includes('tikka') || n.includes('tandoori')) return '🍗';
+  if (n.includes('paneer') || n.includes('thali') || n.includes('curry') || n.includes('dal') || n.includes('roti') || n.includes('naan')) return '🍛';
+  if (n.includes('juice') || n.includes('mojito') || n.includes('lemonade')) return '🍹';
+  if (n.includes('water') || n.includes('mineral')) return '💧';
+  if (n.includes('chocolate') || n.includes('candy') || n.includes('sweet') || n.includes('mithai') || n.includes('gulab jamun') || n.includes('jalebi')) return '🍬';
+  if (n.includes('fries') || n.includes('french fries') || n.includes('chips')) return '🍟';
+  if (n.includes('roll') || n.includes('frankie') || n.includes('shawarma') || n.includes('wrap')) return '🌯';
+  if (n.includes('soup')) return '🥣';
+  if (n.includes('salad')) return '🥗';
+  if (n.includes('fruit')) return '🍎';
+  return '';
+}
+
+function handleQbItemNameInput() {
+  var name = document.getElementById('qb-item-name').value;
+  var emojiInput = document.getElementById('qb-item-icon');
+  if (emojiInput && (!emojiInput.value || emojiInput.getAttribute('data-auto') === 'true')) {
+    var detected = getAutoFoodEmoji(name);
+    if (detected) {
+      emojiInput.value = detected;
+      emojiInput.setAttribute('data-auto', 'true');
+    }
+  }
+}
+
+function triggerAutoEmoji() {
+  var name = document.getElementById('qb-item-name').value;
+  var emojiInput = document.getElementById('qb-item-icon');
+  var detected = getAutoFoodEmoji(name);
+  if (detected && emojiInput) {
+    emojiInput.value = detected;
+    emojiInput.setAttribute('data-auto', 'true');
+    showToast('✨ Auto Detected: ' + detected);
+  } else {
+    showToast('ℹ️ Type item name (e.g. Pasta, Chai) to auto-detect!');
+  }
+}
+
+function setFoodTypePill(type) {
+  document.getElementById('qb-item-food-type').value = type;
+  var vegBtn = document.getElementById('food-pill-veg');
+  var nonvegBtn = document.getElementById('food-pill-nonveg');
+  if (type === 'nonveg') {
+    vegBtn.style.border = '1px solid var(--border-color)';
+    vegBtn.style.background = 'var(--bg-secondary)';
+    vegBtn.style.color = 'var(--text-muted)';
+    nonvegBtn.style.border = '1.5px solid #ef4444';
+    nonvegBtn.style.background = 'rgba(239,68,68,0.18)';
+    nonvegBtn.style.color = '#ef4444';
+  } else {
+    vegBtn.style.border = '1.5px solid #22c55e';
+    vegBtn.style.background = 'rgba(34,197,94,0.18)';
+    vegBtn.style.color = '#22c55e';
+    nonvegBtn.style.border = '1px solid var(--border-color)';
+    nonvegBtn.style.background = 'var(--bg-secondary)';
+    nonvegBtn.style.color = 'var(--text-muted)';
+  }
+}
+
 function openQuickItemEditModal(idx) {
-  var item = _quickBillingItems[idx] || { name: '', price: '', icon: '' };
+  var item = _quickBillingItems[idx] || { name: '', price: '', icon: '', foodType: 'veg' };
   var modal = document.getElementById('modal-quick-item-edit');
   if (!modal) return;
   document.getElementById('qb-item-idx').value = idx;
   document.getElementById('qb-item-name').value = item.name || '';
   document.getElementById('qb-item-price').value = item.price !== undefined ? item.price : '';
-  document.getElementById('qb-item-icon').value = item.icon || '';
+  var emojiInput = document.getElementById('qb-item-icon');
+  emojiInput.value = item.icon || '';
+  emojiInput.removeAttribute('data-auto');
+  var foodType = item.foodType || 'veg';
+  setFoodTypePill(foodType);
   modal.classList.add('active');
 }
 
@@ -3998,13 +4120,15 @@ function saveQuickItemFromModal() {
   var name = document.getElementById('qb-item-name').value.trim();
   var price = parseFloat(document.getElementById('qb-item-price').value) || 0;
   var icon = document.getElementById('qb-item-icon').value.trim();
+  var foodType = document.getElementById('qb-item-food-type').value || 'veg';
 
   if (!name) {
     showToast('⚠️ Please enter Item Name');
     return;
   }
 
-  var itemData = { name: name, price: price, icon: icon };
+  var existingItem = _quickBillingItems[idx] || {};
+  var itemData = Object.assign({}, existingItem, { name: name, price: price, icon: icon, foodType: foodType });
 
   if (!isNaN(idx) && idx >= 0) {
     _quickBillingItems[idx] = itemData;
@@ -4215,9 +4339,13 @@ function renderQuickBillingGrid() {
         var editBadge = _qbEditMode ? '<span style="position:absolute;right:3px;top:2px;font-size:0.65rem;color:#eab308;">✏️</span>' : '';
         var cardOpacity = item.outOfStock ? '0.45' : '1.0';
         var oosBadge = item.outOfStock ? '<div style="position:absolute;bottom:0;left:0;right:0;background:rgba(239,68,68,0.92);color:#fff;font-size:0.52rem;font-weight:900;letter-spacing:0.3px;padding:1px 0;text-transform:uppercase;text-align:center;">OUT OF STOCK</div>' : '';
+        var isNonVeg = (item.foodType === 'nonveg');
+        var foodTag = isNonVeg
+          ? '<span style="display:inline-block;width:9px;height:9px;border:1.2px solid #ef4444;border-radius:2px;padding:1px;vertical-align:middle;margin-left:4px;box-sizing:border-box;" title="Non-Veg"><span style="display:block;width:100%;height:100%;background:#ef4444;border-radius:50%;"></span></span>'
+          : '<span style="display:inline-block;width:9px;height:9px;border:1.2px solid #22c55e;border-radius:2px;padding:1px;vertical-align:middle;margin-left:4px;box-sizing:border-box;" title="Pure Veg"><span style="display:block;width:100%;height:100%;background:#22c55e;border-radius:50%;"></span></span>';
 
         html += '<button onclick="' + clickAction + '" onpointerdown="startItemLongPress(event, ' + i + ')" onpointerup="cancelItemLongPress(event, ' + i + ')" onpointerleave="cancelItemLongPress(event, ' + i + ')" oncontextmenu="event.preventDefault();" style="min-height:52px;height:52px;padding:0.35rem 0.25rem;border-radius:10px;background:' + tileBg + ';border:' + tileBorder + ';color:' + textCol + ';display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;cursor:pointer;position:relative;transition:all 0.15s ease;overflow:hidden;opacity:' + cardOpacity + ';">' +
-          '<div style="font-size:0.85rem;font-weight:800;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:92%;">' + escHtml(icon + item.name) + '</div>' +
+          '<div style="font-size:0.85rem;font-weight:800;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:92%;display:flex;align-items:center;justify-content:center;">' + escHtml(icon + item.name) + foodTag + '</div>' +
           '<div style="font-size:0.75rem;font-weight:700;color:var(--color-accent);">' + priceStr + '</div>' +
           editBadge +
           oosBadge +
@@ -4263,6 +4391,15 @@ function printQuickBillingOrder() {
 
 /* 💎 100-DAY FREE TRIAL & PRICING TIER ENGINE */
 function getTrialInfo() {
+  var pendingTier = localStorage.getItem('calc_pending_tier');
+  if (pendingTier) {
+    localStorage.removeItem('calc_pending_tier');
+    setSecurePlan(pendingTier);
+    setTimeout(function() {
+      showToast('🎉 Payment Verified! ' + pendingTier.toUpperCase() + ' Unlocked Permanent Access!');
+    }, 800);
+  }
+
   var firstLaunch = localStorage.getItem('calc_first_launch_date');
   if (!firstLaunch) {
     firstLaunch = Date.now();
@@ -4270,15 +4407,38 @@ function getTrialInfo() {
   } else {
     firstLaunch = parseInt(firstLaunch);
   }
-  var daysUsed = Math.floor((Date.now() - firstLaunch) / 86400000);
-  var daysLeft = Math.max(0, 100 - daysUsed);
+
+  var launchDate = new Date(firstLaunch);
+  launchDate.setHours(0, 0, 0, 0);
+  var currentDate = new Date();
+  currentDate.setHours(0, 0, 0, 0);
+
+  var calendarDaysUsed = Math.floor((currentDate.getTime() - launchDate.getTime()) / 86400000);
+  var daysLeft = Math.max(0, 100 - calendarDaysUsed);
   var planType = localStorage.getItem('calc_plan_type') || 'trial';
+  var planSig = localStorage.getItem('calc_plan_sig') || '';
+
+  if (planType !== 'trial') {
+    var expectedSig = btoa(planType + '_LAZYCALC_SECURE_2026');
+    if (planSig !== expectedSig) {
+      planType = 'trial';
+      localStorage.setItem('calc_plan_type', 'trial');
+      localStorage.removeItem('calc_plan_sig');
+    }
+  }
+
   return {
     firstLaunch: firstLaunch,
     daysUsed: daysUsed,
     daysLeft: daysLeft,
     planType: planType
   };
+}
+
+function setSecurePlan(tier) {
+  var sig = btoa(tier + '_LAZYCALC_SECURE_2026');
+  localStorage.setItem('calc_plan_type', tier);
+  localStorage.setItem('calc_plan_sig', sig);
 }
 
 function updatePaywallUI() {
@@ -4299,50 +4459,37 @@ function openPlanUpgradeModal() {
 }
 
 function triggerPaymentTier(tier, amount) {
-  var rzpKey = localStorage.getItem('calc_razorpay_key_id') || 'rzp_test_LAZYCALCPOS2026';
-  
-  if (typeof Razorpay === 'undefined') {
-    showToast('💳 Initializing Instant UPI Payment for ₹' + amount + '...');
-    setTimeout(function() {
-      localStorage.setItem('calc_plan_type', tier);
-      closeModal('modal-plan-upgrade');
-      updatePaywallUI();
-      showToast('🎉 Payment Successful! ' + tier.toUpperCase() + ' Unlocked Permanent Access!');
-    }, 1200);
-    return;
+  var rzpKey = localStorage.getItem('calc_razorpay_key_id');
+
+  if (typeof Razorpay !== 'undefined' && rzpKey && rzpKey.startsWith('rzp_')) {
+    showToast('💳 Opening Payment Sheet for ₹' + amount + '...');
+    var options = {
+      "key": rzpKey,
+      "amount": amount * 100,
+      "currency": "INR",
+      "name": "LAZY CALC POS",
+      "description": "Unlock " + tier.toUpperCase() + " Plan (Lifetime Access)",
+      "image": "https://lazy-calc-peach.vercel.app/icon-192.png",
+      "handler": function (response) {
+        setSecurePlan(tier);
+        closeModal('modal-plan-upgrade');
+        updatePaywallUI();
+        showToast('🎉 Payment Verified! ' + tier.toUpperCase() + ' Unlocked Permanent Access!');
+      },
+      "prefill": { "contact": "", "email": "" },
+      "theme": { "color": "#eab308" }
+    };
+    try {
+      var rzp = new Razorpay(options);
+      rzp.open();
+      return;
+    } catch(e) {}
   }
 
-  var options = {
-    "key": rzpKey,
-    "amount": amount * 100,
-    "currency": "INR",
-    "name": "LAZY CALC POS",
-    "description": "Unlock " + tier.toUpperCase() + " Plan (Lifetime Access)",
-    "image": "https://lazy-calc-peach.vercel.app/icon-192.png",
-    "handler": function (response) {
-      localStorage.setItem('calc_plan_type', tier);
-      closeModal('modal-plan-upgrade');
-      updatePaywallUI();
-      showToast('🎉 Payment Successful! ' + tier.toUpperCase() + ' Unlocked Permanent Access!');
-    },
-    "prefill": {
-      "contact": "",
-      "email": ""
-    },
-    "theme": {
-      "color": "#eab308"
-    }
-  };
-
-  try {
-    var rzp = new Razorpay(options);
-    rzp.open();
-  } catch(e) {
-    localStorage.setItem('calc_plan_type', tier);
-    closeModal('modal-plan-upgrade');
-    updatePaywallUI();
-    showToast('🎉 Payment Successful! ' + tier.toUpperCase() + ' Unlocked Permanent Access!');
-  }
+  // Smooth customer redirect to Razorpay Merchant Payment Page (@krishnamadnani)
+  showToast('💳 Opening Payment Page for ₹' + amount + '...');
+  var targetUrl = 'https://razorpay.me/@krishnamadnani';
+  window.open(targetUrl, '_blank');
 }
 
 window.getTrialInfo = getTrialInfo;
