@@ -8632,7 +8632,6 @@ function renderStaffMode(container) {
                     '</div>' +
                     '<div style="display:flex;align-items:center;justify-content:space-between;margin-top:0.25rem;">' +
                       '<div style="font-size:0.78rem;color:var(--text-muted);">📞 ' + escHtml(emp.phone) + '</div>' +
-                      '<div style="font-size:0.75rem;font-weight:700;color:#22c55e;background:rgba(34,197,94,0.12);padding:1px 6px;border-radius:6px;">' + (emp.attendance || 0) + '/26 Days</div>' +
                     '</div>' +
                   '</div>' +
                 '</div>' +
@@ -8789,10 +8788,16 @@ function renderStaffCalendarGrid(emp) {
     emp.attendanceLog.forEach(function(l) { logMap[l.date] = l.status; });
   }
 
+  var now = new Date();
+  var totalDays = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+  var monthStr = (now.getMonth() + 1) < 10 ? '0' + (now.getMonth() + 1) : '' + (now.getMonth() + 1);
+  var ymPrefix = now.getFullYear() + '-' + monthStr + '-';
+
   var html = '';
-  for (var d = 1; d <= 28; d++) {
+  for (var d = 1; d <= totalDays; d++) {
     var dayStr = d < 10 ? '0' + d : '' + d;
-    var status = logMap['2026-08-' + dayStr] || (d <= 24 ? 'P' : (d === 25 ? 'A' : '--'));
+    var fullDate = ymPrefix + dayStr;
+    var status = logMap[fullDate] || (d <= 24 ? 'P' : (d === 25 ? 'A' : '--'));
     var bg = status === 'P' ? '#22c55e' : (status === 'A' ? '#ef4444' : (status === 'H' ? '#eab308' : 'var(--bg-tertiary)'));
     var color = (status === 'P' || status === 'A') ? '#fff' : (status === 'H' ? '#000' : 'var(--text-muted)');
     html += '<div style="padding:4px 2px;border-radius:6px;background:' + bg + ';color:' + color + ';font-size:0.7rem;font-weight:800;">' + d + '<br><span style="font-size:0.65rem;">' + status + '</span></div>';
