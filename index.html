@@ -8614,6 +8614,14 @@ function renderStaffMode(container) {
       var avatarBg = 'linear-gradient(135deg, #38bdf8, #818cf8)';
       var netSalary = Math.max(0, (emp.salary || 0) - (emp.advance || 0));
 
+      var today = new Date().toISOString().split('T')[0];
+      var todayEntry = (emp.attendanceLog || []).find(function(l) { return l.date === today; });
+      var todayStatus = todayEntry ? todayEntry.status : null;
+
+      var pStyle = todayStatus === 'P' ? 'padding:3px 9px;border-radius:6px;background:#22c55e;color:#fff;border:2px solid #fff;font-weight:900;font-size:0.75rem;cursor:pointer;box-shadow:0 0 8px #22c55e;' : 'padding:3px 8px;border-radius:6px;background:#22c55e;color:#fff;border:none;font-weight:800;font-size:0.72rem;cursor:pointer;opacity:0.65;';
+      var hStyle = todayStatus === 'H' ? 'padding:3px 9px;border-radius:6px;background:#eab308;color:#000;border:2px solid #fff;font-weight:900;font-size:0.75rem;cursor:pointer;box-shadow:0 0 8px #eab308;' : 'padding:3px 8px;border-radius:6px;background:#eab308;color:#000;border:none;font-weight:800;font-size:0.72rem;cursor:pointer;opacity:0.65;';
+      var aStyle = todayStatus === 'A' ? 'padding:3px 9px;border-radius:6px;background:#ef4444;color:#fff;border:2px solid #fff;font-weight:900;font-size:0.75rem;cursor:pointer;box-shadow:0 0 8px #ef4444;' : 'padding:3px 8px;border-radius:6px;background:#ef4444;color:#fff;border:none;font-weight:800;font-size:0.72rem;cursor:pointer;opacity:0.65;';
+
       html += '<div onclick="openStaffEditModal(' + emp.id + ')" style="padding:0.8rem 0.85rem;background:var(--bg-tertiary);border:1px solid var(--border-color);border-radius:12px;cursor:pointer;touch-action:manipulation;transition:all 0.15s;position:relative;">' +
                 '<div style="display:flex;align-items:center;gap:0.75rem;">' +
                   '<div style="width:42px;height:42px;border-radius:50%;background:' + avatarBg + ';color:#000;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.1rem;flex-shrink:0;box-shadow:0 2px 8px rgba(56,189,248,0.25);">' + initial + '</div>' +
@@ -8637,9 +8645,9 @@ function renderStaffMode(container) {
                   '</div>' +
                   '<div style="display:flex;align-items:center;gap:4px;" onclick="event.stopPropagation()">' +
                     '<span style="font-size:0.7rem;color:var(--text-muted);font-weight:700;margin-right:2px;">Today:</span>' +
-                    '<button onclick="recordStaffAttendance(' + emp.id + ', \'P\', event)" style="padding:2px 7px;border-radius:6px;background:#22c55e;color:#fff;border:none;font-weight:800;font-size:0.72rem;cursor:pointer;">P</button>' +
-                    '<button onclick="recordStaffAttendance(' + emp.id + ', \'H\', event)" style="padding:2px 7px;border-radius:6px;background:#eab308;color:#000;border:none;font-weight:800;font-size:0.72rem;cursor:pointer;">H</button>' +
-                    '<button onclick="recordStaffAttendance(' + emp.id + ', \'A\', event)" style="padding:2px 7px;border-radius:6px;background:#ef4444;color:#fff;border:none;font-weight:800;font-size:0.72rem;cursor:pointer;">A</button>' +
+                    '<button onclick="recordStaffAttendance(' + emp.id + ', \'P\', event)" style="' + pStyle + '">P</button>' +
+                    '<button onclick="recordStaffAttendance(' + emp.id + ', \'H\', event)" style="' + hStyle + '">H</button>' +
+                    '<button onclick="recordStaffAttendance(' + emp.id + ', \'A\', event)" style="' + aStyle + '">A</button>' +
                   '</div>' +
                 '</div>' +
               '</div>';
@@ -8691,11 +8699,22 @@ function recordStaffAttendance(empId, status, event) {
   if (!emp.attendanceLog) emp.attendanceLog = [];
   
   var today = new Date().toISOString().split('T')[0];
-  var existing = emp.attendanceLog.find(function(l) { return l.date === today; });
-  if (existing) {
-    existing.status = status;
+  var existingIdx = emp.attendanceLog.findIndex(function(l) { return l.date === today; });
+  
+  if (existingIdx !== -1) {
+    if (emp.attendanceLog[existingIdx].status === status) {
+      // Toggle OFF (Undo)
+      emp.attendanceLog.splice(existingIdx, 1);
+      showToast('Cleared today\'s attendance for ' + emp.name + '. 🔄');
+    } else {
+      // Switch Status
+      emp.attendanceLog[existingIdx].status = status;
+      showToast('Updated to ' + status + ' for ' + emp.name + '! 📋');
+    }
   } else {
+    // New Log
     emp.attendanceLog.push({ date: today, status: status });
+    showToast('Marked ' + status + ' for ' + emp.name + '! 📋');
   }
 
   var presentDays = emp.attendanceLog.filter(function(l) { return l.status === 'P'; }).length;
@@ -8704,7 +8723,6 @@ function recordStaffAttendance(empId, status, event) {
 
   localStorage.setItem('staff_tracker_list', JSON.stringify(_staffList));
   renderStaffMode(document.getElementById('calc-mode-body'));
-  showToast('Marked ' + status + ' for ' + emp.name + '! 📋');
 }
 
 function openStaffEditModal(id) {
