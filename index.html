@@ -1636,74 +1636,74 @@ body {
 </div>
 
 <!-- 👤 STAFF TRACKER EMPLOYEE EDIT MODAL -->
-<div id="modal-staff-edit" class="modal-overlay" onclick="dismissModalOnBackdrop(event, 'modal-staff-edit')" style="display:none;z-index:9999 !important;">
-  <div class="modal-card" style="max-width:440px;width:94%;padding:1.1rem 1rem;border-radius:18px;border:1px solid var(--border-color);box-shadow:0 10px 30px rgba(0,0,0,0.8);box-sizing:border-box;max-height:90vh;overflow-y:auto;">
+<div id="modal-staff-edit" class="modal-overlay" onclick="dismissModalOnBackdrop(event, 'modal-staff-edit')" style="display:none;z-index:9999 !important;align-items:flex-start !important;padding-top:1rem !important;">
+  <div class="modal-card" style="max-width:440px;width:94%;padding:1.25rem 1.1rem;border-radius:20px;border:1px solid var(--border-color);box-shadow:0 10px 30px rgba(0,0,0,0.85);box-sizing:border-box;max-height:85vh;overflow-y:auto;-webkit-overflow-scrolling:touch;margin-top:0.5rem;">
     
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.85rem;border-bottom:1px solid var(--border-color);padding-bottom:0.5rem;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.85rem;border-bottom:1px solid var(--border-color);padding-bottom:0.6rem;">
       <h3 id="staff-edit-modal-title" style="margin:0;font-size:1.05rem;font-weight:800;color:var(--text-primary);display:flex;align-items:center;gap:6px;">
         👤 Employee Details
       </h3>
       <button onclick="closeModal('modal-staff-edit')" class="close-btn" style="background:none;border:none;color:var(--text-primary);font-size:1.2rem;cursor:pointer;">✕</button>
     </div>
 
-    <form id="staff-edit-form" onsubmit="saveStaffMember(event)" style="display:flex;flex-direction:column;gap:0.75rem;text-align:left;">
+    <form id="staff-edit-form" onsubmit="saveStaffMember(event)" style="display:flex;flex-direction:column;gap:0.85rem;text-align:left;">
       <input type="hidden" id="staff-id-input" value="">
 
       <div>
-        <label style="font-size:0.78rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:0.25rem;">Employee Name *</label>
-        <input type="text" id="staff-name-input" required placeholder="e.g. Ramesh Kumar" style="width:100%;padding:0.55rem;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-tertiary);color:var(--text-primary);font-size:0.88rem;box-sizing:border-box;">
+        <label style="font-size:0.78rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:0.3rem;">Employee Name *</label>
+        <input type="text" id="staff-name-input" required placeholder="e.g. Ramesh Kumar" style="width:100%;padding:0.65rem 0.75rem;border-radius:10px;border:1px solid var(--border-color);background:var(--bg-tertiary);color:var(--text-primary);font-size:0.9rem;min-height:44px;outline:none;box-sizing:border-box;">
       </div>
 
-      <div style="display:flex;gap:0.5rem;">
+      <div style="display:flex;gap:0.55rem;">
         <div style="flex:1;">
-          <label style="font-size:0.78rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:0.25rem;">Mobile Number *</label>
-          <input type="tel" id="staff-phone-input" required pattern="[0-9]{10}" placeholder="10-digit number" style="width:100%;padding:0.55rem;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-tertiary);color:var(--text-primary);font-size:0.88rem;box-sizing:border-box;">
+          <label style="font-size:0.78rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:0.3rem;">Mobile Number *</label>
+          <input type="tel" id="staff-phone-input" required pattern="[0-9]{10}" placeholder="10-digit number" style="width:100%;padding:0.65rem 0.75rem;border-radius:10px;border:1px solid var(--border-color);background:var(--bg-tertiary);color:var(--text-primary);font-size:0.9rem;min-height:44px;outline:none;box-sizing:border-box;">
         </div>
         <div style="flex:1;">
-          <label style="font-size:0.78rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:0.25rem;">Monthly Salary (₹) *</label>
-          <input type="number" id="staff-salary-input" required placeholder="25000" style="width:100%;padding:0.55rem;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-tertiary);color:var(--text-primary);font-size:0.88rem;box-sizing:border-box;">
-        </div>
-      </div>
-
-      <div>
-        <label style="font-size:0.78rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:0.25rem;">Shift Hours & Working Days</label>
-        <div style="display:flex;align-items:center;gap:4px;margin-bottom:0.4rem;">
-          <input type="time" id="staff-shift-start" value="09:00" style="flex:1;padding:0.4rem;border-radius:6px;border:1px solid var(--border-color);background:var(--bg-tertiary);color:var(--text-primary);font-size:0.78rem;box-sizing:border-box;">
-          <span style="font-size:0.75rem;color:var(--text-muted);">-</span>
-          <input type="time" id="staff-shift-end" value="18:00" style="flex:1;padding:0.4rem;border-radius:6px;border:1px solid var(--border-color);background:var(--bg-tertiary);color:var(--text-primary);font-size:0.78rem;box-sizing:border-box;">
-        </div>
-        <div id="staff-roster-chips" style="display:flex;gap:3px;justify-content:space-between;"></div>
-      </div>
-
-      <div style="display:flex;gap:0.5rem;">
-        <div style="flex:1;">
-          <label style="font-size:0.78rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:0.25rem;">Advance Taken (₹)</label>
-          <input type="number" id="staff-advance-input" placeholder="0" style="width:100%;padding:0.55rem;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-tertiary);color:var(--text-primary);font-size:0.88rem;box-sizing:border-box;">
-        </div>
-        <div style="flex:1;">
-          <label style="font-size:0.78rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:0.25rem;">Notes / Remarks</label>
-          <input type="text" id="staff-notes-input" placeholder="e.g. Night Shift" style="width:100%;padding:0.55rem;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-tertiary);color:var(--text-primary);font-size:0.88rem;box-sizing:border-box;">
+          <label style="font-size:0.78rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:0.3rem;">Monthly Salary (₹) *</label>
+          <input type="number" id="staff-salary-input" required placeholder="25000" style="width:100%;padding:0.65rem 0.75rem;border-radius:10px;border:1px solid var(--border-color);background:var(--bg-tertiary);color:var(--text-primary);font-size:0.9rem;min-height:44px;outline:none;box-sizing:border-box;">
         </div>
       </div>
 
       <div>
-        <label style="font-size:0.78rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:0.25rem;">Aadhaar Card (Image/PDF, max 5MB)</label>
-        <input type="file" id="staff-aadhaar-input" accept="image/*,.pdf" onchange="handleStaffAadhaarUpload(event)" style="width:100%;font-size:0.78rem;color:var(--text-primary);">
+        <label style="font-size:0.78rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:0.3rem;">Shift Hours & Working Days</label>
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:0.45rem;">
+          <input type="time" id="staff-shift-start" value="09:00" style="flex:1;padding:0.5rem;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-tertiary);color:var(--text-primary);font-size:0.85rem;min-height:40px;box-sizing:border-box;">
+          <span style="font-size:0.8rem;color:var(--text-muted);">-</span>
+          <input type="time" id="staff-shift-end" value="18:00" style="flex:1;padding:0.5rem;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-tertiary);color:var(--text-primary);font-size:0.85rem;min-height:40px;box-sizing:border-box;">
+        </div>
+        <div id="staff-roster-chips" style="display:flex;gap:4px;justify-content:space-between;"></div>
+      </div>
+
+      <div style="display:flex;gap:0.55rem;">
+        <div style="flex:1;">
+          <label style="font-size:0.78rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:0.3rem;">Advance Taken (₹)</label>
+          <input type="number" id="staff-advance-input" placeholder="0" style="width:100%;padding:0.65rem 0.75rem;border-radius:10px;border:1px solid var(--border-color);background:var(--bg-tertiary);color:var(--text-primary);font-size:0.9rem;min-height:44px;outline:none;box-sizing:border-box;">
+        </div>
+        <div style="flex:1;">
+          <label style="font-size:0.78rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:0.3rem;">Notes / Remarks</label>
+          <input type="text" id="staff-notes-input" placeholder="e.g. Night Shift" style="width:100%;padding:0.65rem 0.75rem;border-radius:10px;border:1px solid var(--border-color);background:var(--bg-tertiary);color:var(--text-primary);font-size:0.9rem;min-height:44px;outline:none;box-sizing:border-box;">
+        </div>
+      </div>
+
+      <div>
+        <label style="font-size:0.78rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:0.3rem;">Aadhaar Card (Image/PDF, max 5MB)</label>
+        <input type="file" id="staff-aadhaar-input" accept="image/*,.pdf" onchange="handleStaffAadhaarUpload(event)" style="width:100%;font-size:0.8rem;color:var(--text-primary);padding:0.4rem 0;">
         <div id="staff-aadhaar-status" style="font-size:0.75rem;color:#38bdf8;margin-top:0.2rem;font-weight:700;"></div>
       </div>
 
       <!-- 30-Day Attendance Visual Calendar Grid -->
       <div>
-        <label style="font-size:0.78rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:0.25rem;">Monthly Attendance Calendar</label>
+        <label style="font-size:0.78rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:0.3rem;">Monthly Attendance Calendar</label>
         <div id="staff-calendar-grid" style="display:grid;grid-template-columns:repeat(7, 1fr);gap:4px;background:var(--bg-secondary);padding:0.5rem;border-radius:10px;border:1px solid var(--border-color);text-align:center;"></div>
       </div>
 
       <!-- Action Buttons: PDF Slip & WhatsApp Statement -->
-      <div id="staff-slip-actions" style="display:none;gap:0.4rem;margin-top:0.2rem;">
-        <button type="button" onclick="sendStaffWhatsappSlip()" style="flex:1;padding:0.55rem;border-radius:8px;background:#25D366;color:#ffffff;border:none;font-weight:800;font-size:0.78rem;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:4px;">
+      <div id="staff-slip-actions" style="display:none;gap:0.5rem;margin-top:0.25rem;">
+        <button type="button" onclick="sendStaffWhatsappSlip()" style="flex:1;padding:0.65rem;border-radius:10px;background:#25D366;color:#ffffff;border:none;font-weight:800;font-size:0.82rem;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:4px;min-height:44px;">
           💬 WhatsApp Slip
         </button>
-        <button type="button" onclick="exportStaffPdf()" style="flex:1;padding:0.55rem;border-radius:8px;background:#38bdf8;color:#000000;border:none;font-weight:800;font-size:0.78rem;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:4px;">
+        <button type="button" onclick="exportStaffPdf()" style="flex:1;padding:0.65rem;border-radius:10px;background:#38bdf8;color:#000000;border:none;font-weight:800;font-size:0.82rem;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:4px;min-height:44px;">
           📄 Print PDF Slip
         </button>
       </div>
