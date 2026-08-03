@@ -8582,33 +8582,33 @@ function renderStaffMode(container) {
     return true;
   });
 
-  var html = '<div style="padding:0.75rem 0.85rem;max-width:600px;margin:0 auto;box-sizing:border-box;position:relative;min-height:350px;">';
+  var html = '<div style="padding:0.75rem 0.85rem;max-width:680px;width:100%;margin:0 auto;box-sizing:border-box;position:relative;min-height:350px;">';
   
-  html += '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;">' +
-            '<div style="font-size:1.15rem;font-weight:800;color:var(--text-primary);display:flex;align-items:center;gap:6px;">' +
-              '👤 Staff Tracker <span style="font-size:0.65rem;background:#38bdf8;color:#000;padding:2px 6px;border-radius:12px;font-weight:800;">β Beta</span>' +
+  html += '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.85rem;">' +
+            '<div style="font-size:1.2rem;font-weight:900;color:var(--text-primary);display:flex;align-items:center;gap:6px;">' +
+              '👤 Staff Tracker <span style="font-size:0.65rem;background:#38bdf8;color:#000;padding:2px 7px;border-radius:12px;font-weight:900;">β Beta</span>' +
             '</div>' +
-            '<div style="font-size:0.78rem;color:var(--text-muted);font-weight:700;">' + _staffList.length + ' Employees</div>' +
+            '<div style="font-size:0.82rem;color:var(--text-muted);font-weight:700;">' + _staffList.length + ' Employees</div>' +
           '</div>';
 
   html += '<div style="margin-bottom:0.75rem;">' +
-            '<input type="text" placeholder="🔍 Search employee by name or phone..." value="' + escHtml(_staffSearchQuery) + '" oninput="_staffSearchQuery=this.value;renderStaffMode(document.getElementById(\'calc-mode-body\'))" style="width:100%;padding:0.55rem 0.75rem;border-radius:20px;border:1px solid var(--border-color);background:var(--bg-tertiary);color:var(--text-primary);font-size:0.85rem;outline:none;box-sizing:border-box;">' +
+            '<input type="text" placeholder="🔍 Search employee by name or phone..." value="' + escHtml(_staffSearchQuery) + '" oninput="_staffSearchQuery=this.value;renderStaffMode(document.getElementById(\'calc-mode-body\'))" style="width:100%;padding:0.65rem 0.85rem;border-radius:20px;border:1px solid var(--border-color);background:var(--bg-tertiary);color:var(--text-primary);font-size:0.88rem;outline:none;box-sizing:border-box;">' +
           '</div>';
 
-  html += '<div style="display:flex;gap:0.4rem;margin-bottom:0.85rem;">' +
+  html += '<div style="display:flex;gap:0.45rem;margin-bottom:0.85rem;overflow-x:auto;">' +
             '<span class="sp-chip ' + (_staffFilter === 'all' ? 'on' : '') + '" onclick="_staffFilter=\'all\';renderStaffMode(document.getElementById(\'calc-mode-body\'))">All (' + _staffList.length + ')</span>' +
             '<span class="sp-chip ' + (_staffFilter === 'active' ? 'on' : '') + '" onclick="_staffFilter=\'active\';renderStaffMode(document.getElementById(\'calc-mode-body\'))">Active</span>' +
             '<span class="sp-chip ' + (_staffFilter === 'onshift' ? 'on' : '') + '" onclick="_staffFilter=\'onshift\';renderStaffMode(document.getElementById(\'calc-mode-body\'))">On Shift</span>' +
           '</div>';
 
   if (!filtered.length) {
-    html += '<div style="text-align:center;padding:2.5rem 1rem;color:var(--text-muted);background:var(--bg-tertiary);border-radius:12px;border:1px dashed var(--border-color);">' +
+    html += '<div style="text-align:center;padding:2.5rem 1rem;color:var(--text-muted);background:var(--bg-tertiary);border-radius:14px;border:1px dashed var(--border-color);">' +
               '<div style="font-size:2rem;margin-bottom:0.3rem;">📋</div>' +
               '<div style="font-size:0.9rem;font-weight:700;">No employees found</div>' +
               '<div style="font-size:0.78rem;margin-top:0.2rem;">Tap "+ Add Employee" below to add a staff member.</div>' +
             '</div>';
   } else {
-    html += '<div style="display:flex;flex-direction:column;gap:0.6rem;">';
+    html += '<div style="display:flex;flex-direction:column;gap:0.75rem;">';
     filtered.forEach(function(emp) {
       var initial = emp.name ? emp.name[0].toUpperCase() : 'E';
       var avatarBg = 'linear-gradient(135deg, #38bdf8, #818cf8)';
@@ -8622,28 +8622,34 @@ function renderStaffMode(container) {
       var hStyle = todayStatus === 'H' ? 'padding:3px 9px;border-radius:6px;background:#eab308;color:#000;border:2px solid #fff;font-weight:900;font-size:0.75rem;cursor:pointer;box-shadow:0 0 8px #eab308;' : 'padding:3px 8px;border-radius:6px;background:#eab308;color:#000;border:none;font-weight:800;font-size:0.72rem;cursor:pointer;opacity:0.65;';
       var aStyle = todayStatus === 'A' ? 'padding:3px 9px;border-radius:6px;background:#ef4444;color:#fff;border:2px solid #fff;font-weight:900;font-size:0.75rem;cursor:pointer;box-shadow:0 0 8px #ef4444;' : 'padding:3px 8px;border-radius:6px;background:#ef4444;color:#fff;border:none;font-weight:800;font-size:0.72rem;cursor:pointer;opacity:0.65;';
 
-      html += '<div onclick="openStaffEditModal(' + emp.id + ')" style="padding:0.8rem 0.85rem;background:var(--bg-tertiary);border:1px solid var(--border-color);border-radius:12px;cursor:pointer;touch-action:manipulation;transition:all 0.15s;position:relative;">' +
+      var phoneClean = emp.phone ? emp.phone.replace(/[^0-9]/g, '') : '';
+      var waUrl = 'https://wa.me/91' + phoneClean;
+
+      html += '<div onclick="openStaffEditModal(' + emp.id + ')" style="padding:0.9rem 1rem;background:var(--bg-tertiary);border:1px solid var(--border-color);border-radius:16px;cursor:pointer;touch-action:manipulation;transition:all 0.15s;position:relative;box-shadow:0 4px 14px rgba(0,0,0,0.25);">' +
                 '<div style="display:flex;align-items:center;gap:0.75rem;">' +
-                  '<div style="width:42px;height:42px;border-radius:50%;background:' + avatarBg + ';color:#000;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.1rem;flex-shrink:0;box-shadow:0 2px 8px rgba(56,189,248,0.25);">' + initial + '</div>' +
+                  '<div style="width:44px;height:44px;border-radius:50%;background:' + avatarBg + ';color:#000;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1.15rem;flex-shrink:0;box-shadow:0 2px 8px rgba(56,189,248,0.3);">' + initial + '</div>' +
                   '<div style="flex:1;min-width:0;">' +
                     '<div style="display:flex;align-items:center;justify-content:space-between;">' +
-                      '<div style="font-size:0.92rem;font-weight:800;color:var(--text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + escHtml(emp.name) + '</div>' +
-                      '<div style="font-size:0.85rem;font-weight:800;color:#38bdf8;">₹' + fmtNum(emp.salary) + '<span style="font-size:0.68rem;color:var(--text-muted);font-weight:600;">/mo</span></div>' +
+                      '<div style="font-size:0.96rem;font-weight:800;color:var(--text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + escHtml(emp.name) + '</div>' +
+                      '<div style="font-size:0.88rem;font-weight:900;color:#38bdf8;background:rgba(56,189,248,0.1);padding:3px 8px;border-radius:8px;">₹' + fmtNum(emp.salary) + '<span style="font-size:0.68rem;color:var(--text-muted);font-weight:600;">/mo</span></div>' +
                     '</div>' +
-                    '<div style="display:flex;align-items:center;justify-content:space-between;margin-top:0.25rem;">' +
-                      '<div style="font-size:0.78rem;color:var(--text-muted);">📞 ' + escHtml(emp.phone) + '</div>' +
+                    '<div style="display:flex;align-items:center;justify-content:space-between;margin-top:0.3rem;">' +
+                      '<div style="font-size:0.8rem;color:var(--text-muted);display:flex;align-items:center;gap:4px;">' +
+                        '📞 ' + escHtml(emp.phone) +
+                        '<a href="' + waUrl + '" target="_blank" onclick="event.stopPropagation()" style="color:#25D366;text-decoration:none;font-weight:900;margin-left:4px;" title="Chat on WhatsApp">💬</a>' +
+                      '</div>' +
                     '</div>' +
                   '</div>' +
                 '</div>' +
 
-                /* Sub-row: Net Payable & Quick Attendance Buttons */
-                '<div style="display:flex;align-items:center;justify-content:space-between;margin-top:0.6rem;padding-top:0.5rem;border-top:1px solid var(--border-color);">' +
-                  '<div style="font-size:0.75rem;color:var(--text-muted);">' +
-                    'Net Pay: <span style="color:#22c55e;font-weight:800;">₹' + fmtNum(netSalary) + '</span>' +
-                    (emp.advance ? ' <span style="color:#ef4444;font-size:0.7rem;">(Adv: ₹' + fmtNum(emp.advance) + ')</span>' : '') +
+                /* Sub-row: Net Payable & Quick Attendance Segmented Control */
+                '<div style="display:flex;align-items:center;justify-content:space-between;margin-top:0.7rem;padding-top:0.6rem;border-top:1px solid var(--border-color);">' +
+                  '<div style="font-size:0.78rem;color:var(--text-muted);">' +
+                    'Net Pay: <span style="color:#22c55e;font-weight:900;">₹' + fmtNum(netSalary) + '</span>' +
+                    (emp.advance ? ' <span style="color:#ef4444;font-size:0.72rem;margin-left:4px;">(Adv: ₹' + fmtNum(emp.advance) + ')</span>' : '') +
                   '</div>' +
-                  '<div style="display:flex;align-items:center;gap:4px;" onclick="event.stopPropagation()">' +
-                    '<span style="font-size:0.7rem;color:var(--text-muted);font-weight:700;margin-right:2px;">Today:</span>' +
+                  '<div style="display:flex;align-items:center;background:var(--bg-secondary);padding:3px;border-radius:10px;border:1px solid var(--border-color);" onclick="event.stopPropagation()">' +
+                    '<span style="font-size:0.7rem;color:var(--text-muted);font-weight:800;padding:0 5px;">Today:</span>' +
                     '<button onclick="recordStaffAttendance(' + emp.id + ', \'P\', event)" style="' + pStyle + '">P</button>' +
                     '<button onclick="recordStaffAttendance(' + emp.id + ', \'H\', event)" style="' + hStyle + '">H</button>' +
                     '<button onclick="recordStaffAttendance(' + emp.id + ', \'A\', event)" style="' + aStyle + '">A</button>' +
