@@ -1548,58 +1548,57 @@ body {
       <div style="font-size:0.74rem;color:var(--text-muted);margin-top:2px;">Full access to all features. Upgrade anytime for lifetime access!</div>
     </div>
 
-    <!-- Tier 1: Basic App (₹9) -->
+    <!-- Tier 1: Single-Feature (₹19/mo) -->
     <div style="background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:14px;padding:0.85rem;margin-bottom:0.85rem;position:relative;">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.4rem;">
-        <div style="font-size:0.95rem;font-weight:800;color:var(--text-primary);">🌱 Basic App</div>
-        <div style="font-size:1.15rem;font-weight:900;color:var(--color-accent);">₹9 <span style="font-size:0.68rem;font-weight:600;color:var(--text-muted);">/ lifetime</span></div>
+        <div style="font-size:0.95rem;font-weight:800;color:var(--text-primary);">🌱 Single-Feature Plan</div>
+        <div style="font-size:1.15rem;font-weight:900;color:var(--color-accent);">₹19 <span style="font-size:0.68rem;font-weight:600;color:var(--text-muted);">/ month</span></div>
       </div>
       <div style="font-size:0.75rem;color:var(--text-muted);line-height:1.35;margin-bottom:0.6rem;">
-        ✔ Standard Calculator + Voice Calc<br>
-        ✔ Lazy Sticky Operator Mode<br>
-        ✔ Calculation History & Color Themes<br>
-        <span style="color:#ef4444;font-size:0.72rem;">✖ Excludes Expense Splitter & Billing POS Mode</span>
+        ✔ Unlock <strong>ONE</strong> core module of your choice:<br>
+        • 🛒 Billing POS Mode OR<br>
+        • 👥 Expense Splitter OR<br>
+        • 👤 Staff Tracker (Attendance & Salary)
       </div>
-      <button onclick="triggerPaymentTier('basic', 9)" style="width:100%;padding:0.65rem;border-radius:10px;background:var(--bg-tertiary);color:var(--text-primary);border:1px solid var(--border-color);font-weight:800;font-size:0.85rem;cursor:pointer;transition:all 0.15s ease;">
-        Unlock Basic (₹9)
+      <button onclick="triggerPaymentTier('single', 19)" style="width:100%;padding:0.65rem;border-radius:10px;background:var(--bg-tertiary);color:var(--text-primary);border:1px solid var(--border-color);font-weight:800;font-size:0.85rem;cursor:pointer;transition:all 0.15s ease;">
+        Select Single-Feature (₹19/mo)
       </button>
     </div>
 
-    <!-- Tier 2: Pro App (₹19) -->
+    <!-- Tier 2: Dual-Feature (₹29/mo) -->
     <div style="background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:14px;padding:0.85rem;margin-bottom:0.85rem;position:relative;">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.4rem;">
         <div style="display:flex;align-items:center;gap:6px;">
-          <div style="font-size:0.95rem;font-weight:800;color:var(--text-primary);">⭐ Pro App</div>
+          <div style="font-size:0.95rem;font-weight:800;color:var(--text-primary);">⭐ Dual-Feature Plan</div>
         </div>
-        <div style="font-size:1.15rem;font-weight:900;color:#3b82f6;">₹19 <span style="font-size:0.68rem;font-weight:600;color:var(--text-muted);">/ lifetime</span></div>
+        <div style="font-size:1.15rem;font-weight:900;color:#3b82f6;">₹29 <span style="font-size:0.68rem;font-weight:600;color:var(--text-muted);">/ month</span></div>
       </div>
       <div style="font-size:0.75rem;color:var(--text-muted);line-height:1.35;margin-bottom:0.6rem;">
-        ✔ Everything in Basic App<br>
-        ✔ Expense Splitter (Group & Person Bills)<br>
-        ✔ Loan EMI, Fuel & Unit Converters<br>
-        <span style="color:#ef4444;font-size:0.72rem;">✖ Excludes Billing POS Mode</span>
+        ✔ Unlock <strong>ANY TWO</strong> core modules:<br>
+        • 🛒 Billing POS + 👥 Splitter OR<br>
+        • 🛒 Billing POS + 👤 Staff Tracker OR<br>
+        • 👥 Splitter + 👤 Staff Tracker
       </div>
-      <button onclick="triggerPaymentTier('pro', 19)" style="width:100%;padding:0.65rem;border-radius:10px;background:#3b82f6;color:#ffffff;border:none;font-weight:800;font-size:0.85rem;cursor:pointer;transition:all 0.15s ease;box-shadow:0 3px 10px rgba(59,130,246,0.3);">
-        Unlock Pro (₹19)
+      <button onclick="triggerPaymentTier('dual', 29)" style="width:100%;padding:0.65rem;border-radius:10px;background:#3b82f6;color:#ffffff;border:none;font-weight:800;font-size:0.85rem;cursor:pointer;transition:all 0.15s ease;box-shadow:0 3px 10px rgba(59,130,246,0.3);">
+        Select Dual-Feature (₹29/mo)
       </button>
     </div>
 
-    <!-- Tier 3: All-Access POS (₹29) -->
+    <!-- Tier 3: All-Features Premium (₹39/mo) -->
     <div style="background:linear-gradient(135deg, rgba(234,179,8,0.12) 0%, rgba(234,179,8,0.03) 100%);border:2px solid #eab308;border-radius:14px;padding:0.85rem;margin-bottom:0.85rem;position:relative;box-shadow:0 4px 16px rgba(234,179,8,0.15);">
       <div style="position:absolute;right:10px;top:-10px;background:#eab308;color:#000;font-size:0.6rem;font-weight:900;padding:2px 8px;border-radius:10px;text-transform:uppercase;letter-spacing:0.5px;">👑 BEST VALUE</div>
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.4rem;">
-        <div style="font-size:0.95rem;font-weight:900;color:#eab308;">👑 All-Access POS</div>
-        <div style="font-size:1.2rem;font-weight:900;color:#eab308;">₹29 <span style="font-size:0.68rem;font-weight:600;color:var(--text-muted);">/ lifetime</span></div>
+        <div style="font-size:0.95rem;font-weight:900;color:#eab308;">👑 All-Features Premium</div>
+        <div style="font-size:1.2rem;font-weight:900;color:#eab308;">₹39 <span style="font-size:0.68rem;font-weight:600;color:var(--text-muted);">/ month</span></div>
       </div>
       <div style="font-size:0.75rem;color:var(--text-primary);line-height:1.4;margin-bottom:0.65rem;">
-        ✔ <strong>EVERYTHING INCLUDED!</strong><br>
-        ✔ 🛒 Billing POS Mode & Custom Menu Grid<br>
-        ✔ 💬 Instant WhatsApp Receipts to Customers<br>
-        ✔ 🖨️ Bluetooth Thermal Printer Support<br>
-        ✔ 🚫 Out-of-Stock Engine & Unlimited Rows
+        ✔ <strong>UNLIMITED ACCESS TO ALL MODULES!</strong><br>
+        ✔ 🛒 Billing POS + 👥 Splitter + 👤 Staff Tracker<br>
+        ✔ ☁️ Encrypted Cloud Backup & Auto Sync<br>
+        ✔ 🖨️ Thermal Receipts, Aadhaar Uploads & PDF Export
       </div>
-      <button onclick="triggerPaymentTier('all_access', 29)" style="width:100%;padding:0.7rem;border-radius:10px;background:#eab308;color:#000000;border:none;font-weight:900;font-size:0.9rem;cursor:pointer;transition:all 0.15s ease;box-shadow:0 4px 14px rgba(234,179,8,0.4);">
-        Unlock All-Access (₹29)
+      <button onclick="triggerPaymentTier('all_access', 39)" style="width:100%;padding:0.7rem;border-radius:10px;background:#eab308;color:#000000;border:none;font-weight:900;font-size:0.9rem;cursor:pointer;transition:all 0.15s ease;box-shadow:0 4px 14px rgba(234,179,8,0.4);">
+        Unlock All-Features Premium (₹39/mo)
       </button>
     </div>
 
@@ -1879,6 +1878,7 @@ body {
           <div class="modes-menu-item" onclick="selectModeFromMenu('emi')">📈 Loan EMI</div>
           <div class="modes-menu-item" onclick="selectModeFromMenu('converter')">📏 Unit Converter</div>
           <div class="modes-menu-item" onclick="selectModeFromMenu('scientific')">📐 Scientific</div>
+          <div class="modes-menu-item" onclick="selectModeFromMenu('staff')">👤 Staff Tracker <span style="font-size:0.65rem;background:#38bdf8;color:#000;padding:1px 5px;border-radius:4px;font-weight:800;margin-left:4px;">β</span></div>
         </div>
       </div>
       
@@ -3513,7 +3513,8 @@ function applyCalcMode(name) {
     fuel: '<span style="color:#fb923c;text-shadow:0 0 10px rgba(251,146,60,0.6)">⛽ Fuel & Trip</span> ' + chev,
     emi: '<span style="color:#34d399;text-shadow:0 0 10px rgba(52,211,153,0.6)">📈 Loan EMI</span> ' + chev,
     converter: '<span style="color:#60a5fa;text-shadow:0 0 10px rgba(96,165,250,0.6)">📏 Unit Converter</span> ' + chev,
-    scientific: '<span style="color:#a78bfa;text-shadow:0 0 10px rgba(167,139,250,0.6)">📐 Scientific</span> ' + chev
+    scientific: '<span style="color:#a78bfa;text-shadow:0 0 10px rgba(167,139,250,0.6)">📐 Scientific</span> ' + chev,
+    staff: '<span style="color:#38bdf8;text-shadow:0 0 10px rgba(56,189,248,0.6)">👤 Staff Tracker <span style="font-size:0.65rem;background:#38bdf8;color:#000;padding:1px 5px;border-radius:4px;font-weight:800;">β</span></span> ' + chev
   };
 
   var posScreen = document.getElementById('pos-live-screen');
@@ -3595,20 +3596,21 @@ function applyCalcMode(name) {
     if (expIconBtn) { expIconBtn.style.display = 'none'; }
     if (voiceBtn) { voiceBtn.style.display = 'none'; }
     if (hModesBtn) {
-      var isSpecialized = ['splitter','gold','fuel','emi','gst','converter','scientific','expenses','date'].indexOf(name) !== -1;
+      var isSpecialized = ['splitter','gold','fuel','emi','gst','converter','scientific','expenses','date','staff'].indexOf(name) !== -1;
       hModesBtn.classList.toggle('active', isSpecialized);
       hModesBtn.style.display = '';
       hModesBtn.innerHTML = modeTitles[name] || 'Lazy Calc ▾';
       hModesBtn.style.fontFamily = name === 'basic' ? "'Caveat', cursive" : 'inherit';
     }
     if (expWaBtn) expWaBtn.style.display = name === 'expenses' ? '' : 'none';
-    if (histBtn) histBtn.style.display = (name === 'expenses' || name === 'splitter' || name === 'date') ? 'none' : '';
-    if (histContainer) histContainer.style.display = (name === 'expenses' || name === 'splitter') ? 'none' : '';
+    if (histBtn) histBtn.style.display = (name === 'expenses' || name === 'splitter' || name === 'date' || name === 'staff') ? 'none' : '';
+    if (histContainer) histContainer.style.display = (name === 'expenses' || name === 'splitter' || name === 'staff') ? 'none' : '';
     updateCalcHistoryVisibility();
 
     if (name === 'date') { if (modalBody) modalBody.classList.remove('sp-mode'); renderDateMode(modeBody, display); }
     else if (name === 'expenses') { if (modalBody) modalBody.classList.add('sp-mode'); _expensesNewCount = 0; updateExpensesBadge(); renderExpensesMode(modeBody); }
     else if (name === 'splitter') { if (modalBody) modalBody.classList.add('sp-mode'); renderSplitterMode(modeBody); }
+    else if (name === 'staff') { if (modalBody) modalBody.classList.add('sp-mode'); renderStaffMode(modeBody); }
     else if (name === 'fuel') { if (modalBody) modalBody.classList.remove('sp-mode'); renderFuelMode(modeBody); }
     else if (name === 'emi') { if (modalBody) modalBody.classList.remove('sp-mode'); renderEmiMode(modeBody); }
     else if (name === 'converter') { if (modalBody) modalBody.classList.remove('sp-mode'); renderConverterMode(modeBody); }
@@ -3657,7 +3659,7 @@ function setCalcMode(name) {
     renderCalcHistory();
     return;
   }
-  if (['date','expenses','splitter','fuel','emi','converter','scientific','quickbilling'].indexOf(name) !== -1 && _calcMode === name) { setCalcMode('basic'); return; }
+  if (['date','expenses','splitter','fuel','emi','converter','scientific','quickbilling','staff'].indexOf(name) !== -1 && _calcMode === name) { setCalcMode('basic'); return; }
   if (_calcMode === name) return;
   _calcMode = name;
   localStorage.setItem('calc_mode', name);
@@ -8481,6 +8483,208 @@ function renderScientificMode(container) {
   '</div>';
   container.innerHTML = html;
   sciEvalLive();
+}
+
+var _staffList = JSON.parse(localStorage.getItem('staff_tracker_list') || '[]');
+var _staffFilter = 'all';
+var _staffSearchQuery = '';
+
+function renderStaffMode(container) {
+  if (!container) return;
+  
+  if (!_staffList || !_staffList.length) {
+    _staffList = [
+      { id: 1, name: 'Ramesh Kumar', phone: '9876543210', salary: 22000, advance: 2000, shiftStart: '09:00', shiftEnd: '18:00', attendance: 24, status: 'active', aadhaar: null },
+      { id: 2, name: 'Suresh Verma', phone: '8765432109', salary: 18000, advance: 500, shiftStart: '10:00', shiftEnd: '19:00', attendance: 22, status: 'active', aadhaar: null }
+    ];
+    localStorage.setItem('staff_tracker_list', JSON.stringify(_staffList));
+  }
+
+  var filtered = _staffList.filter(function(emp) {
+    if (_staffSearchQuery) {
+      var q = _staffSearchQuery.toLowerCase();
+      var matchName = emp.name && emp.name.toLowerCase().indexOf(q) !== -1;
+      var matchPhone = emp.phone && emp.phone.indexOf(q) !== -1;
+      if (!matchName && !matchPhone) return false;
+    }
+    if (_staffFilter === 'active') return emp.status === 'active';
+    if (_staffFilter === 'onshift') return emp.status === 'active';
+    return true;
+  });
+
+  var html = '<div style="padding:0.75rem 0.85rem;max-width:600px;margin:0 auto;box-sizing:border-box;position:relative;min-height:350px;">';
+  
+  html += '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;">' +
+            '<div style="font-size:1.15rem;font-weight:800;color:var(--text-primary);display:flex;align-items:center;gap:6px;">' +
+              '👤 Staff Tracker <span style="font-size:0.65rem;background:#38bdf8;color:#000;padding:2px 6px;border-radius:12px;font-weight:800;">β Beta</span>' +
+            '</div>' +
+            '<div style="font-size:0.78rem;color:var(--text-muted);font-weight:700;">' + _staffList.length + ' Employees</div>' +
+          '</div>';
+
+  html += '<div style="margin-bottom:0.75rem;">' +
+            '<input type="text" placeholder="🔍 Search employee by name or phone..." value="' + escHtml(_staffSearchQuery) + '" oninput="_staffSearchQuery=this.value;renderStaffMode(document.getElementById(\'calc-mode-body\'))" style="width:100%;padding:0.55rem 0.75rem;border-radius:20px;border:1px solid var(--border-color);background:var(--bg-tertiary);color:var(--text-primary);font-size:0.85rem;outline:none;box-sizing:border-box;">' +
+          '</div>';
+
+  html += '<div style="display:flex;gap:0.4rem;margin-bottom:0.85rem;">' +
+            '<span class="sp-chip ' + (_staffFilter === 'all' ? 'on' : '') + '" onclick="_staffFilter=\'all\';renderStaffMode(document.getElementById(\'calc-mode-body\'))">All (' + _staffList.length + ')</span>' +
+            '<span class="sp-chip ' + (_staffFilter === 'active' ? 'on' : '') + '" onclick="_staffFilter=\'active\';renderStaffMode(document.getElementById(\'calc-mode-body\'))">Active</span>' +
+            '<span class="sp-chip ' + (_staffFilter === 'onshift' ? 'on' : '') + '" onclick="_staffFilter=\'onshift\';renderStaffMode(document.getElementById(\'calc-mode-body\'))">On Shift</span>' +
+          '</div>';
+
+  if (!filtered.length) {
+    html += '<div style="text-align:center;padding:2.5rem 1rem;color:var(--text-muted);background:var(--bg-tertiary);border-radius:12px;border:1px dashed var(--border-color);">' +
+              '<div style="font-size:2rem;margin-bottom:0.3rem;">📋</div>' +
+              '<div style="font-size:0.9rem;font-weight:700;">No employees found</div>' +
+              '<div style="font-size:0.78rem;margin-top:0.2rem;">Tap "+ Add Employee" below to add a staff member.</div>' +
+            '</div>';
+  } else {
+    html += '<div style="display:flex;flex-direction:column;gap:0.6rem;">';
+    filtered.forEach(function(emp) {
+      var initial = emp.name ? emp.name[0].toUpperCase() : 'E';
+      var avatarBg = 'linear-gradient(135deg, #38bdf8, #818cf8)';
+      html += '<div onclick="openStaffEditModal(' + emp.id + ')" style="display:flex;align-items:center;gap:0.75rem;padding:0.75rem 0.85rem;background:var(--bg-tertiary);border:1px solid var(--border-color);border-radius:12px;cursor:pointer;touch-action:manipulation;transition:all 0.15s;position:relative;">' +
+                '<div style="width:42px;height:42px;border-radius:50%;background:' + avatarBg + ';color:#000;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.1rem;flex-shrink:0;box-shadow:0 2px 8px rgba(56,189,248,0.25);">' + initial + '</div>' +
+                '<div style="flex:1;min-width:0;">' +
+                  '<div style="display:flex;align-items:center;justify-content:space-between;">' +
+                    '<div style="font-size:0.92rem;font-weight:800;color:var(--text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + escHtml(emp.name) + '</div>' +
+                    '<div style="font-size:0.85rem;font-weight:800;color:#38bdf8;">₹' + fmtNum(emp.salary) + '<span style="font-size:0.68rem;color:var(--text-muted);font-weight:600;">/mo</span></div>' +
+                  '</div>' +
+                  '<div style="display:flex;align-items:center;justify-content:space-between;margin-top:0.25rem;">' +
+                    '<div style="font-size:0.78rem;color:var(--text-muted);">📞 ' + escHtml(emp.phone) + '</div>' +
+                    '<div style="font-size:0.75rem;font-weight:700;color:#22c55e;background:rgba(34,197,94,0.12);padding:1px 6px;border-radius:6px;">' + (emp.attendance || 0) + '/26 Days</div>' +
+                  '</div>' +
+                '</div>' +
+              '</div>';
+    });
+    html += '</div>';
+  }
+
+  html += '<div style="position:sticky;bottom:1rem;margin-top:1.5rem;display:flex;justify-content:flex-end;">' +
+            '<button onclick="openStaffEditModal(null)" style="padding:0.65rem 1.15rem;border-radius:24px;background:#22c55e;color:#ffffff;border:none;font-weight:800;font-size:0.88rem;cursor:pointer;display:inline-flex;align-items:center;gap:6px;box-shadow:0 4px 16px rgba(34,197,94,0.4);touch-action:manipulation;transition:all 0.15s;">' +
+              '➕ Add Employee' +
+            '</button>' +
+          '</div>';
+
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+var _editingStaffId = null;
+var _currentAadhaarData = null;
+
+function openStaffEditModal(id) {
+  _editingStaffId = id;
+  _currentAadhaarData = null;
+  var title = document.getElementById('staff-edit-modal-title');
+  var nameIn = document.getElementById('staff-name-input');
+  var phoneIn = document.getElementById('staff-phone-input');
+  var salaryIn = document.getElementById('staff-salary-input');
+  var advanceIn = document.getElementById('staff-advance-input');
+  var shiftStartIn = document.getElementById('staff-shift-start');
+  var shiftEndIn = document.getElementById('staff-shift-end');
+  var delBtn = document.getElementById('staff-delete-btn');
+  var statusDiv = document.getElementById('staff-aadhaar-status');
+  if (statusDiv) statusDiv.textContent = '';
+
+  if (id) {
+    var emp = _staffList.find(function(e) { return e.id === id; });
+    if (emp) {
+      if (title) title.innerHTML = '👤 Edit Employee: ' + escHtml(emp.name);
+      if (nameIn) nameIn.value = emp.name || '';
+      if (phoneIn) phoneIn.value = emp.phone || '';
+      if (salaryIn) salaryIn.value = emp.salary || '';
+      if (advanceIn) advanceIn.value = emp.advance || '';
+      if (shiftStartIn) shiftStartIn.value = emp.shiftStart || '09:00';
+      if (shiftEndIn) shiftEndIn.value = emp.shiftEnd || '18:00';
+      if (delBtn) delBtn.style.display = 'block';
+      if (emp.aadhaar && statusDiv) statusDiv.textContent = '✅ Aadhaar Document Attached';
+    }
+  } else {
+    if (title) title.innerHTML = '👤 Add New Employee';
+    if (nameIn) nameIn.value = '';
+    if (phoneIn) phoneIn.value = '';
+    if (salaryIn) salaryIn.value = '';
+    if (advanceIn) advanceIn.value = '';
+    if (shiftStartIn) shiftStartIn.value = '09:00';
+    if (shiftEndIn) shiftEndIn.value = '18:00';
+    if (delBtn) delBtn.style.display = 'none';
+  }
+  openModal('modal-staff-edit');
+}
+
+function handleStaffAadhaarUpload(e) {
+  var file = e.target.files[0];
+  var statusDiv = document.getElementById('staff-aadhaar-status');
+  if (!file) return;
+  if (file.size > 5 * 1024 * 1024) {
+    alert('File size exceeds 5MB limit! Please upload a smaller image or PDF.');
+    e.target.value = '';
+    return;
+  }
+  var reader = new FileReader();
+  reader.onload = function(evt) {
+    _currentAadhaarData = evt.target.result;
+    if (statusDiv) statusDiv.textContent = '✅ Attached: ' + file.name;
+  };
+  reader.readAsDataURL(file);
+}
+
+function saveStaffMember(e) {
+  if (e) e.preventDefault();
+  var name = document.getElementById('staff-name-input').value.trim();
+  var phone = document.getElementById('staff-phone-input').value.trim();
+  var salary = parseFloat(document.getElementById('staff-salary-input').value) || 0;
+  var advance = parseFloat(document.getElementById('staff-advance-input').value) || 0;
+  var shiftStart = document.getElementById('staff-shift-start').value;
+  var shiftEnd = document.getElementById('staff-shift-end').value;
+
+  if (!name || !phone || phone.length !== 10) {
+    alert('Please enter a valid employee name and 10-digit mobile number.');
+    return;
+  }
+
+  if (_editingStaffId) {
+    var emp = _staffList.find(function(x) { return x.id === _editingStaffId; });
+    if (emp) {
+      emp.name = name;
+      emp.phone = phone;
+      emp.salary = salary;
+      emp.advance = advance;
+      emp.shiftStart = shiftStart;
+      emp.shiftEnd = shiftEnd;
+      if (_currentAadhaarData) emp.aadhaar = _currentAadhaarData;
+    }
+  } else {
+    var newEmp = {
+      id: Date.now(),
+      name: name,
+      phone: phone,
+      salary: salary,
+      advance: advance,
+      shiftStart: shiftStart,
+      shiftEnd: shiftEnd,
+      attendance: 26,
+      status: 'active',
+      aadhaar: _currentAadhaarData || null
+    };
+    _staffList.push(newEmp);
+  }
+
+  localStorage.setItem('staff_tracker_list', JSON.stringify(_staffList));
+  closeModal('modal-staff-edit');
+  renderStaffMode(document.getElementById('calc-mode-body'));
+  showToast('Employee saved successfully! 👤');
+}
+
+function deleteStaffMember() {
+  if (!_editingStaffId) return;
+  if (confirm('Are you sure you want to delete this employee record?')) {
+    _staffList = _staffList.filter(function(x) { return x.id !== _editingStaffId; });
+    localStorage.setItem('staff_tracker_list', JSON.stringify(_staffList));
+    closeModal('modal-staff-edit');
+    renderStaffMode(document.getElementById('calc-mode-body'));
+    showToast('Employee deleted.');
+  }
 }
 
 function renderSplitterMode(container) {
