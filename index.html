@@ -1635,6 +1635,69 @@ body {
   </div>
 </div>
 
+<!-- 👤 STAFF TRACKER EMPLOYEE EDIT MODAL -->
+<div id="modal-staff-edit" class="modal-overlay" onclick="dismissModalOnBackdrop(event, 'modal-staff-edit')" style="display:none;z-index:9999 !important;">
+  <div class="modal-card" style="max-width:440px;width:94%;padding:1.1rem 1rem;border-radius:18px;border:1px solid var(--border-color);box-shadow:0 10px 30px rgba(0,0,0,0.8);box-sizing:border-box;max-height:90vh;overflow-y:auto;">
+    
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.85rem;border-bottom:1px solid var(--border-color);padding-bottom:0.5rem;">
+      <h3 id="staff-edit-modal-title" style="margin:0;font-size:1.05rem;font-weight:800;color:var(--text-primary);display:flex;align-items:center;gap:6px;">
+        👤 Employee Details
+      </h3>
+      <button onclick="closeModal('modal-staff-edit')" class="close-btn" style="background:none;border:none;color:var(--text-primary);font-size:1.2rem;cursor:pointer;">✕</button>
+    </div>
+
+    <form id="staff-edit-form" onsubmit="saveStaffMember(event)" style="display:flex;flex-direction:column;gap:0.75rem;text-align:left;">
+      <input type="hidden" id="staff-id-input" value="">
+
+      <div>
+        <label style="font-size:0.78rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:0.25rem;">Employee Name *</label>
+        <input type="text" id="staff-name-input" required placeholder="e.g. Ramesh Kumar" style="width:100%;padding:0.55rem;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-tertiary);color:var(--text-primary);font-size:0.88rem;box-sizing:border-box;">
+      </div>
+
+      <div style="display:flex;gap:0.5rem;">
+        <div style="flex:1;">
+          <label style="font-size:0.78rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:0.25rem;">Mobile Number *</label>
+          <input type="tel" id="staff-phone-input" required pattern="[0-9]{10}" placeholder="10-digit number" style="width:100%;padding:0.55rem;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-tertiary);color:var(--text-primary);font-size:0.88rem;box-sizing:border-box;">
+        </div>
+        <div style="flex:1;">
+          <label style="font-size:0.78rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:0.25rem;">Monthly Salary (₹) *</label>
+          <input type="number" id="staff-salary-input" required placeholder="25000" style="width:100%;padding:0.55rem;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-tertiary);color:var(--text-primary);font-size:0.88rem;box-sizing:border-box;">
+        </div>
+      </div>
+
+      <div style="display:flex;gap:0.5rem;">
+        <div style="flex:1;">
+          <label style="font-size:0.78rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:0.25rem;">Shift Timings</label>
+          <div style="display:flex;align-items:center;gap:3px;">
+            <input type="time" id="staff-shift-start" value="09:00" style="flex:1;padding:0.4rem;border-radius:6px;border:1px solid var(--border-color);background:var(--bg-tertiary);color:var(--text-primary);font-size:0.78rem;box-sizing:border-box;">
+            <span style="font-size:0.75rem;color:var(--text-muted);">-</span>
+            <input type="time" id="staff-shift-end" value="18:00" style="flex:1;padding:0.4rem;border-radius:6px;border:1px solid var(--border-color);background:var(--bg-tertiary);color:var(--text-primary);font-size:0.78rem;box-sizing:border-box;">
+          </div>
+        </div>
+        <div style="flex:1;">
+          <label style="font-size:0.78rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:0.25rem;">Advance Taken (₹)</label>
+          <input type="number" id="staff-advance-input" placeholder="0" style="width:100%;padding:0.55rem;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-tertiary);color:var(--text-primary);font-size:0.88rem;box-sizing:border-box;">
+        </div>
+      </div>
+
+      <div>
+        <label style="font-size:0.78rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:0.25rem;">Aadhaar Card (Image/PDF, max 5MB)</label>
+        <input type="file" id="staff-aadhaar-input" accept="image/*,.pdf" onchange="handleStaffAadhaarUpload(event)" style="width:100%;font-size:0.78rem;color:var(--text-primary);">
+        <div id="staff-aadhaar-status" style="font-size:0.75rem;color:#38bdf8;margin-top:0.2rem;font-weight:700;"></div>
+      </div>
+
+      <div style="display:flex;gap:0.5rem;margin-top:0.5rem;">
+        <button type="submit" style="flex:2;padding:0.65rem;border-radius:10px;background:#22c55e;color:#fff;border:none;font-weight:800;font-size:0.88rem;cursor:pointer;">
+          💾 Save Employee
+        </button>
+        <button type="button" id="staff-delete-btn" onclick="deleteStaffMember()" style="flex:1;padding:0.65rem;border-radius:10px;background:#ef4444;color:#fff;border:none;font-weight:800;font-size:0.88rem;cursor:pointer;display:none;">
+          🗑️ Delete
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <div class="modal-overlay" id="modal-guide" onclick="closeGuideModal(event)">
   <div class="modal-container modal-guide-box" onclick="event.stopPropagation()">
     <div style="font-size:1.1rem;font-weight:700;margin-bottom:0.8rem;text-transform:uppercase;color:var(--color-accent);text-align:center;">✨ What Makes Lazy Calc Different?</div>
