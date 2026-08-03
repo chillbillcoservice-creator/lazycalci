@@ -5000,8 +5000,31 @@ function triggerPaymentTier(tier, amount) {
 }
 
 function openRazorpayPaymentPage() {
-  showToast('💳 Opening Razorpay Payment Page...');
-  window.open('https://razorpay.me/@krishnamadnani', '_blank');
+  var keyId = 'rzp_live_TLErKJOgPF0o4n';
+  var amt = (_selectedTierAmount || 29) * 100;
+  var planTitle = _selectedTier ? _selectedTier.toUpperCase() : 'PRO';
+
+  if (typeof Razorpay !== 'undefined') {
+    var options = {
+      key: keyId,
+      amount: amt,
+      currency: "INR",
+      name: "Lazy Calc Pro",
+      description: planTitle + " Subscription Plan",
+      image: "https://lazy-calc-peach.vercel.app/icon-192.png",
+      handler: function (response) {
+        confirmCompletedPayment(response.razorpay_payment_id);
+      },
+      theme: {
+        color: "#eab308"
+      }
+    };
+    var rzp1 = new Razorpay(options);
+    rzp1.open();
+  } else {
+    showToast('💳 Opening Razorpay Payment Page...');
+    window.open('https://razorpay.me/@krishnamadnani', '_blank');
+  }
 }
 
 function confirmCompletedPayment() {
