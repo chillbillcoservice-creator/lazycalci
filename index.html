@@ -4949,47 +4949,15 @@ var _selectedAmount = 29;
 function triggerPaymentTier(tier, amount) {
   _selectedTier = tier || 'all_access';
   _selectedAmount = amount || 29;
-  
-  var rzpKey = localStorage.getItem('calc_razorpay_key_id');
-
-  if (typeof Razorpay !== 'undefined' && rzpKey && rzpKey.startsWith('rzp_')) {
-    showToast('💳 Opening Razorpay Checkout for ₹' + amount + '...');
-    try {
-      var options = {
-        "key": rzpKey,
-        "amount": amount * 100,
-        "currency": "INR",
-        "name": "LAZY CALC POS",
-        "description": "Unlock " + tier.toUpperCase() + " Plan (Lifetime Access)",
-        "image": "https://lazy-calc-peach.vercel.app/icon-192.png",
-        "handler": function (response) {
-          setSecurePlan(tier);
-          closeModal('modal-plan-upgrade');
-          closeModal('modal-payment-checkout');
-          updatePaywallUI();
-          showToast('🎉 Payment Verified! ' + tier.toUpperCase() + ' Unlocked Permanent Access!');
-        },
-        "theme": { "color": "#eab308" }
-      };
-      var rzp = new Razorpay(options);
-      rzp.open();
-      return;
-    } catch(e) {}
-  }
-
-  var planLabel = (tier === 'single') ? '🌱 Single-Feature Plan (₹19/mo)' : (tier === 'dual') ? '⭐ Dual-Feature Plan (₹29/mo)' : '👑 All-Features Premium (₹39/mo)';
-  var labelEl = document.getElementById('checkout-selected-plan');
-  if (labelEl) labelEl.textContent = planLabel;
-  var payBtn = document.getElementById('checkout-pay-now-btn');
-  if (payBtn) payBtn.innerHTML = '⚡ Pay ₹' + amount + ' Now';
-
-  openModal('modal-payment-checkout');
+  openRazorpayPaymentPage();
 }
 
 function openRazorpayPaymentPage() {
   var keyId = 'rzp_live_TLErKJOgPF0o4n';
-  var amt = (_selectedTierAmount || 29) * 100;
+  var amt = (_selectedAmount || 29) * 100;
   var planTitle = _selectedTier ? _selectedTier.toUpperCase() : 'PRO';
+
+  showToast('💳 Opening Payment...');
 
   function launchRzp() {
     try {
@@ -5015,14 +4983,7 @@ function openRazorpayPaymentPage() {
   if (typeof Razorpay !== 'undefined') {
     launchRzp();
   } else {
-    showToast('💳 Opening Razorpay...');
-    var script = document.createElement('script');
-    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
-    script.onload = launchRzp;
-    script.onerror = function() {
-      window.location.href = 'https://razorpay.me/@krishnamadnani';
-    };
-    document.head.appendChild(script);
+    window.location.href = 'https://razorpay.me/@krishnamadnani';
   }
 }
 
