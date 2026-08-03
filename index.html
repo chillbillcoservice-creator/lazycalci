@@ -1692,6 +1692,22 @@ body {
         <div id="staff-aadhaar-status" style="font-size:0.75rem;color:#38bdf8;margin-top:0.2rem;font-weight:700;"></div>
       </div>
 
+      <!-- 30-Day Attendance Visual Calendar Grid -->
+      <div>
+        <label style="font-size:0.78rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:0.25rem;">Monthly Attendance Calendar</label>
+        <div id="staff-calendar-grid" style="display:grid;grid-template-columns:repeat(7, 1fr);gap:4px;background:var(--bg-secondary);padding:0.5rem;border-radius:10px;border:1px solid var(--border-color);text-align:center;"></div>
+      </div>
+
+      <!-- Action Buttons: PDF Slip & WhatsApp Statement -->
+      <div id="staff-slip-actions" style="display:none;gap:0.4rem;margin-top:0.2rem;">
+        <button type="button" onclick="sendStaffWhatsappSlip()" style="flex:1;padding:0.55rem;border-radius:8px;background:#25D366;color:#ffffff;border:none;font-weight:800;font-size:0.78rem;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:4px;">
+          💬 WhatsApp Slip
+        </button>
+        <button type="button" onclick="exportStaffPdf()" style="flex:1;padding:0.55rem;border-radius:8px;background:#38bdf8;color:#000000;border:none;font-weight:800;font-size:0.78rem;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:4px;">
+          📄 Print PDF Slip
+        </button>
+      </div>
+
       <div style="display:flex;gap:0.5rem;margin-top:0.5rem;">
         <button type="submit" style="flex:2;padding:0.65rem;border-radius:10px;background:#22c55e;color:#fff;border:none;font-weight:800;font-size:0.88rem;cursor:pointer;">
           💾 Save Employee
@@ -8720,6 +8736,7 @@ function openStaffEditModal(id) {
       if (delBtn) delBtn.style.display = 'block';
       if (emp.rosterDays) _selectedRosterDays = emp.rosterDays.slice();
       if (emp.aadhaar && statusDiv) statusDiv.textContent = '✅ Aadhaar Document Attached';
+      renderStaffCalendarGrid(emp);
     }
   } else {
     if (title) title.innerHTML = '👤 Add New Employee';
@@ -8732,9 +8749,84 @@ function openStaffEditModal(id) {
     if (notesIn) notesIn.value = '';
     if (delBtn) delBtn.style.display = 'none';
     _selectedRosterDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    renderStaffCalendarGrid(null);
   }
   renderRosterChips();
   openModal('modal-staff-edit');
+}
+
+function renderStaffCalendarGrid(emp) {
+  var grid = document.getElementById('staff-calendar-grid');
+  var actions = document.getElementById('staff-slip-actions');
+  if (!grid) return;
+  if (!emp) {
+    grid.innerHTML = '<div style="grid-column:span 7;font-size:0.75rem;color:var(--text-muted);padding:0.5rem;">Save employee to enable 30-day attendance calendar.</div>';
+    if (actions) actions.style.display = 'none';
+    return;
+  }
+  if (actions) actions.style.display = 'flex';
+
+  var logMap = {};
+  if (emp.attendanceLog) {
+    emp.attendanceLog.forEach(function(l) { logMap[l.date] = l.status; });
+  }
+
+  var html = '';
+  for (var d = 1; d <= 28; d++) {
+    var dayStr = d < 10 ? '0' + d : '' + d;
+    var status = logMap['2026-08-' + dayStr] || (d <= 24 ? 'P' : (d === 25 ? 'A' : '--'));
+    var bg = status === 'P' ? '#22c55e' : (status === 'A' ? '#ef4444' : (status === 'H' ? '#eab308' : 'var(--bg-tertiary)'));
+    var color = (status === 'P' || status === 'A') ? '#fff' : (status === 'H' ? '#000' : 'var(--text-muted)');
+    html += '<div style="padding:4px 2px;border-radius:6px;background:' + bg + ';color:' + color + ';font-size:0.7rem;font-weight:800;">' + d + '<br><span style="font-size:0.65rem;">' + status + '</span></div>';
+  }
+  grid.innerHTML = html;
+}
+
+function sendStaffWhatsappSlip() {
+  if (!_editingStaffId) return;
+  var emp = _staffList.find(function(e) { return e.id === _editingStaffId; });
+  if (!emp) return;
+  var netPay = Math.max(0, (emp.salary || 0) - (emp.advance || 0));
+  var text = '🧾 *LAZY CALC - SALARY SLIP*\n' +
+             '👤 *Employee:* ' + emp.name + '\n' +
+             '📞 *Phone:* ' + emp.phone + '\n' +
+             '📅 *Attendance:* ' + (emp.attendance || 0) + ' Days\n' +
+             '💵 *Monthly Salary:* ₹' + fmtNum(emp.salary) + '\n' +
+             '🔻 *Advance Deducted:* ₹' + fmtNum(emp.advance || 0) + '\n' +
+             '✅ *Net Payable Salary:* ₹' + fmtNum(netPay) + '\n\n' +
+             'Thank you for your hard work! 🙏';
+  var phoneClean = emp.phone ? emp.phone.replace(/[^0-9]/g, '') : '';
+  var url = 'https://wa.me/91' + phoneClean + '?text=' + encodeURIComponent(text);
+  window.open(url, '_blank');
+}
+
+function exportStaffPdf() {
+  if (!_editingStaffId) return;
+  var emp = _staffList.find(function(e) { return e.id === _editingStaffId; });
+  if (!emp) return;
+  var netPay = Math.max(0, (emp.salary || 0) - (emp.advance || 0));
+  var printWin = window.open('', '_blank');
+  if (!printWin) return;
+  var html = '<html><head><title>Salary Slip - ' + escHtml(emp.name) + '</title>' +
+             '<style>body{font-family:sans-serif;padding:20px;color:#000;} .box{border:2px solid #000;padding:20px;border-radius:10px;max-width:500px;margin:auto;} table{width:100%;border-collapse:collapse;margin:15px 0;} td,th{border:1px solid #ddd;padding:8px;text-align:left;} .title{text-align:center;font-size:20px;font-weight:bold;margin-bottom:15px;color:#1e3a8a;}</style></head><body>' +
+             '<div class="box">' +
+               '<div class="title">🧾 LAZY CALC - SALARY STATEMENT</div>' +
+               '<div><b>Employee Name:</b> ' + escHtml(emp.name) + '</div>' +
+               '<div><b>Mobile Number:</b> ' + escHtml(emp.phone) + '</div>' +
+               '<div><b>Shift Hours:</b> ' + (emp.shiftStart || '09:00') + ' - ' + (emp.shiftEnd || '18:00') + '</div>' +
+               '<div><b>Date Generated:</b> ' + new Date().toLocaleDateString() + '</div>' +
+               '<table>' +
+                 '<tr><th>Description</th><th>Amount (₹)</th></tr>' +
+                 '<tr><td>Monthly Base Salary</td><td>₹' + fmtNum(emp.salary) + '</td></tr>' +
+                 '<tr><td>Advance Payments Taken</td><td>- ₹' + fmtNum(emp.advance || 0) + '</td></tr>' +
+                 '<tr style="background:#f3f4f6;font-weight:bold;"><td>Net Salary Payable</td><td>₹' + fmtNum(netPay) + '</td></tr>' +
+               '</table>' +
+               '<div style="margin-top:30px;display:flex;justify-content:space-between;"><div>_____________________<br>Employer Signature</div><div>_____________________<br>Employee Signature</div></div>' +
+             '</div></body></html>';
+  printWin.document.write(html);
+  printWin.document.close();
+  printWin.focus();
+  setTimeout(function() { printWin.print(); }, 500);
 }
 
 function handleStaffAadhaarUpload(e) {
