@@ -1281,7 +1281,7 @@ body {
       
       <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:1rem;">
         <button onclick="stepPosModalQty(-1)" style="width:44px;height:44px;border-radius:10px;border:1px solid var(--border-color);background:var(--bg-tertiary);color:var(--text-primary);font-size:1.4rem;font-weight:800;cursor:pointer;">-</button>
-        <input type="number" id="pos-modal-qty-input" value="1" min="1" style="width:75px;height:44px;text-align:center;font-size:1.3rem;font-weight:800;border-radius:10px;border:1px solid var(--border-color);background:var(--bg-secondary);color:var(--color-accent);" />
+        <input type="number" id="pos-modal-qty-input" value="1" min="0" oninput="setPosModalQtyVal(this.value)" style="width:75px;height:44px;text-align:center;font-size:1.3rem;font-weight:800;border-radius:10px;border:1px solid var(--border-color);background:var(--bg-secondary);color:var(--color-accent);" />
         <button onclick="stepPosModalQty(1)" style="width:44px;height:44px;border-radius:10px;border:1px solid var(--border-color);background:var(--bg-tertiary);color:var(--text-primary);font-size:1.4rem;font-weight:800;cursor:pointer;">+</button>
       </div>
 
@@ -1295,7 +1295,7 @@ body {
 
       <div style="display:flex;gap:8px;">
         <button onclick="deletePosLineFromModal()" style="flex:1;padding:0.75rem;border-radius:10px;border:1px solid var(--border-color);background:rgba(255,107,107,0.15);color:#ff6b6b;font-weight:800;font-size:0.88rem;cursor:pointer;">🗑️ Remove</button>
-        <button onclick="savePosLineQtyFromModal()" style="flex:1.5;padding:0.75rem;border-radius:10px;border:none;background:var(--color-accent);color:#fff;font-weight:800;font-size:0.88rem;cursor:pointer;">✅ Save Qty</button>
+        <button onclick="savePosLineQtyFromModal()" style="flex:1.5;padding:0.75rem;border-radius:10px;border:none;background:var(--color-accent);color:#fff;font-weight:800;font-size:0.88rem;cursor:pointer;">✅ Done</button>
       </div>
     </div>
   </div>
@@ -2646,7 +2646,9 @@ var _navBottom = localStorage.getItem('calc_nav_bottom') === 'true';
 var _expensesNewCount = 0;
 
 function getHeaderChevronSvg() {
-  return '<span class="hdr-chevron-svg" style="display:inline-flex;align-items:center;justify-content:center;transition:transform 0.25s ease;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span>';
+  var isUp = _navBottom || (document.getElementById('modal-calculator') && document.getElementById('modal-calculator').classList.contains('nav-bottom-mode'));
+  var points = isUp ? "6 15 12 9 18 15" : "6 9 12 15 18 9";
+  return '<span class="hdr-chevron-svg" style="display:inline-flex;align-items:center;justify-content:center;transition:transform 0.25s ease;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="' + points + '"></polyline></svg></span>';
 }
 
 function updateNavPositionUI() {
@@ -4048,24 +4050,40 @@ function openPosQtyEditModal(idx) {
 function stepPosModalQty(delta) {
   var input = document.getElementById('pos-modal-qty-input');
   if (!input) return;
-  var cur = parseInt(input.value) || 1;
-  input.value = Math.max(1, cur + delta);
+  var cur = parseInt(input.value) || 0;
+  var newQty = cur + delta;
+  setPosModalQtyVal(newQty);
 }
 
 function setPosModalQtyVal(val) {
+  var newQty = parseInt(val);
+  if (isNaN(newQty)) newQty = 0;
   var input = document.getElementById('pos-modal-qty-input');
-  if (input) input.value = val;
+
+  var idx = parseInt(document.getElementById('pos-qty-line-idx').value);
+  if (!isNaN(idx) && idx >= 0 && idx < _quickBillingOrder.length) {
+    if (newQty <= 0) {
+      var itemName = _quickBillingOrder[idx].name || 'item';
+      if (confirm('🗑️ Do you wish to remove "' + itemName + '" from the cart?')) {
+        _quickBillingOrder.splice(idx, 1);
+        renderQuickBillingScreen();
+        closeModal('modal-pos-qty-edit');
+        showToast('🗑️ Removed ' + itemName + ' from cart');
+      } else {
+        if (input) input.value = 1;
+        _quickBillingOrder[idx].qty = 1;
+        renderQuickBillingScreen();
+      }
+    } else {
+      if (input && parseInt(input.value) !== newQty) input.value = newQty;
+      _quickBillingOrder[idx].qty = newQty;
+      renderQuickBillingScreen();
+    }
+  }
 }
 
 function savePosLineQtyFromModal() {
-  var idx = parseInt(document.getElementById('pos-qty-line-idx').value);
-  var newQty = parseInt(document.getElementById('pos-modal-qty-input').value) || 1;
-  if (!isNaN(idx) && idx >= 0 && idx < _quickBillingOrder.length) {
-    _quickBillingOrder[idx].qty = Math.max(1, newQty);
-    renderQuickBillingScreen();
-    closeModal('modal-pos-qty-edit');
-    showToast('✅ Quantity updated to ' + _quickBillingOrder[idx].qty);
-  }
+  closeModal('modal-pos-qty-edit');
 }
 
 function deletePosLineFromModal() {
