@@ -599,6 +599,27 @@ details[open] summary:before { content:'▼'; }
 .skin-neon #calc-buttons button:nth-child(20) { background: linear-gradient(135deg, #00f2fe, #4facfe) !important; color: #000000 !important; border: none !important; font-weight: 800 !important; }
 .skin-neon #calc-buttons button:nth-child(20):active, .skin-neon #calc-buttons button:nth-child(20).key-pressed { transform: scale(0.94) !important; border-color: #00f2fe !important; box-shadow: none !important; }
 
+body.theme-light.skin-neon #calc-buttons button {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  border: 2px solid #06b6d4 !important;
+  font-weight: 800 !important;
+  box-shadow: 0 2px 8px rgba(6,182,212,0.15) !important;
+}
+body.theme-light.skin-neon #calc-buttons button:nth-child(4),
+body.theme-light.skin-neon #calc-buttons button:nth-child(8),
+body.theme-light.skin-neon #calc-buttons button:nth-child(12),
+body.theme-light.skin-neon #calc-buttons button:nth-child(16) {
+  background: linear-gradient(135deg, #ec4899, #f43f5e) !important;
+  color: #ffffff !important;
+  border: none !important;
+}
+body.theme-light.skin-neon #calc-buttons button:nth-child(20) {
+  background: linear-gradient(135deg, #06b6d4, #3b82f6) !important;
+  color: #ffffff !important;
+  border: none !important;
+}
+
 @media (hover: hover) and (pointer: fine) {
   .skin-samsung #calc-buttons button:hover { background: #3a3a3d !important; }
   .skin-ios #calc-buttons button:hover { background: #555555 !important; }
@@ -971,14 +992,14 @@ body {
       <div style="margin-bottom:1rem;background:var(--bg-tertiary);padding:0.75rem;border-radius:12px;border:1px solid var(--border-color);">
         <div style="font-size:0.8rem;font-weight:700;color:var(--color-accent);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.55rem;text-align:center;">🎨 APPEARANCE & THEMES</div>
         <div class="skin-picker-row" style="display:flex;gap:0.35rem;overflow-x:auto;margin-bottom:0.75rem;padding-bottom:2px;">
-          <button class="skin-option-btn" id="skin-btn-samsung" onclick="previewSkinGlimpse('samsung')" style="flex:1;white-space:nowrap;">📱 Samsung</button>
-          <button class="skin-option-btn" id="skin-btn-ios" onclick="previewSkinGlimpse('ios')" style="flex:1;white-space:nowrap;">🍎 iOS</button>
           <button class="skin-option-btn" id="skin-btn-modern" onclick="previewSkinGlimpse('modern')" style="flex:1;white-space:nowrap;">🔲 Modern</button>
+          <button class="skin-option-btn" id="skin-btn-samsung" onclick="previewSkinGlimpse('samsung')" style="flex:1;white-space:nowrap;">🤖 Android</button>
+          <button class="skin-option-btn" id="skin-btn-ios" onclick="previewSkinGlimpse('ios')" style="flex:1;white-space:nowrap;">🍎 iOS</button>
           <button class="skin-option-btn" id="skin-btn-neon" onclick="previewSkinGlimpse('neon')" style="flex:1;white-space:nowrap;">✨ Neon</button>
         </div>
         
         <div id="skin-preview-card" style="display:none;margin-bottom:0.75rem;padding:0.6rem;background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:10px;text-align:center;">
-          <div style="font-size:0.75rem;font-weight:700;color:var(--color-accent);margin-bottom:0.4rem;" id="skin-preview-title">📱 SAMSUNG SKIN PREVIEW</div>
+          <div style="font-size:0.75rem;font-weight:700;color:var(--color-accent);margin-bottom:0.4rem;" id="skin-preview-title">🤖 ANDROID ONE-UI SKIN PREVIEW</div>
           <div id="skin-preview-mini-calc" style="background:#000;padding:0.5rem;border-radius:8px;font-family:sans-serif;margin-bottom:0.5rem;">
             <div style="text-align:right;color:#fff;font-size:1.1rem;font-weight:700;margin-bottom:6px;padding:2px 4px;border-bottom:1px solid #333;">12,450.00</div>
             <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:3px;">
@@ -993,7 +1014,7 @@ body {
           </div>
         </div>
         <div style="text-align:center;margin-bottom:0.35rem;font-size:0.75rem;color:var(--text-muted);font-weight:600;">COLOR ACCENT THEMES</div>
-        <div style="display:flex;gap:0.45rem;justify-content:center;flex-wrap:wrap;">
+        <div style="display:flex;gap:0.45rem;justify-content:center;flex-wrap:wrap;min-height:36px;align-items:center;">
           <div class="theme-circle" data-theme="monochrome" style="background:#121216;border:2px solid #ffffff" onclick="setTheme('monochrome')" title="Minimal Monochrome (White)"></div>
           <div class="theme-circle" data-theme="light" style="background:#ffffff;border:2px solid #ccc" onclick="setTheme('light')" title="Light (White)"></div>
           <div class="theme-circle" data-theme="skyblue" style="background:#181825;border:2px solid #89b4fa" onclick="setTheme('skyblue')" title="Dark Sky Blue"></div>
@@ -1218,8 +1239,8 @@ body {
   </div>
 </div>
 
-<div class="modal-overlay" id="modal-quick-item-edit" onclick="closeModal('modal-quick-item-edit')" style="display:none;z-index:1010;">
-  <div class="modal-container" onclick="event.stopPropagation()" style="max-width:340px;width:90%;padding:1.2rem;border-radius:16px;">
+<div class="modal-overlay" id="modal-quick-item-edit" onclick="closeModal('modal-quick-item-edit')" style="display:none;z-index:1010;align-items:flex-start !important;padding-top:1rem !important;">
+  <div class="modal-container" onclick="event.stopPropagation()" style="max-width:340px;width:90%;padding:1.2rem;border-radius:16px;margin-top:0.5rem;">
     <div style="font-size:1.05rem;font-weight:800;color:var(--color-accent);margin-bottom:0.85rem;text-align:center;">🛒 EDIT QUICK POS ITEM</div>
     <input type="hidden" id="qb-item-idx">
     <div style="display:flex;flex-direction:column;gap:0.75rem;margin-bottom:1.1rem;">
@@ -1269,14 +1290,14 @@ body {
   </div>
 </div>
 
-<div id="modal-pos-qty-edit" class="modal-overlay" onclick="dismissModalOnBackdrop(event, 'modal-pos-qty-edit')" style="display:none;z-index:9999 !important;">
-  <div class="modal-card" style="max-width:340px;text-align:center;">
+<div id="modal-pos-qty-edit" class="modal-overlay" onclick="dismissModalOnBackdrop(event, 'modal-pos-qty-edit')" style="display:none;z-index:9999 !important;align-items:flex-start !important;padding-top:1rem !important;">
+  <div class="modal-card" style="max-width:340px;width:90%;text-align:center;border-radius:18px;padding:1.25rem;margin-top:0.5rem;">
     <div class="modal-header" style="justify-content:space-between;">
       <h3 id="pos-qty-modal-title" style="margin:0;font-size:1.05rem;font-weight:800;">✏️ Edit Item Quantity</h3>
       <button onclick="closeModal('modal-pos-qty-edit')" class="close-btn">✕</button>
     </div>
     <input type="hidden" id="pos-qty-line-idx" value="" />
-    <div style="padding:0.75rem 0;">
+    <div style="padding:0.75rem 0 0 0;">
       <div id="pos-qty-item-subtitle" style="font-size:0.88rem;font-weight:700;color:var(--text-muted);margin-bottom:1rem;"></div>
       
       <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:1rem;">
@@ -1294,9 +1315,13 @@ body {
       </div>
 
       <div style="display:flex;gap:8px;">
-        <button onclick="deletePosLineFromModal()" style="flex:1;padding:0.75rem;border-radius:10px;border:1px solid var(--border-color);background:rgba(255,107,107,0.15);color:#ff6b6b;font-weight:800;font-size:0.88rem;cursor:pointer;">🗑️ Remove</button>
-        <button onclick="savePosLineQtyFromModal()" style="flex:1.5;padding:0.75rem;border-radius:10px;border:none;background:var(--color-accent);color:#fff;font-weight:800;font-size:0.88rem;cursor:pointer;">✅ Done</button>
+        <button onclick="deletePosLineFromModal()" style="flex:1;padding:0.7rem;border-radius:10px;border:1px solid var(--border-color);background:rgba(255,107,107,0.15);color:#ff6b6b;font-weight:800;font-size:0.88rem;cursor:pointer;">🗑️ Remove</button>
+        <button onclick="savePosLineQtyFromModal()" style="flex:1.4;padding:0.7rem;border-radius:10px;border:none;background:var(--color-accent);color:#fff;font-weight:800;font-size:0.88rem;cursor:pointer;">✅ Done</button>
       </div>
+
+      <button onclick="clearEntirePosCartFromModal()" style="width:100%;margin-top:0.65rem;padding:0.65rem;border-radius:10px;border:1px solid rgba(244,63,94,0.3);background:rgba(244,63,94,0.1);color:#f43f5e;font-weight:800;font-size:0.84rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;">
+        🧹 Clear Entire Cart
+      </button>
     </div>
   </div>
 </div>
@@ -1397,8 +1422,8 @@ body {
   </div>
 </div>
 
-<div id="modal-customer-data" class="modal-overlay" onclick="dismissModalOnBackdrop(event, 'modal-customer-data')" style="display:none;z-index:9999 !important;">
-  <div class="modal-card" style="max-width:440px;width:94%;max-height:85vh;display:flex;flex-direction:column;border-radius:18px;">
+<div id="modal-customer-data" class="modal-overlay" onclick="dismissModalOnBackdrop(event, 'modal-customer-data')" style="display:none;z-index:9999 !important;align-items:flex-start !important;padding-top:1rem !important;">
+  <div class="modal-card" style="max-width:440px;width:94%;max-height:80vh;display:flex;flex-direction:column;border-radius:18px;margin-top:0.5rem;">
     <div class="modal-header" style="justify-content:space-between;padding-bottom:0.75rem;border-bottom:1px solid var(--border-color);">
       <h3 style="margin:0;font-size:1.1rem;font-weight:800;color:#38bdf8;display:flex;align-items:center;gap:6px;">
         👥 Customer Directory & Data
@@ -1420,8 +1445,8 @@ body {
   </div>
 </div>
 
-<div id="modal-stock-status-confirm" class="modal-overlay" onclick="dismissModalOnBackdrop(event, 'modal-stock-status-confirm')" style="display:none;z-index:9999 !important;">
-  <div class="modal-card" style="max-width:340px;width:90%;text-align:center;border-radius:18px;padding:1.25rem;">
+<div id="modal-stock-status-confirm" class="modal-overlay" onclick="dismissModalOnBackdrop(event, 'modal-stock-status-confirm')" style="display:none;z-index:9999 !important;align-items:flex-start !important;padding-top:1rem !important;">
+  <div class="modal-card" style="max-width:340px;width:90%;text-align:center;border-radius:18px;padding:1.25rem;margin-top:0.5rem;">
     <div id="stock-confirm-item-name" style="font-size:1.15rem;font-weight:800;color:var(--text-primary);margin-bottom:0.3rem;">Item Name</div>
     <div id="stock-confirm-status-text" style="font-size:0.85rem;color:var(--text-muted);margin-bottom:0.85rem;">Select an action for this menu item:</div>
     <input type="hidden" id="stock-confirm-item-idx" value="-1">
@@ -1447,8 +1472,8 @@ body {
     </div>
   </div>
 </div>
-<div id="modal-stock-settings" class="modal-overlay" onclick="dismissModalOnBackdrop(event, 'modal-stock-settings')" style="display:none;z-index:9999 !important;">
-  <div class="modal-card" style="max-width:380px;width:92%;padding:1.25rem;border-radius:18px;">
+<div id="modal-stock-settings" class="modal-overlay" onclick="dismissModalOnBackdrop(event, 'modal-stock-settings')" style="display:none;z-index:9999 !important;align-items:flex-start !important;padding-top:1rem !important;">
+  <div class="modal-card" style="max-width:380px;width:92%;padding:1.25rem;border-radius:18px;margin-top:0.5rem;">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.85rem;border-bottom:1px solid var(--border-color);padding-bottom:0.65rem;">
       <div style="font-weight:800;font-size:1.05rem;color:#c084fc;display:flex;align-items:center;gap:6px;">
         <span>📦</span> Automated Stock & Alerts
@@ -3264,6 +3289,36 @@ window.dismissModalOnBackdrop = dismissModalOnBackdrop;
 
 var _calcSkin = localStorage.getItem('calc_skin') || 'modern';
 
+function updateThemeSwatchesVisibility() {
+  var isModern = (_calcSkin === 'modern');
+  var isNeon = (_calcSkin === 'neon');
+  var circles = document.querySelectorAll('.theme-circle');
+  circles.forEach(function(el) {
+    var theme = el.getAttribute('data-theme');
+    if (isModern) {
+      el.style.display = 'inline-block';
+    } else if (isNeon) {
+      if (theme === 'monochrome') {
+        el.style.display = 'inline-block';
+      } else {
+        el.style.display = 'none';
+      }
+    } else {
+      if (theme === 'monochrome' || theme === 'light') {
+        el.style.display = 'inline-block';
+      } else {
+        el.style.display = 'none';
+      }
+    }
+  });
+
+  if (isNeon && _calcTheme !== 'monochrome') {
+    setTheme('monochrome');
+  } else if (!isModern && !isNeon && (_calcTheme !== 'monochrome' && _calcTheme !== 'light')) {
+    setTheme('monochrome');
+  }
+}
+
 function applyCalcSkin(skin) {
   _calcSkin = skin || 'modern';
   localStorage.setItem('calc_skin', _calcSkin);
@@ -3277,6 +3332,7 @@ function applyCalcSkin(skin) {
   });
   var activeBtn = document.getElementById('skin-btn-' + _calcSkin);
   if (activeBtn) activeBtn.classList.add('active');
+  updateThemeSwatchesVisibility();
 }
 
 function setCalcSkin(skin) {
@@ -3292,6 +3348,7 @@ function openSettingsModal() {
   openModal('modal-settings');
   try {
     if (typeof applyCalcSkin === 'function') applyCalcSkin(_calcSkin);
+    updateThemeSwatchesVisibility();
     if (typeof updatePaywallUI === 'function') updatePaywallUI();
   } catch(e) {}
 }
@@ -4093,6 +4150,19 @@ function deletePosLineFromModal() {
     renderQuickBillingScreen();
     closeModal('modal-pos-qty-edit');
     showToast('🗑️ Line item removed');
+  }
+}
+
+function clearEntirePosCartFromModal() {
+  if (!_quickBillingOrder || _quickBillingOrder.length === 0) {
+    closeModal('modal-pos-qty-edit');
+    return;
+  }
+  if (confirm('🧹 Are you sure you want to clear ALL items from the cart?')) {
+    _quickBillingOrder = [];
+    renderQuickBillingScreen();
+    closeModal('modal-pos-qty-edit');
+    showToast('🧹 Entire cart cleared');
   }
 }
 
