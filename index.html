@@ -6,15 +6,14 @@
 <title>Modes</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#f38ba8">
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Modes">
+<meta name="apple-mobile-web-app-title" content="Lazy Calc">
 <link rel="apple-touch-icon" href="icon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&display=swap" rel="stylesheet">
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src="https://checkout.razorpay.com/v1/checkout.js" async defer></script>
 <style>
 html, body, .modal-container { touch-action: manipulation; }
 :root {
@@ -26,6 +25,7 @@ html, body, .modal-container { touch-action: manipulation; }
   --color-accent: #f38ba8;
   --border-color: rgba(205, 214, 244, 0.12);
   --radius-sm: 6px;
+  --text-on-accent: #000000;
 }
 .theme-peach {
   --color-accent: #f38ba8;
@@ -474,11 +474,11 @@ details summary:before { content:'▶'; font-size:0.65rem; color:var(--text-mute
 details[open] summary:before { content:'▼'; }
 .exp-summary { cursor:pointer; font-size:1rem; font-weight:600; color:var(--text-primary); padding:0.5rem 0.6rem; display:flex; align-items:center; gap:0.4rem; list-style:none; background:var(--bg-tertiary); border-radius:var(--radius-sm); margin-bottom:0.35rem; }
 .exp-summary:hover { background:var(--bg-primary); }
-.sp-wa-btn { display:inline-flex; align-items:center; justify-content:center; cursor:pointer; font-size:0.85rem; padding:3px 7px; border-radius:6px; background:var(--bg-primary); border:1px solid var(--border-color); vertical-align:middle; transition:all 0.15s; }
+.sp-wa-btn { display:inline-flex; align-items:center; justify-content:center; cursor:pointer; font-size:0.82rem; font-weight:700; padding:4px 10px; border-radius:20px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.14); color:var(--text-primary) !important; vertical-align:middle; transition:all 0.15s; touch-action:manipulation; }
+.sp-wa-btn:active, .sp-wa-btn:hover { background:var(--color-accent); color:var(--text-on-accent) !important; font-weight:800; border-color:var(--color-accent); box-shadow:0 2px 8px rgba(0,0,0,0.2); }
 .date-preset { font-size:0.75rem; padding:0.3rem 0.5rem; border-radius:6px; border:1px solid var(--border-color); cursor:pointer; color:var(--text-muted); background:transparent; font-weight:600; }
 .date-preset:hover { color:var(--text-primary); border-color:var(--color-accent); }
 .sp-org-badge { font-size:0.55rem; color:#f1c40f; border:1px solid #f1c40f; border-radius:3px; padding:1px 4px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; display:inline-block; }
-.sp-wa-btn:hover { background:var(--color-accent); color:#fff; border-color:var(--color-accent); }
 .sp-section-title { font-size:0.82rem; font-weight:700; color:var(--text-primary); padding:0.4rem 0.6rem; border-radius:var(--radius-sm); background:var(--bg-tertiary); margin-bottom:0.5rem; letter-spacing:0.04em; text-transform:uppercase; border-left:3px solid var(--color-accent); }
 .sp-trip { display:flex; align-items:center; gap:0.5rem; padding:0.6rem 0.75rem; background:var(--bg-tertiary); border-radius:var(--radius-sm); margin-bottom:0.7rem; flex-wrap:wrap; border:1px solid var(--border-color); }
 .sp-trip input { background:transparent; border:none; color:var(--text-primary); font-size:1.05rem; font-weight:600; flex:1; min-width:100px; outline:none; padding:0; }
@@ -492,33 +492,35 @@ details[open] summary:before { content:'▼'; }
 .sp-chips { margin-top:0.45rem; padding-top:0.45rem; border-top:1px solid var(--border-color); }
 .sp-chips-inline { display:flex; flex-wrap:wrap; align-items:center; gap:0.35rem; }
 .sp-chips-table { display:flex; flex-direction:column; gap:0.35rem; }
-.sp-chip-row { display:flex; align-items:center; justify-content:space-between; width:100%; gap:0.5rem; background:var(--bg-primary); padding:0.35rem 0.55rem; border-radius:8px; border:1px solid var(--border-color); }
-.sp-chip { font-size:0.82rem; font-weight:700; padding:0.25rem 0.6rem; border-radius:6px; border:1px solid var(--border-color); cursor:pointer; color:var(--text-primary) !important; background:var(--bg-tertiary); touch-action:manipulation; transition:all 0.15s; white-space:nowrap; }
+.sp-chip-row { display:flex; align-items:center; justify-content:space-between; width:100%; gap:0.5rem; background:transparent; padding:0.25rem 0.2rem; border-bottom:1px solid rgba(255,255,255,0.06); border-radius:0; }
+.sp-chip-row:last-child { border-bottom:none; }
+.sp-chip { font-size:0.82rem; font-weight:700; padding:0.3rem 0.75rem; border-radius:20px; border:1px solid rgba(255,255,255,0.12); cursor:pointer; color:var(--text-primary) !important; background:rgba(255,255,255,0.06); touch-action:manipulation; transition:all 0.15s; white-space:nowrap; display:inline-flex; align-items:center; gap:4px; }
 .sp-action-row { display:flex; gap:0.5rem; margin-bottom:0.4rem; }
-.sp-btn-primary { flex:1; padding:0.55rem; border:1px solid var(--color-accent); border-radius:var(--radius-sm); background:transparent; color:var(--color-accent); cursor:pointer; font-size:0.88rem; font-weight:600; touch-action:manipulation; transition:all 0.15s; }
-.sp-btn-secondary { flex:1; padding:0.55rem; border:1px solid var(--border-color); border-radius:var(--radius-sm); background:var(--bg-tertiary); color:var(--text-primary); cursor:pointer; font-size:0.88rem; font-weight:600; touch-action:manipulation; transition:all 0.15s; }
-.sp-btn-primary:hover { background:var(--color-accent); color:#fff; transform:translateY(-1px); box-shadow:0 2px 8px rgba(0,0,0,0.2); }
-.sp-btn-secondary:hover { background:var(--bg-secondary); border-color:var(--color-accent); transform:translateY(-1px); }
+.sp-btn-primary { flex:1; min-width:0; padding:0.55rem 0.4rem; border:1.5px solid var(--color-accent); border-radius:var(--radius-sm); background:rgba(243, 139, 168, 0.12); color:var(--color-accent); cursor:pointer; font-size:0.84rem; font-weight:700; touch-action:manipulation; transition:all 0.15s; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; text-align:center; }
+.sp-btn-secondary { flex:1; min-width:0; padding:0.55rem 0.4rem; border:1.5px solid var(--border-color); border-radius:var(--radius-sm); background:var(--bg-tertiary); color:var(--text-primary); cursor:pointer; font-size:0.84rem; font-weight:700; touch-action:manipulation; transition:all 0.15s; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; text-align:center; }
+.sp-btn-primary:active, .sp-btn-primary:hover { background:var(--color-accent); color:var(--text-on-accent) !important; font-weight:800; transform:translateY(-1px); box-shadow:0 2px 8px rgba(0,0,0,0.2); }
+.sp-btn-secondary:active, .sp-btn-secondary:hover { background:var(--bg-secondary); border-color:var(--color-accent); transform:translateY(-1px); }
 .sp-buddy-form { display:flex; gap:0.35rem; margin-top:0.35rem; margin-bottom:0.5rem; padding:0.4rem 0.5rem; background:var(--bg-tertiary); border:1px solid var(--border-color); border-radius:8px; flex-wrap:wrap; }
 .sp-buddy-form input { flex:1; min-width:120px; padding:0.55rem; border:1px solid var(--border-color); border-radius:var(--radius-sm); background:var(--bg-primary); color:var(--text-primary); font-size:0.9rem; }
 .sp-buddy-form input:focus { outline:none; border-color:var(--color-accent); }
 .exp-shortcuts { display:flex; gap:0.25rem; padding:0.35rem 0 0.5rem 0; flex-wrap:nowrap; overflow-x:auto; scrollbar-width:none; -ms-overflow-style:none; }
 .exp-shortcuts::-webkit-scrollbar { display:none; }
 .exp-shortcuts span { flex:1; font-size:0.8rem; font-weight:600; padding:0.45rem 0.3rem; border-radius:6px; border:1px solid var(--border-color); cursor:pointer; color:var(--text-primary); background:var(--bg-tertiary); touch-action:manipulation; transition:all 0.15s; white-space:nowrap; display:inline-flex; align-items:center; justify-content:center; text-align:center; }
-.exp-shortcuts span:hover { background:var(--color-accent); color:#fff; border-color:var(--color-accent); transform:translateY(-1px); }
-.exp-btn-add { padding:0.55rem 1rem; border:1px solid var(--color-accent); border-radius:var(--radius-sm); background:var(--color-accent); color:#fff; cursor:pointer; font-size:0.9rem; font-weight:600; touch-action:manipulation; transition:all 0.15s; }
+.exp-shortcuts span:hover, .exp-shortcuts span:active { background:var(--color-accent); color:var(--text-on-accent) !important; border-color:var(--color-accent); transform:translateY(-1px); font-weight:800; }
+.exp-btn-add { padding:0.55rem 1rem; border:1px solid var(--color-accent); border-radius:var(--radius-sm); background:var(--color-accent); color:var(--text-on-accent) !important; cursor:pointer; font-size:0.9rem; font-weight:800; touch-action:manipulation; transition:all 0.15s; }
 .exp-btn-add:hover { transform:translateY(-1px); box-shadow:0 2px 8px rgba(0,0,0,0.2); }
-.sp-chip.on { background:var(--color-accent); color:#121216 !important; border-color:var(--color-accent); font-weight:800; }
-.sp-chip.payer { border-color:#f1c40f; color:#f1c40f !important; }
-.sp-chip.payer.on { background:#f1c40f; border-color:#f1c40f; color:#121216 !important; font-weight:800; }
+.sp-chip.on { background:rgba(243, 139, 168, 0.2); color:var(--color-accent) !important; border-color:var(--color-accent); font-weight:800; box-shadow:0 0 10px rgba(243, 139, 168, 0.15); }
+.sp-chip.payer { border-color:rgba(234, 179, 8, 0.5); color:#eab308 !important; background:rgba(234, 179, 8, 0.12); }
+.sp-chip.payer.on { background:rgba(234, 179, 8, 0.25); border-color:#eab308; color:#fef08a !important; font-weight:800; box-shadow:0 0 10px rgba(234, 179, 8, 0.2); }
 .sp-add-person-btn { cursor:pointer; font-size:1.3rem; color:var(--color-accent); padding:1px 6px; border-radius:4px; line-height:1; font-weight:700; border:1px solid var(--color-accent); }
-.sp-add-person-btn:hover { background:var(--color-accent); color:#fff; }
+.sp-add-person-btn:hover, .sp-add-person-btn:active { background:var(--color-accent); color:var(--text-on-accent) !important; font-weight:800; }
 .sp-invite-btn { cursor:pointer; font-size:0.95rem; padding:2px 4px; border-radius:3px; line-height:1; color:var(--text-muted); }
 .sp-invite-btn:hover { color:var(--color-accent); }
 .sp-you-badge { font-size:0.58rem; color:var(--color-accent); border:1px solid var(--color-accent); border-radius:3px; padding:0 3px; margin-left:0.2rem; white-space:nowrap; font-weight:700; }
-.sp-amt-input-wrap { display:inline-flex; align-items:center; gap:2px; background:var(--bg-tertiary); padding:2px 6px; border-radius:6px; border:1px solid var(--border-color); }
-.sp-currency-prefix { font-size:0.8rem; font-weight:700; color:var(--color-accent); }
-.sp-custom-amt { width:65px; padding:0.22rem 0.35rem; font-size:0.82rem; font-weight:700; border:none; background:transparent; color:var(--text-primary); outline:none; text-align:right; }
+.sp-amt-input-wrap { display:inline-flex; align-items:center; gap:3px; background:rgba(255,255,255,0.05); padding:0.25rem 0.65rem; border-radius:20px; border:1px solid rgba(255,255,255,0.12); transition:border-color 0.15s; }
+.sp-amt-input-wrap:focus-within { border-color:var(--color-accent); background:rgba(243, 139, 168, 0.08); }
+.sp-currency-prefix { font-size:0.82rem; font-weight:800; color:var(--color-accent); }
+.sp-custom-amt { width:70px; padding:0.1rem 0.2rem; font-size:0.88rem; font-weight:800; border:none; background:transparent; color:var(--text-primary); outline:none; text-align:right; }
 .sp-custom-amt:focus { border-color:var(--color-accent); }
 .sp-result { background:var(--bg-tertiary); border-radius:var(--radius-sm); padding:0.6rem; margin-top:0.5rem; border:1px solid var(--border-color); }
 .sp-result-line { font-size:0.85rem; color:var(--text-primary); padding:0.2rem 0; }
@@ -526,6 +528,10 @@ details[open] summary:before { content:'▼'; }
 .sp-split-badge { font-size:0.68rem; font-weight:700; color:var(--color-accent); padding:3px 8px; border-radius:6px; border:1px solid var(--color-accent); background:var(--bg-tertiary); text-transform:uppercase; letter-spacing:0.5px; }
 @keyframes posLinePulse { 0% { background: rgba(56, 189, 248, 0.45); transform: scale(1.02); } 100% { background: rgba(255, 255, 255, 0.03); transform: scale(1); } }
 .pos-line-pulse { animation: posLinePulse 0.6s ease-out; }
+.pos-live-screen-box { background:linear-gradient(180deg, #11141c 0%, #080b0f 100%); border:2px solid rgba(255,255,255,0.16); border-radius:14px; box-shadow:inset 0 3px 12px rgba(0,0,0,0.85), 0 4px 16px rgba(0,0,0,0.4); color:var(--text-primary); }
+.theme-light .pos-live-screen-box { background:#ffffff !important; border:1.5px solid #cbd5e1 !important; box-shadow:0 4px 16px rgba(0,0,0,0.06) !important; color:#0f172a !important; }
+.theme-light #pos-live-screen [id^="pos-line-item-"] { background:#f8fafc !important; border-bottom:1px dashed #cbd5e1 !important; color:#0f172a !important; }
+.theme-light #pos-live-screen [id^="pos-line-item-"] span { color:#0f172a !important; }
 .skin-option-btn {
   padding: 0.55rem 0.4rem;
   border-radius: 8px;
@@ -957,7 +963,7 @@ body {
           </div>
           <div style="font-size:0.7rem;color:var(--text-muted);margin-top:1px;">Full Access Unlocked</div>
         </div>
-        <button onclick="openPlanUpgradeModal()" style="padding:0.4rem 0.7rem;border-radius:8px;background:#eab308;color:#000;border:none;font-weight:800;font-size:0.75rem;cursor:pointer;white-space:nowrap;box-shadow:0 2px 8px rgba(234,179,8,0.3);">
+        <button onclick="openPlanUpgradeModal(event)" style="padding:0.4rem 0.7rem;border-radius:8px;background:#eab308;color:#000;border:none;font-weight:800;font-size:0.75rem;cursor:pointer;white-space:nowrap;box-shadow:0 2px 8px rgba(234,179,8,0.3);">
           ⭐ Upgrade
         </button>
       </div>
@@ -1106,7 +1112,7 @@ body {
   </div>
 </div>
 
-<div class="modal-overlay" id="modal-thermal-receipt" onclick="closeThermalReceiptModal(event)" style="z-index:1005;">
+<div class="modal-overlay" id="modal-thermal-receipt" onclick="closeThermalReceiptModal(event)" style="display:none;z-index:1005;">
   <div class="modal-container" onclick="event.stopPropagation()" style="max-width:380px;width:92%;padding:1.25rem;border-radius:18px;position:relative;background:var(--bg-secondary);border:1px solid var(--border-color);">
     <button onclick="closeThermalReceiptModal()" style="position:absolute;right:14px;top:14px;width:32px;height:32px;border-radius:50%;background:#ffffff;color:#000000;border:2px solid #000000;font-size:1.1rem;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:99 !important;box-shadow:0 4px 14px rgba(0,0,0,0.5);">✕</button>
     
@@ -1127,11 +1133,11 @@ body {
   </div>
 </div>
 
-<div class="modal-overlay" id="modal-bill-customization" onclick="closeBillCustomizationModal(event)" style="z-index:1010;background:rgba(0,0,0,0.88);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);">
-  <div class="modal-container" onclick="event.stopPropagation()" style="max-width:96%;width:96%;max-height:88vh;overflow-y:auto;padding:1.25rem 1rem;border-radius:16px;box-sizing:border-box;position:relative;">
-    <button onclick="closeBillCustomizationModal()" style="position:absolute;right:14px;top:14px;width:30px;height:30px;border-radius:50%;background:var(--bg-tertiary);color:var(--text-primary);border:1px solid var(--border-color);font-size:0.95rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;" title="Close">✕</button>
+<div class="modal-overlay" id="modal-bill-customization" onclick="closeBillCustomizationModal(event)" style="display:none;z-index:1010;background:rgba(0,0,0,0.88);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);">
+  <div class="modal-container" onclick="event.stopPropagation()" style="max-width:440px;width:94%;max-height:88vh;overflow-y:auto;-webkit-overflow-scrolling:touch;touch-action:pan-y;padding:1.25rem 1rem 3rem 1rem;border-radius:18px;box-sizing:border-box;position:relative;">
+    <button onclick="closeBillCustomizationModal()" style="position:absolute;right:14px;top:14px;width:32px;height:32px;border-radius:50%;background:var(--bg-tertiary);color:var(--text-primary);border:1px solid var(--border-color);font-size:0.95rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;" title="Close">✕</button>
     <div class="modal-header" style="margin-bottom:1.2rem;">
-      <h3 style="font-size:0.9rem;font-weight:800;text-align:left;padding-right:48px;margin:0;line-height:1.35;">📝 TEXT ON BILL PRINT / BILL HISTORY</h3>
+      <h3 style="font-size:0.95rem;font-weight:800;text-align:left;padding-right:48px;margin:0;line-height:1.35;color:var(--color-accent);">📝 STORE DETAILS & BILL HISTORY</h3>
     </div>
     <div class="modal-body" style="padding:0;">
       <div style="font-size:0.8rem;font-weight:800;color:var(--color-accent);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:0.85rem;">📝 BILL HEADER & FOOTER DETAILS</div>
@@ -1212,26 +1218,37 @@ body {
   </div>
 </div>
 
-<div class="modal-overlay" id="modal-quick-item-edit" onclick="closeModal('modal-quick-item-edit')" style="z-index:1010;">
+<div class="modal-overlay" id="modal-quick-item-edit" onclick="closeModal('modal-quick-item-edit')" style="display:none;z-index:1010;">
   <div class="modal-container" onclick="event.stopPropagation()" style="max-width:340px;width:90%;padding:1.2rem;border-radius:16px;">
     <div style="font-size:1.05rem;font-weight:800;color:var(--color-accent);margin-bottom:0.85rem;text-align:center;">🛒 EDIT QUICK POS ITEM</div>
     <input type="hidden" id="qb-item-idx">
     <div style="display:flex;flex-direction:column;gap:0.75rem;margin-bottom:1.1rem;">
-      <div>
-        <label style="font-size:0.78rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">Item Name (e.g. Pasta, Chai)</label>
-        <input id="qb-item-name" oninput="handleQbItemNameInput()" placeholder="Item Name" style="width:100%;padding:0.7rem;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-secondary);color:var(--text-primary);font-size:0.95rem;outline:none;box-sizing:border-box;">
-      </div>
-      <div>
-        <label style="font-size:0.78rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">Price / Rate (₹)</label>
-        <input type="number" inputmode="decimal" id="qb-item-price" placeholder="Rate e.g. 50" style="width:100%;padding:0.7rem;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-secondary);color:var(--text-primary);font-size:0.95rem;outline:none;box-sizing:border-box;">
-      </div>
+      
+      <!-- Combined Row 1: Emoji Icon & Item Name -->
       <div>
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
-          <label style="font-size:0.78rem;font-weight:700;color:var(--text-muted);">Emoji / Icon</label>
+          <label style="font-size:0.78rem;font-weight:700;color:var(--text-muted);">Icon & Item Name</label>
           <button onclick="triggerAutoEmoji()" style="background:none;border:none;color:var(--color-accent);font-size:0.75rem;font-weight:800;cursor:pointer;padding:0;" title="Auto Detect Food Emoji">✨ Auto Detect</button>
         </div>
-        <input id="qb-item-icon" placeholder="e.g. 🍝 or ☕" style="width:100%;padding:0.7rem;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-secondary);color:var(--text-primary);font-size:0.95rem;outline:none;box-sizing:border-box;">
+        <div style="display:flex;gap:6px;align-items:center;">
+          <input id="qb-item-icon" placeholder="🥟" style="width:48px;padding:0.65rem 0.2rem;text-align:center;font-size:1.15rem;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-secondary);color:var(--text-primary);outline:none;box-sizing:border-box;">
+          <input id="qb-item-name" oninput="handleQbItemNameInput()" placeholder="Item Name (e.g. Samosaa)" style="flex:1;padding:0.7rem;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-secondary);color:var(--text-primary);font-size:0.95rem;outline:none;box-sizing:border-box;">
+        </div>
       </div>
+
+      <!-- Combined Row 2: Price (₹) & Available Stock Qty -->
+      <div style="display:flex;gap:8px;">
+        <div style="flex:1;">
+          <label style="font-size:0.78rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">Rate / Price (₹)</label>
+          <input type="number" inputmode="decimal" id="qb-item-price" placeholder="e.g. 16" style="width:100%;padding:0.7rem;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-secondary);color:var(--text-primary);font-size:0.95rem;outline:none;box-sizing:border-box;">
+        </div>
+        <div style="flex:1.1;">
+          <label style="font-size:0.78rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">📦 Stock Qty</label>
+          <input type="number" inputmode="numeric" id="qb-item-stock" placeholder="e.g. 50 (blank = ∞)" style="width:100%;padding:0.7rem;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-secondary);color:var(--text-primary);font-size:0.95rem;outline:none;box-sizing:border-box;">
+        </div>
+      </div>
+
+      <!-- Food Type Indicator -->
       <div>
         <label style="font-size:0.78rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">Food Type Indicator</label>
         <input type="hidden" id="qb-item-food-type" value="veg">
@@ -1240,7 +1257,10 @@ body {
           <button type="button" id="food-pill-nonveg" onclick="setFoodTypePill('nonveg')" style="flex:1;padding:0.55rem;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-secondary);color:var(--text-muted);font-weight:700;font-size:0.85rem;cursor:pointer;transition:all 0.15s ease;">🔴 Non-Veg</button>
         </div>
       </div>
+
     </div>
+
+    <!-- Action Buttons -->
     <div style="display:flex;gap:0.5rem;">
       <button onclick="saveQuickItemFromModal()" style="flex:2;padding:0.75rem;border:none;border-radius:10px;background:var(--color-accent);color:#fff;font-weight:800;font-size:0.9rem;cursor:pointer;">💾 Save Item</button>
       <button onclick="deleteQuickItemFromModal()" style="flex:1;padding:0.75rem;border:1px solid var(--border-color);border-radius:10px;background:rgba(255,107,107,0.15);color:#ff6b6b;font-weight:700;font-size:0.85rem;cursor:pointer;">🗑️ Delete</button>
@@ -1249,7 +1269,7 @@ body {
   </div>
 </div>
 
-<div id="modal-pos-qty-edit" class="modal-overlay" onclick="dismissModalOnBackdrop(event, 'modal-pos-qty-edit')" style="z-index:9999 !important;">
+<div id="modal-pos-qty-edit" class="modal-overlay" onclick="dismissModalOnBackdrop(event, 'modal-pos-qty-edit')" style="display:none;z-index:9999 !important;">
   <div class="modal-card" style="max-width:340px;text-align:center;">
     <div class="modal-header" style="justify-content:space-between;">
       <h3 id="pos-qty-modal-title" style="margin:0;font-size:1.05rem;font-weight:800;">✏️ Edit Item Quantity</h3>
@@ -1302,10 +1322,14 @@ body {
       <span style="font-size:1.2rem;">✏️</span> Edit Grid Items
     </button>
 
+    <button onclick="closePosDrawer();openStockSettingsModal();" style="width:100%;padding:0.75rem 0.9rem;border-radius:12px;border:1px solid rgba(168,85,247,0.3);background:rgba(168,85,247,0.1);color:#c084fc;font-weight:700;font-size:0.92rem;cursor:pointer;display:flex;align-items:center;gap:10px;text-align:left;">
+      <span style="font-size:1.2rem;">📦</span> Automated Stock & Alerts
+    </button>
+
     <div style="border-bottom:1px solid var(--border-color);margin:0.4rem 0;"></div>
 
     <button onclick="closePosDrawer();openBillCustomizationModal();" style="width:100%;padding:0.7rem 0.9rem;border-radius:10px;border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);font-weight:600;font-size:0.88rem;cursor:pointer;display:flex;align-items:center;gap:10px;text-align:left;">
-      <span style="font-size:1.1rem;">📝</span> Store & Receipt Details
+      <span style="font-size:1.1rem;">📝</span> Store Details & Bills
     </button>
 
     <button onclick="closePosDrawer();openCustomerDataModal();" style="width:100%;padding:0.7rem 0.9rem;border-radius:10px;border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);font-weight:600;font-size:0.88rem;cursor:pointer;display:flex;align-items:center;gap:10px;text-align:left;">
@@ -1319,7 +1343,7 @@ body {
 </div>
 
 <!-- Sales Report & Analytics Modal -->
-<div class="modal-overlay" id="modal-sales-report" onclick="dismissModalOnBackdrop(event, 'modal-sales-report')" style="z-index:10020 !important;">
+<div class="modal-overlay" id="modal-sales-report" onclick="dismissModalOnBackdrop(event, 'modal-sales-report')" style="display:none;z-index:10020 !important;">
   <div class="modal-card" style="max-width:440px;width:94%;max-height:85vh;display:flex;flex-direction:column;border-radius:18px;">
     <div class="modal-header" style="justify-content:space-between;padding-bottom:0.75rem;border-bottom:1px solid var(--border-color);">
       <h3 style="margin:0;font-size:1.1rem;font-weight:800;color:#38bdf8;display:flex;align-items:center;gap:6px;">
@@ -1359,7 +1383,7 @@ body {
   </div>
 </div>
 
-<div class="modal-overlay" id="modal-bill-onboarding-prompt" onclick="dismissModalOnBackdrop(event, 'modal-bill-onboarding-prompt')" style="z-index:9999 !important;">
+<div class="modal-overlay" id="modal-bill-onboarding-prompt" onclick="dismissModalOnBackdrop(event, 'modal-bill-onboarding-prompt')" style="display:none;z-index:9999 !important;">
   <div class="modal-card" style="max-width:360px;width:90%;text-align:center;padding:1.5rem 1.2rem;border-radius:16px;">
     <div style="font-size:2.8rem;margin-bottom:0.5rem;">🧾</div>
     <div style="font-size:1.2rem;font-weight:800;color:var(--text-primary);margin-bottom:0.6rem;">Setup Business & Receipt Details</div>
@@ -1373,7 +1397,7 @@ body {
   </div>
 </div>
 
-<div id="modal-customer-data" class="modal-overlay" onclick="dismissModalOnBackdrop(event, 'modal-customer-data')" style="z-index:9999 !important;">
+<div id="modal-customer-data" class="modal-overlay" onclick="dismissModalOnBackdrop(event, 'modal-customer-data')" style="display:none;z-index:9999 !important;">
   <div class="modal-card" style="max-width:440px;width:94%;max-height:85vh;display:flex;flex-direction:column;border-radius:18px;">
     <div class="modal-header" style="justify-content:space-between;padding-bottom:0.75rem;border-bottom:1px solid var(--border-color);">
       <h3 style="margin:0;font-size:1.1rem;font-weight:800;color:#38bdf8;display:flex;align-items:center;gap:6px;">
@@ -1396,13 +1420,22 @@ body {
   </div>
 </div>
 
-<div id="modal-stock-status-confirm" class="modal-overlay" onclick="dismissModalOnBackdrop(event, 'modal-stock-status-confirm')" style="z-index:9999 !important;">
+<div id="modal-stock-status-confirm" class="modal-overlay" onclick="dismissModalOnBackdrop(event, 'modal-stock-status-confirm')" style="display:none;z-index:9999 !important;">
   <div class="modal-card" style="max-width:340px;width:90%;text-align:center;border-radius:18px;padding:1.25rem;">
     <div id="stock-confirm-item-name" style="font-size:1.15rem;font-weight:800;color:var(--text-primary);margin-bottom:0.3rem;">Item Name</div>
-    <div id="stock-confirm-status-text" style="font-size:0.85rem;color:var(--text-muted);margin-bottom:1.25rem;">Select an action for this menu item:</div>
+    <div id="stock-confirm-status-text" style="font-size:0.85rem;color:var(--text-muted);margin-bottom:0.85rem;">Select an action for this menu item:</div>
     <input type="hidden" id="stock-confirm-item-idx" value="-1">
+
+    <div style="margin-bottom:1rem;text-align:left;">
+      <label style="font-size:0.78rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">📦 Set Available Stock Qty</label>
+      <div style="display:flex;gap:6px;">
+        <input type="number" inputmode="numeric" id="quick-stock-input" placeholder="e.g. 50 (blank = unlimited)" style="flex:1;padding:0.6rem 0.75rem;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-secondary);color:var(--text-primary);font-size:0.95rem;font-weight:700;outline:none;box-sizing:border-box;">
+        <button onclick="saveQuickStockFromModal()" style="padding:0.6rem 0.9rem;border-radius:8px;border:none;background:var(--color-accent);color:#fff;font-weight:800;font-size:0.85rem;cursor:pointer;">Save Qty</button>
+      </div>
+    </div>
+
     <div style="display:flex;flex-direction:column;gap:8px;">
-      <button id="btn-toggle-stock-action" onclick="confirmToggleStockStatus()" style="width:100%;padding:0.75rem;border-radius:10px;border:none;background:#ff6b6b;color:#fff;font-weight:800;font-size:0.92rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;">
+      <button id="btn-toggle-stock-action" onclick="confirmToggleStockStatus()" style="width:100%;padding:0.65rem;border-radius:10px;border:none;background:#ff6b6b;color:#fff;font-weight:800;font-size:0.88rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;">
         🚫 Mark Out of Stock
       </button>
       <button onclick="closeModal('modal-stock-status-confirm');openQuickItemEditModal(parseInt(document.getElementById('stock-confirm-item-idx').value));" style="width:100%;padding:0.65rem;border-radius:10px;border:1px solid var(--border-color);background:var(--bg-secondary);color:var(--text-primary);font-weight:700;font-size:0.88rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;">
@@ -1414,8 +1447,52 @@ body {
     </div>
   </div>
 </div>
+<div id="modal-stock-settings" class="modal-overlay" onclick="dismissModalOnBackdrop(event, 'modal-stock-settings')" style="display:none;z-index:9999 !important;">
+  <div class="modal-card" style="max-width:380px;width:92%;padding:1.25rem;border-radius:18px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.85rem;border-bottom:1px solid var(--border-color);padding-bottom:0.65rem;">
+      <div style="font-weight:800;font-size:1.05rem;color:#c084fc;display:flex;align-items:center;gap:6px;">
+        <span>📦</span> Automated Stock & Alerts
+      </div>
+      <button onclick="closeStockSettingsModal()" class="close-btn">✕</button>
+    </div>
 
-<div id="modal-held-bills-picker" class="modal-overlay" onclick="dismissModalOnBackdrop(event, 'modal-held-bills-picker')" style="z-index:9999 !important;">
+    <!-- How it works box -->
+    <div style="background:rgba(168,85,247,0.1);border:1px solid rgba(168,85,247,0.25);border-radius:12px;padding:0.75rem 0.85rem;margin-bottom:1rem;font-size:0.82rem;color:var(--text-primary);line-height:1.45;">
+      <div style="font-weight:800;color:#c084fc;margin-bottom:4px;display:flex;align-items:center;gap:5px;">
+        <span>ℹ️</span> How Automatic Inventory Works:
+      </div>
+      • When enabled, adding items to POS bills <b>automatically deducts stock quantity</b>.<br>
+      • When stock drops to <b>Low Stock Threshold</b>, a yellow alert badge appears.<br>
+      • When stock reaches <b>0</b>, item displays <b>OUT OF STOCK</b> and blocks billing.
+    </div>
+
+    <!-- Auto Deduction Toggle Switch -->
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:0.75rem 0;border-bottom:1px solid var(--border-color);">
+      <div>
+        <div style="font-weight:700;font-size:0.9rem;color:var(--text-primary);">Auto Stock Deduction</div>
+        <div style="font-size:0.75rem;color:var(--text-muted);">Deduct stock on POS bill addition</div>
+      </div>
+      <input type="checkbox" id="stock-deduct-toggle" style="width:20px;height:20px;accent-color:#a855f7;cursor:pointer;" checked>
+    </div>
+
+    <!-- Low Stock Alert Threshold Input -->
+    <div style="margin-top:1rem;margin-bottom:1.25rem;">
+      <label style="display:block;font-weight:700;font-size:0.88rem;color:var(--text-primary);margin-bottom:6px;">
+        ⚠️ Low Stock Alert Threshold (Qty)
+      </label>
+      <input type="number" id="stock-low-threshold-input" value="10" min="1" max="999" style="width:100%;padding:0.6rem 0.75rem;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);font-size:0.95rem;font-weight:700;box-sizing:border-box;">
+      <div style="font-size:0.75rem;color:var(--text-muted);margin-top:4px;">Default: 10 units. Displays yellow warning badge on tile when stock drops below this count.</div>
+    </div>
+
+    <!-- Modal Actions -->
+    <div style="display:flex;gap:8px;justify-content:flex-end;">
+      <button onclick="closeStockSettingsModal()" style="padding:0.6rem 1.1rem;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);font-weight:600;font-size:0.88rem;cursor:pointer;">Cancel</button>
+      <button onclick="saveStockSettings()" style="padding:0.6rem 1.25rem;border-radius:8px;border:none;background:#a855f7;color:#fff;font-weight:800;font-size:0.88rem;cursor:pointer;box-shadow:0 3px 10px rgba(168,85,247,0.3);">Save Settings</button>
+    </div>
+  </div>
+</div>
+
+<div id="modal-held-bills-picker" class="modal-overlay" onclick="dismissModalOnBackdrop(event, 'modal-held-bills-picker')" style="display:none;z-index:9999 !important;">
   <div class="modal-card" style="max-width:360px;width:92%;max-height:80vh;display:flex;flex-direction:column;">
     <div class="modal-header" style="justify-content:space-between;">
       <h3 style="margin:0;font-size:1.05rem;font-weight:800;color:var(--color-accent);display:flex;align-items:center;gap:6px;">
@@ -1427,43 +1504,7 @@ body {
   </div>
 </div>
 
-<div id="modal-held-bills-picker" class="modal-overlay" onclick="dismissModalOnBackdrop(event, 'modal-held-bills-picker')" style="z-index:9999 !important;">
-  <div class="modal-card" style="max-width:360px;width:92%;max-height:80vh;display:flex;flex-direction:column;">
-    <div class="modal-header" style="justify-content:space-between;">
-      <h3 style="margin:0;font-size:1.05rem;font-weight:800;color:var(--color-accent);display:flex;align-items:center;gap:6px;">
-        📋 Held Bills List
-      </h3>
-      <button onclick="closeModal('modal-held-bills-picker')" class="close-btn">✕</button>
-    </div>
-    <div id="held-bills-list-body" style="padding:0.75rem 0;overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:8px;"></div>
-  </div>
-</div>
-
-<div id="modal-held-bills-picker" class="modal-overlay" onclick="dismissModalOnBackdrop(event, 'modal-held-bills-picker')" style="z-index:9999 !important;">
-  <div class="modal-card" style="max-width:360px;width:92%;max-height:80vh;display:flex;flex-direction:column;">
-    <div class="modal-header" style="justify-content:space-between;">
-      <h3 style="margin:0;font-size:1.05rem;font-weight:800;color:var(--color-accent);display:flex;align-items:center;gap:6px;">
-        📋 Held Bills List
-      </h3>
-      <button onclick="closeModal('modal-held-bills-picker')" class="close-btn">✕</button>
-    </div>
-    <div id="held-bills-list-body" style="padding:0.75rem 0;overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:8px;"></div>
-  </div>
-</div>
-
-<div id="modal-held-bills-picker" class="modal-overlay" onclick="dismissModalOnBackdrop(event, 'modal-held-bills-picker')" style="z-index:9999 !important;">
-  <div class="modal-card" style="max-width:360px;width:92%;max-height:80vh;display:flex;flex-direction:column;">
-    <div class="modal-header" style="justify-content:space-between;">
-      <h3 style="margin:0;font-size:1.05rem;font-weight:800;color:var(--color-accent);display:flex;align-items:center;gap:6px;">
-        📋 Held Bills List
-      </h3>
-      <button onclick="closeModal('modal-held-bills-picker')" class="close-btn">✕</button>
-    </div>
-    <div id="held-bills-list-body" style="padding:0.75rem 0;overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:8px;"></div>
-  </div>
-</div>
-
-<div id="modal-pos-whatsapp" class="modal-overlay" onclick="dismissModalOnBackdrop(event, 'modal-pos-whatsapp')" style="z-index:9999 !important;">
+<div id="modal-pos-whatsapp" class="modal-overlay" onclick="dismissModalOnBackdrop(event, 'modal-pos-whatsapp')" style="display:none;z-index:9999 !important;">
   <div class="modal-card" style="max-width:340px;text-align:center;">
     <div class="modal-header" style="justify-content:space-between;">
       <h3 style="margin:0;font-size:1.05rem;font-weight:800;color:#25D366;display:flex;align-items:center;gap:6px;">
@@ -1489,7 +1530,7 @@ body {
 </div>
 
 <!-- 💎 100-DAY FREE TRIAL & TIERED PRICING PAYWALL MODAL -->
-<div id="modal-plan-upgrade" class="modal-overlay" onclick="dismissModalOnBackdrop(event, 'modal-plan-upgrade')" style="z-index:10000 !important;background:rgba(10,10,14,0.96) !important;backdrop-filter:blur(16px) !important;">
+<div id="modal-plan-upgrade" class="modal-overlay" onclick="dismissModalOnBackdrop(event, 'modal-plan-upgrade')" style="display:none;z-index:10050 !important;background:rgba(10,10,14,0.96) !important;backdrop-filter:blur(16px) !important;">
   <div class="modal-card" style="max-width:380px;width:94%;max-height:90vh;overflow-y:auto;padding:1.25rem 1rem;border-radius:18px;border:1px solid rgba(255,255,255,0.15);box-shadow:0 10px 30px rgba(0,0,0,0.8);box-sizing:border-box;">
     
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;border-bottom:1px solid rgba(255,255,255,0.08);padding-bottom:0.6rem;">
@@ -1565,6 +1606,48 @@ body {
     <div style="text-align:center;font-size:0.72rem;color:var(--text-muted);margin-top:0.6rem;">
       🔒 100% Secure Instant UPI (GPay, PhonePe, Paytm, BHIM) • One-Time Lifetime Access
     </div>
+  </div>
+</div>
+
+<!-- 💳 RAZORPAY PAYMENT CHECKOUT MODAL -->
+<div id="modal-payment-checkout" class="modal-overlay" onclick="dismissModalOnBackdrop(event, 'modal-payment-checkout')" style="display:none;z-index:10060 !important;background:rgba(10,10,14,0.96) !important;backdrop-filter:blur(16px) !important;">
+  <div class="modal-card" style="max-width:380px;width:94%;padding:1.25rem 1rem;border-radius:18px;border:1px solid rgba(234,179,8,0.3);box-shadow:0 10px 30px rgba(0,0,0,0.8);box-sizing:border-box;text-align:center;">
+    
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.85rem;border-bottom:1px solid rgba(255,255,255,0.08);padding-bottom:0.6rem;">
+      <h3 style="margin:0;font-size:1.05rem;font-weight:900;color:#eab308;display:flex;align-items:center;gap:6px;">
+        💳 Complete Payment
+      </h3>
+      <button onclick="closeModal('modal-payment-checkout')" class="close-btn" style="background:none;border:none;color:var(--text-primary);font-size:1.2rem;cursor:pointer;">✕</button>
+    </div>
+
+    <div style="font-size:0.85rem;color:var(--text-primary);margin-bottom:0.85rem;font-weight:700;">
+      Selected Plan: <span id="checkout-selected-plan" style="color:#eab308;font-weight:900;">ALL-ACCESS POS (₹29)</span>
+    </div>
+
+    <div style="background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:12px;padding:0.85rem;margin-bottom:0.85rem;">
+      <div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:0.6rem;line-height:1.4;">
+        Pay securely via Razorpay UPI (GPay, PhonePe, Paytm, BHIM or Cards)
+      </div>
+      <button onclick="openRazorpayPaymentPage()" style="width:100%;padding:0.75rem;border-radius:10px;background:#eab308;color:#000;border:none;font-weight:900;font-size:0.92rem;cursor:pointer;box-shadow:0 4px 14px rgba(234,179,8,0.4);margin-bottom:0.6rem;">
+        💳 Pay Now on Razorpay
+      </button>
+    </div>
+
+    <div style="border-top:1px solid var(--border-color);padding-top:0.85rem;">
+      <div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:0.5rem;">After completing payment on Razorpay:</div>
+      <button onclick="confirmCompletedPayment()" style="width:100%;padding:0.7rem;border-radius:10px;background:#22c55e;color:#fff;border:none;font-weight:800;font-size:0.88rem;cursor:pointer;box-shadow:0 3px 10px rgba(34,197,94,0.3);">
+        ✅ I Have Paid — Activate Plan Now
+      </button>
+    </div>
+
+    <div style="margin-top:0.85rem;padding-top:0.6rem;border-top:1px solid rgba(255,255,255,0.06);">
+      <div onclick="toggleRazorpayKeyInput()" style="font-size:0.72rem;color:var(--color-accent);cursor:pointer;font-weight:700;">🔑 Have a Razorpay Key ID? Click to Connect</div>
+      <div id="razorpay-key-wrap" style="display:none;margin-top:0.5rem;">
+        <input id="razorpay-key-input" placeholder="e.g. rzp_live_xxxxxxxx" style="width:100%;padding:0.55rem;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);font-size:0.8rem;outline:none;box-sizing:border-box;margin-bottom:0.4rem;">
+        <button onclick="saveRazorpayKey()" style="width:100%;padding:0.45rem;border-radius:6px;background:var(--color-accent);color:#fff;border:none;font-size:0.78rem;font-weight:700;cursor:pointer;">Save Key & Enable 1-Click Popup</button>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -1779,7 +1862,7 @@ body {
       <div class="modal-header-left" style="position:absolute;left:0.85rem;top:50%;transform:translateY(-50%);display:flex;align-items:center;gap:0.45rem;z-index:5;">
         <button id="settings-btn" class="settings-btn" onclick="handleSettingsBtnClick()" title="Settings" style="border:1px solid var(--border-color);border-radius:8px;background:var(--bg-secondary);padding:0.3rem 0.5rem;font-size:1.1rem;cursor:pointer;">⚙️</button>
         <button id="calc-back-btn" class="settings-btn" onclick="setCalcMode('basic')" title="Back to Calculator" style="display:none;font-size:1.35rem;cursor:pointer;padding:0 2px;">⬅️</button>
-        <button id="calc-back-hist-btn" class="settings-btn" onclick="toggleCalcHistory()" title="Calculation History" style="display:none;border:none;background:none;font-size:1.3rem;cursor:pointer;padding:0 2px;align-items:center;justify-content:center;transition:all 0.15s;opacity:0.9;">🕒</button>
+        <button id="calc-back-hist-btn" class="settings-btn" onclick="toggleCalcHistory()" title="Calculation History" style="display:none;border:none;background:none;font-size:1.3rem;cursor:pointer;padding:0 2px;align-items:center;justify-content:center;transition:all 0.15s;opacity:0.9;color:var(--text-primary);"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:block;"><circle cx="12" cy="12" r="9"></circle><polyline points="12 7 12 12 15 15"></polyline></svg></button>
       </div>
 
       <div style="position:absolute;left:26%;top:50%;transform:translate(-50%,-50%);z-index:5;display:flex;align-items:center;justify-content:center;">
@@ -1800,7 +1883,7 @@ body {
       </div>
       
       <div style="position:absolute;left:72%;top:50%;transform:translate(-50%,-50%);z-index:5;display:flex;align-items:center;justify-content:center;">
-        <button id="h-btn-history" class="settings-btn" onclick="toggleCalcHistory()" title="Calculation History" style="display:none;border:none;background:none;font-size:1.3rem;cursor:pointer;padding:0 2px;align-items:center;justify-content:center;transition:all 0.15s;opacity:0.9;">🕒</button>
+        <button id="h-btn-history" class="settings-btn" onclick="toggleCalcHistory()" title="Calculation History" style="display:none;border:none;background:none;cursor:pointer;padding:0 2px;align-items:center;justify-content:center;transition:all 0.15s;opacity:0.9;color:var(--text-primary);"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:block;"><circle cx="12" cy="12" r="9"></circle><polyline points="12 7 12 12 15 15"></polyline></svg></button>
       </div>
 
       <div style="position:absolute;left:83%;top:50%;transform:translate(-50%,-50%);z-index:5;display:flex;align-items:center;justify-content:center;">
@@ -1825,7 +1908,7 @@ body {
     <div class="modal-body">
       <div id="calc-expression"></div>
       <div id="calc-label-editor"></div>
-      <div id="pos-live-screen" style="display:none;background:linear-gradient(180deg, #11141c 0%, #080b0f 100%);border:2px solid rgba(255,255,255,0.16);border-radius:14px;box-shadow:inset 0 3px 12px rgba(0,0,0,0.85), 0 4px 16px rgba(0,0,0,0.4);padding:0.75rem 0.85rem;margin-top:0.45rem;margin-bottom:0.45rem;height:220px;min-height:220px;box-sizing:border-box;"></div>
+      <div id="pos-live-screen" class="pos-live-screen-box" style="display:none;padding:0.75rem 0.85rem;margin-top:0.45rem;margin-bottom:0.45rem;height:220px;min-height:220px;box-sizing:border-box;"></div>
       <div id="pos-action-bar" style="display:none;gap:6px;margin-bottom:0.45rem;width:100%;box-sizing:border-box;">
         <button onclick="window.printQuickBillingOrder()" style="flex:1;height:40px;min-height:40px;max-height:40px;padding:0 0.5rem;border-radius:8px;background:var(--color-accent);color:#fff;border:none;font-weight:800;font-size:0.85rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,0.2);">
           🖨️ Print Receipt
@@ -2282,7 +2365,7 @@ function openBillCustomizationModal() {
   renderSocialLinkRows();
   updateQRPreviewUI();
   renderSavedBillsArchive();
-  modal.classList.add('active');
+  openModal('modal-bill-customization');
 }
 
 function saveBillProfile() {
@@ -2330,9 +2413,10 @@ function toggleSavedBillsArchiveCollapse() {
 }
 
 function closeBillCustomizationModal(e) {
-  if (e && e.target !== e.currentTarget) return;
-  var modal = document.getElementById('modal-bill-customization');
-  if (modal) modal.classList.remove('active');
+  if (e && e.target && e.target.closest && e.target.closest('.modal-container') && !e.target.closest('button')) {
+    return;
+  }
+  closeModal('modal-bill-customization');
 }
 
 function saveBillToArchive(items, totalAmt, dateStr) {
@@ -2489,13 +2573,14 @@ function openThermalReceiptModal(items, totalAmt) {
   html += '<div style="text-align:center;font-size:0.8rem;font-weight:700;color:#222;margin-top:10px;">* ' + escHtml(footerStr) + ' *</div>';
 
   content.innerHTML = html;
-  modal.classList.add('active');
+  openModal('modal-thermal-receipt');
 }
 
 function closeThermalReceiptModal(e) {
-  if (e && e.target !== e.currentTarget) return;
-  var modal = document.getElementById('modal-thermal-receipt');
-  if (modal) modal.classList.remove('active');
+  if (e && e.target && e.target.closest && e.target.closest('.modal-container') && !e.target.closest('button')) {
+    return;
+  }
+  closeModal('modal-thermal-receipt');
 }
 
 function printCurrentReceiptBT() {
@@ -2553,7 +2638,8 @@ function printCurrentReceiptBT() {
   if (_calcMode === 'quickbilling' && _quickBillingOrder.length > 0) {
     _quickBillingOrder = [];
     renderQuickBillingScreen();
-    showToast('✅ Bill printed & cleared for next customer!');
+    showToast('✅ Bill printed & cleared!');
+    checkAndAutoRestoreNextHeldBill();
   }
 }
 
@@ -2562,7 +2648,8 @@ function printCurrentReceiptPDF() {
   if (_calcMode === 'quickbilling' && _quickBillingOrder.length > 0) {
     _quickBillingOrder = [];
     renderQuickBillingScreen();
-    showToast('✅ Bill saved & cleared for next customer!');
+    showToast('✅ Bill saved & cleared!');
+    checkAndAutoRestoreNextHeldBill();
   } else {
     showToast('✅ Bill Saved! Access & view anytime in ⚙️ Settings > 🏷️ Customize Bill > 📂 Saved Bills Archive');
   }
@@ -3166,12 +3253,27 @@ function initCalcDragAndDrop() {
 }
 
 function openModal(id) {
-  document.getElementById(id).classList.add('active');
+  var el = document.getElementById(id);
+  if (el) {
+    el.style.display = 'flex';
+    el.classList.add('active');
+  }
 }
 
 function closeModal(id) {
-  document.getElementById(id).classList.remove('active');
+  var el = document.getElementById(id);
+  if (el) {
+    el.style.display = 'none';
+    el.classList.remove('active');
+  }
 }
+
+function dismissModalOnBackdrop(e, id) {
+  if (e && e.target && (e.target.id === id || e.target.classList.contains('modal-overlay'))) {
+    closeModal(id);
+  }
+}
+window.dismissModalOnBackdrop = dismissModalOnBackdrop;
 
 var _calcSkin = localStorage.getItem('calc_skin') || 'modern';
 
@@ -3197,22 +3299,26 @@ function setCalcSkin(skin) {
 function openSettingsModal() {
   var modal = document.getElementById('modal-settings');
   if (modal) {
-    modal.classList.add('active');
-    try {
-      if (typeof applyCalcSkin === 'function') applyCalcSkin(_calcSkin);
-      if (typeof updatePaywallUI === 'function') updatePaywallUI();
-    } catch(e) {}
+    var container = modal.querySelector('.modal-container');
+    if (container) container.style.transform = 'translateX(0)';
   }
+  openModal('modal-settings');
+  try {
+    if (typeof applyCalcSkin === 'function') applyCalcSkin(_calcSkin);
+    if (typeof updatePaywallUI === 'function') updatePaywallUI();
+  } catch(e) {}
 }
 
 function closeSettingsModal(e) {
-  if (e && e.target !== e.currentTarget) return;
+  if (e && e.target && e.target.closest && e.target.closest('.modal-container') && !e.target.closest('button')) {
+    return;
+  }
   var modal = document.getElementById('modal-settings');
   if (!modal) return;
   var container = modal.querySelector('.modal-container');
   if (container) container.style.transform = 'translateX(-100%)';
   setTimeout(function() {
-    modal.classList.remove('active');
+    closeModal('modal-settings');
     if (container) container.style.transform = '';
   }, 260);
 }
@@ -3674,12 +3780,30 @@ function addQuickBillingItemToBill(idx) {
   var item = _quickBillingItems[idx];
   if (!item || !item.name) return;
 
-  if (item.outOfStock) {
-    showToast('⚠️ ' + item.name + ' is OUT OF STOCK!');
+  var isDeductEnabled = (localStorage.getItem('calc_stock_deduct_enabled') !== 'false');
+  var hasStock = (item.stock !== undefined && item.stock !== null && item.stock !== '');
+
+  if (item.outOfStock || (hasStock && parseInt(item.stock) <= 0)) {
+    showToast('🚫 ' + item.name + ' is Out of Stock! Restock in Menu Edit.');
     return;
   }
 
   var addQty = _quickBillingQty;
+
+  if (isDeductEnabled && hasStock) {
+    var curStock = parseInt(item.stock);
+    if (curStock < addQty) {
+      showToast('⚠️ Only ' + curStock + ' units of ' + item.name + ' remaining!');
+      return;
+    }
+    item.stock = curStock - addQty;
+    if (item.stock === 0) {
+      item.outOfStock = true;
+    }
+    saveQuickBillingItems();
+    renderQuickBillingGrid();
+  }
+
   var unitPrice = parseFloat(item.price) || 0;
 
   var existing = _quickBillingOrder.find(function(o) {
@@ -3719,14 +3843,14 @@ function clearQuickBillingOrder() {
 
 var _heldPosBills = [];
 
-function openHeldBillsPickerModal() {
+function openHeldBillsPickerModal(e) {
+  if (e && e.stopPropagation) e.stopPropagation();
   if (_heldPosBills.length === 0) {
     showToast('⚠️ No held bills');
     return;
   }
   renderHeldBillsList();
-  var modal = document.getElementById('modal-held-bills-picker');
-  if (modal) modal.classList.add('active');
+  openModal('modal-held-bills-picker');
 }
 
 function renderHeldBillsList() {
@@ -3757,8 +3881,8 @@ function renderHeldBillsList() {
         escHtml(summaryLines.join(', ')) +
       '</div>' +
       '<div style="display:flex;gap:6px;margin-top:4px;">' +
-        '<button onclick="restoreSpecificHeldBill(' + idx + ')" style="flex:2;padding:0.5rem;border:none;border-radius:8px;background:var(--color-accent);color:#fff;font-weight:800;font-size:0.82rem;cursor:pointer;">📂 Restore Bill</button>' +
-        '<button onclick="deleteSpecificHeldBill(' + idx + ')" style="flex:1;padding:1px 0.5rem;border:1px solid var(--border-color);border-radius:8px;background:rgba(255,107,107,0.15);color:#ff6b6b;font-weight:700;font-size:0.8rem;cursor:pointer;">🗑️ Delete</button>' +
+        '<button onclick="event.stopPropagation();restoreSpecificHeldBill(' + idx + ')" style="flex:2;padding:0.5rem;border:none;border-radius:8px;background:var(--color-accent);color:#fff;font-weight:800;font-size:0.82rem;cursor:pointer;">📂 Restore Bill</button>' +
+        '<button onclick="event.stopPropagation();deleteSpecificHeldBill(' + idx + ')" style="flex:1;padding:1px 0.5rem;border:1px solid var(--border-color);border-radius:8px;background:rgba(255,107,107,0.15);color:#ff6b6b;font-weight:700;font-size:0.8rem;cursor:pointer;">🗑️ Delete</button>' +
       '</div>' +
     '</div>';
   });
@@ -3768,6 +3892,15 @@ function renderHeldBillsList() {
 
 function restoreSpecificHeldBill(idx) {
   if (idx >= 0 && idx < _heldPosBills.length) {
+    if (_quickBillingOrder && _quickBillingOrder.length > 0) {
+      var autoBillId = _heldPosBills.length + 1;
+      _heldPosBills.push({
+        id: autoBillId,
+        items: JSON.parse(JSON.stringify(_quickBillingOrder)),
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      });
+      showToast('⏸️ Active cart auto-held as Bill #' + autoBillId);
+    }
     var restored = _heldPosBills.splice(idx, 1)[0];
     _quickBillingOrder = restored.items;
     closeModal('modal-held-bills-picker');
@@ -3785,7 +3918,8 @@ function deleteSpecificHeldBill(idx) {
   }
 }
 
-function holdCurrentPosBill() {
+function holdCurrentPosBill(e) {
+  if (e && e.stopPropagation) e.stopPropagation();
   if (_quickBillingOrder.length === 0) {
     if (_heldPosBills.length > 0) {
       openHeldBillsPickerModal();
@@ -3807,6 +3941,22 @@ function holdCurrentPosBill() {
   showToast('⏸️ Bill #' + billId + ' Held! Screen cleared.');
 }
 
+function checkAndAutoRestoreNextHeldBill() {
+  if (_calcMode === 'quickbilling' && _quickBillingOrder.length === 0 && _heldPosBills && _heldPosBills.length > 0) {
+    var lastHeld = _heldPosBills.pop();
+    _quickBillingOrder = lastHeld.items || [];
+    renderQuickBillingScreen();
+    showToast('📋 Auto-restored previous cart (Bill #' + lastHeld.id + ')');
+  }
+}
+
+window.openHeldBillsPickerModal = openHeldBillsPickerModal;
+window.renderHeldBillsList = renderHeldBillsList;
+window.restoreSpecificHeldBill = restoreSpecificHeldBill;
+window.deleteSpecificHeldBill = deleteSpecificHeldBill;
+window.holdCurrentPosBill = holdCurrentPosBill;
+window.checkAndAutoRestoreNextHeldBill = checkAndAutoRestoreNextHeldBill;
+
 function renderQuickBillingScreen(targetOrderIdx) {
   var screenEl = document.getElementById('pos-live-screen');
   if (!screenEl) return;
@@ -3824,7 +3974,7 @@ function renderQuickBillingScreen(targetOrderIdx) {
 
   if (_quickBillingOrder.length === 0) {
     var emptyBtn = _heldPosBills.length > 0 ? 
-      '<button onclick="openHeldBillsPickerModal()" style="margin-top:8px;padding:5px 12px;border-radius:8px;border:1px solid rgba(234,179,8,0.5);background:rgba(234,179,8,0.2);color:#eab308;font-size:0.82rem;font-weight:800;cursor:pointer;">📋 View & Restore Held Bills (' + _heldPosBills.length + ')</button>' : '';
+      '<button onclick="openHeldBillsPickerModal(event)" style="margin-top:8px;padding:5px 12px;border-radius:8px;border:1px solid rgba(234,179,8,0.5);background:rgba(234,179,8,0.2);color:#eab308;font-size:0.82rem;font-weight:800;cursor:pointer;">📋 View & Restore Held Bills (' + _heldPosBills.length + ')</button>' : '';
     
     if (_qbEditMode) {
       screenEl.innerHTML =
@@ -3867,9 +4017,9 @@ function renderQuickBillingScreen(targetOrderIdx) {
 
   html += '</div>';
 
-  var actionBtns = '<button onclick="holdCurrentPosBill()" style="padding:3px 8px;border-radius:6px;border:1px solid rgba(234,179,8,0.4);background:rgba(234,179,8,0.15);color:#eab308;font-size:0.75rem;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:4px;" title="Hold active bill for next customer">⏸️ Hold</button>';
+  var actionBtns = '<button onclick="holdCurrentPosBill(event)" style="padding:3px 8px;border-radius:6px;border:1px solid rgba(234,179,8,0.4);background:rgba(234,179,8,0.15);color:#eab308;font-size:0.75rem;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:4px;" title="Hold active bill for next customer">⏸️ Hold</button>';
   if (_heldPosBills.length > 0) {
-    actionBtns += '<button onclick="openHeldBillsPickerModal()" style="padding:3px 8px;border-radius:6px;border:1px solid rgba(234,179,8,0.6);background:rgba(234,179,8,0.25);color:#eab308;font-size:0.75rem;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:4px;" title="View held bills">📋 Held (' + _heldPosBills.length + ')</button>';
+    actionBtns += '<button onclick="openHeldBillsPickerModal(event)" style="padding:3px 8px;border-radius:6px;border:1px solid rgba(234,179,8,0.6);background:rgba(234,179,8,0.25);color:#eab308;font-size:0.75rem;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:4px;" title="View held bills">📋 Held (' + _heldPosBills.length + ')</button>';
   }
 
   html += '<div style="display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border-color);padding-top:6px;margin-top:auto;font-weight:800;">' +
@@ -3907,8 +4057,7 @@ function openPosQtyEditModal(idx) {
   document.getElementById('pos-qty-modal-title').textContent = '✏️ ' + iconStr + item.name;
   document.getElementById('pos-qty-item-subtitle').textContent = 'Rate: ₹' + item.price + ' per unit';
   document.getElementById('pos-modal-qty-input').value = item.qty || 1;
-  var modal = document.getElementById('modal-pos-qty-edit');
-  if (modal) modal.classList.add('active');
+  openModal('modal-pos-qty-edit');
 }
 
 function stepPosModalQty(delta) {
@@ -3949,8 +4098,7 @@ function openPosWhatsAppModal() {
     showToast('⚠️ No receipt items to send!');
     return;
   }
-  var modal = document.getElementById('modal-pos-whatsapp');
-  if (modal) modal.classList.add('active');
+  openModal('modal-pos-whatsapp');
 }
 
 function sendPosBillOnWhatsApp() {
@@ -4005,9 +4153,11 @@ function sendPosBillOnWhatsApp() {
     _quickBillingOrder = [];
     renderQuickBillingScreen();
     showToast('📲 POS Bill sent on WhatsApp & customer data saved!');
+    checkAndAutoRestoreNextHeldBill();
   } else {
     closeThermalReceiptModal();
     showToast('📲 Thermal Receipt sent on WhatsApp & customer data saved!');
+    checkAndAutoRestoreNextHeldBill();
   }
 }
 
@@ -4180,57 +4330,59 @@ window.renderSalesReportList = renderSalesReportList;
 function getAutoFoodEmoji(name) {
   if (!name || typeof name !== 'string') return '';
   var n = name.toLowerCase().trim();
-  if (n.includes('pasta') || n.includes('macaroni') || n.includes('spaghetti')) return '🍝';
+
+  if (n.includes('samosa') || n.includes('samosaa') || n.includes('kachori') || n.includes('pakoda') || n.includes('pakora') || n.includes('bhajia') || n.includes('pattice')) return '🥟';
   if (n.includes('chai') || n.includes('tea') || n.includes('cutting')) return '☕';
-  if (n.includes('coffee') || n.includes('cappuccino') || n.includes('latte') || n.includes('espresso')) return '☕';
+  if (n.includes('coffee') || n.includes('cappuccino') || n.includes('latte') || n.includes('espresso') || n.includes('cold coffee')) return '☕';
   if (n.includes('pizza')) return '🍕';
   if (n.includes('burger')) return '🍔';
-  if (n.includes('samosa') || n.includes('kachori') || n.includes('pakoda') || n.includes('bhajia')) return '🥟';
-  if (n.includes('maggi') || n.includes('noodle') || n.includes('chowmein') || n.includes('ramen')) return '🍜';
-  if (n.includes('biryani') || n.includes('pulao') || n.includes('fried rice') || n.includes('rice')) return '🍲';
-  if (n.includes('dosa') || n.includes('idli') || n.includes('uttapam')) return '🥞';
+  if (n.includes('maggi') || n.includes('noodle') || n.includes('chowmein') || n.includes('ramen') || n.includes('pasta') || n.includes('macaroni')) return '🍜';
+  if (n.includes('biryani') || n.includes('pulao') || n.includes('fried rice') || n.includes('rice') || n.includes('chawal')) return '🍲';
+  if (n.includes('dosa') || n.includes('idli') || n.includes('uttapam') || n.includes('vada') || n.includes('medu vada')) return '🥞';
   if (n.includes('momo') || n.includes('dimsum') || n.includes('dumpling')) return '🥟';
-  if (n.includes('sandwich') || n.includes('toast') || n.includes('garlic bread')) return '🥪';
+  if (n.includes('sandwich') || n.includes('toast') || n.includes('garlic bread') || n.includes('bread')) return '🥪';
+  if (n.includes('pav bhaji') || n.includes('pavbhaji') || n.includes('vada pav') || n.includes('vadapav') || n.includes('misal')) return '🍞';
+  if (n.includes('chole') || n.includes('bhature') || n.includes('puri') || n.includes('poori')) return '🫓';
+  if (n.includes('paratha') || n.includes('naan') || n.includes('kulcha')) return '🫓';
   if (n.includes('ice cream') || n.includes('sundae') || n.includes('kulfi') || n.includes('scoop')) return '🍨';
   if (n.includes('cake') || n.includes('pastry') || n.includes('brownie') || n.includes('muffin')) return '🍰';
-  if (n.includes('cold drink') || n.includes('soda') || n.includes('coke') || n.includes('pepsi') || n.includes('thumsup') || n.includes('sprite')) return '🥤';
-  if (n.includes('shake') || n.includes('smoothie') || n.includes('lassi') || n.includes('milk')) return '🥛';
-  if (n.includes('beer') || n.includes('whisky') || n.includes('wine') || n.includes('cocktail') || n.includes('rum')) return '🍺';
-  if (n.includes('chicken') || n.includes('mutton') || n.includes('fish') || n.includes('egg') || n.includes('kabab') || n.includes('tikka') || n.includes('tandoori')) return '🍗';
-  if (n.includes('paneer') || n.includes('thali') || n.includes('curry') || n.includes('dal') || n.includes('roti') || n.includes('naan')) return '🍛';
-  if (n.includes('juice') || n.includes('mojito') || n.includes('lemonade')) return '🍹';
+  if (n.includes('cold drink') || n.includes('soda') || n.includes('coke') || n.includes('pepsi') || n.includes('sprite') || n.includes('thumsup') || n.includes('7up')) return '🥤';
+  if (n.includes('shake') || n.includes('smoothie') || n.includes('lassi') || n.includes('milk') || n.includes('badam milk')) return '🥛';
+  if (n.includes('beer') || n.includes('whisky') || n.includes('wine') || n.includes('cocktail') || n.includes('rum') || n.includes('alcohol')) return '🍺';
+  if (n.includes('chicken') || n.includes('mutton') || n.includes('fish') || n.includes('egg') || n.includes('kabab') || n.includes('tikka') || n.includes('tandoori') || n.includes('meat')) return '🍗';
+  if (n.includes('paneer') || n.includes('thali') || n.includes('curry') || n.includes('dal') || n.includes('roti') || n.includes('sabzi')) return '🍛';
+  if (n.includes('juice') || n.includes('mojito') || n.includes('lemonade') || n.includes('nimbu')) return '🍹';
   if (n.includes('water') || n.includes('mineral')) return '💧';
-  if (n.includes('chocolate') || n.includes('candy') || n.includes('sweet') || n.includes('mithai') || n.includes('gulab jamun') || n.includes('jalebi')) return '🍬';
-  if (n.includes('fries') || n.includes('french fries') || n.includes('chips')) return '🍟';
+  if (n.includes('sweet') || n.includes('mithai') || n.includes('jamun') || n.includes('jalebi') || n.includes('rasgulla') || n.includes('barfi')) return '🍬';
+  if (n.includes('fries') || n.includes('french fries') || n.includes('chips') || n.includes('finger chips')) return '🍟';
   if (n.includes('roll') || n.includes('frankie') || n.includes('shawarma') || n.includes('wrap')) return '🌯';
   if (n.includes('soup')) return '🥣';
   if (n.includes('salad')) return '🥗';
-  if (n.includes('fruit')) return '🍎';
+  if (n.includes('fruit') || n.includes('apple') || n.includes('mango') || n.includes('banana')) return '🍎';
   return '';
 }
 
 function handleQbItemNameInput() {
-  var name = document.getElementById('qb-item-name').value;
+  var nameInput = document.getElementById('qb-item-name');
+  var name = nameInput ? nameInput.value : '';
   var emojiInput = document.getElementById('qb-item-icon');
-  if (emojiInput && (!emojiInput.value || emojiInput.getAttribute('data-auto') === 'true')) {
-    var detected = getAutoFoodEmoji(name);
-    if (detected) {
-      emojiInput.value = detected;
-      emojiInput.setAttribute('data-auto', 'true');
-    }
+  if (!emojiInput) return;
+  var detected = getAutoFoodEmoji(name);
+  if (detected) {
+    emojiInput.value = detected;
   }
 }
 
 function triggerAutoEmoji() {
-  var name = document.getElementById('qb-item-name').value;
+  var nameInput = document.getElementById('qb-item-name');
+  var name = nameInput ? nameInput.value : '';
   var emojiInput = document.getElementById('qb-item-icon');
   var detected = getAutoFoodEmoji(name);
   if (detected && emojiInput) {
     emojiInput.value = detected;
-    emojiInput.setAttribute('data-auto', 'true');
     showToast('✨ Auto Detected: ' + detected);
   } else {
-    showToast('ℹ️ Type item name (e.g. Pasta, Chai) to auto-detect!');
+    showToast('💡 Type item name (e.g. Samosa, Chai, Pizza, Burger, Dosa) to auto-detect!');
   }
 }
 
@@ -4256,7 +4408,7 @@ function setFoodTypePill(type) {
 }
 
 function openQuickItemEditModal(idx) {
-  var item = _quickBillingItems[idx] || { name: '', price: '', icon: '', foodType: 'veg' };
+  var item = _quickBillingItems[idx] || { name: '', price: '', icon: '', foodType: 'veg', stock: '' };
   var modal = document.getElementById('modal-quick-item-edit');
   if (!modal) return;
   document.getElementById('qb-item-idx').value = idx;
@@ -4267,7 +4419,11 @@ function openQuickItemEditModal(idx) {
   emojiInput.removeAttribute('data-auto');
   var foodType = item.foodType || 'veg';
   setFoodTypePill(foodType);
-  modal.classList.add('active');
+  var stockInput = document.getElementById('qb-item-stock');
+  if (stockInput) {
+    stockInput.value = (item.stock !== undefined && item.stock !== null) ? item.stock : '';
+  }
+  openModal('modal-quick-item-edit');
 }
 
 function saveQuickItemFromModal() {
@@ -4276,14 +4432,18 @@ function saveQuickItemFromModal() {
   var price = parseFloat(document.getElementById('qb-item-price').value) || 0;
   var icon = document.getElementById('qb-item-icon').value.trim();
   var foodType = document.getElementById('qb-item-food-type').value || 'veg';
+  var stockVal = document.getElementById('qb-item-stock') ? document.getElementById('qb-item-stock').value.trim() : '';
 
   if (!name) {
     showToast('⚠️ Please enter Item Name');
     return;
   }
 
+  var stock = (stockVal !== '') ? parseInt(stockVal) : null;
+  var outOfStock = (stock !== null && stock <= 0);
+
   var existingItem = _quickBillingItems[idx] || {};
-  var itemData = Object.assign({}, existingItem, { name: name, price: price, icon: icon, foodType: foodType });
+  var itemData = Object.assign({}, existingItem, { name: name, price: price, icon: icon, foodType: foodType, stock: stock, outOfStock: outOfStock });
 
   if (!isNaN(idx) && idx >= 0) {
     _quickBillingItems[idx] = itemData;
@@ -4295,6 +4455,36 @@ function saveQuickItemFromModal() {
   closeModal('modal-quick-item-edit');
   renderQuickBillingGrid();
   showToast('✅ Quick Item Saved!');
+}
+
+function openStockSettingsModal() {
+  openModal('modal-stock-settings');
+  var isEnabled = (localStorage.getItem('calc_stock_deduct_enabled') !== 'false');
+  var threshold = parseInt(localStorage.getItem('calc_stock_low_threshold')) || 10;
+  
+  var toggle = document.getElementById('stock-deduct-toggle');
+  var threshInput = document.getElementById('stock-low-threshold-input');
+  if (toggle) toggle.checked = isEnabled;
+  if (threshInput) threshInput.value = threshold;
+}
+
+function closeStockSettingsModal() {
+  closeModal('modal-stock-settings');
+}
+
+function saveStockSettings() {
+  var toggle = document.getElementById('stock-deduct-toggle');
+  var threshInput = document.getElementById('stock-low-threshold-input');
+  
+  var isEnabled = toggle ? toggle.checked : true;
+  var threshold = threshInput ? (parseInt(threshInput.value) || 10) : 10;
+  
+  localStorage.setItem('calc_stock_deduct_enabled', isEnabled ? 'true' : 'false');
+  localStorage.setItem('calc_stock_low_threshold', threshold.toString());
+  
+  closeStockSettingsModal();
+  renderQuickBillingGrid();
+  showToast('✅ Inventory & Stock Alert Settings Saved!');
 }
 
 function deleteQuickItemFromModal() {
@@ -4428,7 +4618,11 @@ function renderSalesReportList() {
   }
 
   var html = filtered.map(function(b) {
-    var itemsSummary = Array.isArray(b.items) ? b.items.map(function(i) { return i.name + ' x' + i.qty; }).join(', ') : 'Custom Bill';
+    var itemsSummary = Array.isArray(b.items) ? b.items.map(function(i) {
+      var nameStr = i.label || i.name || i.desc || 'Item';
+      var qtyStr = i.qty || 1;
+      return nameStr + ' x' + qtyStr;
+    }).join(', ') : 'Custom Bill';
     return '<div style="background:var(--bg-primary);padding:0.65rem 0.75rem;border-radius:10px;border:1px solid var(--border-color);display:flex;justify-content:space-between;align-items:center;">' +
       '<div style="flex:1;min-width:0;padding-right:0.5rem;">' +
         '<div style="font-size:0.88rem;font-weight:700;color:var(--text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + itemsSummary + '</div>' +
@@ -4490,18 +4684,45 @@ function openStockConfirmModal(idx) {
   var iconStr = item.icon ? (item.icon + ' ') : '';
   document.getElementById('stock-confirm-item-name').textContent = iconStr + item.name;
   
+  var stockInput = document.getElementById('quick-stock-input');
+  if (stockInput) {
+    stockInput.value = (item.stock !== undefined && item.stock !== null) ? item.stock : '';
+  }
+
   var btn = document.getElementById('btn-toggle-stock-action');
   var subtext = document.getElementById('stock-confirm-status-text');
   if (item.outOfStock) {
-    subtext.textContent = 'This item is currently marked OUT OF STOCK.';
+    subtext.textContent = 'Currently marked OUT OF STOCK.';
     btn.style.background = '#22c55e';
     btn.innerHTML = '🟢 Mark In Stock';
   } else {
-    subtext.textContent = 'Select an action for this menu item:';
+    var curStockText = (item.stock !== undefined && item.stock !== null && item.stock !== '') ? ('Stock Qty: ' + item.stock + ' units') : 'Unlimited Stock';
+    subtext.textContent = curStockText;
     btn.style.background = '#ef4444';
     btn.innerHTML = '🚫 Mark Out of Stock';
   }
   openModal('modal-stock-status-confirm');
+}
+
+function saveQuickStockFromModal() {
+  var idx = parseInt(document.getElementById('stock-confirm-item-idx').value);
+  var val = document.getElementById('quick-stock-input').value.trim();
+  if (idx >= 0 && idx < _quickBillingItems.length) {
+    var item = _quickBillingItems[idx];
+    if (val === '') {
+      item.stock = null;
+      item.outOfStock = false;
+    } else {
+      var qty = parseInt(val);
+      if (isNaN(qty) || qty < 0) qty = 0;
+      item.stock = qty;
+      item.outOfStock = (qty === 0);
+    }
+    saveQuickBillingItems();
+    closeModal('modal-stock-status-confirm');
+    renderQuickBillingGrid();
+    showToast('📦 Stock set to ' + (item.stock === null ? 'Unlimited' : item.stock) + ' for ' + item.name);
+  }
 }
 
 function confirmToggleStockStatus() {
@@ -4509,6 +4730,9 @@ function confirmToggleStockStatus() {
   if (idx >= 0 && idx < _quickBillingItems.length) {
     var item = _quickBillingItems[idx];
     item.outOfStock = !item.outOfStock;
+    if (!item.outOfStock && (item.stock === 0 || item.stock === '0')) {
+      item.stock = null;
+    }
     saveQuickBillingItems();
     closeModal('modal-stock-status-confirm');
     renderQuickBillingGrid();
@@ -4590,8 +4814,29 @@ function renderQuickBillingGrid() {
         var priceStr = '₹' + parseFloat(item.price || 0).toLocaleString('en-IN');
         var clickAction = 'if(!_isItemLongPressTriggered){ ' + (_qbEditMode ? ('openQuickItemEditModal(' + i + ')') : ('addQuickBillingItemToBill(' + i + ')')) + ' }';
         var editBadge = _qbEditMode ? '<span style="position:absolute;right:3px;top:2px;font-size:0.65rem;color:#eab308;">✏️</span>' : '';
-        var cardOpacity = item.outOfStock ? '0.45' : '1.0';
-        var oosBadge = item.outOfStock ? '<div style="position:absolute;bottom:0;left:0;right:0;background:rgba(239,68,68,0.92);color:#fff;font-size:0.52rem;font-weight:900;letter-spacing:0.3px;padding:1px 0;text-transform:uppercase;text-align:center;">OUT OF STOCK</div>' : '';
+        var hasStock = (item.stock !== undefined && item.stock !== null && item.stock !== '');
+        var lowThreshold = parseInt(localStorage.getItem('calc_stock_low_threshold')) || 10;
+        var isLowStock = false;
+        var isOutOfStock = Boolean(item.outOfStock);
+        
+        if (hasStock) {
+          var stockVal = parseInt(item.stock);
+          if (stockVal <= 0) {
+            isOutOfStock = true;
+          } else if (stockVal <= lowThreshold) {
+            isLowStock = true;
+          }
+        }
+
+        var stockBadge = '';
+        var cardOpacity = '1.0';
+        if (isOutOfStock) {
+          cardOpacity = '0.45';
+          stockBadge = '<div style="position:absolute;bottom:0;left:0;right:0;background:rgba(239,68,68,0.92);color:#fff;font-size:0.52rem;font-weight:900;letter-spacing:0.3px;padding:1px 0;text-transform:uppercase;text-align:center;">OUT OF STOCK</div>';
+        } else if (isLowStock) {
+          stockBadge = '<div style="position:absolute;bottom:0;left:0;right:0;background:rgba(234,179,8,0.92);color:#000;font-size:0.52rem;font-weight:900;letter-spacing:0.3px;padding:1px 0;text-transform:uppercase;text-align:center;">⚠️ LOW (' + item.stock + ')</div>';
+        }
+
         var isNonVeg = (item.foodType === 'nonveg');
         var foodTag = isNonVeg
           ? '<span style="display:inline-block;width:9px;height:9px;border:1.2px solid #ef4444;border-radius:2px;padding:1px;vertical-align:middle;margin-left:4px;box-sizing:border-box;" title="Non-Veg"><span style="display:block;width:100%;height:100%;background:#ef4444;border-radius:50%;"></span></span>'
@@ -4601,7 +4846,7 @@ function renderQuickBillingGrid() {
           '<div style="font-size:0.85rem;font-weight:800;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:92%;display:flex;align-items:center;justify-content:center;">' + escHtml(icon + item.name) + foodTag + '</div>' +
           '<div style="font-size:0.75rem;font-weight:700;color:var(--color-accent);">' + priceStr + '</div>' +
           editBadge +
-          oosBadge +
+          stockBadge +
         '</button>';
       } else {
         html += '<button onclick="openQuickItemEditModal(' + i + ')" style="min-height:52px;height:52px;padding:0.35rem 0.25rem;border-radius:10px;background:' + tileBg + ';border:1.5px dashed var(--border-color);color:var(--text-muted);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;cursor:pointer;opacity:0.85;">' +
@@ -4639,7 +4884,6 @@ function printQuickBillingOrder() {
   });
 
   openThermalReceiptModal(items, totalAmt);
-  showToast('🧾 Receipt Preview Opened');
 }
 
 /* 💎 100-DAY FREE TRIAL & PRICING TIER ENGINE */
@@ -4682,7 +4926,7 @@ function getTrialInfo() {
 
   return {
     firstLaunch: firstLaunch,
-    daysUsed: daysUsed,
+    daysUsed: calendarDaysUsed,
     daysLeft: daysLeft,
     planType: planType
   };
@@ -4706,48 +4950,87 @@ function updatePaywallUI() {
   if (settingsTextEl) settingsTextEl.textContent = displayText;
 }
 
-function openPlanUpgradeModal() {
+function openPlanUpgradeModal(e) {
+  if (e && e.stopPropagation) e.stopPropagation();
+  closeModal('modal-settings');
+  closePosDrawer();
   updatePaywallUI();
   openModal('modal-plan-upgrade');
 }
 
+var _selectedTier = 'all_access';
+var _selectedAmount = 29;
+
 function triggerPaymentTier(tier, amount) {
+  _selectedTier = tier || 'all_access';
+  _selectedAmount = amount || 29;
+  
   var rzpKey = localStorage.getItem('calc_razorpay_key_id');
 
   if (typeof Razorpay !== 'undefined' && rzpKey && rzpKey.startsWith('rzp_')) {
-    showToast('💳 Opening Payment Sheet for ₹' + amount + '...');
-    var options = {
-      "key": rzpKey,
-      "amount": amount * 100,
-      "currency": "INR",
-      "name": "LAZY CALC POS",
-      "description": "Unlock " + tier.toUpperCase() + " Plan (Lifetime Access)",
-      "image": "https://lazy-calc-peach.vercel.app/icon-192.png",
-      "handler": function (response) {
-        setSecurePlan(tier);
-        closeModal('modal-plan-upgrade');
-        updatePaywallUI();
-        showToast('🎉 Payment Verified! ' + tier.toUpperCase() + ' Unlocked Permanent Access!');
-      },
-      "prefill": { "contact": "", "email": "" },
-      "theme": { "color": "#eab308" }
-    };
+    showToast('💳 Opening Razorpay Checkout for ₹' + amount + '...');
     try {
+      var options = {
+        "key": rzpKey,
+        "amount": amount * 100,
+        "currency": "INR",
+        "name": "LAZY CALC POS",
+        "description": "Unlock " + tier.toUpperCase() + " Plan (Lifetime Access)",
+        "image": "https://lazy-calc-peach.vercel.app/icon-192.png",
+        "handler": function (response) {
+          setSecurePlan(tier);
+          closeModal('modal-plan-upgrade');
+          closeModal('modal-payment-checkout');
+          updatePaywallUI();
+          showToast('🎉 Payment Verified! ' + tier.toUpperCase() + ' Unlocked Permanent Access!');
+        },
+        "theme": { "color": "#eab308" }
+      };
       var rzp = new Razorpay(options);
       rzp.open();
       return;
     } catch(e) {}
   }
 
-  // Smooth customer redirect to Razorpay Merchant Payment Page (@krishnamadnani)
-  showToast('💳 Opening Payment Page for ₹' + amount + '...');
-  var targetUrl = 'https://razorpay.me/@krishnamadnani';
-  window.open(targetUrl, '_blank');
+  var planLabel = (tier === 'basic') ? '🌱 Basic App (₹9)' : (tier === 'pro') ? '⭐ Pro App (₹19)' : '👑 All-Access POS (₹29)';
+  var labelEl = document.getElementById('checkout-selected-plan');
+  if (labelEl) labelEl.textContent = planLabel;
+
+  openModal('modal-payment-checkout');
+}
+
+function openRazorpayPaymentPage() {
+  showToast('💳 Opening Razorpay Payment Page...');
+  window.open('https://razorpay.me/@krishnamadnani', '_blank');
+}
+
+function confirmCompletedPayment() {
+  setSecurePlan(_selectedTier);
+  closeModal('modal-plan-upgrade');
+  closeModal('modal-payment-checkout');
+  updatePaywallUI();
+  showToast('🎉 Payment Confirmed! ' + _selectedTier.toUpperCase() + ' Plan Activated Lifetime!');
+}
+
+function toggleRazorpayKeyInput() {
+  var wrap = document.getElementById('razorpay-key-wrap');
+  if (wrap) wrap.style.display = (wrap.style.display === 'none') ? 'block' : 'none';
+}
+
+function saveRazorpayKey() {
+  var val = (document.getElementById('razorpay-key-input').value || '').trim();
+  if (val) {
+    localStorage.setItem('calc_razorpay_key_id', val);
+    showToast('🔑 Razorpay Key ID Saved!');
+    toggleRazorpayKeyInput();
+  }
 }
 
 window.getTrialInfo = getTrialInfo;
 window.openPlanUpgradeModal = openPlanUpgradeModal;
 window.triggerPaymentTier = triggerPaymentTier;
+window.openRazorpayPaymentPage = openRazorpayPaymentPage;
+window.confirmCompletedPayment = confirmCompletedPayment;
 
 function calcBtn(label) {
   if (_stickyActive) {
@@ -5805,8 +6088,15 @@ var firebaseConfig = {
   messagingSenderId: "77621142555",
   appId: "1:77621142555:web:b14feec5aa96ad639244be"
 };
-firebase.initializeApp(firebaseConfig);
-var fdb = firebase.firestore();
+var fdb = null;
+if (typeof firebase !== 'undefined') {
+  try {
+    firebase.initializeApp(firebaseConfig);
+    fdb = firebase.firestore();
+  } catch(e) {
+    console.log('Firebase init warning:', e);
+  }
+}
 var _fbTripId = null;
 var _fbUpdating = false;
 var _fbUnsubscribe = null;
@@ -5816,6 +6106,9 @@ var _fbJoinPrompted = false;
 var _tripEnded = false;
 
 function fbCleanTripData() {
+  var ts = (typeof firebase !== 'undefined' && firebase.firestore && firebase.firestore.FieldValue)
+    ? firebase.firestore.FieldValue.serverTimestamp()
+    : new Date().toISOString();
   return {
     name: splitTripName || '',
     date: splitTripDate || '',
@@ -5824,11 +6117,15 @@ function fbCleanTripData() {
     createdBy: _fbCreatorPhone || '',
     pendingApprovals: splitPendingApprovals || [],
     ended: _tripEnded,
-    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    updatedAt: ts
   };
 }
 
 function fbCreateTrip(cb) {
+  if (!fdb) {
+    if (cb) cb(_fbTripId || ('local_' + Date.now()));
+    return;
+  }
   if (!_fbTripId) {
     try {
       _fbTripId = fdb.collection('trips').doc().id;
@@ -5837,7 +6134,9 @@ function fbCreateTrip(cb) {
     }
   }
   var data = fbCleanTripData();
-  data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+  data.createdAt = (typeof firebase !== 'undefined' && firebase.firestore && firebase.firestore.FieldValue)
+    ? firebase.firestore.FieldValue.serverTimestamp()
+    : new Date().toISOString();
   fdb.collection('trips').doc(_fbTripId).set(data).then(function() {
     _fbUpdating = false;
     if (cb) cb(_fbTripId);
@@ -8303,7 +8602,7 @@ function renderSplitterModeContent(container) {
   /* Mock Demo Mode Notice Banner */
   if (_fbTripId === 'mock') {
     html += '<div style="background:rgba(243, 139, 168, 0.1); border:1.5px dashed var(--color-accent); border-radius:var(--radius-sm); padding:0.85rem; margin-bottom:0.8rem; text-align:center; font-size:0.85rem; color:#fff;">' +
-      '💡 Viewing <b>Demo Group</b> (Sandbox Mode).<br>' +
+      '💡 Viewing <b>Demo Group</b>.<br>' +
       '<button onclick="createGroupPopup()" style="margin-top:0.6rem; padding:0.45rem 1rem; border:none; border-radius:var(--radius-sm); background:var(--color-accent); color:#fff; font-weight:600; cursor:pointer; font-size:0.85rem;">Create Your Group 🚀</button>' +
       '</div>';
   }
@@ -8843,7 +9142,8 @@ function toggleCalcHistory() {
   if (btn) btn.textContent = _calcHistoryVisible ? 'Hide History' : 'Show History';
   var hBtn = document.getElementById('h-btn-history');
   if (hBtn) {
-    hBtn.style.background = _calcHistoryVisible ? 'var(--color-accent)' : 'var(--bg-tertiary)';
+    hBtn.style.color = _calcHistoryVisible ? 'var(--color-accent)' : 'var(--text-primary)';
+    hBtn.style.background = _calcHistoryVisible ? 'rgba(243, 139, 168, 0.15)' : 'transparent';
   }
   renderCalcHistory();
   if (_calcHistoryVisible) {
@@ -8986,7 +9286,10 @@ function dismissOnboarding(e) {
 document.body.classList.add('theme-' + _calcTheme);
 var td = document.querySelector('.theme-circle[data-theme="' + _calcTheme + '"]');
 if (td) td.classList.add('active');
-document.querySelector('meta[name="theme-color"]').content = getComputedStyle(document.body).getPropertyValue('--color-accent').trim();
+try {
+  var accent = getComputedStyle(document.body).getPropertyValue('--color-accent');
+  if (accent && accent.trim()) document.querySelector('meta[name="theme-color"]').content = accent.trim();
+} catch(e) {}
 updateMonochromeIcons();
 var el;
 el = document.getElementById('record-expenses-toggle'); if (el) el.checked = _recordExpenses;
@@ -9002,9 +9305,7 @@ updateExpensesBadge();
 updateNavPositionUI();
 
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js?v=' + Date.now()).then(function(reg) {
-    if (reg) reg.update();
-  }).catch(function(err) {
+  navigator.serviceWorker.register('sw.js?v=2.4.0').catch(function(err) {
     console.log('SW registration failed:', err);
   });
 }
