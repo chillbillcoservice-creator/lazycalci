@@ -636,6 +636,46 @@ body {
 }
 .modal-overlay.active { display: flex; }
 
+#modal-settings {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  z-index: 10005 !important;
+  display: none;
+  align-items: stretch !important;
+  justify-content: flex-start !important;
+  padding: 0 !important;
+}
+#modal-settings.active {
+  display: flex !important;
+}
+#modal-settings .modal-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw !important;
+  width: 100% !important;
+  max-width: 100vw !important;
+  height: 100vh !important;
+  height: 100dvh !important;
+  background: var(--bg-secondary) !important;
+  border-radius: 0 !important;
+  border: none !important;
+  transform: translateX(-100%);
+  transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: none !important;
+  margin: 0 !important;
+  display: flex;
+  flex-direction: column;
+}
+#modal-settings.active .modal-container {
+  transform: translateX(0);
+}
+
 #modal-quick-item-edit,
 #modal-pos-whatsapp,
 #modal-create-group {
@@ -1241,6 +1281,84 @@ body {
   </div>
 </div>
 
+<!-- POS Left Slide-in Drawer Navigation -->
+<div id="drawer-pos-overlay" onclick="closePosDrawer()" style="position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:10010;display:none;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);transition:opacity 0.25s ease;"></div>
+
+<div id="drawer-pos-menu" style="position:fixed;top:0;left:0;bottom:0;width:290px;max-width:82vw;background:var(--bg-secondary);border-right:1px solid var(--border-color);z-index:10011;transform:translateX(-100%);transition:transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);padding:1.25rem 1rem;display:flex;flex-direction:column;box-shadow:4px 0 24px rgba(0,0,0,0.6);box-sizing:border-box;">
+  
+  <div style="display:flex;align-items:center;justify-content:space-between;padding-bottom:1rem;border-bottom:1px solid var(--border-color);margin-bottom:1rem;">
+    <div style="font-weight:800;font-size:1.15rem;color:var(--text-primary);display:flex;align-items:center;gap:8px;">
+      <span style="font-size:1.3rem;">🛒</span> POS Store Menu
+    </div>
+    <button onclick="closePosDrawer()" style="width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,0.08);border:1px solid var(--border-color);color:var(--text-primary);font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>
+  </div>
+
+  <div style="display:flex;flex-direction:column;gap:0.6rem;flex:1;overflow-y:auto;">
+    <button onclick="closePosDrawer();openSalesReportModal();" style="width:100%;padding:0.75rem 0.9rem;border-radius:12px;border:1px solid rgba(56,189,248,0.3);background:rgba(56,189,248,0.1);color:#38bdf8;font-weight:700;font-size:0.92rem;cursor:pointer;display:flex;align-items:center;gap:10px;text-align:left;">
+      <span style="font-size:1.2rem;">📊</span> View Sales Report
+    </button>
+
+    <button onclick="closePosDrawer();toggleQbEditMode();" style="width:100%;padding:0.75rem 0.9rem;border-radius:12px;border:1px solid rgba(234,179,8,0.3);background:rgba(234,179,8,0.1);color:#eab308;font-weight:700;font-size:0.92rem;cursor:pointer;display:flex;align-items:center;gap:10px;text-align:left;">
+      <span style="font-size:1.2rem;">✏️</span> Edit Grid Items
+    </button>
+
+    <div style="border-bottom:1px solid var(--border-color);margin:0.4rem 0;"></div>
+
+    <button onclick="closePosDrawer();openBillCustomizationModal();" style="width:100%;padding:0.7rem 0.9rem;border-radius:10px;border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);font-weight:600;font-size:0.88rem;cursor:pointer;display:flex;align-items:center;gap:10px;text-align:left;">
+      <span style="font-size:1.1rem;">📝</span> Store & Receipt Details
+    </button>
+
+    <button onclick="closePosDrawer();openCustomerDataModal();" style="width:100%;padding:0.7rem 0.9rem;border-radius:10px;border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);font-weight:600;font-size:0.88rem;cursor:pointer;display:flex;align-items:center;gap:10px;text-align:left;">
+      <span style="font-size:1.1rem;">👥</span> Customer Directory
+    </button>
+
+    <button onclick="closePosDrawer();openSettingsModal();" style="width:100%;padding:0.7rem 0.9rem;border-radius:10px;border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);font-weight:600;font-size:0.88rem;cursor:pointer;display:flex;align-items:center;gap:10px;text-align:left;">
+      <span style="font-size:1.1rem;">⚙️</span> App Settings
+    </button>
+  </div>
+</div>
+
+<!-- Sales Report & Analytics Modal -->
+<div class="modal-overlay" id="modal-sales-report" onclick="dismissModalOnBackdrop(event, 'modal-sales-report')" style="z-index:10020 !important;">
+  <div class="modal-card" style="max-width:440px;width:94%;max-height:85vh;display:flex;flex-direction:column;border-radius:18px;">
+    <div class="modal-header" style="justify-content:space-between;padding-bottom:0.75rem;border-bottom:1px solid var(--border-color);">
+      <h3 style="margin:0;font-size:1.1rem;font-weight:800;color:#38bdf8;display:flex;align-items:center;gap:6px;">
+        📊 Sales Report & Analytics
+      </h3>
+      <button onclick="closeModal('modal-sales-report')" class="close-btn">✕</button>
+    </div>
+
+    <!-- Time Period Filter Tabs -->
+    <div style="display:flex;gap:0.4rem;padding:0.75rem 0 0.5rem 0;">
+      <button id="sales-tab-today" onclick="switchSalesReportTab('today')" style="flex:1;padding:0.5rem;border-radius:8px;border:1px solid var(--border-color);background:var(--color-accent);color:#fff;font-weight:700;font-size:0.85rem;cursor:pointer;">Today</button>
+      <button id="sales-tab-week" onclick="switchSalesReportTab('week')" style="flex:1;padding:0.5rem;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-muted);font-weight:700;font-size:0.85rem;cursor:pointer;">Weekly</button>
+      <button id="sales-tab-month" onclick="switchSalesReportTab('month')" style="flex:1;padding:0.5rem;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-muted);font-weight:700;font-size:0.85rem;cursor:pointer;">Monthly</button>
+    </div>
+
+    <!-- Metrics Cards -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-bottom:0.75rem;">
+      <div style="background:var(--bg-primary);padding:0.75rem;border-radius:12px;border:1px solid var(--border-color);text-align:center;">
+        <div style="font-size:0.75rem;color:var(--text-muted);font-weight:600;">TOTAL REVENUE</div>
+        <div id="sales-report-total-amt" style="font-size:1.25rem;font-weight:800;color:#22c55e;margin-top:2px;">₹0.00</div>
+      </div>
+      <div style="background:var(--bg-primary);padding:0.75rem;border-radius:12px;border:1px solid var(--border-color);text-align:center;">
+        <div style="font-size:0.75rem;color:var(--text-muted);font-weight:600;">TOTAL ORDERS</div>
+        <div id="sales-report-orders-count" style="font-size:1.25rem;font-weight:800;color:#38bdf8;margin-top:2px;">0</div>
+      </div>
+    </div>
+
+    <!-- List of Billed Sales Orders -->
+    <div style="font-size:0.85rem;font-weight:700;color:var(--text-muted);margin-bottom:0.4rem;display:flex;align-items:center;justify-content:space-between;">
+      <span>Billed Orders Log</span>
+      <span id="sales-report-avg-order" style="font-size:0.78rem;color:var(--text-muted);font-weight:600;">Avg: ₹0</span>
+    </div>
+    
+    <div id="sales-report-list" style="flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:0.45rem;padding-right:2px;">
+      <!-- Billed items will be rendered here -->
+    </div>
+  </div>
+</div>
+
 <div class="modal-overlay" id="modal-bill-onboarding-prompt" onclick="dismissModalOnBackdrop(event, 'modal-bill-onboarding-prompt')" style="z-index:9999 !important;">
   <div class="modal-card" style="max-width:360px;width:90%;text-align:center;padding:1.5rem 1.2rem;border-radius:16px;">
     <div style="font-size:2.8rem;margin-bottom:0.5rem;">🧾</div>
@@ -1659,7 +1777,7 @@ body {
   <div class="modal-container">
     <div class="modal-header" style="display:flex;align-items:center;padding:0.65rem 0.85rem;border-bottom:1px solid var(--border-color);position:relative;height:52px;box-sizing:border-box;">
       <div class="modal-header-left" style="position:absolute;left:0.85rem;top:50%;transform:translateY(-50%);display:flex;align-items:center;gap:0.45rem;z-index:5;">
-        <button id="settings-btn" class="settings-btn" onclick="openSettingsModal()" title="Settings" style="border:1px solid var(--border-color);border-radius:8px;background:var(--bg-secondary);padding:0.3rem 0.5rem;font-size:1.1rem;cursor:pointer;">⚙️</button>
+        <button id="settings-btn" class="settings-btn" onclick="handleSettingsBtnClick()" title="Settings" style="border:1px solid var(--border-color);border-radius:8px;background:var(--bg-secondary);padding:0.3rem 0.5rem;font-size:1.1rem;cursor:pointer;">⚙️</button>
         <button id="calc-back-btn" class="settings-btn" onclick="setCalcMode('basic')" title="Back to Calculator" style="display:none;font-size:1.35rem;cursor:pointer;padding:0 2px;">⬅️</button>
         <button id="calc-back-hist-btn" class="settings-btn" onclick="toggleCalcHistory()" title="Calculation History" style="display:none;border:none;background:none;font-size:1.3rem;cursor:pointer;padding:0 2px;align-items:center;justify-content:center;transition:all 0.15s;opacity:0.9;">🕒</button>
       </div>
@@ -3089,7 +3207,14 @@ function openSettingsModal() {
 
 function closeSettingsModal(e) {
   if (e && e.target !== e.currentTarget) return;
-  document.getElementById('modal-settings').classList.remove('active');
+  var modal = document.getElementById('modal-settings');
+  if (!modal) return;
+  var container = modal.querySelector('.modal-container');
+  if (container) container.style.transform = 'translateX(-100%)';
+  setTimeout(function() {
+    modal.classList.remove('active');
+    if (container) container.style.transform = '';
+  }, 260);
 }
 
 function openGuideModal() {
@@ -3287,11 +3412,23 @@ function applyCalcMode(name) {
 
   var posScreen = document.getElementById('pos-live-screen');
   var posActionBar = document.getElementById('pos-action-bar');
-  var posEditBtn = document.getElementById('pos-edit-toggle-btn');
   if (posScreen) posScreen.style.display = (name === 'quickbilling') ? 'block' : 'none';
   if (posActionBar) posActionBar.style.display = (name === 'quickbilling') ? 'flex' : 'none';
+
+  if (settingsBtn) {
+    settingsBtn.style.color = 'var(--text-primary)';
+    if (name === 'quickbilling') {
+      settingsBtn.innerHTML = '☰';
+      settingsBtn.title = 'POS Menu';
+    } else {
+      settingsBtn.innerHTML = '⚙️';
+      settingsBtn.title = 'Settings';
+    }
+  }
+
+  var posEditBtn = document.getElementById('pos-edit-toggle-btn');
   if (posEditBtn) {
-    posEditBtn.style.display = (name === 'quickbilling') ? 'inline-flex' : 'none';
+    posEditBtn.style.display = 'none';
     if (name !== 'quickbilling') {
       _qbEditMode = false;
       updatePosEditToggleBtnUI();
@@ -3688,11 +3825,23 @@ function renderQuickBillingScreen(targetOrderIdx) {
   if (_quickBillingOrder.length === 0) {
     var emptyBtn = _heldPosBills.length > 0 ? 
       '<button onclick="openHeldBillsPickerModal()" style="margin-top:8px;padding:5px 12px;border-radius:8px;border:1px solid rgba(234,179,8,0.5);background:rgba(234,179,8,0.2);color:#eab308;font-size:0.82rem;font-weight:800;cursor:pointer;">📋 View & Restore Held Bills (' + _heldPosBills.length + ')</button>' : '';
-    screenEl.innerHTML =
-      '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:var(--text-muted);font-size:0.92rem;font-weight:700;">' +
-        '<div>🛒 Tap item tiles below to add to POS Bill</div>' +
-        emptyBtn +
-      '</div>';
+    
+    if (_qbEditMode) {
+      screenEl.innerHTML =
+        '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;text-align:center;padding:0.5rem;gap:8px;">' +
+          '<button onclick="toggleQbEditMode()" style="background:linear-gradient(135deg, #facc15 0%, #eab308 100%);color:#000;padding:0.42rem 1.1rem;border-radius:30px;font-weight:900;font-size:0.88rem;box-shadow:0 4px 16px rgba(234,179,8,0.4);border:none;cursor:pointer;display:inline-flex;align-items:center;gap:6px;">' +
+            '<span style="font-size:1.05rem;">✏️</span> EDITING <span style="font-size:0.75rem;margin-left:4px;background:rgba(0,0,0,0.15);padding:1px 6px;border-radius:50%;">✕</span>' +
+          '</button>' +
+          '<div style="font-size:0.78rem;color:var(--text-muted);font-weight:600;">Tap any item tile below to edit name, price & emoji</div>' +
+          emptyBtn +
+        '</div>';
+    } else {
+      screenEl.innerHTML =
+        '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:var(--text-muted);font-size:0.92rem;font-weight:700;">' +
+          '<div>🛒 Tap item tiles below to add to POS Bill</div>' +
+          emptyBtn +
+        '</div>';
+    }
     return;
   }
 
@@ -4021,6 +4170,12 @@ window.openPosQtyEditModal = openPosQtyEditModal;
 window.handleQbItemNameInput = handleQbItemNameInput;
 window.triggerAutoEmoji = triggerAutoEmoji;
 window.setFoodTypePill = setFoodTypePill;
+window.handleSettingsBtnClick = handleSettingsBtnClick;
+window.openPosDrawer = openPosDrawer;
+window.closePosDrawer = closePosDrawer;
+window.openSalesReportModal = openSalesReportModal;
+window.switchSalesReportTab = switchSalesReportTab;
+window.renderSalesReportList = renderSalesReportList;
 
 function getAutoFoodEmoji(name) {
   if (!name || typeof name !== 'string') return '';
@@ -4181,30 +4336,128 @@ function addNewQuickBillingTileRow() {
 
 var _qbEditMode = false;
 
+function handleSettingsBtnClick() {
+  if (_calcMode === 'quickbilling') {
+    openPosDrawer();
+  } else {
+    openSettingsModal();
+  }
+}
+
+function openPosDrawer() {
+  var overlay = document.getElementById('drawer-pos-overlay');
+  var drawer = document.getElementById('drawer-pos-menu');
+  if (overlay) overlay.style.display = 'block';
+  if (drawer) {
+    setTimeout(function() {
+      drawer.style.transform = 'translateX(0)';
+    }, 10);
+  }
+}
+
+function closePosDrawer() {
+  var overlay = document.getElementById('drawer-pos-overlay');
+  var drawer = document.getElementById('drawer-pos-menu');
+  if (drawer) drawer.style.transform = 'translateX(-100%)';
+  if (overlay) {
+    setTimeout(function() {
+      overlay.style.display = 'none';
+    }, 280);
+  }
+}
+
+var _currentSalesPeriod = 'today';
+
+function openSalesReportModal() {
+  switchSalesReportTab('today');
+  openModal('modal-sales-report');
+}
+
+function switchSalesReportTab(period) {
+  _currentSalesPeriod = period || 'today';
+  ['today', 'week', 'month'].forEach(function(p) {
+    var tabBtn = document.getElementById('sales-tab-' + p);
+    if (tabBtn) {
+      if (p === _currentSalesPeriod) {
+        tabBtn.style.background = 'var(--color-accent)';
+        tabBtn.style.color = '#ffffff';
+      } else {
+        tabBtn.style.background = 'var(--bg-primary)';
+        tabBtn.style.color = 'var(--text-muted)';
+      }
+    }
+  });
+  renderSalesReportList();
+}
+
+function renderSalesReportList() {
+  var listEl = document.getElementById('sales-report-list');
+  var totalAmtEl = document.getElementById('sales-report-total-amt');
+  var countEl = document.getElementById('sales-report-orders-count');
+  var avgEl = document.getElementById('sales-report-avg-order');
+  if (!listEl) return;
+
+  var now = new Date();
+  var start = new Date();
+  if (_currentSalesPeriod === 'today') {
+    start.setHours(0,0,0,0);
+  } else if (_currentSalesPeriod === 'week') {
+    start.setDate(now.getDate() - 7);
+  } else if (_currentSalesPeriod === 'month') {
+    start.setDate(now.getDate() - 30);
+  }
+
+  var filtered = (_savedBillsArchive || []).filter(function(b) {
+    var t = b.id ? Number(b.id) : 0;
+    return t >= start.getTime();
+  });
+
+  var totalRev = 0;
+  filtered.forEach(function(b) {
+    totalRev += Number(b.total || 0);
+  });
+
+  if (totalAmtEl) totalAmtEl.textContent = '₹' + totalRev.toFixed(2);
+  if (countEl) countEl.textContent = filtered.length;
+  var avg = filtered.length > 0 ? (totalRev / filtered.length).toFixed(0) : '0';
+  if (avgEl) avgEl.textContent = 'Avg: ₹' + avg;
+
+  if (!filtered.length) {
+    listEl.innerHTML = '<div style="text-align:center;padding:2rem 1rem;color:var(--text-muted);font-size:0.88rem;">No billed sales recorded for this period.</div>';
+    return;
+  }
+
+  var html = filtered.map(function(b) {
+    var itemsSummary = Array.isArray(b.items) ? b.items.map(function(i) { return i.name + ' x' + i.qty; }).join(', ') : 'Custom Bill';
+    return '<div style="background:var(--bg-primary);padding:0.65rem 0.75rem;border-radius:10px;border:1px solid var(--border-color);display:flex;justify-content:space-between;align-items:center;">' +
+      '<div style="flex:1;min-width:0;padding-right:0.5rem;">' +
+        '<div style="font-size:0.88rem;font-weight:700;color:var(--text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + itemsSummary + '</div>' +
+        '<div style="font-size:0.75rem;color:var(--text-muted);margin-top:2px;">🕒 ' + (b.date || 'Recent') + '</div>' +
+      '</div>' +
+      '<div style="font-weight:800;color:#22c55e;font-size:0.95rem;">₹' + Number(b.total || 0).toFixed(2) + '</div>' +
+    '</div>';
+  }).join('');
+
+  listEl.innerHTML = html;
+}
+
 function toggleQbEditMode() {
   _qbEditMode = !_qbEditMode;
   updatePosEditToggleBtnUI();
   renderQuickBillingGrid();
-
-  if (_qbEditMode) {
-    showToast('✏️ Menu Edit Mode ON: Tap any item card to edit name & price!');
-  } else {
-    showToast('✅ Billing Mode Active');
-  }
+  renderQuickBillingScreen();
 }
 
 function updatePosEditToggleBtnUI() {
-  var btn = document.getElementById('pos-edit-toggle-btn');
-  if (!btn) return;
-  btn.style.border = 'none';
-  if (_qbEditMode) {
-    btn.style.background = 'rgba(234,179,8,0.25)';
-    btn.style.color = '#eab308';
-    btn.innerHTML = '✏️';
-  } else {
-    btn.style.background = 'none';
-    btn.style.color = 'var(--text-primary)';
-    btn.innerHTML = '✏️';
+  var topBtn = document.getElementById('pos-edit-toggle-btn');
+  var bottomPill = document.getElementById('pos-bottom-edit-pill');
+  if (topBtn) topBtn.style.display = 'none';
+  if (bottomPill) {
+    if (_qbEditMode && _calcMode === 'quickbilling') {
+      bottomPill.style.display = 'inline-flex';
+    } else {
+      bottomPill.style.display = 'none';
+    }
   }
 }
 
