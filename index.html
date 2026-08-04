@@ -9718,7 +9718,7 @@ function renderInlineLedgerHTML() {
         
         html += '<div style="display:flex;align-items:center;justify-content:space-between;font-size:0.76rem;background:var(--bg-primary);padding:4px 6px;border-radius:4px;border-left:3px solid ' + txColor + ';">' +
           '<div>' +
-            '<strong style="color:' + txColor + ';">' + txLabel + ': ₹' + fmtNum(tx.amount) + '</strong>' +
+            '<strong style="color:' + txColor + ';">' + txLabel + '</strong>' +
             '<div style="font-size:0.68rem;color:var(--text-muted);">' + showNote + escHtml(tx.date || '') + '</div>' +
           '</div>' +
           '<button onclick="event.stopPropagation();deleteKhataTransaction(' + i + ',' + t + ')" style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:0.85rem;padding:2px;" title="Delete Entry">🗑️</button>' +
