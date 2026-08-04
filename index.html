@@ -9638,6 +9638,19 @@ function clearActiveKhataCustomer() {
   calcUpdateDisplay();
 }
 
+function exitKhataMode() {
+  _activeKhataCustomerIndex = -1;
+  _khataBalancePreloaded = false;
+  _calcHistoryVisible = false;
+  _historyFolded = true;
+  calcTokens = [{v: '0', label: ''}];
+  _editingCalcToken = -1;
+  _calcShowExpr = true;
+  calcUpdateDisplay();
+  renderCalcHistory();
+  if (typeof showToast === 'function') showToast('🚪 Exited Khata Mode — Calci Normal');
+}
+
 function recordKhataTransaction(type, amount) {
   if (_activeKhataCustomerIndex < 0 || !_calcLedgerCustomers[_activeKhataCustomerIndex]) return;
   var c = _calcLedgerCustomers[_activeKhataCustomerIndex];
@@ -9803,7 +9816,7 @@ function renderCalcHistory() {
 
   var tabHeader = '<div style="display:flex;gap:6px;margin-bottom:0.5rem;width:100%;box-sizing:border-box;">' +
     '<button onclick="switchHistoryTab(\'history\')" style="flex:3;height:36px;box-sizing:border-box;background:' + (isHistActive ? 'var(--color-accent)' : 'var(--bg-tertiary)') + ';color:' + (isHistActive ? '#fff' : 'var(--text-primary)') + ';border:1px solid var(--border-color);border-radius:var(--radius-sm);font-size:0.86rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;">📜 ' + (isHistActive ? 'Hide History' : 'Show History') + '</button>' +
-    '<button onclick="switchHistoryTab(\'ledger\')" style="flex:1;height:36px;box-sizing:border-box;background:' + (isLedgerActive ? 'var(--color-accent)' : 'var(--bg-tertiary)') + ';color:' + (isLedgerActive ? '#fff' : 'var(--color-accent)') + ';border:1px solid var(--border-color);border-radius:var(--radius-sm);font-size:0.86rem;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;">📖 ' + (isLedgerActive ? 'Hide' : 'Ledger') + '</button>' +
+    '<button onclick="' + (isLedgerActive ? 'exitKhataMode()' : 'switchHistoryTab(\'ledger\')') + '" style="flex:1;height:36px;box-sizing:border-box;background:' + (isLedgerActive ? 'var(--color-accent)' : 'var(--bg-tertiary)') + ';color:' + (isLedgerActive ? '#fff' : 'var(--color-accent)') + ';border:1px solid var(--border-color);border-radius:var(--radius-sm);font-size:0.86rem;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;">' + (isLedgerActive ? '🚪 Exit' : '📖 Ledger') + '</button>' +
   '</div>';
 
   if (_historyFolded) {
