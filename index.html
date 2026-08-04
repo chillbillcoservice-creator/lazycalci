@@ -5890,6 +5890,36 @@ function calcEqual() {
       renderCalcHistory();
     }
 
+    if (_activeKhataCustomerIndex >= 0 && typeof _calcLedgerCustomers !== 'undefined' && _calcLedgerCustomers && _calcLedgerCustomers[_activeKhataCustomerIndex]) {
+      var c = _calcLedgerCustomers[_activeKhataCustomerIndex];
+      var txAmt = 0;
+      var txType = 'jama';
+      
+      for (var k = 0; k < calcTokens.length; k++) {
+        if (calcTokens[k].v === '+') { txType = 'jama'; }
+        if (calcTokens[k].v === '-') { txType = 'udhar'; }
+        if (k > 0 && ['+','-','*','/','%'].indexOf(calcTokens[k-1].v) !== -1) {
+          txAmt = parseFloat((calcTokens[k].v || '').replace(/[^\d.]/g, '')) || 0;
+        }
+      }
+      
+      if (txAmt > 0) {
+        if (!Array.isArray(c.transactions)) c.transactions = [];
+        if (txType === 'jama') {
+          c.balance -= txAmt;
+          c.transactions.unshift({ date: new Date().toLocaleString(), type: 'jama', amount: txAmt, note: 'Payment Taken via Main Calci' });
+          if (typeof showToast === 'function') showToast('✅ Recorded ₹' + fmtNum(txAmt) + ' Take for ' + c.name);
+        } else {
+          c.balance += txAmt;
+          c.transactions.unshift({ date: new Date().toLocaleString(), type: 'udhar', amount: txAmt, note: 'Credit Given via Main Calci' });
+          if (typeof showToast === 'function') showToast('🔴 Recorded ₹' + fmtNum(txAmt) + ' Give for ' + c.name);
+        }
+        localStorage.setItem('calc_ledger_customers', JSON.stringify(_calcLedgerCustomers));
+        selectKhataCustomer(_activeKhataCustomerIndex);
+        return;
+      }
+    }
+
     calcTokens = [{v: String(result), label: ''}];
     _editingCalcToken = -1;
     _calcShowExpr = false;
