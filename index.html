@@ -5883,11 +5883,11 @@ function calcEqual() {
         if (!Array.isArray(c.transactions)) c.transactions = [];
         if (txType === 'jama') {
           c.balance -= txAmt;
-          c.transactions.unshift({ date: new Date().toLocaleString(), type: 'jama', amount: txAmt, note: 'Payment Taken via Main Calci' });
+          c.transactions.unshift({ date: new Date().toLocaleString(), type: 'jama', amount: txAmt, note: '' });
           if (typeof showToast === 'function') showToast('✅ Recorded ₹' + fmtNum(txAmt) + ' Take for ' + c.name);
         } else {
           c.balance += txAmt;
-          c.transactions.unshift({ date: new Date().toLocaleString(), type: 'udhar', amount: txAmt, note: 'Credit Given via Main Calci' });
+          c.transactions.unshift({ date: new Date().toLocaleString(), type: 'udhar', amount: txAmt, note: '' });
           if (typeof showToast === 'function') showToast('🔴 Recorded ₹' + fmtNum(txAmt) + ' Give for ' + c.name);
         }
         localStorage.setItem('calc_ledger_customers', JSON.stringify(_calcLedgerCustomers));
@@ -9648,11 +9648,11 @@ function recordKhataTransaction(type, amount) {
   
   if (type === 'jama') {
     c.balance -= amount;
-    c.transactions.unshift({ date: new Date().toLocaleString(), type: 'jama', amount: amount, note: 'Payment Taken via Main Calci' });
+    c.transactions.unshift({ date: new Date().toLocaleString(), type: 'jama', amount: amount, note: '' });
     if (typeof showToast === 'function') showToast('✅ Recorded ₹' + fmtNum(amount) + ' Take for ' + c.name);
   } else {
     c.balance += amount;
-    c.transactions.unshift({ date: new Date().toLocaleString(), type: 'udhar', amount: amount, note: 'Credit Given via Main Calci' });
+    c.transactions.unshift({ date: new Date().toLocaleString(), type: 'udhar', amount: amount, note: '' });
     if (typeof showToast === 'function') showToast('🔴 Recorded ₹' + fmtNum(amount) + ' Give for ' + c.name);
   }
 
@@ -9688,11 +9688,12 @@ function renderInlineLedgerHTML() {
         var isJama = (tx.type === 'jama');
         var txLabel = isJama ? '🟢 Take (Payment)' : '🔴 Give (Credit)';
         var txColor = isJama ? '#10b981' : '#ef4444';
+        var showNote = tx.note && tx.note.indexOf('via Main Calci') === -1 ? escHtml(tx.note) + ' • ' : '';
         
         html += '<div style="display:flex;align-items:center;justify-content:space-between;font-size:0.76rem;background:var(--bg-primary);padding:4px 6px;border-radius:4px;border-left:3px solid ' + txColor + ';">' +
           '<div>' +
             '<strong style="color:' + txColor + ';">' + txLabel + ': ₹' + fmtNum(tx.amount) + '</strong>' +
-            '<div style="font-size:0.68rem;color:var(--text-muted);">' + escHtml(tx.note || '') + ' • ' + escHtml(tx.date || '') + '</div>' +
+            '<div style="font-size:0.68rem;color:var(--text-muted);">' + showNote + escHtml(tx.date || '') + '</div>' +
           '</div>' +
           '<button onclick="event.stopPropagation();deleteKhataTransaction(' + i + ',' + t + ')" style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:0.85rem;padding:2px;" title="Delete Entry">🗑️</button>' +
         '</div>';
