@@ -9563,9 +9563,7 @@ function renderCalcHistory() {
     if (entryMode === _calcMode) { filtered.push(e); indices.push(i); }
   }
   if (filtered.length === 0) {
-    container.innerHTML = tabHeader + '<div style="padding:0.75rem;text-align:center;font-size:0.82rem;color:var(--text-muted);background:var(--bg-tertiary);border-radius:var(--radius-sm);border:1px solid var(--border-color);">' +
-      '📜 No calculations recorded yet. Perform a calculation to view history!' +
-    '</div>';
+    container.innerHTML = tabHeader;
     return;
   }
 
