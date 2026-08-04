@@ -9446,7 +9446,7 @@ function updateCalcHistoryVisibility() {
   var backHistBtn = document.getElementById('calc-back-hist-btn');
   var hasHistory = (typeof calcHistory !== 'undefined' && calcHistory && calcHistory.length > 0);
   if (mainHistBtn) {
-    mainHistBtn.style.display = (_calcMode === 'basic' && hasHistory && _calcMode !== 'quickbilling') ? '' : 'none';
+    mainHistBtn.style.display = (_calcMode === 'basic' && _calcMode !== 'quickbilling') ? 'inline-flex' : 'none';
   }
   if (backHistBtn) {
     var isSuppressed = (_calcMode === 'expenses' || _calcMode === 'splitter' || _calcMode === 'date' || _calcMode === 'basic' || _calcMode === 'quickbilling');
@@ -9454,15 +9454,87 @@ function updateCalcHistoryVisibility() {
   }
 }
 
+var _activeHistorySubTab = 'history';
+var _calcLedgerCustomers = [];
+try {
+  _calcLedgerCustomers = JSON.parse(localStorage.getItem('calc_ledger_customers')) || [];
+} catch(e) { _calcLedgerCustomers = []; }
+
+if (!Array.isArray(_calcLedgerCustomers) || _calcLedgerCustomers.length === 0) {
+  _calcLedgerCustomers = [
+    { id: 1, name: 'Ramesh Kumar', phone: '9876543210', balance: 450 },
+    { id: 2, name: 'Priya Sharma', phone: '9123456789', balance: -200 }
+  ];
+  localStorage.setItem('calc_ledger_customers', JSON.stringify(_calcLedgerCustomers));
+}
+
+function switchHistoryTab(tab) {
+  _activeHistorySubTab = tab;
+  renderCalcHistory();
+}
+
+function renderInlineLedgerHTML() {
+  var html = '<div style="display:flex;flex-direction:column;gap:6px;">';
+  for (var i = 0; i < _calcLedgerCustomers.length; i++) {
+    var c = _calcLedgerCustomers[i];
+    var balText = c.balance > 0 ? '🟢 Get ₹' + fmtNum(c.balance) : (c.balance < 0 ? '🔴 Give ₹' + fmtNum(Math.abs(c.balance)) : '⚪ Settled');
+    html += '<div style="display:flex;align-items:center;justify-content:space-between;padding:0.5rem 0.65rem;background:var(--bg-tertiary);border-radius:var(--radius-sm);border:1px solid var(--border-color);font-size:0.85rem;">' +
+      '<div><strong>' + escHtml(c.name) + '</strong> <span style="font-size:0.75rem;margin-left:6px;font-weight:700;">' + balText + '</span></div>' +
+      '<button onclick="event.stopPropagation();sendLedgerWASummary(' + i + ')" style="background:none;border:none;cursor:pointer;font-size:1.1rem;" title="WhatsApp Statement">💬</button>' +
+    '</div>';
+  }
+  html += '<button onclick="addInlineLedgerCustomer()" style="margin-top:4px;padding:6px;border-radius:6px;border:none;background:var(--color-accent);color:#fff;font-weight:700;font-size:0.8rem;cursor:pointer;">+ Add Customer to Khata</button>';
+  html += '</div>';
+  return html;
+}
+
+function addInlineLedgerCustomer() {
+  var name = prompt('👤 Enter Customer Name:');
+  if (!name || !name.trim()) return;
+  var phone = prompt('📱 Enter Customer Phone Number (Optional):') || '';
+  var initBal = parseFloat(prompt('💰 Initial Pending Balance (e.g. 500 for Udhar, -200 for Jama, 0 for Fresh):')) || 0;
+
+  var newCust = {
+    id: Date.now(),
+    name: name.trim(),
+    phone: phone.trim(),
+    balance: initBal
+  };
+
+  _calcLedgerCustomers.unshift(newCust);
+  localStorage.setItem('calc_ledger_customers', JSON.stringify(_calcLedgerCustomers));
+  renderCalcHistory();
+  if (typeof showToast === 'function') showToast('✅ Customer ' + name.trim() + ' added to Khata Ledger');
+}
+
+function sendLedgerWASummary(idx) {
+  if (!_calcLedgerCustomers || !_calcLedgerCustomers[idx]) return;
+  var c = _calcLedgerCustomers[idx];
+  var balMsg = c.balance > 0 ? 'Pending Udhar Dues: ₹' + c.balance : (c.balance < 0 ? 'Advance Credit: ₹' + Math.abs(c.balance) : 'Settled Balance: ₹0');
+  var text = 'Namaste ' + c.name + ' ji, your Khata Ledger balance with us is: ' + balMsg + '. Thank you!';
+  var url = 'https://wa.me/' + (c.phone ? '91' + c.phone.replace(/\D/g,'') : '') + '?text=' + encodeURIComponent(text);
+  window.open(url, '_blank');
+}
+
 function renderCalcHistory() {
   updateCalcHistoryVisibility();
-  updateCalcHistoryBtnState();
   var container = document.getElementById('calc-history');
+  if (!container) return;
   if (!_calcHistoryVisible) {
     container.style.display = 'none';
     return;
   }
   container.style.display = 'block';
+
+  var tabHeader = '<div style="display:flex;gap:6px;margin-bottom:0.5rem;width:100%;box-sizing:border-box;">' +
+    '<button onclick="switchHistoryTab(\'history\')" style="flex:3;height:36px;box-sizing:border-box;background:' + (_activeHistorySubTab === 'history' ? 'var(--color-accent)' : 'var(--bg-tertiary)') + ';color:' + (_activeHistorySubTab === 'history' ? '#fff' : 'var(--text-primary)') + ';border:1px solid var(--border-color);border-radius:var(--radius-sm);font-size:0.86rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;">📜 Show History</button>' +
+    '<button onclick="switchHistoryTab(\'ledger\')" style="flex:1;height:36px;box-sizing:border-box;background:' + (_activeHistorySubTab === 'ledger' ? 'var(--color-accent)' : 'var(--bg-tertiary)') + ';color:' + (_activeHistorySubTab === 'ledger' ? '#fff' : 'var(--color-accent)') + ';border:1px solid var(--border-color);border-radius:var(--radius-sm);font-size:0.86rem;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;">📖 Ledger</button>' +
+  '</div>';
+
+  if (_activeHistorySubTab === 'ledger') {
+    container.innerHTML = tabHeader + renderInlineLedgerHTML();
+    return;
+  }
 
   var filtered = [], indices = [];
   for (var i = 0; i < calcHistory.length; i++) {
@@ -9471,13 +9543,14 @@ function renderCalcHistory() {
     if (entryMode === _calcMode) { filtered.push(e); indices.push(i); }
   }
   if (filtered.length === 0) {
-    container.innerHTML = '';
-    container.style.display = 'none';
+    container.innerHTML = tabHeader + '<div style="padding:0.75rem;text-align:center;font-size:0.82rem;color:var(--text-muted);background:var(--bg-tertiary);border-radius:var(--radius-sm);border:1px solid var(--border-color);">' +
+      '📜 No calculations recorded yet. Perform a calculation to view history!' +
+    '</div>';
     return;
   }
 
   var limit = Math.min(filtered.length, (_calcMode === 'date' || _calcMode === 'gold' || _calcMode === 'fuel' || _calcMode === 'emi' || _calcMode === 'gst') ? 5 : 10);
-  var html = '';
+  var html = tabHeader;
   for (var j = 0; j < limit; j++) {
     var entry = filtered[j], realIdx = indices[j];
     var expr = entry.expression || '';
