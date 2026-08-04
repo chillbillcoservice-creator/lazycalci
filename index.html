@@ -9573,34 +9573,84 @@ function renderInlineLedgerHTML() {
     var c = _calcLedgerCustomers[i];
     var isSelected = (_activeKhataCustomerIndex === i);
     var balText = c.balance > 0 ? '🟢 Take ₹' + fmtNum(c.balance) : (c.balance < 0 ? '🔴 Give ₹' + fmtNum(Math.abs(c.balance)) : '⚪ Settled');
-    html += '<div onclick="selectKhataCustomer(' + i + ')" style="display:flex;align-items:center;justify-content:space-between;padding:0.55rem 0.7rem;background:' + (isSelected ? 'rgba(243,139,168,0.18)' : 'var(--bg-tertiary)') + ';border-radius:var(--radius-sm);border:1px solid ' + (isSelected ? 'var(--color-accent)' : 'var(--border-color)') + ';font-size:0.85rem;cursor:pointer;">' +
+    
+    html += '<div style="background:' + (isSelected ? 'rgba(243,139,168,0.12)' : 'var(--bg-tertiary)') + ';border-radius:var(--radius-sm);border:1px solid ' + (isSelected ? 'var(--color-accent)' : 'var(--border-color)') + ';overflow:hidden;">';
+    html += '<div onclick="selectKhataCustomer(' + i + ')" style="display:flex;align-items:center;justify-content:space-between;padding:0.55rem 0.7rem;font-size:0.85rem;cursor:pointer;">' +
       '<div><strong>' + escHtml(c.name) + '</strong> <span style="font-size:0.75rem;margin-left:6px;font-weight:700;">' + balText + '</span></div>' +
       '<div style="display:flex;align-items:center;gap:6px;">' +
-        '<span style="font-size:0.72rem;background:var(--color-accent);color:#fff;padding:2px 6px;border-radius:4px;font-weight:700;">Tap to Record ➔</span>' +
-        '<button onclick="event.stopPropagation();sendLedgerWASummary(' + i + ')" style="background:none;border:none;cursor:pointer;font-size:1.1rem;" title="WhatsApp Statement">💬</button>' +
+        '<span style="font-size:0.72rem;background:' + (isSelected ? '#10b981' : 'var(--color-accent)') + ';color:#fff;padding:2px 6px;border-radius:4px;font-weight:700;">' + (isSelected ? '● Active' : 'Tap to Record ➔') + '</span>' +
+        '<button onclick="event.stopPropagation();sendLedgerWASummary(' + i + ')" style="background:none;border:none;cursor:pointer;font-size:1.1rem;" title="Send WhatsApp Statement">💬</button>' +
       '</div>' +
     '</div>';
+
+    if (isSelected && Array.isArray(c.transactions) && c.transactions.length > 0) {
+      html += '<div style="border-top:1px dashed var(--border-color);padding:0.5rem 0.7rem;background:rgba(0,0,0,0.15);display:flex;flex-direction:column;gap:4px;">';
+      html += '<div style="font-size:0.75rem;font-weight:800;color:var(--text-muted);margin-bottom:2px;display:flex;justify-content:space-between;align-items:center;">' +
+        '<span>📜 TRANSACTION HISTORY (' + c.transactions.length + ')</span>' +
+        '<button onclick="event.stopPropagation();sendLedgerWASummary(' + i + ')" style="background:#25D366;color:#fff;border:none;padding:2px 6px;border-radius:4px;font-size:0.72rem;font-weight:700;cursor:pointer;">💬 WhatsApp Statement</button>' +
+      '</div>';
+      
+      for (var t = 0; t < c.transactions.length; t++) {
+        var tx = c.transactions[t];
+        var isJama = (tx.type === 'jama');
+        var txLabel = isJama ? '🟢 Take (Payment)' : '🔴 Give (Credit)';
+        var txColor = isJama ? '#10b981' : '#ef4444';
+        
+        html += '<div style="display:flex;align-items:center;justify-content:space-between;font-size:0.76rem;background:var(--bg-primary);padding:4px 6px;border-radius:4px;border-left:3px solid ' + txColor + ';">' +
+          '<div>' +
+            '<strong style="color:' + txColor + ';">' + txLabel + ': ₹' + fmtNum(tx.amount) + '</strong>' +
+            '<div style="font-size:0.68rem;color:var(--text-muted);">' + escHtml(tx.note || '') + ' • ' + escHtml(tx.date || '') + '</div>' +
+          '</div>' +
+          '<button onclick="event.stopPropagation();deleteKhataTransaction(' + i + ',' + t + ')" style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:0.85rem;padding:2px;" title="Delete Entry">🗑️</button>' +
+        '</div>';
+      }
+      html += '</div>';
+    }
+    html += '</div>';
   }
-  html += '<button onclick="addInlineLedgerCustomer()" style="margin-top:4px;padding:6px;border-radius:6px;border:none;background:var(--color-accent);color:#fff;font-weight:700;font-size:0.8rem;cursor:pointer;">+ Add Customer to Khata</button>';
+  html += '<button onclick="addInlineLedgerCustomer()" style="margin-top:4px;padding:7px;border-radius:6px;border:none;background:var(--color-accent);color:#fff;font-weight:700;font-size:0.82rem;cursor:pointer;">+ Add New Customer to Khata</button>';
   html += '</div>';
   return html;
+}
+
+function deleteKhataTransaction(custIdx, txIdx) {
+  if (!_calcLedgerCustomers || !_calcLedgerCustomers[custIdx]) return;
+  var c = _calcLedgerCustomers[custIdx];
+  if (!c.transactions || !c.transactions[txIdx]) return;
+  
+  if (!confirm('🗑️ Delete this transaction entry for ' + c.name + '?')) return;
+  
+  var tx = c.transactions[txIdx];
+  if (tx.type === 'jama') {
+    c.balance += tx.amount;
+  } else {
+    c.balance -= tx.amount;
+  }
+  c.transactions.splice(txIdx, 1);
+  
+  localStorage.setItem('calc_ledger_customers', JSON.stringify(_calcLedgerCustomers));
+  renderCalcHistory();
+  calcUpdateDisplay();
+  if (typeof showToast === 'function') showToast('🗑️ Deleted entry & updated balance');
 }
 
 function addInlineLedgerCustomer() {
   var name = prompt('👤 Enter Customer Name:');
   if (!name || !name.trim()) return;
   var phone = prompt('📱 Enter Customer Phone Number (Optional):') || '';
-  var initBal = parseFloat(prompt('💰 Initial Pending Balance (e.g. 500 for Udhar, -200 for Jama, 0 for Fresh):')) || 0;
+  var initBal = parseFloat(prompt('💰 Initial Pending Balance (e.g. 500 for Take/Udhar, -200 for Give/Jama, 0 for Fresh):')) || 0;
 
   var newCust = {
     id: Date.now(),
     name: name.trim(),
     phone: phone.trim(),
-    balance: initBal
+    balance: initBal,
+    transactions: initBal !== 0 ? [{ date: new Date().toLocaleString(), type: initBal > 0 ? 'udhar' : 'jama', amount: Math.abs(initBal), note: 'Opening Balance' }] : []
   };
 
   _calcLedgerCustomers.unshift(newCust);
   localStorage.setItem('calc_ledger_customers', JSON.stringify(_calcLedgerCustomers));
+  selectKhataCustomer(0);
   renderCalcHistory();
   if (typeof showToast === 'function') showToast('✅ Customer ' + name.trim() + ' added to Khata Ledger');
 }
@@ -9608,8 +9658,8 @@ function addInlineLedgerCustomer() {
 function sendLedgerWASummary(idx) {
   if (!_calcLedgerCustomers || !_calcLedgerCustomers[idx]) return;
   var c = _calcLedgerCustomers[idx];
-  var balMsg = c.balance > 0 ? 'Pending Udhar Dues: ₹' + c.balance : (c.balance < 0 ? 'Advance Credit: ₹' + Math.abs(c.balance) : 'Settled Balance: ₹0');
-  var text = 'Namaste ' + c.name + ' ji, your Khata Ledger balance with us is: ' + balMsg + '. Thank you!';
+  var balMsg = c.balance > 0 ? 'Pending Dues (Take): ₹' + fmtNum(c.balance) : (c.balance < 0 ? 'Advance Credit (Give): ₹' + fmtNum(Math.abs(c.balance)) : 'Settled Balance: ₹0');
+  var text = 'Namaste ' + c.name + ' ji,\nYour Khata Ledger balance with us is: *' + balMsg + '*.\n\nThank you for your business!';
   var url = 'https://wa.me/' + (c.phone ? '91' + c.phone.replace(/\D/g,'') : '') + '?text=' + encodeURIComponent(text);
   window.open(url, '_blank');
 }
