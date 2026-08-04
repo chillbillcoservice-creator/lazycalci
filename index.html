@@ -9789,7 +9789,6 @@ function renderInlineLedgerHTML() {
         '<span style="font-size:0.75rem;font-weight:700;white-space:nowrap;">' + balText + '</span>' +
       '</div>' +
       '<div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">' +
-        (isSelected ? '<span style="font-size:0.68rem;background:rgba(16,185,129,0.2);color:#10b981;border:1px solid rgba(16,185,129,0.4);padding:2px 6px;border-radius:4px;font-weight:800;">● Active</span>' : '') +
         '<button onclick="toggleCustomerFold(' + i + ', event)" style="background:var(--bg-primary);border:1px solid var(--border-color);color:var(--text-primary);padding:3px 7px;border-radius:4px;font-size:0.72rem;font-weight:800;cursor:pointer;" title="Fold / Unfold Card">' + (isFolded ? '▼ Unfold' : '▲ Fold') + '</button>' +
         '<button onclick="event.stopPropagation();sendLedgerWASummary(' + i + ')" style="background:none;border:none;cursor:pointer;font-size:1.1rem;padding:0;" title="Send WhatsApp Statement">💬</button>' +
       '</div>' +
