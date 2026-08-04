@@ -10013,6 +10013,7 @@ function toggleCalcHistory() {
   _calcHistoryVisible = !_calcHistoryVisible;
   if (_calcHistoryVisible) {
     _historyFolded = false;
+    _activeHistorySubTab = 'history';
   }
   var btn = document.getElementById('calc-history-btn');
   if (btn) btn.textContent = _calcHistoryVisible ? 'Hide History' : 'Show History';
