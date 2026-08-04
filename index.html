@@ -5652,7 +5652,7 @@ function renderCalcLabelEditor() {
   if (_editingCalcToken === -1) {
     if (_activeKhataCustomerIndex >= 0 && _calcLedgerCustomers && _calcLedgerCustomers[_activeKhataCustomerIndex]) {
       var c = _calcLedgerCustomers[_activeKhataCustomerIndex];
-      var balText = c.balance > 0 ? 'Take: ₹' + fmtNum(c.balance) : (c.balance < 0 ? 'Give: ₹' + fmtNum(Math.abs(c.balance)) : 'Settled: ₹0');
+      var balText = c.balance > 0 ? 'Taken: ₹' + fmtNum(c.balance) : (c.balance < 0 ? 'Given: ₹' + fmtNum(Math.abs(c.balance)) : 'Settled: ₹0');
       container.innerHTML = '<div style="display:flex;align-items:center;justify-content:space-between;width:100%;gap:6px;white-space:nowrap;overflow:hidden;padding:2px 0;">' +
         '<div style="display:flex;align-items:center;gap:6px;min-width:0;overflow:hidden;">' +
           '<span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:0.95rem;font-weight:700;">👤 ' + escHtml(c.name) + '</span>' +
@@ -9569,7 +9569,7 @@ function switchHistoryTab(tab) {
 
 var _khataBalancePreloaded = false;
 
-function selectKhataCustomer(idx) {
+function selectKhataCustomer(idx, keepUnfolded) {
   if (!_calcLedgerCustomers || !_calcLedgerCustomers[idx]) return;
   _activeKhataCustomerIndex = idx;
   var c = _calcLedgerCustomers[idx];
@@ -9580,7 +9580,8 @@ function selectKhataCustomer(idx) {
   _calcShowExpr = true;
   calcUpdateDisplay();
 
-  _historyFolded = true;
+  _calcHistoryVisible = true;
+  _historyFolded = Boolean(!keepUnfolded);
   renderCalcHistory();
   if (typeof showToast === 'function') showToast('👤 Selected ' + c.name + ' (Bal: ₹' + fmtNum(c.balance) + ')');
 }
@@ -9596,7 +9597,7 @@ function submitActiveKhata(type) {
     var curVal = tokens.length === 1 ? tokens[0].v : String(c.balance || 0);
     calcTokens = [{v: curVal, label: ''}, {v: opChar, label: ''}];
     calcUpdateDisplay();
-    if (typeof showToast === 'function') showToast((type === 'jama' ? '🟢 Take Payment (-)' : '🔴 Give Credit (+)') + ' selected. Type amount!');
+    if (typeof showToast === 'function') showToast((type === 'jama' ? '🟢 Taken (-)' : '🔴 Given (+)') + ' selected. Type amount!');
     return;
   }
 
@@ -9605,7 +9606,7 @@ function submitActiveKhata(type) {
     tokens[tokens.length - 1] = {v: opChar, label: ''};
     calcTokens = tokens;
     calcUpdateDisplay();
-    if (typeof showToast === 'function') showToast((type === 'jama' ? '🟢 Take Payment (-)' : '🔴 Give Credit (+)') + ' selected. Type amount!');
+    if (typeof showToast === 'function') showToast((type === 'jama' ? '🟢 Taken (-)' : '🔴 Given (+)') + ' selected. Type amount!');
     return;
   }
 
@@ -9640,19 +9641,20 @@ function recordKhataTransaction(type, amount) {
   if (type === 'jama') {
     c.balance -= amount;
     c.transactions.unshift({ date: new Date().toLocaleString(), type: 'jama', amount: amount, note: '' });
-    if (typeof showToast === 'function') showToast('✅ Recorded ₹' + fmtNum(amount) + ' Take for ' + c.name);
+    if (typeof showToast === 'function') showToast('✅ Recorded ₹' + fmtNum(amount) + ' Taken for ' + c.name);
   } else {
     c.balance += amount;
     c.transactions.unshift({ date: new Date().toLocaleString(), type: 'udhar', amount: amount, note: '' });
-    if (typeof showToast === 'function') showToast('🔴 Recorded ₹' + fmtNum(amount) + ' Give for ' + c.name);
+    if (typeof showToast === 'function') showToast('🔴 Recorded ₹' + fmtNum(amount) + ' Given for ' + c.name);
   }
 
   localStorage.setItem('calc_ledger_customers', JSON.stringify(_calcLedgerCustomers));
   _foldedCustomerMap[_activeKhataCustomerIndex] = false;
   _calcHistoryVisible = true;
+  _historyFolded = false;
   _activeHistorySubTab = 'ledger';
   var targetIdx = _activeKhataCustomerIndex;
-  selectKhataCustomer(targetIdx);
+  selectKhataCustomer(targetIdx, true);
 
   setTimeout(function() {
     var card = document.getElementById('khata-cust-card-' + targetIdx);
@@ -9676,7 +9678,7 @@ function renderInlineLedgerHTML() {
     var c = _calcLedgerCustomers[i];
     var isSelected = (_activeKhataCustomerIndex === i);
     var isFolded = Boolean(_foldedCustomerMap[i]);
-    var balText = c.balance > 0 ? '🟢 Take ₹' + fmtNum(c.balance) : (c.balance < 0 ? '🔴 Give ₹' + fmtNum(Math.abs(c.balance)) : '⚪ Settled');
+    var balText = c.balance > 0 ? '🟢 Taken ₹' + fmtNum(c.balance) : (c.balance < 0 ? '🔴 Given ₹' + fmtNum(Math.abs(c.balance)) : '⚪ Settled');
     
     html += '<div id="khata-cust-card-' + i + '" style="background:' + (isSelected ? 'rgba(243,139,168,0.12)' : 'var(--bg-tertiary)') + ';border-radius:var(--radius-sm);border:1px solid ' + (isSelected ? 'var(--color-accent)' : 'var(--border-color)') + ';overflow:hidden;">';
     html += '<div onclick="selectKhataCustomer(' + i + ')" style="display:flex;align-items:center;justify-content:space-between;padding:0.55rem 0.7rem;font-size:0.85rem;cursor:pointer;">' +
@@ -9701,7 +9703,7 @@ function renderInlineLedgerHTML() {
       for (var t = 0; t < c.transactions.length; t++) {
         var tx = c.transactions[t];
         var isJama = (tx.type === 'jama');
-        var txLabel = isJama ? '🟢 Take (Payment)' : '🔴 Give (Credit)';
+        var txLabel = isJama ? '🟢 Taken' : '🔴 Given';
         var txColor = isJama ? '#10b981' : '#ef4444';
         var showNote = tx.note && tx.note.indexOf('via Main Calci') === -1 ? escHtml(tx.note) + ' • ' : '';
         
