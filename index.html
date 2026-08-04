@@ -1999,7 +1999,7 @@ body {
       </div>
       
       <div style="position:absolute;left:72%;top:50%;transform:translate(-50%,-50%);z-index:5;display:flex;align-items:center;justify-content:center;">
-        <button id="h-btn-history" class="settings-btn" onclick="toggleCalcHistory()" title="Calculation History" style="display:none;border:none;background:none;cursor:pointer;padding:0 2px;align-items:center;justify-content:center;transition:all 0.15s;opacity:0.9;color:var(--text-primary);"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:block;"><circle cx="12" cy="12" r="9"></circle><polyline points="12 7 12 12 15 15"></polyline></svg></button>
+        <button id="h-btn-history" class="settings-btn" onclick="toggleCalcHistory()" title="Calculation History" style="display:none;border:none;background:none;cursor:pointer;padding:6px 10px;align-items:center;justify-content:center;transition:all 0.15s;opacity:0.9;color:var(--text-primary);touch-action:manipulation;-webkit-tap-highlight-color:transparent;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:block;"><circle cx="12" cy="12" r="9"></circle><polyline points="12 7 12 12 15 15"></polyline></svg></button>
       </div>
 
       <div style="position:absolute;left:83%;top:50%;transform:translate(-50%,-50%);z-index:5;display:flex;align-items:center;justify-content:center;">
@@ -10011,6 +10011,9 @@ function goToDashboard() {
 
 function toggleCalcHistory() {
   _calcHistoryVisible = !_calcHistoryVisible;
+  if (_calcHistoryVisible) {
+    _historyFolded = false;
+  }
   var btn = document.getElementById('calc-history-btn');
   if (btn) btn.textContent = _calcHistoryVisible ? 'Hide History' : 'Show History';
   var hBtn = document.getElementById('h-btn-history');
