@@ -5709,7 +5709,33 @@ function renderCalcLabelEditor() {
   if (_editingCalcToken === -1) {
     if (_activeKhataCustomerIndex >= 0 && _calcLedgerCustomers && _calcLedgerCustomers[_activeKhataCustomerIndex]) {
       var c = _calcLedgerCustomers[_activeKhataCustomerIndex];
-      var balText = c.balance > 0 ? 'Owes You ₹' + fmtNum(c.balance) : (c.balance < 0 ? 'You Owe ₹' + fmtNum(Math.abs(c.balance)) : 'Settled ₹0');
+      var baseBal = c.balance;
+      var baseText = baseBal > 0 ? 'Owes You ₹' + fmtNum(baseBal) : (baseBal < 0 ? 'You Owe ₹' + fmtNum(Math.abs(baseBal)) : 'Settled ₹0');
+      var balText = baseText;
+
+      var exprStr = calcExprFromTokens();
+      var liveVal = 0;
+      if (exprStr && exprStr !== '0') {
+        try {
+          var ev = evalExpr(exprStr);
+          if (isFinite(ev)) liveVal = ev;
+        } catch(e) {}
+      }
+
+      if (liveVal !== 0) {
+        var lastOp = '+';
+        for (var k = 0; k < calcTokens.length; k++) {
+          if (calcTokens[k].v === '+') { lastOp = '+'; }
+          if (calcTokens[k].v === '-') { lastOp = '-'; }
+        }
+        var projBal = (lastOp === '-') ? (baseBal - Math.abs(liveVal)) : (baseBal + Math.abs(liveVal));
+        var projText = projBal > 0 ? '₹' + fmtNum(projBal) : (projBal < 0 ? 'You Owe ₹' + fmtNum(Math.abs(projBal)) : 'Settled ₹0');
+        if ((baseBal >= 0 && projBal < 0) || (baseBal < 0 && projBal >= 0)) {
+          projText = projBal > 0 ? 'Owes You ₹' + fmtNum(projBal) : (projBal < 0 ? 'You Owe ₹' + fmtNum(Math.abs(projBal)) : 'Settled ₹0');
+        }
+        balText = baseText + ' ➔ ' + projText;
+      }
+
       container.innerHTML = '<div style="display:flex;align-items:center;justify-content:space-between;width:100%;gap:6px;white-space:nowrap;overflow:hidden;padding:2px 0;">' +
         '<div onclick="selectKhataCustomer(' + _activeKhataCustomerIndex + ')" style="display:flex;align-items:center;gap:6px;min-width:0;overflow:hidden;cursor:pointer;" title="Tap to reload balance">' +
           '<span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:0.95rem;font-weight:700;">👤 ' + escHtml(c.name) + '</span>' +
@@ -10294,6 +10320,24 @@ function shareExpensesWA() {
 }
 
 function shareCalcExpression() {
+  if (_activeKhataCustomerIndex >= 0 && typeof _calcLedgerCustomers !== 'undefined' && _calcLedgerCustomers && _calcLedgerCustomers[_activeKhataCustomerIndex]) {
+    var cIdx = _activeKhataCustomerIndex;
+    var txAmt = 0;
+    var lastOp = '+';
+    for (var k = 0; k < calcTokens.length; k++) {
+      if (calcTokens[k].v === '+') { lastOp = '+'; }
+      if (calcTokens[k].v === '-') { lastOp = '-'; }
+      if (k > 0 && ['+','-','*','/','%'].indexOf(calcTokens[k-1].v) !== -1) {
+        txAmt = parseFloat((calcTokens[k].v || '').replace(/[^\d.]/g, '')) || 0;
+      }
+    }
+    if (txAmt > 0) {
+      var txType = (lastOp === '+') ? 'udhar' : 'jama';
+      recordKhataTransaction(txType, txAmt);
+    }
+    sendLedgerWASummary(cIdx);
+    return;
+  }
   if (_calcMode === 'splitter') {
     var txt = splitShareText();
     if (txt) doShare(txt, 'Trip Expenses Split');
