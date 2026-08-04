@@ -3891,19 +3891,13 @@ function updateKhataKeypadButtons() {
   if (!plusBtn || !minusBtn) return;
 
   if (_activeKhataCustomerIndex >= 0 && typeof _calcLedgerCustomers !== 'undefined' && _calcLedgerCustomers && _calcLedgerCustomers[_activeKhataCustomerIndex]) {
-    plusBtn.innerHTML = '+ Take';
+    plusBtn.innerHTML = '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.05;"><span style="font-size:1.35rem;font-weight:800;color:#10b981;">+</span><span style="font-size:0.72rem;font-weight:800;color:#10b981;letter-spacing:0.4px;">Take</span></div>';
     plusBtn.style.border = '1px solid var(--border-color)';
-    plusBtn.style.color = '#10b981';
     plusBtn.style.background = 'var(--bg-tertiary)';
-    plusBtn.style.fontWeight = '700';
-    plusBtn.style.fontSize = '1rem';
 
-    minusBtn.innerHTML = '- Give';
+    minusBtn.innerHTML = '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.05;"><span style="font-size:1.35rem;font-weight:800;color:#ef4444;">-</span><span style="font-size:0.72rem;font-weight:800;color:#ef4444;letter-spacing:0.4px;">Give</span></div>';
     minusBtn.style.border = '1px solid var(--border-color)';
-    minusBtn.style.color = '#ef4444';
     minusBtn.style.background = 'var(--bg-tertiary)';
-    minusBtn.style.fontWeight = '700';
-    minusBtn.style.fontSize = '1rem';
   } else {
     plusBtn.innerHTML = '+';
     plusBtn.style.border = '1px solid var(--border-color)';
@@ -5646,12 +5640,12 @@ function renderCalcLabelEditor() {
     if (_activeKhataCustomerIndex >= 0 && _calcLedgerCustomers && _calcLedgerCustomers[_activeKhataCustomerIndex]) {
       var c = _calcLedgerCustomers[_activeKhataCustomerIndex];
       var balText = c.balance > 0 ? 'Take: ₹' + fmtNum(c.balance) : (c.balance < 0 ? 'Give: ₹' + fmtNum(Math.abs(c.balance)) : 'Settled: ₹0');
-      container.innerHTML = '<div style="display:flex;align-items:center;justify-content:space-between;width:100%;gap:4px;white-space:nowrap;overflow:hidden;padding:2px 0;">' +
-        '<div style="display:flex;align-items:center;gap:4px;min-width:0;overflow:hidden;">' +
-          '<span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:0.82rem;">👤 <strong>' + escHtml(c.name) + '</strong></span>' +
-          '<span style="font-size:0.72rem;font-weight:700;color:var(--color-accent);background:rgba(243,139,168,0.15);padding:1px 5px;border-radius:4px;white-space:nowrap;">' + balText + '</span>' +
+      container.innerHTML = '<div style="display:flex;align-items:center;justify-content:space-between;width:100%;gap:6px;white-space:nowrap;overflow:hidden;padding:2px 0;">' +
+        '<div style="display:flex;align-items:center;gap:6px;min-width:0;overflow:hidden;">' +
+          '<span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:0.95rem;font-weight:700;">👤 ' + escHtml(c.name) + '</span>' +
+          '<span style="font-size:0.8rem;font-weight:800;color:var(--color-accent);background:rgba(243,139,168,0.18);padding:2px 7px;border-radius:6px;white-space:nowrap;">' + balText + '</span>' +
         '</div>' +
-        '<button onclick="clearActiveKhataCustomer()" style="background:none;border:none;color:var(--text-muted);font-weight:800;cursor:pointer;font-size:0.85rem;padding:0 2px;flex-shrink:0;">✕ Exit</button>' +
+        '<button onclick="clearActiveKhataCustomer()" style="background:none;border:none;color:var(--text-muted);font-weight:800;cursor:pointer;font-size:0.9rem;padding:0 4px;flex-shrink:0;">✕ Exit</button>' +
       '</div>';
       return;
     }
