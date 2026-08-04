@@ -9592,13 +9592,13 @@ function submitActiveKhata(type) {
   var c = _calcLedgerCustomers[_activeKhataCustomerIndex];
   
   var tokens = calcTokens || [];
-  var opChar = (type === 'jama') ? '-' : '+';
+  var opChar = (type === 'udhar') ? '+' : '-';
 
   if (tokens.length <= 1) {
     var curVal = tokens.length === 1 ? tokens[0].v : String(c.balance || 0);
     calcTokens = [{v: curVal, label: ''}, {v: opChar, label: ''}];
     calcUpdateDisplay();
-    if (typeof showToast === 'function') showToast((type === 'jama' ? '🔴 Taken (-)' : '🟢 Given (+)') + ' selected. Type amount!');
+    if (typeof showToast === 'function') showToast((type === 'udhar' ? '🔴 Give (+)' : '🟢 Take (-)') + ' selected. Type amount!');
     return;
   }
 
@@ -9607,7 +9607,7 @@ function submitActiveKhata(type) {
     tokens[tokens.length - 1] = {v: opChar, label: ''};
     calcTokens = tokens;
     calcUpdateDisplay();
-    if (typeof showToast === 'function') showToast((type === 'jama' ? '🔴 Taken (-)' : '🟢 Given (+)') + ' selected. Type amount!');
+    if (typeof showToast === 'function') showToast((type === 'udhar' ? '🔴 Give (+)' : '🟢 Take (-)') + ' selected. Type amount!');
     return;
   }
 
@@ -9619,8 +9619,8 @@ function submitActiveKhata(type) {
 
   var finalType = type;
   for (var i = tokens.length - 2; i >= 0; i--) {
-    if (tokens[i].v === '-') { finalType = 'jama'; break; }
     if (tokens[i].v === '+') { finalType = 'udhar'; break; }
+    if (tokens[i].v === '-') { finalType = 'jama'; break; }
   }
 
   recordKhataTransaction(finalType, amount);
@@ -9639,14 +9639,14 @@ function recordKhataTransaction(type, amount) {
   
   if (!Array.isArray(c.transactions)) c.transactions = [];
   
-  if (type === 'jama') {
-    c.balance -= amount;
-    c.transactions.unshift({ date: new Date().toLocaleString(), type: 'jama', amount: amount, note: '' });
-    if (typeof showToast === 'function') showToast('🔴 Recorded Taken -₹' + fmtNum(amount) + ' for ' + c.name);
-  } else {
+  if (type === 'udhar') {
     c.balance += amount;
     c.transactions.unshift({ date: new Date().toLocaleString(), type: 'udhar', amount: amount, note: '' });
-    if (typeof showToast === 'function') showToast('🟢 Recorded Given +₹' + fmtNum(amount) + ' for ' + c.name);
+    if (typeof showToast === 'function') showToast('🔴 Recorded Give +₹' + fmtNum(amount) + ' for ' + c.name);
+  } else {
+    c.balance -= amount;
+    c.transactions.unshift({ date: new Date().toLocaleString(), type: 'jama', amount: amount, note: '' });
+    if (typeof showToast === 'function') showToast('🟢 Recorded Take -₹' + fmtNum(amount) + ' for ' + c.name);
   }
 
   localStorage.setItem('calc_ledger_customers', JSON.stringify(_calcLedgerCustomers));
@@ -9679,7 +9679,7 @@ function renderInlineLedgerHTML() {
     var c = _calcLedgerCustomers[i];
     var isSelected = (_activeKhataCustomerIndex === i);
     var isFolded = Boolean(_foldedCustomerMap[i]);
-    var balText = c.balance > 0 ? '🟢 Given +₹' + fmtNum(c.balance) : (c.balance < 0 ? '🔴 Taken -₹' + fmtNum(Math.abs(c.balance)) : '⚪ ₹0');
+    var balText = c.balance > 0 ? '🔴 Given +₹' + fmtNum(c.balance) : (c.balance < 0 ? '🟢 Taken -₹' + fmtNum(Math.abs(c.balance)) : '⚪ ₹0');
     
     html += '<div id="khata-cust-card-' + i + '" style="background:' + (isSelected ? 'rgba(243,139,168,0.12)' : 'var(--bg-tertiary)') + ';border-radius:var(--radius-sm);border:1px solid ' + (isSelected ? 'var(--color-accent)' : 'var(--border-color)') + ';overflow:hidden;">';
     html += '<div onclick="selectKhataCustomer(' + i + ')" style="display:flex;align-items:center;justify-content:space-between;padding:0.55rem 0.7rem;font-size:0.85rem;cursor:pointer;">' +
@@ -9703,9 +9703,9 @@ function renderInlineLedgerHTML() {
       
       for (var t = 0; t < c.transactions.length; t++) {
         var tx = c.transactions[t];
-        var isJama = (tx.type === 'jama');
-        var txLabel = isJama ? '🔴 Taken -₹' + fmtNum(tx.amount) : '🟢 Given +₹' + fmtNum(tx.amount);
-        var txColor = isJama ? '#ef4444' : '#10b981';
+        var isUdhar = (tx.type === 'udhar');
+        var txLabel = isUdhar ? '🔴 Give +₹' + fmtNum(tx.amount) : '🟢 Take -₹' + fmtNum(tx.amount);
+        var txColor = isUdhar ? '#ef4444' : '#10b981';
         var txColor = isJama ? '#ef4444' : '#10b981';
         var txColor = isJama ? '#10b981' : '#ef4444';
         var txColor = isJama ? '#10b981' : '#ef4444';
