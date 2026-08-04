@@ -9592,22 +9592,29 @@ function submitActiveKhata(type) {
   if (_activeKhataCustomerIndex < 0 || !_calcLedgerCustomers[_activeKhataCustomerIndex]) return;
   var c = _calcLedgerCustomers[_activeKhataCustomerIndex];
   
-  var exprStr = (calcExprFromTokens() || '').trim();
   var tokens = calcTokens || [];
+  var opChar = (type === 'jama') ? '+' : '-';
 
   if (tokens.length <= 1) {
-    var opChar = (type === 'jama') ? '+' : '-';
     var curVal = tokens.length === 1 ? tokens[0].v : String(c.balance || 0);
     calcTokens = [{v: curVal, label: ''}, {v: opChar, label: ''}];
     calcUpdateDisplay();
-    if (typeof showToast === 'function') showToast((type === 'jama' ? '🟢 Take (+)' : '🔴 Give (-)') + ' selected. Type amount!');
+    if (typeof showToast === 'function') showToast((type === 'jama' ? '🟢 Take (+)' : '🔴 Give (-)') + ' selected. Enter amount!');
     return;
   }
 
   var lastToken = tokens[tokens.length - 1];
+  if (['+', '-', '×', '÷', '*', '/'].indexOf(lastToken.v) !== -1) {
+    tokens[tokens.length - 1] = {v: opChar, label: ''};
+    calcTokens = tokens;
+    calcUpdateDisplay();
+    if (typeof showToast === 'function') showToast((type === 'jama' ? '🟢 Take (+)' : '🔴 Give (-)') + ' selected. Enter amount!');
+    return;
+  }
+
   var amount = parseFloat((lastToken.v || '').replace(/[^\d.]/g, '')) || 0;
   if (!amount || amount <= 0) {
-    if (typeof showToast === 'function') showToast('⚠️ Type amount on keypad first (e.g. 500)');
+    if (typeof showToast === 'function') showToast('⚠️ Enter amount on keypad (e.g. 500)');
     return;
   }
 
