@@ -9804,7 +9804,7 @@ function renderInlineLedgerHTML() {
       for (var t = 0; t < c.transactions.length; t++) {
         var tx = c.transactions[t];
         var isJama = (tx.type === 'jama');
-        var txLabel = isJama ? '🟢 Taken -₹' + fmtNum(tx.amount) : '🔴 Given +₹' + fmtNum(tx.amount);
+        var txLabel = isJama ? '🟢 Received +₹' + fmtNum(tx.amount) : '🔴 Given +₹' + fmtNum(tx.amount);
         var txColor = isJama ? '#10b981' : '#ef4444';
         var showNote = tx.note && tx.note.indexOf('via Main Calci') === -1 ? escHtml(tx.note) + ' • ' : '';
         
