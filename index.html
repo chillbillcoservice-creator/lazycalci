@@ -9547,7 +9547,7 @@ function updateCalcHistoryVisibility() {
 }
 
 var _activeHistorySubTab = 'history';
-var _historyFolded = false;
+var _historyFolded = true;
 var _calcLedgerCustomers = [];
 try {
   _calcLedgerCustomers = JSON.parse(localStorage.getItem('calc_ledger_customers')) || [];
@@ -9569,6 +9569,16 @@ function scrollToCalcHistory() {
     var modalBody = h.closest('.modal-body') || h.parentElement;
     if (modalBody && typeof modalBody.scrollTo === 'function') {
       modalBody.scrollTo({ top: h.offsetTop - 10, behavior: 'smooth' });
+    }
+  }, 60);
+}
+
+function scrollToTopCalculator() {
+  setTimeout(function() {
+    var modalCalc = document.getElementById('modal-calculator');
+    var modalBody = modalCalc ? modalCalc.querySelector('.modal-body') : null;
+    if (modalBody && typeof modalBody.scrollTo === 'function') {
+      modalBody.scrollTo({ top: 0, behavior: 'smooth' });
     }
   }, 60);
 }
@@ -9603,9 +9613,7 @@ function selectKhataCustomer(idx, keepUnfolded) {
   _calcHistoryVisible = true;
   _historyFolded = Boolean(!keepUnfolded);
   renderCalcHistory();
-  if (_calcHistoryVisible && !_historyFolded) {
-    scrollToCalcHistory();
-  }
+  scrollToTopCalculator();
   var bTxt = c.balance > 0 ? 'Given +₹' + fmtNum(c.balance) : (c.balance < 0 ? 'Taken -₹' + fmtNum(Math.abs(c.balance)) : '₹0');
   if (typeof showToast === 'function') showToast('👤 Selected ' + c.name + ' (Bal: ' + bTxt + ')');
 }
