@@ -8860,8 +8860,7 @@ function renderStaffMode(container) {
       var hStyle = todayStatus === 'H' ? 'padding:3px 9px;border-radius:6px;background:#eab308;color:#000;border:2px solid #fff;font-weight:900;font-size:0.75rem;cursor:pointer;box-shadow:0 0 8px #eab308;' : 'padding:3px 8px;border-radius:6px;background:#eab308;color:#000;border:none;font-weight:800;font-size:0.72rem;cursor:pointer;opacity:0.65;';
       var aStyle = todayStatus === 'A' ? 'padding:3px 9px;border-radius:6px;background:#ef4444;color:#fff;border:2px solid #fff;font-weight:900;font-size:0.75rem;cursor:pointer;box-shadow:0 0 8px #ef4444;' : 'padding:3px 8px;border-radius:6px;background:#ef4444;color:#fff;border:none;font-weight:800;font-size:0.72rem;cursor:pointer;opacity:0.65;';
 
-      var phoneClean = emp.phone ? emp.phone.replace(/[^0-9]/g, '') : '';
-      var waUrl = 'https://wa.me/91' + phoneClean;
+      var waUrl = 'https://wa.me/' + formatIndianPhoneForWA(emp.phone);
 
       html += '<div onclick="openStaffEditModal(' + emp.id + ')" style="padding:0.9rem 1rem;background:var(--bg-tertiary);border:1px solid var(--border-color);border-radius:16px;cursor:pointer;touch-action:manipulation;transition:all 0.15s;position:relative;box-shadow:0 4px 14px rgba(0,0,0,0.25);">' +
                 '<div style="display:flex;align-items:center;gap:0.75rem;">' +
@@ -9062,8 +9061,7 @@ function sendStaffWhatsappSlip() {
              '🔻 *Advance Deducted:* ₹' + fmtNum(emp.advance || 0) + '\n' +
              '✅ *Net Payable Salary:* ₹' + fmtNum(netPay) + '\n\n' +
              'Thank you for your hard work! 🙏';
-  var phoneClean = emp.phone ? emp.phone.replace(/[^0-9]/g, '') : '';
-  var url = 'https://wa.me/91' + phoneClean + '?text=' + encodeURIComponent(text);
+  var url = 'https://wa.me/' + formatIndianPhoneForWA(emp.phone) + '?text=' + encodeURIComponent(text);
   window.open(url, '_blank');
 }
 
@@ -9978,12 +9976,29 @@ function saveNewKhataContact() {
   if (typeof showToast === 'function') showToast('✅ Contact ' + name + ' added to Khata!');
 }
 
+function formatIndianPhoneForWA(phone) {
+  if (!phone) return '';
+  var digits = String(phone).replace(/\D/g, '');
+  if (!digits) return '';
+  while (digits.length > 10 && digits.charAt(0) === '0') {
+    digits = digits.substring(1);
+  }
+  while (digits.length > 10 && digits.substring(0, 2) === '91') {
+    digits = digits.substring(2);
+  }
+  if (digits.length === 10) {
+    return '91' + digits;
+  }
+  return digits.startsWith('91') ? digits : '91' + digits;
+}
+
 function sendLedgerWASummary(idx) {
   if (!_calcLedgerCustomers || !_calcLedgerCustomers[idx]) return;
   var c = _calcLedgerCustomers[idx];
   var balVal = c.balance > 0 ? '₹' + fmtNum(c.balance) : (c.balance < 0 ? '-₹' + fmtNum(Math.abs(c.balance)) : '₹0');
   var text = 'Namaste ' + c.name + ' ji, pending balance: ' + balVal;
-  var url = 'https://wa.me/' + (c.phone ? '91' + c.phone.replace(/\D/g,'') : '') + '?text=' + encodeURIComponent(text);
+  var waPhone = formatIndianPhoneForWA(c.phone);
+  var url = 'https://wa.me/' + waPhone + '?text=' + encodeURIComponent(text);
   window.open(url, '_blank');
 }
 
