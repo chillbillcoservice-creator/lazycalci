@@ -2120,6 +2120,8 @@ function toggleVibeSetting(v) {
   localStorage.setItem('calc_vibe_enabled', v);
 }
 
+var _activeKhataCustomerIndex = -1;
+
 function toggleSoundSetting(v) {
   _soundEnabled = v;
   localStorage.setItem('calc_sound_enabled', v);
@@ -9496,8 +9498,6 @@ function switchHistoryTab(tab) {
   renderCalcHistory();
 }
 
-var _activeKhataCustomerIndex = -1;
-
 function selectKhataCustomer(idx) {
   if (!_calcLedgerCustomers || !_calcLedgerCustomers[idx]) return;
   _activeKhataCustomerIndex = idx;
@@ -9506,20 +9506,40 @@ function selectKhataCustomer(idx) {
   var banner = document.getElementById('active-khata-banner');
   if (banner) {
     var balText = c.balance > 0 ? 'Udhar: ₹' + fmtNum(c.balance) : (c.balance < 0 ? 'Jama: ₹' + fmtNum(Math.abs(c.balance)) : 'Bal: ₹0');
-    banner.innerHTML = '<div style="display:flex;align-items:center;gap:6px;min-width:0;">' +
-      '<span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">👤 <strong>' + escHtml(c.name) + '</strong></span>' +
-      '<span style="font-size:0.75rem;font-weight:700;color:var(--color-accent);background:rgba(243,139,168,0.15);padding:2px 6px;border-radius:4px;white-space:nowrap;">' + balText + '</span>' +
-    '</div>' +
-    '<div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">' +
-      '<span style="font-size:0.70rem;color:var(--text-muted);white-space:nowrap;">Type amt & tap + / -</span>' +
-      '<button onclick="clearActiveKhataCustomer()" style="background:none;border:none;color:var(--text-muted);font-weight:800;cursor:pointer;font-size:0.9rem;padding:0 2px;">✕ Exit</button>' +
+    banner.innerHTML = '<div style="display:flex;align-items:center;justify-content:space-between;width:100%;gap:4px;flex-wrap:wrap;">' +
+      '<div style="display:flex;align-items:center;gap:6px;min-width:0;">' +
+        '<span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">👤 <strong>' + escHtml(c.name) + '</strong></span>' +
+        '<span style="font-size:0.75rem;font-weight:700;color:var(--color-accent);background:rgba(243,139,168,0.15);padding:2px 6px;border-radius:4px;white-space:nowrap;">' + balText + '</span>' +
+      '</div>' +
+      '<div style="display:flex;align-items:center;gap:4px;flex-shrink:0;">' +
+        '<button onclick="submitActiveKhata(\'jama\')" style="background:#10b981;color:#fff;border:none;padding:4px 8px;border-radius:6px;font-size:0.78rem;font-weight:700;cursor:pointer;white-space:nowrap;">🟢 + Jama</button>' +
+        '<button onclick="submitActiveKhata(\'udhar\')" style="background:#ef4444;color:#fff;border:none;padding:4px 8px;border-radius:6px;font-size:0.78rem;font-weight:700;cursor:pointer;white-space:nowrap;">🔴 - Udhar</button>' +
+        '<button onclick="clearActiveKhataCustomer()" style="background:none;border:none;color:var(--text-muted);font-weight:800;cursor:pointer;font-size:0.85rem;padding:0 2px;">✕ Exit</button>' +
+      '</div>' +
     '</div>';
     banner.style.display = 'flex';
   }
 
+  calcTokens = [{v: '0', label: ''}];
+  _calcShowExpr = true;
+  calcUpdateDisplay();
+
   _historyFolded = true;
   renderCalcHistory();
   if (typeof showToast === 'function') showToast('👤 Selected ' + c.name + ' for Khata entry');
+}
+
+function submitActiveKhata(type) {
+  var exprStr = calcExprFromTokens();
+  var amount = 0;
+  try { amount = evalExpr(exprStr); } catch(e) { amount = parseFloat(exprStr) || 0; }
+  if (!amount || amount <= 0) {
+    if (typeof showToast === 'function') showToast('⚠️ Type amount on keypad first (e.g. 500)');
+    return;
+  }
+  recordKhataTransaction(type, amount);
+  calcTokens = [{v: '0', label: ''}];
+  calcUpdateDisplay();
 }
 
 function clearActiveKhataCustomer() {
