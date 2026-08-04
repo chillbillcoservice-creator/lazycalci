@@ -9648,7 +9648,18 @@ function recordKhataTransaction(type, amount) {
   }
 
   localStorage.setItem('calc_ledger_customers', JSON.stringify(_calcLedgerCustomers));
-  selectKhataCustomer(_activeKhataCustomerIndex);
+  _foldedCustomerMap[_activeKhataCustomerIndex] = false;
+  _calcHistoryVisible = true;
+  _activeHistorySubTab = 'ledger';
+  var targetIdx = _activeKhataCustomerIndex;
+  selectKhataCustomer(targetIdx);
+
+  setTimeout(function() {
+    var card = document.getElementById('khata-cust-card-' + targetIdx);
+    if (card) {
+      card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  }, 80);
 }
 
 var _foldedCustomerMap = {};
@@ -9667,7 +9678,7 @@ function renderInlineLedgerHTML() {
     var isFolded = Boolean(_foldedCustomerMap[i]);
     var balText = c.balance > 0 ? '🟢 Take ₹' + fmtNum(c.balance) : (c.balance < 0 ? '🔴 Give ₹' + fmtNum(Math.abs(c.balance)) : '⚪ Settled');
     
-    html += '<div style="background:' + (isSelected ? 'rgba(243,139,168,0.12)' : 'var(--bg-tertiary)') + ';border-radius:var(--radius-sm);border:1px solid ' + (isSelected ? 'var(--color-accent)' : 'var(--border-color)') + ';overflow:hidden;">';
+    html += '<div id="khata-cust-card-' + i + '" style="background:' + (isSelected ? 'rgba(243,139,168,0.12)' : 'var(--bg-tertiary)') + ';border-radius:var(--radius-sm);border:1px solid ' + (isSelected ? 'var(--color-accent)' : 'var(--border-color)') + ';overflow:hidden;">';
     html += '<div onclick="selectKhataCustomer(' + i + ')" style="display:flex;align-items:center;justify-content:space-between;padding:0.55rem 0.7rem;font-size:0.85rem;cursor:pointer;">' +
       '<div style="display:flex;align-items:center;gap:6px;min-width:0;overflow:hidden;">' +
         '<strong style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + escHtml(c.name) + '</strong>' +
