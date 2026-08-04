@@ -9598,7 +9598,7 @@ function submitActiveKhata(type) {
     var curVal = tokens.length === 1 ? tokens[0].v : String(c.balance || 0);
     calcTokens = [{v: curVal, label: ''}, {v: opChar, label: ''}];
     calcUpdateDisplay();
-    if (typeof showToast === 'function') showToast((type === 'jama' ? '🟢 Take (-)' : '🔴 Give (+)') + ' selected. Type amount!');
+    if (typeof showToast === 'function') showToast((type === 'jama' ? '🔴 Take (-)' : '🟢 Give (+)') + ' selected. Type amount!');
     return;
   }
 
@@ -9607,7 +9607,7 @@ function submitActiveKhata(type) {
     tokens[tokens.length - 1] = {v: opChar, label: ''};
     calcTokens = tokens;
     calcUpdateDisplay();
-    if (typeof showToast === 'function') showToast((type === 'jama' ? '🟢 Take (-)' : '🔴 Give (+)') + ' selected. Type amount!');
+    if (typeof showToast === 'function') showToast((type === 'jama' ? '🔴 Take (-)' : '🟢 Give (+)') + ' selected. Type amount!');
     return;
   }
 
@@ -9642,11 +9642,11 @@ function recordKhataTransaction(type, amount) {
   if (type === 'jama') {
     c.balance -= amount;
     c.transactions.unshift({ date: new Date().toLocaleString(), type: 'jama', amount: amount, note: '' });
-    if (typeof showToast === 'function') showToast('🟢 Recorded Take -₹' + fmtNum(amount) + ' for ' + c.name);
+    if (typeof showToast === 'function') showToast('🔴 Recorded Take -₹' + fmtNum(amount) + ' for ' + c.name);
   } else {
     c.balance += amount;
     c.transactions.unshift({ date: new Date().toLocaleString(), type: 'udhar', amount: amount, note: '' });
-    if (typeof showToast === 'function') showToast('🔴 Recorded Give +₹' + fmtNum(amount) + ' for ' + c.name);
+    if (typeof showToast === 'function') showToast('🟢 Recorded Give +₹' + fmtNum(amount) + ' for ' + c.name);
   }
 
   localStorage.setItem('calc_ledger_customers', JSON.stringify(_calcLedgerCustomers));
@@ -9704,8 +9704,8 @@ function renderInlineLedgerHTML() {
       for (var t = 0; t < c.transactions.length; t++) {
         var tx = c.transactions[t];
         var isJama = (tx.type === 'jama');
-        var txLabel = isJama ? '🟢 Take -₹' + fmtNum(tx.amount) : '🔴 Give +₹' + fmtNum(tx.amount);
-        var txColor = isJama ? '#10b981' : '#ef4444';
+        var txLabel = isJama ? '🔴 Take -₹' + fmtNum(tx.amount) : '🟢 Give +₹' + fmtNum(tx.amount);
+        var txColor = isJama ? '#ef4444' : '#10b981';
         var txColor = isJama ? '#10b981' : '#ef4444';
         var txColor = isJama ? '#10b981' : '#ef4444';
         var showNote = tx.note && tx.note.indexOf('via Main Calci') === -1 ? escHtml(tx.note) + ' • ' : '';
