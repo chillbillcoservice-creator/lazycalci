@@ -3904,11 +3904,11 @@ function updateKhataKeypadButtons() {
   if (!plusBtn || !minusBtn) return;
 
   if (_activeKhataCustomerIndex >= 0 && typeof _calcLedgerCustomers !== 'undefined' && _calcLedgerCustomers && _calcLedgerCustomers[_activeKhataCustomerIndex]) {
-    plusBtn.innerHTML = '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.05;"><span style="font-size:1.35rem;font-weight:800;color:#10b981;">+</span><span style="font-size:0.72rem;font-weight:800;color:#10b981;letter-spacing:0.4px;">Take</span></div>';
+    plusBtn.innerHTML = '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.05;"><span style="font-size:1.35rem;font-weight:800;color:#10b981;">+</span><span style="font-size:0.85rem;font-weight:800;color:#10b981;letter-spacing:0.4px;">Take</span></div>';
     plusBtn.style.border = '1px solid var(--border-color)';
     plusBtn.style.background = 'var(--bg-tertiary)';
 
-    minusBtn.innerHTML = '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.05;"><span style="font-size:1.35rem;font-weight:800;color:#ef4444;">-</span><span style="font-size:0.72rem;font-weight:800;color:#ef4444;letter-spacing:0.4px;">Give</span></div>';
+    minusBtn.innerHTML = '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.05;"><span style="font-size:1.35rem;font-weight:800;color:#ef4444;">-</span><span style="font-size:0.85rem;font-weight:800;color:#ef4444;letter-spacing:0.4px;">Give</span></div>';
     minusBtn.style.border = '1px solid var(--border-color)';
     minusBtn.style.background = 'var(--bg-tertiary)';
   } else {
@@ -9561,7 +9561,8 @@ function selectKhataCustomer(idx) {
   _activeKhataCustomerIndex = idx;
   var c = _calcLedgerCustomers[idx];
 
-  calcTokens = [{v: '0', label: ''}];
+  var initVal = String(Math.abs(c.balance) || 0);
+  calcTokens = [{v: initVal, label: ''}];
   _calcShowExpr = true;
   calcUpdateDisplay();
 
