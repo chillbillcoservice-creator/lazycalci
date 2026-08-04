@@ -850,20 +850,15 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: 0.1rem 0.5rem 0.25rem 0.5rem !important;
-  }
-  #modal-calculator.history-open .modal-body {
     overflow-y: auto !important;
     -webkit-overflow-scrolling: touch !important;
+    padding: 0.1rem 0.6rem 0.5rem 0.6rem !important;
   }
-  #modal-calculator:not(.history-open) .modal-body {
-    overflow-y: hidden !important;
-  }
-  #calc-buttons button { min-height: 46px !important; font-size: 1.35rem !important; padding: 0.3rem 0 !important; }
-  #calc-buttons { gap: 0.35rem !important; margin-top: 0.35rem !important; }
-  #calc-expression { min-height: 1.8rem !important; margin-top: 0.2rem !important; font-size: 1.25rem !important; }
-  #calc-display { min-height: 2.7rem !important; padding: 0.3rem 0.7rem !important; font-size: 1.6rem !important; }
-  #calc-history { max-height: 240px !important; overflow-y: auto !important; -webkit-overflow-scrolling: touch !important; padding-right: 2px; }
+  #calc-buttons button { min-height: 52px !important; font-size: 1.4rem !important; padding: 0.4rem 0 !important; }
+  #calc-buttons { gap: 0.45rem !important; margin-top: 0.45rem !important; }
+  #calc-expression { min-height: 2.4rem !important; margin-top: 0.3rem !important; font-size: 1.4rem !important; }
+  #calc-display { min-height: 3rem !important; padding: 0.4rem 0.8rem !important; font-size: 1.7rem !important; }
+  #calc-history { max-height: none !important; overflow-y: visible !important; }
 }
 @media (max-width:420px) { .mode-heading-btn { font-size:0.92rem; } }
 .modal-header-left { position:relative; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
