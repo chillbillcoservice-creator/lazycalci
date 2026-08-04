@@ -5709,7 +5709,28 @@ function renderCalcLabelEditor() {
   if (_editingCalcToken === -1) {
     if (_activeKhataCustomerIndex >= 0 && _calcLedgerCustomers && _calcLedgerCustomers[_activeKhataCustomerIndex]) {
       var c = _calcLedgerCustomers[_activeKhataCustomerIndex];
-      var balText = c.balance > 0 ? 'Owes You ₹' + fmtNum(c.balance) : (c.balance < 0 ? 'You Owe ₹' + fmtNum(Math.abs(c.balance)) : 'Settled ₹0');
+      var baseBal = c.balance;
+
+      var exprStr = calcExprFromTokens();
+      var liveVal = 0;
+      if (exprStr && exprStr !== '0') {
+        try {
+          var ev = evalExpr(exprStr);
+          if (isFinite(ev)) liveVal = ev;
+        } catch(e) {}
+      }
+
+      var effectiveBal = baseBal;
+      if (liveVal !== 0) {
+        var lastOp = '+';
+        for (var k = 0; k < calcTokens.length; k++) {
+          if (calcTokens[k].v === '+') { lastOp = '+'; }
+          if (calcTokens[k].v === '-') { lastOp = '-'; }
+        }
+        effectiveBal = (lastOp === '-') ? (baseBal - Math.abs(liveVal)) : (baseBal + Math.abs(liveVal));
+      }
+
+      var balText = effectiveBal > 0 ? 'Owes You ₹' + fmtNum(effectiveBal) : (effectiveBal < 0 ? 'You Owe ₹' + fmtNum(Math.abs(effectiveBal)) : 'Settled ₹0');
 
       container.innerHTML = '<div style="display:flex;align-items:center;justify-content:space-between;width:100%;gap:6px;white-space:nowrap;overflow:hidden;padding:2px 0;">' +
         '<div onclick="selectKhataCustomer(' + _activeKhataCustomerIndex + ')" style="display:flex;align-items:center;gap:6px;min-width:0;overflow:hidden;cursor:pointer;" title="Tap to reload balance">' +
