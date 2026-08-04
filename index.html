@@ -3882,6 +3882,43 @@ function renderCalcButtons() {
     }
     return '<button onpointerdown="triggerKeyFeedback(this);calcBtn(\'' + label.replace(/'/g, "\\'") + '\')" onpointerup="releaseKeyFeedback(this)" onpointercancel="releaseKeyFeedback(this)" onpointerleave="releaseKeyFeedback(this)" style="padding:1.2rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:' + bg + ';color:' + color + ';font-size:1.3rem;font-weight:600;cursor:pointer;">' + label + '</button>';
   }).join('');
+  updateKhataKeypadButtons();
+}
+
+function updateKhataKeypadButtons() {
+  var plusBtn = document.getElementById('sticky-btn-plus');
+  var minusBtn = document.getElementById('sticky-btn-minus');
+  if (!plusBtn || !minusBtn) return;
+
+  if (_activeKhataCustomerIndex >= 0 && typeof _calcLedgerCustomers !== 'undefined' && _calcLedgerCustomers && _calcLedgerCustomers[_activeKhataCustomerIndex]) {
+    plusBtn.innerHTML = '🟢+Take';
+    plusBtn.style.border = '2px solid #10b981';
+    plusBtn.style.color = '#10b981';
+    plusBtn.style.background = 'rgba(16,185,129,0.18)';
+    plusBtn.style.fontWeight = '800';
+    plusBtn.style.fontSize = '0.95rem';
+
+    minusBtn.innerHTML = '🔴-Give';
+    minusBtn.style.border = '2px solid #ef4444';
+    minusBtn.style.color = '#ef4444';
+    minusBtn.style.background = 'rgba(239,68,68,0.18)';
+    minusBtn.style.fontWeight = '800';
+    minusBtn.style.fontSize = '0.95rem';
+  } else {
+    plusBtn.innerHTML = '+';
+    plusBtn.style.border = '1px solid var(--border-color)';
+    plusBtn.style.color = 'var(--text-primary)';
+    plusBtn.style.background = 'var(--bg-tertiary)';
+    plusBtn.style.fontWeight = '600';
+    plusBtn.style.fontSize = '1.3rem';
+
+    minusBtn.innerHTML = '-';
+    minusBtn.style.border = '1px solid var(--border-color)';
+    minusBtn.style.color = 'var(--text-primary)';
+    minusBtn.style.background = 'var(--bg-tertiary)';
+    minusBtn.style.fontWeight = '600';
+    minusBtn.style.fontSize = '1.3rem';
+  }
 }
 
 var _quickBillingItems = (function() {
@@ -5501,6 +5538,7 @@ function calcUpdateDisplay(skipEditor) {
   }
 
   if (!skipEditor) renderCalcLabelEditor();
+  updateKhataKeypadButtons();
 }
 
 function updateOutputWords(num) {
@@ -5613,10 +5651,9 @@ function renderCalcLabelEditor() {
           '<span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:0.82rem;">👤 <strong>' + escHtml(c.name) + '</strong></span>' +
           '<span style="font-size:0.72rem;font-weight:700;color:var(--color-accent);background:rgba(243,139,168,0.15);padding:1px 5px;border-radius:4px;white-space:nowrap;">' + balText + '</span>' +
         '</div>' +
-        '<div style="display:flex;align-items:center;gap:3px;flex-shrink:0;">' +
-          '<button onclick="submitActiveKhata(\'jama\')" style="background:#10b981;color:#fff;border:none;padding:3px 7px;border-radius:5px;font-size:0.75rem;font-weight:700;cursor:pointer;white-space:nowrap;">🟢 + Take</button>' +
-          '<button onclick="submitActiveKhata(\'udhar\')" style="background:#ef4444;color:#fff;border:none;padding:3px 7px;border-radius:5px;font-size:0.75rem;font-weight:700;cursor:pointer;white-space:nowrap;">🔴 - Give</button>' +
-          '<button onclick="clearActiveKhataCustomer()" style="background:none;border:none;color:var(--text-muted);font-weight:800;cursor:pointer;font-size:0.85rem;padding:0 2px;">✕</button>' +
+        '<div style="font-size:0.74rem;color:var(--text-muted);font-weight:600;display:flex;align-items:center;gap:6px;flex-shrink:0;">' +
+          '<span>👇 Tap 🟢+Take / 🔴-Give below</span>' +
+          '<button onclick="clearActiveKhataCustomer()" style="background:none;border:none;color:var(--text-muted);font-weight:800;cursor:pointer;font-size:0.85rem;padding:0 2px;">✕ Exit</button>' +
         '</div>' +
       '</div>';
       return;
