@@ -9811,6 +9811,25 @@ function toggleCustomerFold(idx, event) {
   renderCalcHistory();
 }
 
+function deleteKhataCustomer(idx, event) {
+  if (event) event.stopPropagation();
+  if (!_calcLedgerCustomers || !_calcLedgerCustomers[idx]) return;
+  var c = _calcLedgerCustomers[idx];
+  if (!confirm('Are you sure you want to delete customer "' + c.name + '" from Khata?')) return;
+  _calcLedgerCustomers.splice(idx, 1);
+  try {
+    localStorage.setItem('lazy_calc_ledger_customers', JSON.stringify(_calcLedgerCustomers));
+  } catch(e) {}
+  if (_activeKhataCustomerIndex === idx) {
+    _activeKhataCustomerIndex = -1;
+  } else if (_activeKhataCustomerIndex > idx) {
+    _activeKhataCustomerIndex--;
+  }
+  renderCalcHistory();
+  calcUpdateDisplay();
+  if (typeof showToast === 'function') showToast('🗑️ Customer "' + c.name + '" deleted');
+}
+
 function renderInlineLedgerHTML() {
   var html = '<div style="display:flex;flex-direction:column;gap:6px;">';
   for (var i = 0; i < _calcLedgerCustomers.length; i++) {
@@ -9826,8 +9845,9 @@ function renderInlineLedgerHTML() {
         '<span style="font-size:0.75rem;font-weight:700;white-space:nowrap;">' + balText + '</span>' +
       '</div>' +
       '<div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">' +
-        '<button onclick="toggleCustomerFold(' + i + ', event)" style="background:var(--bg-primary);border:1px solid var(--border-color);color:var(--text-primary);padding:3px 7px;border-radius:4px;font-size:0.72rem;font-weight:800;cursor:pointer;" title="Fold / Unfold Card">' + (isFolded ? '▼ Unfold' : '▲ Fold') + '</button>' +
+        '<button onclick="toggleCustomerFold(' + i + ', event)" style="background:var(--bg-primary);border:1px solid var(--border-color);color:var(--text-primary);padding:3px 8px;border-radius:6px;font-size:0.75rem;font-weight:800;cursor:pointer;" title="Fold / Unfold Card">' + (isFolded ? '▼' : '▲') + '</button>' +
         '<button onclick="event.stopPropagation();sendLedgerWASummary(' + i + ')" style="background:none;border:none;cursor:pointer;font-size:1.1rem;padding:0;" title="Send WhatsApp Statement">💬</button>' +
+        '<button onclick="deleteKhataCustomer(' + i + ', event)" style="background:none;border:none;cursor:pointer;font-size:1.05rem;padding:0;opacity:0.8;" title="Delete Customer">🗑️</button>' +
       '</div>' +
     '</div>';
 
