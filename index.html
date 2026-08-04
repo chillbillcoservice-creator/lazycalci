@@ -9980,8 +9980,8 @@ function saveNewKhataContact() {
 function sendLedgerWASummary(idx) {
   if (!_calcLedgerCustomers || !_calcLedgerCustomers[idx]) return;
   var c = _calcLedgerCustomers[idx];
-  var balMsg = c.balance > 0 ? 'Pending Dues (Take): ₹' + fmtNum(c.balance) : (c.balance < 0 ? 'Advance Credit (Give): ₹' + fmtNum(Math.abs(c.balance)) : 'Settled Balance: ₹0');
-  var text = 'Namaste ' + c.name + ' ji,\nYour Khata Ledger balance with us is: *' + balMsg + '*.\n\nThank you for your business!';
+  var balVal = c.balance > 0 ? '₹' + fmtNum(c.balance) : (c.balance < 0 ? '-₹' + fmtNum(Math.abs(c.balance)) : '₹0');
+  var text = 'Namaste ' + c.name + ' ji, pending balance: ' + balVal;
   var url = 'https://wa.me/' + (c.phone ? '91' + c.phone.replace(/\D/g,'') : '') + '?text=' + encodeURIComponent(text);
   window.open(url, '_blank');
 }
