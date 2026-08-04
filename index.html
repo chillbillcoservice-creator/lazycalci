@@ -5798,30 +5798,6 @@ function calcInput(val) {
     }
   }
 
-  if (_activeKhataCustomerIndex >= 0) {
-    if (_khataBalancePreloaded) {
-      if (['0','1','2','3','4','5','6','7','8','9','.'].indexOf(val) !== -1) {
-        calcTokens = [{v: val === '.' ? '0.' : val, label: ''}];
-        _khataBalancePreloaded = false;
-        calcUpdateDisplay();
-        return;
-      }
-      if (val === '+' || val === '-' || mapped === '+' || mapped === '-') {
-        if (typeof showToast === 'function') showToast('💡 Type new amount on keypad first (e.g. 500)');
-        return;
-      }
-    } else if (val === '+' || val === '-' || mapped === '+' || mapped === '-') {
-      var amount = parseFloat(calcExprFromTokens()) || 0;
-      if (amount > 0) {
-        recordKhataTransaction((val === '+' || mapped === '+') ? 'jama' : 'udhar', amount);
-        return;
-      } else {
-        if (typeof showToast === 'function') showToast('⚠️ Type amount on keypad first (e.g. 500)');
-        return;
-      }
-    }
-  }
-
   if (!_calcShowExpr) {
     _calcShowExpr = true;
     _calcSavedExpr = '';
