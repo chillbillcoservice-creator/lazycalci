@@ -5607,14 +5607,14 @@ function renderCalcLabelEditor() {
   if (_editingCalcToken === -1) {
     if (_activeKhataCustomerIndex >= 0 && _calcLedgerCustomers && _calcLedgerCustomers[_activeKhataCustomerIndex]) {
       var c = _calcLedgerCustomers[_activeKhataCustomerIndex];
-      var balText = c.balance > 0 ? 'Get: ₹' + fmtNum(c.balance) : (c.balance < 0 ? 'Give: ₹' + fmtNum(Math.abs(c.balance)) : 'Settled: ₹0');
+      var balText = c.balance > 0 ? 'Take: ₹' + fmtNum(c.balance) : (c.balance < 0 ? 'Give: ₹' + fmtNum(Math.abs(c.balance)) : 'Settled: ₹0');
       container.innerHTML = '<div style="display:flex;align-items:center;justify-content:space-between;width:100%;gap:4px;white-space:nowrap;overflow:hidden;padding:2px 0;">' +
         '<div style="display:flex;align-items:center;gap:4px;min-width:0;overflow:hidden;">' +
           '<span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:0.82rem;">👤 <strong>' + escHtml(c.name) + '</strong></span>' +
           '<span style="font-size:0.72rem;font-weight:700;color:var(--color-accent);background:rgba(243,139,168,0.15);padding:1px 5px;border-radius:4px;white-space:nowrap;">' + balText + '</span>' +
         '</div>' +
         '<div style="display:flex;align-items:center;gap:3px;flex-shrink:0;">' +
-          '<button onclick="submitActiveKhata(\'jama\')" style="background:#10b981;color:#fff;border:none;padding:3px 7px;border-radius:5px;font-size:0.75rem;font-weight:700;cursor:pointer;white-space:nowrap;">🟢 + Get</button>' +
+          '<button onclick="submitActiveKhata(\'jama\')" style="background:#10b981;color:#fff;border:none;padding:3px 7px;border-radius:5px;font-size:0.75rem;font-weight:700;cursor:pointer;white-space:nowrap;">🟢 + Take</button>' +
           '<button onclick="submitActiveKhata(\'udhar\')" style="background:#ef4444;color:#fff;border:none;padding:3px 7px;border-radius:5px;font-size:0.75rem;font-weight:700;cursor:pointer;white-space:nowrap;">🔴 - Give</button>' +
           '<button onclick="clearActiveKhataCustomer()" style="background:none;border:none;color:var(--text-muted);font-weight:800;cursor:pointer;font-size:0.85rem;padding:0 2px;">✕</button>' +
         '</div>' +
@@ -9555,11 +9555,11 @@ function recordKhataTransaction(type, amount) {
   
   if (type === 'jama') {
     c.balance -= amount;
-    c.transactions.unshift({ date: new Date().toLocaleString(), type: 'jama', amount: amount, note: 'Got Payment via Main Calci' });
-    if (typeof showToast === 'function') showToast('✅ Recorded ₹' + fmtNum(amount) + ' Get for ' + c.name);
+    c.transactions.unshift({ date: new Date().toLocaleString(), type: 'jama', amount: amount, note: 'Payment Taken via Main Calci' });
+    if (typeof showToast === 'function') showToast('✅ Recorded ₹' + fmtNum(amount) + ' Take for ' + c.name);
   } else {
     c.balance += amount;
-    c.transactions.unshift({ date: new Date().toLocaleString(), type: 'udhar', amount: amount, note: 'Gave Credit via Main Calci' });
+    c.transactions.unshift({ date: new Date().toLocaleString(), type: 'udhar', amount: amount, note: 'Credit Given via Main Calci' });
     if (typeof showToast === 'function') showToast('🔴 Recorded ₹' + fmtNum(amount) + ' Give for ' + c.name);
   }
 
@@ -9572,7 +9572,7 @@ function renderInlineLedgerHTML() {
   for (var i = 0; i < _calcLedgerCustomers.length; i++) {
     var c = _calcLedgerCustomers[i];
     var isSelected = (_activeKhataCustomerIndex === i);
-    var balText = c.balance > 0 ? '🟢 Get ₹' + fmtNum(c.balance) : (c.balance < 0 ? '🔴 Give ₹' + fmtNum(Math.abs(c.balance)) : '⚪ Settled');
+    var balText = c.balance > 0 ? '🟢 Take ₹' + fmtNum(c.balance) : (c.balance < 0 ? '🔴 Give ₹' + fmtNum(Math.abs(c.balance)) : '⚪ Settled');
     html += '<div onclick="selectKhataCustomer(' + i + ')" style="display:flex;align-items:center;justify-content:space-between;padding:0.55rem 0.7rem;background:' + (isSelected ? 'rgba(243,139,168,0.18)' : 'var(--bg-tertiary)') + ';border-radius:var(--radius-sm);border:1px solid ' + (isSelected ? 'var(--color-accent)' : 'var(--border-color)') + ';font-size:0.85rem;cursor:pointer;">' +
       '<div><strong>' + escHtml(c.name) + '</strong> <span style="font-size:0.75rem;margin-left:6px;font-weight:700;">' + balText + '</span></div>' +
       '<div style="display:flex;align-items:center;gap:6px;">' +
