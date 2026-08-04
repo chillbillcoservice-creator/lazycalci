@@ -850,7 +850,13 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    overflow-y: hidden !important;
+    padding: 0.1rem 0.6rem 0.5rem 0.6rem !important;
   }
+  #calc-buttons button { min-height: 52px !important; font-size: 1.4rem !important; padding: 0.4rem 0 !important; }
+  #calc-buttons { gap: 0.45rem !important; margin-top: 0.45rem !important; }
+  #calc-expression { min-height: 2.4rem !important; margin-top: 0.3rem !important; font-size: 1.4rem !important; }
+  #calc-display { min-height: 3rem !important; padding: 0.4rem 0.8rem !important; font-size: 1.7rem !important; }
 }
 @media (max-width:420px) { .mode-heading-btn { font-size:0.92rem; } }
 .modal-header-left { position:relative; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
@@ -9455,6 +9461,7 @@ function updateCalcHistoryVisibility() {
 }
 
 var _activeHistorySubTab = 'history';
+var _historyFolded = false;
 var _calcLedgerCustomers = [];
 try {
   _calcLedgerCustomers = JSON.parse(localStorage.getItem('calc_ledger_customers')) || [];
@@ -9469,7 +9476,12 @@ if (!Array.isArray(_calcLedgerCustomers) || _calcLedgerCustomers.length === 0) {
 }
 
 function switchHistoryTab(tab) {
-  _activeHistorySubTab = tab;
+  if (_activeHistorySubTab === tab) {
+    _historyFolded = !_historyFolded;
+  } else {
+    _activeHistorySubTab = tab;
+    _historyFolded = false;
+  }
   renderCalcHistory();
 }
 
@@ -9526,10 +9538,18 @@ function renderCalcHistory() {
   }
   container.style.display = 'block';
 
+  var isHistActive = (_activeHistorySubTab === 'history' && !_historyFolded);
+  var isLedgerActive = (_activeHistorySubTab === 'ledger' && !_historyFolded);
+
   var tabHeader = '<div style="display:flex;gap:6px;margin-bottom:0.5rem;width:100%;box-sizing:border-box;">' +
-    '<button onclick="switchHistoryTab(\'history\')" style="flex:3;height:36px;box-sizing:border-box;background:' + (_activeHistorySubTab === 'history' ? 'var(--color-accent)' : 'var(--bg-tertiary)') + ';color:' + (_activeHistorySubTab === 'history' ? '#fff' : 'var(--text-primary)') + ';border:1px solid var(--border-color);border-radius:var(--radius-sm);font-size:0.86rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;">📜 Show History</button>' +
-    '<button onclick="switchHistoryTab(\'ledger\')" style="flex:1;height:36px;box-sizing:border-box;background:' + (_activeHistorySubTab === 'ledger' ? 'var(--color-accent)' : 'var(--bg-tertiary)') + ';color:' + (_activeHistorySubTab === 'ledger' ? '#fff' : 'var(--color-accent)') + ';border:1px solid var(--border-color);border-radius:var(--radius-sm);font-size:0.86rem;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;">📖 Ledger</button>' +
+    '<button onclick="switchHistoryTab(\'history\')" style="flex:3;height:36px;box-sizing:border-box;background:' + (isHistActive ? 'var(--color-accent)' : 'var(--bg-tertiary)') + ';color:' + (isHistActive ? '#fff' : 'var(--text-primary)') + ';border:1px solid var(--border-color);border-radius:var(--radius-sm);font-size:0.86rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;">📜 ' + (isHistActive ? 'Hide History' : 'Show History') + '</button>' +
+    '<button onclick="switchHistoryTab(\'ledger\')" style="flex:1;height:36px;box-sizing:border-box;background:' + (isLedgerActive ? 'var(--color-accent)' : 'var(--bg-tertiary)') + ';color:' + (isLedgerActive ? '#fff' : 'var(--color-accent)') + ';border:1px solid var(--border-color);border-radius:var(--radius-sm);font-size:0.86rem;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;">📖 ' + (isLedgerActive ? 'Hide' : 'Ledger') + '</button>' +
   '</div>';
+
+  if (_historyFolded) {
+    container.innerHTML = tabHeader;
+    return;
+  }
 
   if (_activeHistorySubTab === 'ledger') {
     container.innerHTML = tabHeader + renderInlineLedgerHTML();
