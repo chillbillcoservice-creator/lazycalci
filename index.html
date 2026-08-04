@@ -3891,19 +3891,19 @@ function updateKhataKeypadButtons() {
   if (!plusBtn || !minusBtn) return;
 
   if (_activeKhataCustomerIndex >= 0 && typeof _calcLedgerCustomers !== 'undefined' && _calcLedgerCustomers && _calcLedgerCustomers[_activeKhataCustomerIndex]) {
-    plusBtn.innerHTML = '🟢+Take';
-    plusBtn.style.border = '2px solid #10b981';
+    plusBtn.innerHTML = '+ Take';
+    plusBtn.style.border = '1px solid var(--border-color)';
     plusBtn.style.color = '#10b981';
-    plusBtn.style.background = 'rgba(16,185,129,0.18)';
-    plusBtn.style.fontWeight = '800';
-    plusBtn.style.fontSize = '0.95rem';
+    plusBtn.style.background = 'var(--bg-tertiary)';
+    plusBtn.style.fontWeight = '700';
+    plusBtn.style.fontSize = '1rem';
 
-    minusBtn.innerHTML = '🔴-Give';
-    minusBtn.style.border = '2px solid #ef4444';
+    minusBtn.innerHTML = '- Give';
+    minusBtn.style.border = '1px solid var(--border-color)';
     minusBtn.style.color = '#ef4444';
-    minusBtn.style.background = 'rgba(239,68,68,0.18)';
-    minusBtn.style.fontWeight = '800';
-    minusBtn.style.fontSize = '0.95rem';
+    minusBtn.style.background = 'var(--bg-tertiary)';
+    minusBtn.style.fontWeight = '700';
+    minusBtn.style.fontSize = '1rem';
   } else {
     plusBtn.innerHTML = '+';
     plusBtn.style.border = '1px solid var(--border-color)';
