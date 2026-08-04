@@ -858,7 +858,7 @@ body {
   #calc-buttons { gap: 0.45rem !important; margin-top: 0.45rem !important; }
   #calc-expression { min-height: 2.4rem !important; margin-top: 0.3rem !important; font-size: 1.4rem !important; }
   #calc-display { min-height: 3rem !important; padding: 0.4rem 0.8rem !important; font-size: 1.7rem !important; }
-  #calc-history { max-height: 220px !important; overflow-y: auto !important; -webkit-overflow-scrolling: touch !important; flex-shrink: 1 !important; }
+  #calc-history { max-height: 380px !important; min-height: 180px !important; overflow-y: auto !important; -webkit-overflow-scrolling: touch !important; flex-shrink: 0 !important; }
 }
 @media (max-width:420px) { .mode-heading-btn { font-size:0.92rem; } }
 .modal-header-left { position:relative; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
@@ -930,8 +930,8 @@ body {
 }
 #calc-history {
   margin-top: 0.5rem;
-  flex-shrink: 1 !important;
-  max-height: 220px !important;
+  flex-shrink: 0 !important;
+  max-height: 380px !important;
   overflow-y: auto !important;
   -webkit-overflow-scrolling: touch !important;
 }
@@ -9561,6 +9561,18 @@ if (!Array.isArray(_calcLedgerCustomers) || _calcLedgerCustomers.length === 0) {
   localStorage.setItem('calc_ledger_customers', JSON.stringify(_calcLedgerCustomers));
 }
 
+function scrollToCalcHistory() {
+  setTimeout(function() {
+    var h = document.getElementById('calc-history');
+    if (!h || h.style.display === 'none') return;
+    h.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    var modalBody = h.closest('.modal-body') || h.parentElement;
+    if (modalBody && typeof modalBody.scrollTo === 'function') {
+      modalBody.scrollTo({ top: h.offsetTop - 10, behavior: 'smooth' });
+    }
+  }, 60);
+}
+
 function switchHistoryTab(tab) {
   _calcHistoryVisible = true;
   if (_activeHistorySubTab === tab) {
@@ -9570,6 +9582,9 @@ function switchHistoryTab(tab) {
     _historyFolded = false;
   }
   renderCalcHistory();
+  if (_calcHistoryVisible && !_historyFolded) {
+    scrollToCalcHistory();
+  }
 }
 
 var _khataBalancePreloaded = false;
@@ -9588,6 +9603,9 @@ function selectKhataCustomer(idx, keepUnfolded) {
   _calcHistoryVisible = true;
   _historyFolded = Boolean(!keepUnfolded);
   renderCalcHistory();
+  if (_calcHistoryVisible && !_historyFolded) {
+    scrollToCalcHistory();
+  }
   var bTxt = c.balance > 0 ? 'Given +₹' + fmtNum(c.balance) : (c.balance < 0 ? 'Taken -₹' + fmtNum(Math.abs(c.balance)) : '₹0');
   if (typeof showToast === 'function') showToast('👤 Selected ' + c.name + ' (Bal: ' + bTxt + ')');
 }
@@ -10060,10 +10078,7 @@ function toggleCalcHistory() {
   }
   renderCalcHistory();
   if (_calcHistoryVisible) {
-    setTimeout(function() {
-      var h = document.getElementById('calc-history');
-      if (h) h.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }, 60);
+    scrollToCalcHistory();
   }
 }
 
