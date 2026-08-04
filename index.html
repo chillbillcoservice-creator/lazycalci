@@ -9577,39 +9577,44 @@ function selectKhataCustomer(idx) {
   _activeKhataCustomerIndex = idx;
   var c = _calcLedgerCustomers[idx];
 
-  calcTokens = [];
-  _khataBalancePreloaded = false;
+  var initVal = String(c.balance || 0);
+  calcTokens = [{v: initVal, label: ''}];
+  _khataBalancePreloaded = true;
   _calcShowExpr = true;
   calcUpdateDisplay();
 
   _historyFolded = true;
   renderCalcHistory();
-  if (typeof showToast === 'function') showToast('👤 Selected ' + c.name + '. Tap + (Take) or - (Give) first!');
+  if (typeof showToast === 'function') showToast('👤 Selected ' + c.name + ' (Bal: ₹' + fmtNum(c.balance) + ')');
 }
 
 function submitActiveKhata(type) {
-  var exprStr = (calcExprFromTokens() || '').trim();
+  if (_activeKhataCustomerIndex < 0 || !_calcLedgerCustomers[_activeKhataCustomerIndex]) return;
+  var c = _calcLedgerCustomers[_activeKhataCustomerIndex];
   
-  if (!exprStr || exprStr === '0' || exprStr === '+' || exprStr === '-') {
+  var exprStr = (calcExprFromTokens() || '').trim();
+  var tokens = calcTokens || [];
+
+  if (tokens.length <= 1) {
     var opChar = (type === 'jama') ? '+' : '-';
-    calcTokens = [{v: opChar, label: ''}];
+    var curVal = tokens.length === 1 ? tokens[0].v : String(c.balance || 0);
+    calcTokens = [{v: curVal, label: ''}, {v: opChar, label: ''}];
     calcUpdateDisplay();
     if (typeof showToast === 'function') showToast((type === 'jama' ? '🟢 Take (+)' : '🔴 Give (-)') + ' selected. Type amount!');
     return;
   }
 
-  var cleanStr = exprStr.replace(/[^\d.]/g, '');
-  var amount = parseFloat(cleanStr) || 0;
+  var lastToken = tokens[tokens.length - 1];
+  var amount = parseFloat((lastToken.v || '').replace(/[^\d.]/g, '')) || 0;
   if (!amount || amount <= 0) {
     if (typeof showToast === 'function') showToast('⚠️ Type amount on keypad first (e.g. 500)');
     return;
   }
 
   var finalType = type;
-  if (exprStr.startsWith('-')) {
-    finalType = 'udhar';
-  } else if (exprStr.startsWith('+')) {
-    finalType = 'jama';
+  for (var i = tokens.length - 2; i >= 0; i--) {
+    if (tokens[i].v === '-') { finalType = 'udhar'; break; }
+    if (tokens[i].v === '+') { finalType = 'jama'; break; }
   }
 
   recordKhataTransaction(finalType, amount);
@@ -9618,6 +9623,7 @@ function submitActiveKhata(type) {
 function clearActiveKhataCustomer() {
   _activeKhataCustomerIndex = -1;
   _khataBalancePreloaded = false;
+  calcTokens = [];
   calcUpdateDisplay();
 }
 
@@ -9638,9 +9644,7 @@ function recordKhataTransaction(type, amount) {
   }
 
   localStorage.setItem('calc_ledger_customers', JSON.stringify(_calcLedgerCustomers));
-  calcTokens = [];
-  calcUpdateDisplay();
-  renderCalcHistory();
+  selectKhataCustomer(_activeKhataCustomerIndex);
 }
 
 function renderInlineLedgerHTML() {
