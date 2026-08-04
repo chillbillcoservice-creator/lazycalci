@@ -858,7 +858,7 @@ body {
   #calc-buttons { gap: 0.45rem !important; margin-top: 0.45rem !important; }
   #calc-expression { min-height: 2.4rem !important; margin-top: 0.3rem !important; font-size: 1.4rem !important; }
   #calc-display { min-height: 3rem !important; padding: 0.4rem 0.8rem !important; font-size: 1.7rem !important; }
-  #calc-history { max-height: none !important; overflow-y: visible !important; }
+  #calc-history { max-height: 220px !important; overflow-y: auto !important; -webkit-overflow-scrolling: touch !important; flex-shrink: 1 !important; }
 }
 @media (max-width:420px) { .mode-heading-btn { font-size:0.92rem; } }
 .modal-header-left { position:relative; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
@@ -921,7 +921,20 @@ body {
   color: var(--text-primary);
   font-size:0.9rem; cursor:pointer;
 }
-#calc-history { margin-top:0.5rem; }
+#calc-expression,
+#calc-label-editor,
+.calc-result-area,
+#calc-buttons,
+#calc-action-bar {
+  flex-shrink: 0 !important;
+}
+#calc-history {
+  margin-top: 0.5rem;
+  flex-shrink: 1 !important;
+  max-height: 220px !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+}
 .history-entry {
   padding:0.4rem 0.5rem; margin-bottom:0.3rem;
   background: var(--bg-tertiary);
