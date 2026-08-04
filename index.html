@@ -5747,7 +5747,7 @@ function renderCalcLabelEditor() {
         }
       }
 
-      var balText = effectiveBal > 0 ? 'Owes You ₹' + fmtNum(effectiveBal) : (effectiveBal < 0 ? 'You Owe ₹' + fmtNum(Math.abs(effectiveBal)) : 'Settled ₹0');
+      var balText = effectiveBal > 0 ? 'Owes You ₹' + fmtNum(effectiveBal) : (effectiveBal < 0 ? 'You Owe ₹' + fmtNum(Math.abs(effectiveBal)) : '₹0');
 
       container.innerHTML = '<div style="display:flex;align-items:center;justify-content:space-between;width:100%;gap:6px;white-space:nowrap;overflow:hidden;padding:2px 0;">' +
         '<div onclick="selectKhataCustomer(' + _activeKhataCustomerIndex + ')" style="display:flex;align-items:center;gap:6px;min-width:0;overflow:hidden;cursor:pointer;" title="Tap to reload balance">' +
@@ -9852,7 +9852,7 @@ function renderInlineLedgerHTML() {
     var c = _calcLedgerCustomers[i];
     var isSelected = (_activeKhataCustomerIndex === i);
     var isFolded = Boolean(_foldedCustomerMap[i]);
-    var balText = c.balance > 0 ? '🟢 Owes You ₹' + fmtNum(c.balance) : (c.balance < 0 ? '🔴 You Owe ₹' + fmtNum(Math.abs(c.balance)) : '⚪ Settled ₹0');
+    var balText = c.balance > 0 ? '🟢 Owes You ₹' + fmtNum(c.balance) : (c.balance < 0 ? '🔴 You Owe ₹' + fmtNum(Math.abs(c.balance)) : '⚪ ₹0');
     
     html += '<div id="khata-cust-card-' + i + '" style="background:' + (isSelected ? 'rgba(243,139,168,0.12)' : 'var(--bg-tertiary)') + ';border-radius:var(--radius-sm);border:1px solid ' + (isSelected ? 'var(--color-accent)' : 'var(--border-color)') + ';overflow:hidden;">';
     html += '<div onclick="selectKhataCustomer(' + i + ')" style="display:flex;align-items:center;justify-content:space-between;padding:0.55rem 0.7rem;font-size:0.85rem;cursor:pointer;">' +
@@ -10028,6 +10028,17 @@ function saveNewKhataContact() {
     return;
   }
 
+  if (Array.isArray(_calcLedgerCustomers)) {
+    var exists = _calcLedgerCustomers.some(function(c) {
+      return c.name && c.name.trim().toLowerCase() === name.toLowerCase();
+    });
+    if (exists) {
+      alert('⚠️ Contact "' + name + '" already exists in Khata!');
+      if (nameInput) nameInput.focus();
+      return;
+    }
+  }
+
   var phone = phoneInput ? phoneInput.value.trim() : '';
   var rawBal = parseFloat(balInput ? balInput.value : '0') || 0;
   rawBal = Math.abs(rawBal);
@@ -10069,7 +10080,16 @@ function formatIndianPhoneForWA(phone) {
 function sendLedgerWASummary(idx) {
   if (!_calcLedgerCustomers || !_calcLedgerCustomers[idx]) return;
   var c = _calcLedgerCustomers[idx];
-  var balVal = c.balance > 0 ? '₹' + fmtNum(c.balance) : (c.balance < 0 ? '-₹' + fmtNum(Math.abs(c.balance)) : '₹0');
+  
+  var targetBal = c.balance;
+  if (_activeKhataCustomerIndex === idx) {
+    var res = getKhataAmountAndTypeFromTokens();
+    if (res.amount > 0) {
+      targetBal = (res.type === 'jama') ? (c.balance - res.amount) : (c.balance + res.amount);
+    }
+  }
+
+  var balVal = targetBal > 0 ? '₹' + fmtNum(targetBal) : (targetBal < 0 ? '-₹' + fmtNum(Math.abs(targetBal)) : '₹0');
   var text = 'Namaste ' + c.name + ' ji, pending balance: ' + balVal;
   var waPhone = formatIndianPhoneForWA(c.phone);
   var url = 'https://wa.me/' + waPhone + '?text=' + encodeURIComponent(text);
