@@ -5783,6 +5783,11 @@ function calcInput(val) {
   var map = { '×': '*', '÷': '/' };
   var mapped = map[val] || val;
 
+  if (_activeKhataCustomerIndex >= 0) {
+    if (mapped === '-') mapped = '+';
+    else if (mapped === '+') mapped = '-';
+  }
+
   var activeEl = document.activeElement;
   if (activeEl && activeEl.id === 'calc-bill-qty-input') {
     if (['+','-','*','/','%','='].indexOf(val) === -1 && ['+','-','*','/','%','='].indexOf(mapped) === -1) {
