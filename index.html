@@ -5968,21 +5968,9 @@ function calcEqual() {
     }
 
     if (_activeKhataCustomerIndex >= 0 && typeof _calcLedgerCustomers !== 'undefined' && _calcLedgerCustomers && _calcLedgerCustomers[_activeKhataCustomerIndex]) {
-      var c = _calcLedgerCustomers[_activeKhataCustomerIndex];
-      var txAmt = 0;
-      var lastOp = '+';
-      
-      for (var k = 0; k < calcTokens.length; k++) {
-        if (calcTokens[k].v === '+') { lastOp = '+'; }
-        if (calcTokens[k].v === '-') { lastOp = '-'; }
-        if (k > 0 && ['+','-','*','/','%'].indexOf(calcTokens[k-1].v) !== -1) {
-          txAmt = parseFloat((calcTokens[k].v || '').replace(/[^\d.]/g, '')) || 0;
-        }
-      }
-      
-      if (txAmt > 0) {
-        var txType = (lastOp === '+') ? 'udhar' : 'jama';
-        recordKhataTransaction(txType, txAmt);
+      var res = getKhataAmountAndTypeFromTokens('udhar');
+      if (res.amount > 0) {
+        recordKhataTransaction(res.type, res.amount);
         return;
       }
     }
@@ -9712,6 +9700,40 @@ function selectKhataCustomer(idx, keepUnfolded) {
   if (typeof showToast === 'function') showToast('👤 Selected ' + c.name + ' (Bal: ' + bTxt + ')');
 }
 
+function getKhataAmountAndTypeFromTokens(defaultType) {
+  if (!calcTokens || calcTokens.length === 0) return { amount: 0, type: defaultType || 'udhar' };
+  var c = (_activeKhataCustomerIndex >= 0 && _calcLedgerCustomers && _calcLedgerCustomers[_activeKhataCustomerIndex]) ? _calcLedgerCustomers[_activeKhataCustomerIndex] : null;
+  var baseBal = c ? (c.balance || 0) : 0;
+  var firstIsBase = (_khataBalancePreloaded && calcTokens.length >= 1 && Math.abs(parseFloat(calcTokens[0].v) - Math.abs(baseBal)) < 0.001);
+
+  if (firstIsBase) {
+    if (calcTokens.length <= 1) return { amount: 0, type: defaultType || 'udhar' };
+    var firstOp = calcTokens[1].v;
+    var txType = (firstOp === '-') ? 'jama' : ((firstOp === '+') ? 'udhar' : (defaultType || 'udhar'));
+    var restExpr = '';
+    for (var r = 1; r < calcTokens.length; r++) { restExpr += calcTokens[r].v; }
+    var amount = 0;
+    try {
+      var ev = evalExpr(restExpr);
+      if (isFinite(ev)) amount = Math.abs(ev);
+    } catch(e) {}
+    return { amount: amount, type: txType };
+  } else {
+    var exprStr = calcExprFromTokens();
+    var amount = 0;
+    try {
+      var ev = evalExpr(exprStr);
+      if (isFinite(ev)) amount = Math.abs(ev);
+    } catch(e) {}
+    var txType = defaultType || 'udhar';
+    for (var k = 0; k < calcTokens.length; k++) {
+      if (calcTokens[k].v === '-') { txType = 'jama'; }
+      if (calcTokens[k].v === '+') { txType = 'udhar'; }
+    }
+    return { amount: amount, type: txType };
+  }
+}
+
 function submitActiveKhata(type) {
   if (_activeKhataCustomerIndex < 0 || !_calcLedgerCustomers[_activeKhataCustomerIndex]) return;
   var c = _calcLedgerCustomers[_activeKhataCustomerIndex];
@@ -9736,19 +9758,13 @@ function submitActiveKhata(type) {
     return;
   }
 
-  var amount = parseFloat((lastToken.v || '').replace(/[^\d.]/g, '')) || 0;
-  if (!amount || amount <= 0) {
+  var res = getKhataAmountAndTypeFromTokens(type);
+  if (!res.amount || res.amount <= 0) {
     if (typeof showToast === 'function') showToast('⚠️ Type amount on keypad first (e.g. 500)');
     return;
   }
 
-  var finalType = type;
-  for (var i = tokens.length - 2; i >= 0; i--) {
-    if (tokens[i].v === '-') { finalType = 'jama'; break; }
-    if (tokens[i].v === '+') { finalType = 'udhar'; break; }
-  }
-
-  recordKhataTransaction(finalType, amount);
+  recordKhataTransaction(res.type, res.amount);
 }
 
 function clearActiveKhataCustomer() {
