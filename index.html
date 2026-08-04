@@ -9577,26 +9577,42 @@ function selectKhataCustomer(idx) {
   _activeKhataCustomerIndex = idx;
   var c = _calcLedgerCustomers[idx];
 
-  var initVal = String(Math.abs(c.balance) || 0);
-  calcTokens = [{v: initVal, label: ''}];
-  _khataBalancePreloaded = true;
+  calcTokens = [];
+  _khataBalancePreloaded = false;
   _calcShowExpr = true;
   calcUpdateDisplay();
 
   _historyFolded = true;
   renderCalcHistory();
-  if (typeof showToast === 'function') showToast('👤 Selected ' + c.name + ' for Khata entry');
+  if (typeof showToast === 'function') showToast('👤 Selected ' + c.name + '. Tap + (Take) or - (Give) first!');
 }
 
 function submitActiveKhata(type) {
-  var exprStr = calcExprFromTokens();
-  var amount = 0;
-  try { amount = evalExpr(exprStr); } catch(e) { amount = parseFloat(exprStr) || 0; }
+  var exprStr = (calcExprFromTokens() || '').trim();
+  
+  if (!exprStr || exprStr === '0' || exprStr === '+' || exprStr === '-') {
+    var opChar = (type === 'jama') ? '+' : '-';
+    calcTokens = [{v: opChar, label: ''}];
+    calcUpdateDisplay();
+    if (typeof showToast === 'function') showToast((type === 'jama' ? '🟢 Take (+)' : '🔴 Give (-)') + ' selected. Type amount!');
+    return;
+  }
+
+  var cleanStr = exprStr.replace(/[^\d.]/g, '');
+  var amount = parseFloat(cleanStr) || 0;
   if (!amount || amount <= 0) {
     if (typeof showToast === 'function') showToast('⚠️ Type amount on keypad first (e.g. 500)');
     return;
   }
-  recordKhataTransaction(type, amount);
+
+  var finalType = type;
+  if (exprStr.startsWith('-')) {
+    finalType = 'udhar';
+  } else if (exprStr.startsWith('+')) {
+    finalType = 'jama';
+  }
+
+  recordKhataTransaction(finalType, amount);
 }
 
 function clearActiveKhataCustomer() {
@@ -9622,7 +9638,9 @@ function recordKhataTransaction(type, amount) {
   }
 
   localStorage.setItem('calc_ledger_customers', JSON.stringify(_calcLedgerCustomers));
-  selectKhataCustomer(_activeKhataCustomerIndex);
+  calcTokens = [];
+  calcUpdateDisplay();
+  renderCalcHistory();
 }
 
 function renderInlineLedgerHTML() {
