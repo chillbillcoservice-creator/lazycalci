@@ -5710,24 +5710,41 @@ function renderCalcLabelEditor() {
     if (_activeKhataCustomerIndex >= 0 && _calcLedgerCustomers && _calcLedgerCustomers[_activeKhataCustomerIndex]) {
       var c = _calcLedgerCustomers[_activeKhataCustomerIndex];
       var baseBal = c.balance;
-
-      var exprStr = calcExprFromTokens();
-      var liveVal = 0;
-      if (exprStr && exprStr !== '0') {
-        try {
-          var ev = evalExpr(exprStr);
-          if (isFinite(ev)) liveVal = ev;
-        } catch(e) {}
-      }
-
       var effectiveBal = baseBal;
-      if (liveVal !== 0) {
-        var lastOp = '+';
-        for (var k = 0; k < calcTokens.length; k++) {
-          if (calcTokens[k].v === '+') { lastOp = '+'; }
-          if (calcTokens[k].v === '-') { lastOp = '-'; }
+
+      if (calcTokens && calcTokens.length > 0) {
+        if (_khataBalancePreloaded && calcTokens.length === 1 && Math.abs(parseFloat(calcTokens[0].v) - Math.abs(baseBal)) < 0.001) {
+          effectiveBal = baseBal;
+        } else if (_khataBalancePreloaded && calcTokens.length > 1 && Math.abs(parseFloat(calcTokens[0].v) - Math.abs(baseBal)) < 0.001) {
+          var restTokens = calcTokens.slice(1);
+          var restExpr = '';
+          for (var r = 0; r < restTokens.length; r++) { restExpr += restTokens[r].v; }
+          var delta = 0;
+          if (restExpr) {
+            try {
+              var evRest = evalExpr(restExpr);
+              if (isFinite(evRest)) delta = evRest;
+            } catch(e) {}
+          }
+          effectiveBal = baseBal + delta;
+        } else {
+          var exprStr = calcExprFromTokens();
+          var liveVal = 0;
+          if (exprStr && exprStr !== '0') {
+            try {
+              var ev = evalExpr(exprStr);
+              if (isFinite(ev)) liveVal = ev;
+            } catch(e) {}
+          }
+          if (liveVal !== 0) {
+            var lastOp = '+';
+            for (var k = 0; k < calcTokens.length; k++) {
+              if (calcTokens[k].v === '+') { lastOp = '+'; }
+              if (calcTokens[k].v === '-') { lastOp = '-'; }
+            }
+            effectiveBal = (lastOp === '-') ? (baseBal - Math.abs(liveVal)) : (baseBal + Math.abs(liveVal));
+          }
         }
-        effectiveBal = (lastOp === '-') ? (baseBal - Math.abs(liveVal)) : (baseBal + Math.abs(liveVal));
       }
 
       var balText = effectiveBal > 0 ? 'Owes You ₹' + fmtNum(effectiveBal) : (effectiveBal < 0 ? 'You Owe ₹' + fmtNum(Math.abs(effectiveBal)) : 'Settled ₹0');
