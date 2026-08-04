@@ -5880,7 +5880,7 @@ function calcEqual() {
       }
       
       if (txAmt > 0) {
-        var txType = (lastOp === '+') ? 'jama' : 'udhar';
+        var txType = (lastOp === '+') ? 'udhar' : 'jama';
         recordKhataTransaction(txType, txAmt);
         return;
       }
