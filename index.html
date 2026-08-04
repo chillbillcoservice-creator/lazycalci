@@ -9780,7 +9780,7 @@ function renderInlineLedgerHTML() {
     var c = _calcLedgerCustomers[i];
     var isSelected = (_activeKhataCustomerIndex === i);
     var isFolded = Boolean(_foldedCustomerMap[i]);
-    var balText = c.balance > 0 ? '🟢 Given +₹' + fmtNum(c.balance) : (c.balance < 0 ? '🔴 Taken -₹' + fmtNum(Math.abs(c.balance)) : '⚪ ₹0');
+    var balText = c.balance > 0 ? '🟢 To Collect +₹' + fmtNum(c.balance) : (c.balance < 0 ? '🔴 To Pay -₹' + fmtNum(Math.abs(c.balance)) : '⚪ ₹0');
     
     html += '<div id="khata-cust-card-' + i + '" style="background:' + (isSelected ? 'rgba(243,139,168,0.12)' : 'var(--bg-tertiary)') + ';border-radius:var(--radius-sm);border:1px solid ' + (isSelected ? 'var(--color-accent)' : 'var(--border-color)') + ';overflow:hidden;">';
     html += '<div onclick="selectKhataCustomer(' + i + ')" style="display:flex;align-items:center;justify-content:space-between;padding:0.55rem 0.7rem;font-size:0.85rem;cursor:pointer;">' +
@@ -9804,7 +9804,7 @@ function renderInlineLedgerHTML() {
       for (var t = 0; t < c.transactions.length; t++) {
         var tx = c.transactions[t];
         var isJama = (tx.type === 'jama');
-        var txLabel = isJama ? '🟢 Received +₹' + fmtNum(tx.amount) : '🔴 Given +₹' + fmtNum(tx.amount);
+        var txLabel = isJama ? '🟢 Received +₹' + fmtNum(tx.amount) : '🔴 Paid +₹' + fmtNum(tx.amount);
         var txColor = isJama ? '#10b981' : '#ef4444';
         var showNote = tx.note && tx.note.indexOf('via Main Calci') === -1 ? escHtml(tx.note) + ' • ' : '';
         
