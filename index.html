@@ -2020,7 +2020,6 @@ body {
           💬 WhatsApp Bill
         </button>
       </div>
-      <div id="active-khata-banner" style="display:none;margin-top:0.4rem;padding:0.45rem 0.75rem;background:var(--bg-tertiary);border:1px solid var(--color-accent);border-radius:var(--radius-sm);align-items:center;justify-content:space-between;font-size:0.85rem;color:var(--text-primary);box-sizing:border-box;"></div>
       <div class="calc-result-area">
         <div id="calc-display" onclick="toggleResultExpr()">0</div>
         <div id="calc-display-words" style="min-height:1.25rem;line-height:1.25rem;font-size:0.80rem;color:var(--text-primary);text-align:right;margin-top:0.25rem;font-style:italic;font-weight:600;opacity:0.95;visibility:hidden;transition:opacity 0.15s ease;"></div>
@@ -5606,6 +5605,22 @@ function renderCalcLabelEditor() {
   }
 
   if (_editingCalcToken === -1) {
+    if (_activeKhataCustomerIndex >= 0 && _calcLedgerCustomers && _calcLedgerCustomers[_activeKhataCustomerIndex]) {
+      var c = _calcLedgerCustomers[_activeKhataCustomerIndex];
+      var balText = c.balance > 0 ? 'Get: ₹' + fmtNum(c.balance) : (c.balance < 0 ? 'Give: ₹' + fmtNum(Math.abs(c.balance)) : 'Settled: ₹0');
+      container.innerHTML = '<div style="display:flex;align-items:center;justify-content:space-between;width:100%;gap:4px;white-space:nowrap;overflow:hidden;padding:2px 0;">' +
+        '<div style="display:flex;align-items:center;gap:4px;min-width:0;overflow:hidden;">' +
+          '<span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:0.82rem;">👤 <strong>' + escHtml(c.name) + '</strong></span>' +
+          '<span style="font-size:0.72rem;font-weight:700;color:var(--color-accent);background:rgba(243,139,168,0.15);padding:1px 5px;border-radius:4px;white-space:nowrap;">' + balText + '</span>' +
+        '</div>' +
+        '<div style="display:flex;align-items:center;gap:3px;flex-shrink:0;">' +
+          '<button onclick="submitActiveKhata(\'jama\')" style="background:#10b981;color:#fff;border:none;padding:3px 7px;border-radius:5px;font-size:0.75rem;font-weight:700;cursor:pointer;white-space:nowrap;">🟢 + Get</button>' +
+          '<button onclick="submitActiveKhata(\'udhar\')" style="background:#ef4444;color:#fff;border:none;padding:3px 7px;border-radius:5px;font-size:0.75rem;font-weight:700;cursor:pointer;white-space:nowrap;">🔴 - Give</button>' +
+          '<button onclick="clearActiveKhataCustomer()" style="background:none;border:none;color:var(--text-muted);font-weight:800;cursor:pointer;font-size:0.85rem;padding:0 2px;">✕</button>' +
+        '</div>' +
+      '</div>';
+      return;
+    }
     if (_isVoiceListening) {
       var vTxt = _lastVoiceTranscript ? '"' + escHtml(_lastVoiceTranscript) + '"' : 'Speak to Calculate... (Listening)';
       container.innerHTML = '<div style="font-size:0.85rem;color:#ef4444;font-weight:700;padding:0.3rem 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">🔴 <span id="voice-help-txt">' + vTxt + '</span></div>';
@@ -9504,23 +9519,6 @@ function selectKhataCustomer(idx) {
   if (!_calcLedgerCustomers || !_calcLedgerCustomers[idx]) return;
   _activeKhataCustomerIndex = idx;
   var c = _calcLedgerCustomers[idx];
-  
-  var banner = document.getElementById('active-khata-banner');
-  if (banner) {
-    var balText = c.balance > 0 ? 'Get: ₹' + fmtNum(c.balance) : (c.balance < 0 ? 'Give: ₹' + fmtNum(Math.abs(c.balance)) : 'Settled: ₹0');
-    banner.innerHTML = '<div style="display:flex;align-items:center;justify-content:space-between;width:100%;gap:4px;white-space:nowrap;overflow:hidden;">' +
-      '<div style="display:flex;align-items:center;gap:4px;min-width:0;overflow:hidden;">' +
-        '<span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:0.8rem;">👤 <strong>' + escHtml(c.name) + '</strong></span>' +
-        '<span style="font-size:0.72rem;font-weight:700;color:var(--color-accent);background:rgba(243,139,168,0.15);padding:1px 5px;border-radius:4px;white-space:nowrap;">' + balText + '</span>' +
-      '</div>' +
-      '<div style="display:flex;align-items:center;gap:3px;flex-shrink:0;">' +
-        '<button onclick="submitActiveKhata(\'jama\')" style="background:#10b981;color:#fff;border:none;padding:3px 6px;border-radius:5px;font-size:0.75rem;font-weight:700;cursor:pointer;white-space:nowrap;">🟢 + Get</button>' +
-        '<button onclick="submitActiveKhata(\'udhar\')" style="background:#ef4444;color:#fff;border:none;padding:3px 6px;border-radius:5px;font-size:0.75rem;font-weight:700;cursor:pointer;white-space:nowrap;">🔴 - Give</button>' +
-        '<button onclick="clearActiveKhataCustomer()" style="background:none;border:none;color:var(--text-muted);font-weight:800;cursor:pointer;font-size:0.85rem;padding:0 2px;">✕</button>' +
-      '</div>' +
-    '</div>';
-    banner.style.display = 'flex';
-  }
 
   calcTokens = [{v: '0', label: ''}];
   _calcShowExpr = true;
@@ -9546,8 +9544,7 @@ function submitActiveKhata(type) {
 
 function clearActiveKhataCustomer() {
   _activeKhataCustomerIndex = -1;
-  var banner = document.getElementById('active-khata-banner');
-  if (banner) banner.style.display = 'none';
+  calcUpdateDisplay();
 }
 
 function recordKhataTransaction(type, amount) {
