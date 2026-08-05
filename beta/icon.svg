@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#181825"/>
+      <stop offset="100%" stop-color="#11111b"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="80" fill="url(#bg)" stroke="#f38ba8" stroke-width="4"/>
+  <rect x="140" y="100" width="232" height="50" rx="8" fill="#1e1e2e" stroke="rgba(205,214,244,0.12)" stroke-width="2"/>
+  <text x="256" y="136" text-anchor="middle" font-size="28" fill="#6c7086" font-family="sans-serif">0</text>
+  <rect x="140" y="170" width="232" height="14" rx="4" fill="#f38ba8" opacity="0.15"/>
+  <text x="256" y="256" text-anchor="middle" font-size="180" font-weight="bold" fill="#f38ba8" font-family="sans-serif">=</text>
+  <rect x="140" y="310" width="232" height="2" rx="1" fill="rgba(205,214,244,0.15)"/>
+  <g transform="translate(148, 340)" opacity="0.5">
+    <rect width="28" height="28" rx="4" fill="#1e1e2e" stroke="rgba(205,214,244,0.12)" stroke-width="1.5"/>
+    <rect x="40" width="28" height="28" rx="4" fill="#1e1e2e" stroke="rgba(205,214,244,0.12)" stroke-width="1.5"/>
+    <rect x="80" width="28" height="28" rx="4" fill="#1e1e2e" stroke="rgba(205,214,244,0.12)" stroke-width="1.5"/>
+    <rect x="120" width="28" height="28" rx="4" fill="#11111b" stroke="rgba(205,214,244,0.12)" stroke-width="1.5"/>
+    <rect y="36" width="28" height="28" rx="4" fill="#1e1e2e" stroke="rgba(205,214,244,0.12)" stroke-width="1.5"/>
+    <rect x="40" y="36" width="28" height="28" rx="4" fill="#1e1e2e" stroke="rgba(205,214,244,0.12)" stroke-width="1.5"/>
+    <rect x="80" y="36" width="28" height="28" rx="4" fill="#1e1e2e" stroke="rgba(205,214,244,0.12)" stroke-width="1.5"/>
+    <rect x="120" y="36" width="28" height="28" rx="4" fill="#11111b" stroke="rgba(205,214,244,0.12)" stroke-width="1.5"/>
+    <rect x="120" y="0" width="28" height="64" rx="4" fill="#f38ba8" opacity="0.85"/>
+  </g>
+</svg>
