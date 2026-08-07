@@ -1031,6 +1031,19 @@ body {
           <div class="theme-circle" data-theme="silver" style="background:#1b2028;border:2px solid #cbd5e1" onclick="setTheme('silver')" title="Metallic Silver"></div>
           <div class="theme-circle" data-theme="gold" style="background:#18150c;border:2px solid #facc15" onclick="setTheme('gold')" title="Subtle Cyber Gold"></div>
         </div>
+        <div style="margin-top:0.75rem;padding-top:0.65rem;border-top:1px solid var(--border-color);">
+          <div style="text-align:center;margin-bottom:0.45rem;font-size:0.72rem;color:var(--text-muted);font-weight:800;text-transform:uppercase;letter-spacing:0.5px;" id="lbl-navstyle-settings">🎛️ MODES MENU STYLE</div>
+          <div style="display:flex;gap:0.5rem;">
+            <div id="navstyle-card-centre-s" onclick="chooseNavStyle('centre')" style="flex:1;padding:0.55rem 0.4rem;border-radius:12px;border:2px solid var(--border-color);background:var(--bg-primary);cursor:pointer;text-align:center;transition:all 0.2s ease;">
+              <div style="font-size:0.78rem;font-weight:800;color:#d4af37;">🎛️ Old Skool</div>
+              <div style="font-size:0.64rem;color:var(--text-muted);font-weight:600;margin-top:2px;" id="lbl-navstyle-centre-cap-s">Modes from the centre</div>
+            </div>
+            <div id="navstyle-card-drawer-s" onclick="chooseNavStyle('drawer')" style="flex:1;padding:0.55rem 0.4rem;border-radius:12px;border:2px solid var(--border-color);background:var(--bg-primary);cursor:pointer;text-align:center;transition:all 0.2s ease;">
+              <div style="font-size:0.78rem;font-weight:800;color:#38bdf8;">🚀 Modern</div>
+              <div style="font-size:0.64rem;color:var(--text-muted);font-weight:600;margin-top:2px;" id="lbl-navstyle-drawer-cap-s">Modes from the left</div>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="toggle-row">
         <div>
@@ -1383,6 +1396,42 @@ body {
   </div>
 </div>
 
+<!-- Main App Left Slide-in Drawer Navigation -->
+<div id="drawer-main-overlay" onclick="closeMainDrawer()" style="position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:10040;display:none;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);transition:opacity 0.25s ease;"></div>
+
+<div id="drawer-main-menu" style="position:fixed;top:0;left:0;bottom:0;width:290px;max-width:82vw;background:var(--bg-secondary);border-right:1px solid var(--border-color);z-index:10041;transform:translateX(-100%);transition:transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);padding:1.25rem 1rem;display:flex;flex-direction:column;box-shadow:4px 0 24px rgba(0,0,0,0.6);box-sizing:border-box;">
+
+  <div style="display:flex;align-items:center;justify-content:space-between;padding-bottom:1rem;border-bottom:1px solid var(--border-color);margin-bottom:1rem;">
+    <div style="font-weight:800;font-size:1.3rem;color:var(--color-accent);font-family:'Parisienne','Alex Brush','Great Vibes',cursive;letter-spacing:0.02em;display:flex;align-items:center;gap:8px;">
+      Lazy Calc
+    </div>
+    <button onclick="closeMainDrawer()" style="width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,0.08);border:1px solid var(--border-color);color:var(--text-primary);font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>
+  </div>
+
+  <div id="lbl-main-drawer-modes" style="font-size:0.72rem;font-weight:800;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin:0 0 0.5rem 0.25rem;">Modes</div>
+
+  <div style="display:flex;flex-direction:column;gap:0.45rem;flex:1;overflow-y:auto;">
+    <button id="main-drawer-date" onclick="selectModeFromMainDrawer('date')" style="width:100%;padding:0.75rem 0.9rem;border-radius:12px;border:1px solid rgba(244,63,94,0.3);background:rgba(244,63,94,0.1);color:#f43f5e;font-weight:700;font-size:0.92rem;cursor:pointer;display:flex;align-items:center;gap:10px;text-align:left;">🗓️ Date & Duration</button>
+    <button id="main-drawer-ledger" onclick="openLedgerFromMainDrawer()" style="width:100%;padding:0.75rem 0.9rem;border-radius:12px;border:1px solid rgba(212,175,55,0.35);background:rgba(212,175,55,0.08);color:#d4af37;font-weight:700;font-size:0.92rem;cursor:pointer;display:flex;align-items:center;gap:10px;text-align:left;">📜 Ledger</button>
+    <button id="main-drawer-expenses" onclick="selectModeFromMainDrawer('expenses')" style="width:100%;padding:0.75rem 0.9rem;border-radius:12px;border:1px solid rgba(37,211,102,0.3);background:rgba(37,211,102,0.1);color:#25D366;font-weight:700;font-size:0.92rem;cursor:pointer;display:flex;align-items:center;gap:10px;text-align:left;">💸 Expenses</button>
+    <button id="main-drawer-splitter" onclick="selectModeFromMainDrawer('splitter')" style="width:100%;padding:0.75rem 0.9rem;border-radius:12px;border:1px solid rgba(192,132,252,0.3);background:rgba(192,132,252,0.1);color:#c084fc;font-weight:700;font-size:0.92rem;cursor:pointer;display:flex;align-items:center;gap:10px;text-align:left;">👥 Splitter</button>
+    <button id="main-drawer-quickbilling" onclick="selectModeFromMainDrawer('quickbilling')" style="width:100%;padding:0.75rem 0.9rem;border-radius:12px;border:1px solid rgba(234,179,8,0.3);background:rgba(234,179,8,0.1);color:#eab308;font-weight:700;font-size:0.92rem;cursor:pointer;display:flex;align-items:center;gap:10px;text-align:left;">🛒 Billing - POS</button>
+    <button id="main-drawer-fuel" onclick="selectModeFromMainDrawer('fuel')" style="width:100%;padding:0.75rem 0.9rem;border-radius:12px;border:1px solid rgba(251,146,60,0.3);background:rgba(251,146,60,0.1);color:#fb923c;font-weight:700;font-size:0.92rem;cursor:pointer;display:flex;align-items:center;gap:10px;text-align:left;">⛽ Fuel & Trip</button>
+    <button id="main-drawer-emi" onclick="selectModeFromMainDrawer('emi')" style="width:100%;padding:0.75rem 0.9rem;border-radius:12px;border:1px solid rgba(52,211,153,0.3);background:rgba(52,211,153,0.1);color:#34d399;font-weight:700;font-size:0.92rem;cursor:pointer;display:flex;align-items:center;gap:10px;text-align:left;">📈 Loan EMI</button>
+    <button id="main-drawer-converter" onclick="selectModeFromMainDrawer('converter')" style="width:100%;padding:0.75rem 0.9rem;border-radius:12px;border:1px solid rgba(96,165,250,0.3);background:rgba(96,165,250,0.1);color:#60a5fa;font-weight:700;font-size:0.92rem;cursor:pointer;display:flex;align-items:center;gap:10px;text-align:left;">📏 Unit Converter</button>
+    <button id="main-drawer-scientific" onclick="selectModeFromMainDrawer('scientific')" style="width:100%;padding:0.75rem 0.9rem;border-radius:12px;border:1px solid rgba(167,139,250,0.3);background:rgba(167,139,250,0.1);color:#a78bfa;font-weight:700;font-size:0.92rem;cursor:pointer;display:flex;align-items:center;gap:10px;text-align:left;">📐 Scientific</button>
+  </div>
+
+  <div style="border-bottom:1px solid var(--border-color);margin:0.4rem 0;"></div>
+
+  <button id="main-drawer-settings" onclick="closeMainDrawer();openSettingsModal();" style="width:100%;padding:0.7rem 0.9rem;border-radius:10px;border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);font-weight:600;font-size:0.88rem;cursor:pointer;display:flex;align-items:center;gap:10px;text-align:left;">
+    <span style="font-size:1.1rem;">⚙️</span> Settings
+  </button>
+  <button id="main-drawer-guide" onclick="closeMainDrawer();openGuideModal();" style="width:100%;padding:0.7rem 0.9rem;border-radius:10px;border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);font-weight:600;font-size:0.88rem;cursor:pointer;display:flex;align-items:center;gap:10px;text-align:left;margin-top:0.45rem;">
+    <span style="font-size:1.1rem;">📖</span> How to Use
+  </button>
+</div>
+
 <!-- Sales Report & Analytics Modal -->
 <div class="modal-overlay" id="modal-sales-report" onclick="dismissModalOnBackdrop(event, 'modal-sales-report')" style="display:none;z-index:10020 !important;">
   <div class="modal-card" style="max-width:440px;width:94%;max-height:85vh;display:flex;flex-direction:column;border-radius:18px;">
@@ -1654,10 +1703,11 @@ body {
 
     <!-- Tier 1: Basic App (₹9) -->
     <div style="background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:14px;padding:0.85rem;margin-bottom:0.85rem;position:relative;">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.4rem;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.2rem;">
         <div style="font-size:0.95rem;font-weight:800;color:var(--text-primary);">🌱 Basic App</div>
         <div style="font-size:1.15rem;font-weight:900;color:var(--color-accent);">₹9 <span style="font-size:0.68rem;font-weight:600;color:var(--text-muted);">/ lifetime</span></div>
       </div>
+      <div style="font-size:0.72rem;color:var(--text-muted);font-weight:600;margin-bottom:0.45rem;">Best for personal use</div>
       <div style="font-size:0.75rem;color:var(--text-muted);line-height:1.35;margin-bottom:0.6rem;">
         ✔ Calculator + Voice Calc + Lazy Mode<br>
         ✔ Expense Tracker & Khata Ledger<br>
@@ -1673,12 +1723,13 @@ body {
 
     <!-- Tier 2: Pro App (₹19) -->
     <div style="background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:14px;padding:0.85rem;margin-bottom:0.85rem;position:relative;">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.4rem;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.2rem;">
         <div style="display:flex;align-items:center;gap:6px;">
           <div style="font-size:0.95rem;font-weight:800;color:var(--text-primary);">⭐ Pro App</div>
         </div>
         <div style="font-size:1.15rem;font-weight:900;color:#3b82f6;">₹19 <span style="font-size:0.68rem;font-weight:600;color:var(--text-muted);">/ lifetime</span></div>
       </div>
+      <div style="font-size:0.72rem;color:var(--text-muted);font-weight:600;margin-bottom:0.45rem;">Best for families &amp; friends</div>
       <div style="font-size:0.75rem;color:var(--text-muted);line-height:1.35;margin-bottom:0.6rem;">
         ✔ Everything in Basic App<br>
         ✔ Expense Splitter (Group & Person Bills)<br>
@@ -1690,25 +1741,31 @@ body {
     </div>
 
     <!-- Tier 3: All-Access POS (₹29) -->
-    <div style="background:linear-gradient(135deg, rgba(234,179,8,0.12) 0%, rgba(234,179,8,0.03) 100%);border:2px solid #eab308;border-radius:14px;padding:0.85rem;margin-bottom:0.85rem;position:relative;box-shadow:0 4px 16px rgba(234,179,8,0.15);">
+    <div style="background:linear-gradient(135deg, rgba(234,179,8,0.12) 0%, rgba(234,179,8,0.03) 100%);border:2px solid #eab308;border-radius:16px;padding:1.05rem;margin-bottom:0.85rem;position:relative;box-shadow:0 4px 16px rgba(234,179,8,0.15);">
       <div style="position:absolute;right:10px;top:-10px;background:#eab308;color:#000;font-size:0.6rem;font-weight:900;padding:2px 8px;border-radius:10px;text-transform:uppercase;letter-spacing:0.5px;">👑 BEST VALUE</div>
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.4rem;">
-        <div style="font-size:0.95rem;font-weight:900;color:#eab308;">👑 All-Access POS</div>
-        <div style="font-size:1.2rem;font-weight:900;color:#eab308;">₹29 <span style="font-size:0.68rem;font-weight:600;color:var(--text-muted);">/ lifetime</span></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.2rem;">
+        <div style="font-size:1.05rem;font-weight:900;color:#eab308;">👑 All-Access POS</div>
+        <div style="font-size:1.45rem;font-weight:900;color:#eab308;">₹29 <span style="font-size:0.68rem;font-weight:600;color:var(--text-muted);">/ lifetime</span></div>
       </div>
-      <div style="font-size:0.75rem;color:var(--text-primary);line-height:1.4;margin-bottom:0.65rem;">
+      <div style="font-size:0.74rem;color:#eab308;font-weight:700;margin-bottom:0.45rem;">Best for shop owners</div>
+      <div style="font-size:0.78rem;color:var(--text-primary);line-height:1.45;margin-bottom:0.65rem;">
         ✔ <strong>EVERYTHING INCLUDED</strong><br>
         ✔ Billing POS & Custom Menu Grid<br>
         ✔ Expense Splitter (Group & Person Bills)<br>
         ✔ Khata Ledger & Expense Tracker<br>
         ✔ Stock Alerts & Business Reports
       </div>
-      <button onclick="triggerPaymentTier('all_access', 29)" style="width:100%;padding:0.7rem;border-radius:10px;background:#eab308;color:#000000;border:none;font-weight:900;font-size:0.9rem;cursor:pointer;transition:all 0.15s ease;box-shadow:0 4px 14px rgba(234,179,8,0.4);">
+      <button onclick="triggerPaymentTier('all_access', 29)" style="width:100%;padding:0.75rem;border-radius:10px;background:#eab308;color:#000000;border:none;font-weight:900;font-size:0.95rem;cursor:pointer;transition:all 0.15s ease;box-shadow:0 4px 14px rgba(234,179,8,0.4);">
         Unlock All-Access (₹29)
       </button>
     </div>
 
-    <div style="text-align:center;font-size:0.72rem;color:var(--text-muted);margin-top:0.6rem;">
+    <!-- Trust Line -->
+    <div style="text-align:center;font-size:0.76rem;font-weight:800;color:#eab308;margin:0.1rem 0 0.4rem 0;">
+      ✅ One-time payment • No subscription • Lifetime updates
+    </div>
+
+    <div style="text-align:center;font-size:0.72rem;color:var(--text-muted);">
       🔒 100% Secure Instant UPI (GPay, PhonePe, Paytm, BHIM) • One-Time Lifetime Access
     </div>
   </div>
@@ -1902,8 +1959,53 @@ body {
       <div id="onboarding-hint" style="font-size:0.75rem;font-weight:700;color:#d4af37;opacity:0.9;margin:0.1rem 0;">💡 The smart calculator built for daily life.</div>
       
       <!-- SUBTLE ELEGANT ROYAL TEAL/NAVY CTA BUTTON -->
-      <button id="onboarding-btn-gotit" onclick="dismissOnboarding()" style="width:100%;padding:0.8rem;border:none;border-radius:20px;background:linear-gradient(135deg, #0d9488 0%, #0f766e 100%);color:#ffffff;font-size:1.05rem;cursor:pointer;font-weight:900;box-shadow:0 8px 25px rgba(13,148,136,0.35), inset 0 1px 0 rgba(255,255,255,0.25);">Got It!</button>
+      <button id="onboarding-btn-gotit" onclick="finishOnboarding()" style="width:100%;padding:0.8rem;border:none;border-radius:20px;background:linear-gradient(135deg, #0d9488 0%, #0f766e 100%);color:#ffffff;font-size:1.05rem;cursor:pointer;font-weight:900;box-shadow:0 8px 25px rgba(13,148,136,0.35), inset 0 1px 0 rgba(255,255,255,0.25);">Got It!</button>
     </div>
+  </div>
+</div>
+
+<!-- MODES MENU STYLE CHOICE WINDOW -->
+<div class="modal-overlay" id="modal-navstyle" onclick="dismissNavStyle(event)" style="backdrop-filter:blur(25px);-webkit-backdrop-filter:blur(25px);background:rgba(5,9,14,0.88);z-index:1004 !important;">
+  <div class="modal-container" onclick="event.stopPropagation()" style="padding:1.4rem 1.2rem;max-width:360px;border-radius:26px;background:linear-gradient(165deg, #0e1520 0%, #090e15 100%);border:1.5px solid rgba(212,175,55,0.3);box-shadow:0 25px 60px rgba(0,0,0,0.9), 0 0 35px rgba(212,175,55,0.12), inset 0 1px 0 rgba(255,255,255,0.15);position:relative;overflow:hidden;">
+    <div style="position:absolute;top:-50px;left:50%;transform:translateX(-50%);width:240px;height:240px;background:radial-gradient(circle, rgba(212,175,55,0.18) 0%, rgba(148,163,184,0.06) 55%, transparent 70%);pointer-events:none;"></div>
+
+    <div style="font-size:1.7rem;margin-bottom:0.2rem;text-align:center;filter:drop-shadow(0 0 12px rgba(212,175,55,0.5));">🎛️</div>
+    <div id="lbl-navstyle-title" style="font-size:1.08rem;font-weight:900;margin-bottom:0.2rem;text-transform:uppercase;color:#ffffff;text-align:center;letter-spacing:0.5px;text-shadow:0 0 12px rgba(255,255,255,0.22);">How would you like to use the app?</div>
+    <div id="lbl-navstyle-subtitle" style="font-size:0.8rem;font-weight:600;color:rgba(226,232,240,0.85);text-align:center;margin-bottom:1rem;">Pick how modes open up - you can change it anytime in Settings.</div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.7rem;margin-bottom:1.1rem;">
+      <!-- OLD SKOOL CARD -->
+      <div id="navstyle-card-centre" onclick="chooseNavStyle('centre')" style="padding:0.6rem 0.55rem;border-radius:16px;border:2px solid rgba(255,255,255,0.14);background:rgba(255,255,255,0.04);cursor:pointer;text-align:center;transition:all 0.2s ease;box-shadow:0 4px 14px rgba(0,0,0,0.35);">
+        <div style="background:#000;border-radius:10px;padding:6px 8px 8px;font-family:sans-serif;margin-bottom:0.5rem;">
+          <div style="display:flex;justify-content:center;">
+            <div style="background:rgba(212,175,55,0.15);border:1px solid #d4af37;color:#d4af37;border-radius:6px;padding:2px 8px;font-size:0.68rem;font-weight:800;display:flex;align-items:center;gap:4px;">Lazy Calc <span style="font-size:0.6rem;">▾</span></div>
+          </div>
+          <div style="margin:5px auto 0;width:78%;background:#222;border:1px solid #444;border-radius:6px;padding:2px 0;">
+            <div style="font-size:0.6rem;color:#fff;padding:3px 6px;text-align:left;">📜 Ledger</div>
+            <div style="font-size:0.6rem;color:#fff;padding:3px 6px;border-top:1px solid #333;text-align:left;">💸 Expenses</div>
+            <div style="font-size:0.6rem;color:#fff;padding:3px 6px;border-top:1px solid #333;text-align:left;">👥 Splitter</div>
+          </div>
+        </div>
+        <div id="lbl-navstyle-oldskool" style="font-size:0.82rem;font-weight:800;color:#d4af37;">🎛️ Old Skool</div>
+        <div id="lbl-navstyle-centre-cap" style="font-size:0.66rem;color:rgba(226,232,240,0.7);font-weight:600;margin-top:2px;">Modes appear from the centre</div>
+      </div>
+      <!-- MODERN CARD -->
+      <div id="navstyle-card-drawer" onclick="chooseNavStyle('drawer')" style="padding:0.6rem 0.55rem;border-radius:16px;border:2px solid rgba(255,255,255,0.14);background:rgba(255,255,255,0.04);cursor:pointer;text-align:center;transition:all 0.2s ease;box-shadow:0 4px 14px rgba(0,0,0,0.35);">
+        <div style="background:#000;border-radius:10px;padding:0;font-family:sans-serif;margin-bottom:0.5rem;position:relative;height:86px;overflow:hidden;">
+          <div style="position:absolute;left:0;top:0;bottom:0;width:62%;background:#161616;border-right:1px solid #444;padding:6px;box-sizing:border-box;">
+            <div style="font-family:'Parisienne','Alex Brush','Great Vibes',cursive;color:#d4af37;font-size:0.72rem;font-weight:800;margin-bottom:4px;">Lazy Calc</div>
+            <div style="font-size:0.6rem;color:#fff;padding:3px 4px;background:rgba(212,175,55,0.12);border-radius:4px;margin-bottom:2px;text-align:left;">📜 Ledger</div>
+            <div style="font-size:0.6rem;color:#fff;padding:3px 4px;margin-bottom:2px;text-align:left;">💸 Expenses</div>
+            <div style="font-size:0.6rem;color:#fff;padding:3px 4px;text-align:left;">👥 Splitter</div>
+          </div>
+          <div style="padding:4px 0 0 66%;font-size:0.72rem;color:#888;">☰</div>
+        </div>
+        <div id="lbl-navstyle-modern" style="font-size:0.82rem;font-weight:800;color:#38bdf8;">🚀 Modern</div>
+        <div id="lbl-navstyle-drawer-cap" style="font-size:0.66rem;color:rgba(226,232,240,0.7);font-weight:600;margin-top:2px;">Modes appear from the left</div>
+      </div>
+    </div>
+
+    <button id="lbl-navstyle-skip" onclick="dismissNavStyle()" style="width:100%;padding:0.72rem;border:none;border-radius:20px;background:linear-gradient(135deg, #0d9488 0%, #0f766e 100%);color:#ffffff;font-size:0.95rem;cursor:pointer;font-weight:800;box-shadow:0 8px 25px rgba(13,148,136,0.35), inset 0 1px 0 rgba(255,255,255,0.25);">Maybe Later</button>
   </div>
 </div>
 
@@ -2017,7 +2119,7 @@ body {
       </div>
 
       <div id="modes-dropdown-wrap" class="modes-dropdown-wrap" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);pointer-events:auto;z-index:10;">
-        <span id="h-btn-modes" class="mode-heading-btn" onclick="toggleModesMenu(event)" style="padding:0.25rem 0.65rem;display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:1.25rem;font-family:'Parisienne','Alex Brush','Great Vibes',cursive;letter-spacing:0.02em;background:transparent;border:1px solid var(--border-color);border-radius:10px;cursor:pointer;">Lazy Calc <span class="hdr-chevron-svg" style="display:inline-flex;align-items:center;justify-content:center;transition:transform 0.25s ease;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></span></span>
+        <span id="h-btn-modes" class="mode-heading-btn" style="padding:0.25rem 0.65rem;display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:1.25rem;font-family:'Parisienne','Alex Brush','Great Vibes',cursive;letter-spacing:0.02em;background:transparent;border:none;cursor:default;pointer-events:none;">Lazy Calc</span>
         <div id="modes-menu" class="modes-menu-popup" onclick="event.stopPropagation()">
           <div id="mitem-date" class="modes-menu-item" onclick="selectModeFromMenu('date')">🗓️ Date & Duration</div>
           <div id="mitem-billing" class="modes-menu-item" onclick="selectModeFromMenu('quickbilling')">🛒 Billing - POS</div>
@@ -2816,6 +2918,7 @@ var _kMode = localStorage.getItem('calc_k_mode') === 'true';
 var _shareMode = localStorage.getItem('calc_share_mode') || 'system';
 var _billMode = localStorage.getItem('calc_bill_mode') === 'true';
 var _navBottom = localStorage.getItem('calc_nav_bottom') === 'true';
+var _navStyle = localStorage.getItem('nav_style') || 'drawer';
 var _expensesNewCount = 0;
 
 function getHeaderChevronSvg() {
@@ -2829,26 +2932,73 @@ function updateNavPositionUI() {
   if (btn) btn.textContent = _navBottom ? (_appLang === 'hi' ? '📌 स्थिति: नीचे' : _appLang === 'hn' ? '📌 Nav Position: Bottom' : '📌 NAV POSITION: BOTTOM') : (_appLang === 'hi' ? '📌 स्थिति: ऊपर' : _appLang === 'hn' ? '📌 Nav Position: Top' : '📌 NAV POSITION: TOP');
   var modesBtn = document.getElementById('h-btn-modes');
   if (modesBtn) {
-    var chev = getHeaderChevronSvg();
-    var titles = {
-      basic: 'Lazy Calc ' + chev,
-      expenses: '<span style="color:#25D366;text-shadow:0 0 10px rgba(37,211,102,0.6)">' + (_appLang === 'hi' ? '💸 खर्च' : _appLang === 'hn' ? '💸 Expenses' : '💸 Expenses') + '</span> ' + chev,
-      date: '<span style="color:#f43f5e;text-shadow:0 0 10px rgba(244,63,94,0.6)">' + (_appLang === 'hi' ? '🗓️ तारीख व अवधि' : _appLang === 'hn' ? '🗓️ Date & Duration' : '🗓️ Date & Duration') + '</span> ' + chev,
-      splitter: '<span style="color:#c084fc;text-shadow:0 0 10px rgba(192,132,252,0.6)">' + (_appLang === 'hi' ? '👥 स्प्लिटर (हिसाब)' : _appLang === 'hn' ? '👥 Splitter' : '👥 Splitter') + '</span> ' + chev,
-      gold: '<span style="color:#fde047;text-shadow:0 0 10px rgba(253,224,71,0.6)">' + (_appLang === 'hi' ? '🪙 सोना व आभूषण' : _appLang === 'hn' ? '🪙 Gold & Jewellery' : '🪙 Gold & Jewellery') + '</span> ' + chev,
-      fuel: '<span style="color:#fb923c;text-shadow:0 0 10px rgba(251,146,60,0.6)">' + (_appLang === 'hi' ? '⛽ ईंधन व ट्रिप' : _appLang === 'hn' ? '⛽ Fuel & Trip' : '⛽ Fuel & Trip') + '</span> ' + chev,
-      emi: '<span style="color:#34d399;text-shadow:0 0 10px rgba(52,211,153,0.6)">' + (_appLang === 'hi' ? '📈 लोन EMI' : _appLang === 'hn' ? '📈 Loan EMI' : '📈 Loan EMI') + '</span> ' + chev,
-      gst: '<span style="color:#fbbf24;text-shadow:0 0 10px rgba(251,191,36,0.6)">' + (_appLang === 'hi' ? '💰 GST टैक्स' : _appLang === 'hn' ? '💰 GST & Tax' : '💰 GST & Tax') + '</span> ' + chev,
-      converter: '<span style="color:#60a5fa;text-shadow:0 0 10px rgba(96,165,250,0.6)">' + (_appLang === 'hi' ? '📏 इकाई कनवर्टर' : _appLang === 'hn' ? '📏 Unit Converter' : '📏 Unit Converter') + '</span> ' + chev,
-      scientific: '<span style="color:#a78bfa;text-shadow:0 0 10px rgba(167,139,250,0.6)">' + (_appLang === 'hi' ? '📐 साइंटिफिक' : _appLang === 'hn' ? '📐 Scientific' : '📐 Scientific') + '</span> ' + chev
-    };
-    modesBtn.innerHTML = titles[_calcMode] || ('Lazy Calc ' + chev);
-    modesBtn.style.fontFamily = _calcMode === 'basic' ? "'Parisienne', 'Alex Brush', 'Great Vibes', cursive" : "var(--font-sans, system-ui, sans-serif)";
+    modesBtn.style.fontFamily = "'Parisienne', 'Alex Brush', 'Great Vibes', cursive";
+    modesBtn.classList.remove('active');
   }
   var mainCalc = document.getElementById('modal-calculator');
   if (mainCalc) {
     mainCalc.classList.toggle('nav-bottom-mode', _navBottom);
   }
+  applyNavStyle();
+}
+
+function applyNavStyle() {
+  var modesBtn = document.getElementById('h-btn-modes');
+  if (modesBtn) {
+    if (_navStyle === 'centre') {
+      modesBtn.setAttribute('onclick', 'toggleModesMenu(event)');
+      modesBtn.style.pointerEvents = 'auto';
+      modesBtn.style.cursor = 'pointer';
+      modesBtn.style.border = '1px solid var(--border-color)';
+      modesBtn.style.borderRadius = '10px';
+      modesBtn.style.background = 'transparent';
+      modesBtn.style.padding = '0.25rem 0.65rem';
+      modesBtn.innerHTML = 'Lazy Calc ' + getHeaderChevronSvg();
+    } else {
+      modesBtn.removeAttribute('onclick');
+      modesBtn.style.pointerEvents = 'none';
+      modesBtn.style.cursor = 'default';
+      modesBtn.style.border = 'none';
+      modesBtn.style.background = 'transparent';
+      modesBtn.style.padding = '0.25rem 0.65rem';
+      modesBtn.innerHTML = 'Lazy Calc';
+      var mm = document.getElementById('modes-menu');
+      if (mm) mm.classList.remove('active');
+    }
+  }
+  var c1 = document.getElementById('navstyle-card-centre');
+  var c2 = document.getElementById('navstyle-card-drawer');
+  if (c1) c1.style.border = _navStyle === 'centre' ? '2px solid #d4af37' : '2px solid rgba(255,255,255,0.14)';
+  if (c2) c2.style.border = _navStyle === 'drawer' ? '2px solid #38bdf8' : '2px solid rgba(255,255,255,0.14)';
+  var s1 = document.getElementById('navstyle-card-centre-s');
+  var s2 = document.getElementById('navstyle-card-drawer-s');
+  if (s1) s1.style.border = _navStyle === 'centre' ? '2px solid #d4af37' : '2px solid var(--border-color)';
+  if (s2) s2.style.border = _navStyle === 'drawer' ? '2px solid #38bdf8' : '2px solid var(--border-color)';
+}
+
+function chooseNavStyle(style) {
+  _navStyle = (style === 'centre') ? 'centre' : 'drawer';
+  try { localStorage.setItem('nav_style', _navStyle); } catch(e) {}
+  applyNavStyle();
+  var m = document.getElementById('modal-navstyle');
+  if (m) m.classList.remove('active');
+  if (typeof showToast === 'function') showToast(_navStyle === 'centre' ? '🎛️ ' + _t('Old Skool Mode - modes from the centre', 'ओल्ड स्कूल मोड - मोड केंद्र से', 'Old Skool Mode - modes centre se') : '🚀 ' + _t('Modern Mode - modes from the left', 'मॉडर्न मोड - मोड बाईं ओर से', 'Modern Mode - modes left se'));
+}
+
+function finishOnboarding() {
+  dismissOnboarding();
+  if (!localStorage.getItem('nav_style')) {
+    setTimeout(function() {
+      var m = document.getElementById('modal-navstyle');
+      if (m) m.classList.add('active');
+    }, 300);
+  }
+}
+
+function dismissNavStyle(e) {
+  if (e && e.target !== e.currentTarget && e.target.tagName !== 'BUTTON') return;
+  var m = document.getElementById('modal-navstyle');
+  if (m) m.classList.remove('active');
 }
 
 function toggleNavPosition() {
@@ -3846,7 +3996,29 @@ function setAppLanguage(lang) {
     'lbl-cust-total': ['Total Customers: ', 'कुल ग्राहक: ', 'Kul customers: '],
     'lbl-cust-total-billed': ['Total Billed: ', 'कुल बिल: ', 'Kul bill: '],
     'lbl-cust-export': ['📥 Export CSV', '📥 CSV एक्सपोर्ट करें', '📥 CSV export karein'],
-    'lbl-cust-clear': ['🗑️ Clear', '🗑️ साफ करें', '🗑️ Saaf karein']
+    'lbl-cust-clear': ['🗑️ Clear', '🗑️ साफ करें', '🗑️ Saaf karein'],
+    'lbl-main-drawer-modes': ['Modes', 'मोड', 'Modes'],
+    'main-drawer-ledger': ['📜 Ledger', '📜 खाता', '📜 Khata'],
+    'main-drawer-expenses': ['💸 Expenses', '💸 खर्च', '💸 Expenses'],
+    'main-drawer-quickbilling': ['🛒 Billing - POS', '🛒 बिलिंग - POS', '🛒 Billing - POS'],
+    'main-drawer-date': ['🗓️ Date & Duration', '🗓️ तारीख व अवधि', '🗓️ Date & Duration'],
+    'main-drawer-splitter': ['👥 Splitter', '👥 स्प्लिटर (हिसाब)', '👥 Splitter'],
+    'main-drawer-fuel': ['⛽ Fuel & Trip', '⛽ ईंधन व ट्रिप', '⛽ Fuel & Trip'],
+    'main-drawer-emi': ['📈 Loan EMI', '📈 लोन EMI', '📈 Loan EMI'],
+    'main-drawer-converter': ['📏 Unit Converter', '📏 इकाई कनवर्टर', '📏 Unit Converter'],
+    'main-drawer-scientific': ['📐 Scientific', '📐 साइंटिफिक', '📐 Scientific'],
+    'main-drawer-settings': ['⚙️ Settings', '⚙️ सेटिंग्स', '⚙️ Settings'],
+    'main-drawer-guide': ['📖 How to Use', '📖 उपयोग कैसे करें', '📖 Kaise use karein'],
+    'lbl-navstyle-settings': ['🎛️ MODES MENU STYLE', '🎛️ मोड मेन्यू स्टाइल', '🎛️ Modes menu style'],
+    'lbl-navstyle-centre-cap-s': ['Modes from the centre', 'मोड केंद्र से', 'Modes centre se'],
+    'lbl-navstyle-drawer-cap-s': ['Modes from the left', 'मोड बाईं ओर से', 'Modes left se'],
+    'lbl-navstyle-title': ['How would you like to use the app?', 'आप ऐप का उपयोग कैसे करना चाहेंगे?', 'App kaise use karna chahenge?'],
+    'lbl-navstyle-subtitle': ['Pick how modes open up - you can change it anytime in Settings.', 'चुनें कि मोड कैसे खुलें - आप इसे कभी भी सेटिंग्स में बदल सकते हैं।', 'Chunein modes kaise khulein - Settings me kabhi bhi badal sakte hain.'],
+    'lbl-navstyle-oldskool': ['🎛️ Old Skool', '🎛️ ओल्ड स्कूल', '🎛️ Old Skool'],
+    'lbl-navstyle-modern': ['🚀 Modern', '🚀 मॉडर्न', '🚀 Modern'],
+    'lbl-navstyle-centre-cap': ['Modes appear from the centre', 'मोड केंद्र से खुलते हैं', 'Modes centre se khulte hain'],
+    'lbl-navstyle-drawer-cap': ['Modes appear from the left', 'मोड बाईं ओर से खुलते हैं', 'Modes left se khulte hain'],
+    'lbl-navstyle-skip': ['Maybe Later', 'शायद बाद में', 'Shayad baad mein']
   };
   for (var mid in m) {
     var mel = document.getElementById(mid);
@@ -3991,6 +4163,10 @@ function translateStaticHtml() {
     '✗ No Billing POS': ['✗ बिलिंग POS नहीं', '✗ Billing POS nahi'],
     'Unlock Pro (₹19)': ['प्रो अनलॉक करें (₹19)', 'Pro unlock karein (₹19)'],
     '👑 BEST VALUE': ['👑 सबसे अच्छा विकल्प', '👑 Sabse accha vikalp'],
+    '✅ One-time payment • No subscription • Lifetime updates': ['✅ एक बार का भुगतान • कोई सदस्यता नहीं • जीवनभर अपडेट', '✅ Ek baar ka bhugtan • Koi subscription nahi • Zindagi bhar updates'],
+    'Best for personal use': ['व्यक्तिगत उपयोग के लिए सबसे अच्छा', 'Personal use ke liye best'],
+    'Best for families & friends': ['परिवार व दोस्तों के लिए सबसे अच्छा', 'Family aur doston ke liye best'],
+    'Best for shop owners': ['दुकानदारों के लिए सबसे अच्छा', 'Shop owners ke liye best'],
     '👑 All-Access POS': ['👑 ऑल-एक्सेस POS', '👑 All-access POS'],
     '✔ EVERYTHING INCLUDED': ['✔ सब कुछ शामिल', '✔ Sab kuch shamil'],
     '✔ Billing POS & Custom Menu Grid': ['✔ बिलिंग POS व कस्टम मेन्यू ग्रिड', '✔ Billing POS aur custom menu grid'],
@@ -4273,8 +4449,8 @@ function applyCalcMode(name) {
       settingsBtn.innerHTML = '☰';
       settingsBtn.title = 'POS Menu';
     } else {
-      settingsBtn.innerHTML = '⚙️';
-      settingsBtn.title = 'Settings';
+      settingsBtn.innerHTML = '☰';
+      settingsBtn.title = 'Menu';
     }
   }
 
@@ -4314,8 +4490,11 @@ function applyCalcMode(name) {
     if (hModesBtn) {
       hModesBtn.classList.remove('active');
       hModesBtn.style.display = '';
-      hModesBtn.innerHTML = 'Lazy Calc ' + chev;
+      hModesBtn.innerHTML = 'Lazy Calc';
       hModesBtn.style.fontFamily = "'Parisienne', 'Alex Brush', 'Great Vibes', cursive";
+      hModesBtn.style.cursor = 'default';
+      hModesBtn.style.border = 'none';
+      hModesBtn.style.pointerEvents = 'none';
     }
     if (histBtn) histBtn.style.display = '';
     if (histContainer) histContainer.style.display = '';
@@ -4342,11 +4521,13 @@ function applyCalcMode(name) {
     if (expIconBtn) { expIconBtn.style.display = 'none'; }
     if (voiceBtn) { voiceBtn.style.display = 'none'; }
     if (hModesBtn) {
-      var isSpecialized = ['splitter','gold','fuel','emi','gst','converter','scientific','expenses','date'].indexOf(name) !== -1;
-      hModesBtn.classList.toggle('active', isSpecialized);
+      hModesBtn.classList.remove('active');
       hModesBtn.style.display = '';
-      hModesBtn.innerHTML = modeTitles[name] || 'Lazy Calc ▾';
-      hModesBtn.style.fontFamily = name === 'basic' ? "'Parisienne', 'Alex Brush', 'Great Vibes', cursive" : "var(--font-sans, system-ui, sans-serif)";
+      hModesBtn.innerHTML = 'Lazy Calc';
+      hModesBtn.style.fontFamily = "'Parisienne', 'Alex Brush', 'Great Vibes', cursive";
+      hModesBtn.style.cursor = 'default';
+      hModesBtn.style.border = 'none';
+      hModesBtn.style.pointerEvents = 'none';
     }
     if (expWaBtn) expWaBtn.style.display = name === 'expenses' ? '' : 'none';
     if (histBtn) histBtn.style.display = (name === 'expenses' || name === 'splitter' || name === 'date') ? 'none' : '';
@@ -5032,7 +5213,7 @@ function buildPosBillMessage(custName) {
   var lines = [];
   var usedSource = null;
 
-  var isPosSend = (_calcMode === 'quickbilling' && _quickBillingOrder.length > 0);
+  var isPosSend = (_quickBillingOrder.length > 0);
   if (isPosSend) {
     usedSource = 'pos';
     _quickBillingOrder.forEach(function(o) {
@@ -5543,8 +5724,10 @@ var _qbEditMode = false;
 function handleSettingsBtnClick() {
   if (_calcMode === 'quickbilling') {
     openPosDrawer();
-  } else {
+  } else if (_navStyle === 'centre') {
     openSettingsModal();
+  } else {
+    openMainDrawer();
   }
 }
 
@@ -5568,6 +5751,44 @@ function closePosDrawer() {
       overlay.style.display = 'none';
     }, 280);
   }
+}
+
+function openMainDrawer() {
+  var overlay = document.getElementById('drawer-main-overlay');
+  var drawer = document.getElementById('drawer-main-menu');
+  if (overlay) overlay.style.display = 'block';
+  if (drawer) {
+    setTimeout(function() {
+      drawer.style.transform = 'translateX(0)';
+    }, 10);
+  }
+}
+
+function closeMainDrawer() {
+  var overlay = document.getElementById('drawer-main-overlay');
+  var drawer = document.getElementById('drawer-main-menu');
+  if (drawer) drawer.style.transform = 'translateX(-100%)';
+  if (overlay) {
+    setTimeout(function() {
+      overlay.style.display = 'none';
+    }, 280);
+  }
+}
+
+function selectModeFromMainDrawer(name) {
+  closeMainDrawer();
+  if (_calcMode === name) return;
+  setCalcMode(name);
+}
+
+function openLedgerFromMainDrawer() {
+  closeMainDrawer();
+  if (_calcMode !== 'basic') setCalcMode('basic');
+  _calcHistoryVisible = true;
+  _activeHistorySubTab = 'ledger';
+  _historyFolded = false;
+  renderCalcHistory();
+  scrollToCalcHistory();
 }
 
 var _currentSalesPeriod = 'today';
