@@ -2942,6 +2942,21 @@ function updateNavPositionUI() {
   applyNavStyle();
 }
 
+function updateSettingsBtnIcon() {
+  var settingsBtn = document.getElementById('settings-btn');
+  if (!settingsBtn) return;
+  if (_calcMode === 'quickbilling') {
+    settingsBtn.innerHTML = '☰';
+    settingsBtn.title = 'POS Menu';
+  } else if (_navStyle === 'centre') {
+    settingsBtn.innerHTML = '⚙️';
+    settingsBtn.title = 'Settings';
+  } else {
+    settingsBtn.innerHTML = '☰';
+    settingsBtn.title = 'Menu';
+  }
+}
+
 function applyNavStyle() {
   var modesBtn = document.getElementById('h-btn-modes');
   if (modesBtn) {
@@ -2966,6 +2981,7 @@ function applyNavStyle() {
       if (mm) mm.classList.remove('active');
     }
   }
+  updateSettingsBtnIcon();
   var c1 = document.getElementById('navstyle-card-centre');
   var c2 = document.getElementById('navstyle-card-drawer');
   if (c1) c1.style.border = _navStyle === 'centre' ? '2px solid #d4af37' : '2px solid rgba(255,255,255,0.14)';
@@ -4445,13 +4461,7 @@ function applyCalcMode(name) {
 
   if (settingsBtn) {
     settingsBtn.style.color = 'var(--text-primary)';
-    if (name === 'quickbilling') {
-      settingsBtn.innerHTML = '☰';
-      settingsBtn.title = 'POS Menu';
-    } else {
-      settingsBtn.innerHTML = '☰';
-      settingsBtn.title = 'Menu';
-    }
+    updateSettingsBtnIcon();
   }
 
   var posEditBtn = document.getElementById('pos-edit-toggle-btn');
