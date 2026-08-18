@@ -3142,14 +3142,12 @@ function numToWords(n) {
 function evalExpr(str) {
   try {
     str = str.replace(/([\d.]+)%([\d.]+)/g, '$1*$2/100');
-    if (str.charAt(0) === '+') str = str.slice(1);
     var tokens = [];
     var num = '';
     for (var i = 0; i < str.length; i++) {
       var ch = str[i];
       if ((ch >= '0' && ch <= '9') || ch === '.') { num += ch; }
       else if (ch === '-' && (i === 0 || '+-*/('.indexOf(str[i-1]) >= 0)) { num += ch; }
-      else if (ch === '+' && (i === 0 || '+-*/('.indexOf(str[i-1]) >= 0)) { /* unary plus */ }
       else if ('+-*/'.indexOf(ch) >= 0) { if (num !== '') { tokens.push(parseFloat(num)); num = ''; } tokens.push(ch); }
     }
     if (num !== '') tokens.push(parseFloat(num));
@@ -3401,52 +3399,26 @@ function parsePastedCalcText(rawText) {
     .trim();
   if (!text) return false;
 
-  var isSummaryHeader = /^(?:pending\s+balance|pending\s+amount|pending|total\s+balance|net\s+balance|balance|bal|grand\s+total|subtotal|net\s+total|final\s+total|final\s+amount|total\s+amount|total|you\s+will\s+get|you\s+will\s+give|you'll\s+get|you'll\s+give|net\s+you\s+will\s+get|net\s+you\s+will\s+give|lena\s+hai|dena\s+hai|baki|baqi|hisab|hisaab)/i;
+  var cleaned = text.replace(/[₹$€£]/g, '');
 
-  var lines = text.split(/\r?\n/).map(function(l) { return l.trim(); }).filter(Boolean);
-
-  var itemLines = [];
-  var summaryLines = [];
-
-  for (var i = 0; i < lines.length; i++) {
-    var line = lines[i];
-    var hasNum = /\d/.test(line);
-    if (!hasNum) continue;
-
-    var isSumm = isSummaryHeader.test(line) || /(?:pending\s+balance|total\s+balance|net\s+balance|balance|bal|total|grand\s+total|subtotal|final\s+amount|you\s+will\s+(?:give|get)|baki|baqi|hisab|hisaab)\s*[:\-=]/i.test(line);
-    if (isSumm) {
-      summaryLines.push(line);
-    } else {
-      itemLines.push(line);
-    }
-  }
-
-  var linesToProcess = itemLines.length > 0 ? itemLines : summaryLines;
-  if (linesToProcess.length === 0) {
-    linesToProcess = [text];
-  }
-
-  var combinedText = linesToProcess.join('\n');
-  var cleaned = combinedText.replace(/[₹$€£]/g, '');
-
-  if (cleaned.indexOf('=') !== -1 && linesToProcess.length === 1) {
+  var exprPart = cleaned;
+  if (cleaned.indexOf('=') !== -1) {
     var parts = cleaned.split('=');
-    cleaned = parts[0].trim();
+    exprPart = parts[0].trim();
   }
 
   var regex = /(\d[\d,]*\.?\d*)|([\+\-\*\x\×\/\÷\%])|(\([^\)]+\)|\[[^\]]+\])/gi;
-  var matches = cleaned.match(regex);
+  var matches = exprPart.match(regex);
 
   if (!matches || matches.length === 0) {
     var numOnly = cleaned.replace(/,/g, '').match(/\d+\.?\d*/);
     if (numOnly) {
-      var isNeg = /-\s*\d/.test(cleaned);
-      calcTokens = isNeg ? [{ v: '-', label: '' }, { v: numOnly[0], label: '' }] : [{ v: numOnly[0], label: '' }];
+      calcTokens = [{ v: numOnly[0], label: '' }];
       _calcSavedExpr = '';
       _calcShowExpr = true;
       calcUpdateDisplay();
       triggerResultPulse();
-      showToast('📋 Pasted ' + (isNeg ? '-' : '') + '₹' + fmtNum(parseFloat(numOnly[0]) || 0));
+      showToast('📋 Pasted ₹' + fmtNum(parseFloat(numOnly[0]) || 0));
       return true;
     }
     return false;
@@ -3463,7 +3435,6 @@ function parsePastedCalcText(rawText) {
       var op = m;
       if (op === 'x' || op === '×') op = '*';
       if (op === '÷') op = '/';
-      if (op === '+' && newTokens.length === 0) continue;
       newTokens.push({ v: op, label: '' });
       lastNumToken = null;
     } else if (/^[\(\[]/.test(m)) {
@@ -3474,12 +3445,6 @@ function parsePastedCalcText(rawText) {
     } else {
       var nStr = m.replace(/,/g, '');
       if (!isNaN(parseFloat(nStr))) {
-        if (newTokens.length > 0) {
-          var prev = newTokens[newTokens.length - 1];
-          if (['+','-','*','/','%'].indexOf(prev.v) === -1) {
-            newTokens.push({ v: '+', label: '' });
-          }
-        }
         lastNumToken = { v: nStr, label: '' };
         newTokens.push(lastNumToken);
       }
@@ -10466,8 +10431,7 @@ function renderSplitterModeContent(container) {
       
             html += '<div class="sp-expense">';
       html += '<div class="sp-expense-top">';
-      html += '<div class="sp-expense-desc" style="font-size:0.92rem;font-weight:700;color:#fff;line-height:1.3"><span style="display:inline-block;vertical-align:middle;">' + escHtml(e.desc||_t('📝 Expense', '📝 खर्च', '📝 Expense')) + '</span></div>';
-      if (e.photo) { html += '<img src="'+escHtml(e.photo)+'" style="max-height:36px;border-radius:5px;border:1px solid var(--border-color);cursor:pointer;margin-right:0.3rem;" onclick="aepShowPhotoById('+e.id+')">'; }
+      html += '<div class="sp-expense-desc" style="font-size:0.92rem;font-weight:700;color:#fff;line-height:1.3"><span style="display:inline-block;vertical-align:middle;">' + escHtml(e.desc||_t('📝 Expense', '📝 खर्च', '📝 Expense')) + '</span>' + (e.photo ? ' <img src="'+escHtml(e.photo)+'" style="max-height:36px;border-radius:5px;border:1px solid var(--border-color);cursor:pointer;margin-left:0.3rem;" onclick="aepShowPhotoById('+e.id+')">' : '') + '</div>';
       html += '<div style="font-size:1.05rem;font-weight:700;color:var(--color-accent);white-space:nowrap;margin-left:auto;margin-right:0.4rem">₹'+fmtNum(parseFloat(e.amount)||0)+'</div>';
       html += (_isCreator && !_tripEnded) ? '<span class="rm-exp" onclick="removeSplitExpense('+e.id+')">🗑️</span>' : '';
       html += '</div>';

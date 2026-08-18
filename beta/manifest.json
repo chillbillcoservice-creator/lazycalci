@@ -1,0 +1,19 @@
+{
+  "name": "LAZY CALC",
+  "short_name": "LAZY CALC",
+  "description": "Token-based calculator with labels, history & WhatsApp sharing",
+  "start_url": ".",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#1e1e2e",
+  "theme_color": "#f38ba8",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["utilities", "finance"]
+}
