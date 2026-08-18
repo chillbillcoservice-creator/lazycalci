@@ -6546,6 +6546,7 @@ function updateStickyDisplay() {
   display.style.alignItems = 'center';
   var tag = '<span style="font-size:0.65rem;color:var(--color-accent);border:1px solid var(--color-accent);border-radius:4px;padding:2px 6px;letter-spacing:0.5px;font-weight:700;flex-shrink:0;line-height:1.2;">🔒 LAZY MODE</span>';
   display.innerHTML = tag + '<span style="flex:1;text-align:right;overflow-x:auto;white-space:nowrap;">' + fmtNum(_stickyResult) + '</span>';
+  updateOutputWords(_stickyResult);
 }
 function updateStickyOpHighlight() {
   var ids = {'×':'mul','÷':'div','-':'minus','+':'plus','*':'mul','/':'div'};
@@ -6607,24 +6608,33 @@ function calcUpdateDisplay(skipEditor) {
           var valForWords = _kMode ? live * 1000 : live;
           var w = numToWords(valForWords);
           if (w) {
-            if (w.length > 35) {
+            expr.style.display = 'flex';
+            expr.style.alignItems = 'center';
+            expr.style.justifyContent = 'flex-end';
+            expr.style.textAlign = 'right';
+            if (w.length > 70) {
               expr.style.whiteSpace = 'normal';
               expr.style.wordBreak = 'break-word';
               expr.style.overflowX = 'hidden';
               expr.style.overflowY = 'hidden';
-              expr.style.textAlign = 'right';
               expr.style.lineHeight = '1.25';
-              expr.style.fontSize = w.length > 65 ? '0.82rem' : '0.90rem';
+              expr.style.fontSize = '0.98rem';
+            } else if (w.length > 40) {
+              expr.style.whiteSpace = 'normal';
+              expr.style.wordBreak = 'break-word';
+              expr.style.overflowX = 'hidden';
+              expr.style.overflowY = 'hidden';
+              expr.style.lineHeight = '1.25';
+              expr.style.fontSize = '1.20rem';
             } else {
               expr.style.whiteSpace = 'nowrap';
               expr.style.overflowX = 'auto';
               expr.style.overflowY = 'hidden';
-              expr.style.textAlign = 'right';
-              expr.style.lineHeight = '2.2rem';
-              expr.style.fontSize = '1.05rem';
+              expr.style.lineHeight = '1.3';
+              expr.style.fontSize = '1.45rem';
             }
             expr.style.color = 'var(--text-primary)';
-            expr.innerHTML = '<span onclick="toggleResultExpr()" style="cursor:pointer;font-style:italic;font-weight:600;display:inline-block;width:100%;">' + escHtml(w) + '</span>';
+            expr.innerHTML = '<span onclick="toggleResultExpr()" style="cursor:pointer;font-style:italic;font-weight:700;display:inline-block;width:100%;">' + escHtml(w) + '</span>';
           } else {
             expr.innerHTML = '';
           }
