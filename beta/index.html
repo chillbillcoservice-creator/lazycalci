@@ -3142,12 +3142,14 @@ function numToWords(n) {
 function evalExpr(str) {
   try {
     str = str.replace(/([\d.]+)%([\d.]+)/g, '$1*$2/100');
+    if (str.charAt(0) === '+') str = str.slice(1);
     var tokens = [];
     var num = '';
     for (var i = 0; i < str.length; i++) {
       var ch = str[i];
       if ((ch >= '0' && ch <= '9') || ch === '.') { num += ch; }
       else if (ch === '-' && (i === 0 || '+-*/('.indexOf(str[i-1]) >= 0)) { num += ch; }
+      else if (ch === '+' && (i === 0 || '+-*/('.indexOf(str[i-1]) >= 0)) { /* unary plus */ }
       else if ('+-*/'.indexOf(ch) >= 0) { if (num !== '') { tokens.push(parseFloat(num)); num = ''; } tokens.push(ch); }
     }
     if (num !== '') tokens.push(parseFloat(num));
@@ -3399,26 +3401,60 @@ function parsePastedCalcText(rawText) {
     .trim();
   if (!text) return false;
 
-  var cleaned = text.replace(/[₹$€£]/g, '');
-
-  var exprPart = cleaned;
-  if (cleaned.indexOf('=') !== -1) {
-    var parts = cleaned.split('=');
-    exprPart = parts[0].trim();
+  // If text contains '=', check if there is an expression before '='
+  var textToProcess = text;
+  if (text.indexOf('=') !== -1) {
+    var eqParts = text.split('=');
+    var beforeEq = eqParts[0].trim();
+    var afterEq = eqParts.slice(1).join('=').trim();
+    if (/\d/.test(beforeEq)) {
+      textToProcess = beforeEq;
+    } else if (/\d/.test(afterEq)) {
+      textToProcess = afterEq;
+    }
   }
 
+  var isSummaryHeader = /^(?:pending\s+balance|pending\s+amount|pending|total\s+balance|net\s+balance|balance|bal|grand\s+total|subtotal|net\s+total|final\s+total|final\s+amount|total\s+amount|total|you\s+will\s+get|you\s+will\s+give|you'll\s+get|you'll\s+give|net\s+you\s+will\s+get|net\s+you\s+will\s+give|lena\s+hai|dena\s+hai|baki|baqi|hisab|hisaab)\b/i;
+
+  var lines = textToProcess.split(/\r?\n/).map(function(l) { return l.trim(); }).filter(Boolean);
+
+  var itemLines = [];
+  var summaryLines = [];
+
+  for (var i = 0; i < lines.length; i++) {
+    var line = lines[i];
+    var hasNum = /\d/.test(line);
+    if (!hasNum) continue;
+
+    var isSumm = isSummaryHeader.test(line) || /(?:pending\s+balance|total\s+balance|net\s+balance|balance|bal|total|grand\s+total|subtotal|final\s+amount|you\s+will\s+(?:give|get)|baki|baqi|hisab|hisaab)\s*[:\-=]/i.test(line) || /^=\s*\d/.test(line);
+    if (isSumm) {
+      summaryLines.push(line);
+    } else {
+      itemLines.push(line);
+    }
+  }
+
+  var linesToUse = itemLines.length > 0 ? itemLines : summaryLines;
+  if (linesToUse.length === 0) {
+    linesToUse = [textToProcess];
+  }
+
+  var combinedText = linesToUse.join('\n');
+  var cleaned = combinedText.replace(/[₹$€£]/g, '');
+
   var regex = /(\d[\d,]*\.?\d*)|([\+\-\*\x\×\/\÷\%])|(\([^\)]+\)|\[[^\]]+\])/gi;
-  var matches = exprPart.match(regex);
+  var matches = cleaned.match(regex);
 
   if (!matches || matches.length === 0) {
     var numOnly = cleaned.replace(/,/g, '').match(/\d+\.?\d*/);
     if (numOnly) {
-      calcTokens = [{ v: numOnly[0], label: '' }];
+      var isNeg = /-\s*\d/.test(cleaned);
+      calcTokens = isNeg ? [{ v: '-', label: '' }, { v: numOnly[0], label: '' }] : [{ v: numOnly[0], label: '' }];
       _calcSavedExpr = '';
       _calcShowExpr = true;
       calcUpdateDisplay();
       triggerResultPulse();
-      showToast('📋 Pasted ₹' + fmtNum(parseFloat(numOnly[0]) || 0));
+      showToast('📋 Pasted ' + (isNeg ? '-' : '') + '₹' + fmtNum(parseFloat(numOnly[0]) || 0));
       return true;
     }
     return false;
@@ -3435,6 +3471,7 @@ function parsePastedCalcText(rawText) {
       var op = m;
       if (op === 'x' || op === '×') op = '*';
       if (op === '÷') op = '/';
+      if (op === '+' && newTokens.length === 0) continue;
       newTokens.push({ v: op, label: '' });
       lastNumToken = null;
     } else if (/^[\(\[]/.test(m)) {
@@ -3445,6 +3482,12 @@ function parsePastedCalcText(rawText) {
     } else {
       var nStr = m.replace(/,/g, '');
       if (!isNaN(parseFloat(nStr))) {
+        if (newTokens.length > 0) {
+          var prev = newTokens[newTokens.length - 1];
+          if (['+','-','*','/','%'].indexOf(prev.v) === -1) {
+            newTokens.push({ v: '+', label: '' });
+          }
+        }
         lastNumToken = { v: nStr, label: '' };
         newTokens.push(lastNumToken);
       }
