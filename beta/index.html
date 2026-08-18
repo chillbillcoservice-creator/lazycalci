@@ -6562,12 +6562,23 @@ function updateStickyOpHighlight() {
 
 function fitExprFontSize(expr) {
   if (!expr) return;
+  if (_exprResetTimer) { clearTimeout(_exprResetTimer); _exprResetTimer = null; }
   expr.style.fontSize = '1.7rem';
   _exprFontSize = 1.7;
   if (expr.scrollWidth > expr.clientWidth) {
     var ratio = expr.clientWidth / expr.scrollWidth;
     _exprFontSize = Math.max(1.1, 1.7 * ratio);
     expr.style.fontSize = _exprFontSize.toFixed(2) + 'rem';
+
+    _exprResetTimer = setTimeout(function() {
+      var e = document.getElementById('calc-expression');
+      if (e) {
+        e.style.fontSize = '1.7rem';
+        _exprFontSize = 1.7;
+        e.scrollLeft = e.scrollWidth;
+      }
+      _exprResetTimer = null;
+    }, 1500);
   }
   expr.scrollLeft = expr.scrollWidth;
 }
