@@ -6431,7 +6431,7 @@ function activateStickyMode(op) {
   if (!formattedFullExpr) {
     var cur = parseFloat(document.getElementById('calc-display').textContent.replace(/^=\s*/, ''));
     currentTotal = isFinite(cur) ? cur : 0;
-    formattedFullExpr = fmtNum(currentTotal);
+    formattedFullExpr = currentTotal !== 0 ? fmtNum(currentTotal) : '';
   }
   _stickyResult = currentTotal;
   _stickyFullExpr = formattedFullExpr;
@@ -6496,13 +6496,17 @@ function stickyFlush() {
   if (isNaN(num)) return;
   var res = _stickyResult;
   var opDisplay = _stickyOp === '*' ? '×' : (_stickyOp === '/' ? '÷' : _stickyOp);
-  switch (_stickyOp) {
-    case '+': res += num; break;
-    case '-': res -= num; break;
-    case '×':
-    case '*': res *= num; break;
-    case '÷':
-    case '/': if (num === 0) { deactivateSticky(); document.getElementById('calc-display').textContent = 'Error'; return; } res /= num; break;
+  if (!_stickyFullExpr && _stickyResult === 0) {
+    res = num;
+  } else {
+    switch (_stickyOp) {
+      case '+': res += num; break;
+      case '-': res -= num; break;
+      case '×':
+      case '*': res *= num; break;
+      case '÷':
+      case '/': if (num === 0) { deactivateSticky(); document.getElementById('calc-display').textContent = 'Error'; return; } res /= num; break;
+    }
   }
   var inputFormatted = fmtNum(num);
   _stickyFullExpr = (_stickyFullExpr ? _stickyFullExpr + ' ' + opDisplay + ' ' : '') + inputFormatted;
@@ -6523,7 +6527,7 @@ function updateStickyDisplay() {
     var formattedInput = isNaN(n) ? _stickyInput : fmtNum(n);
     fullText = (_stickyFullExpr ? _stickyFullExpr + ' ' + opDisplay + ' ' : '') + formattedInput;
   } else {
-    fullText = _stickyFullExpr || _stickyLastExpr || fmtNum(_stickyResult);
+    fullText = _stickyFullExpr || _stickyLastExpr || '0';
   }
 
   // Top expression row: full expression only, right aligned
