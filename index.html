@@ -6446,7 +6446,9 @@ function deactivateSticky() {
   var toggle = document.getElementById('sticky-mode-toggle');
   if (toggle) toggle.checked = false;
   var expr = document.getElementById('calc-expression');
-  if (expr) { expr.style.display = ''; expr.style.justifyContent = ''; expr.style.alignItems = ''; }
+  if (expr) { expr.style.display = ''; expr.style.justifyContent = ''; expr.style.alignItems = ''; expr.style.color = ''; expr.style.fontWeight = ''; }
+  var display = document.getElementById('calc-display');
+  if (display) { display.style.display = ''; display.style.justifyContent = ''; display.style.alignItems = ''; }
   if (_stickyTimer) { clearTimeout(_stickyTimer); _stickyTimer = null; }
   if (_stickyPendingTimer) { clearTimeout(_stickyPendingTimer); _stickyPendingTimer = null; }
   _stickyPendingOp = null;
@@ -6512,10 +6514,7 @@ function updateStickyDisplay() {
   var display = document.getElementById('calc-display');
   var expr = document.getElementById('calc-expression');
   if (!display || !expr) return;
-  expr.style.display = 'flex';
-  expr.style.justifyContent = 'space-between';
-  expr.style.alignItems = 'center';
-  var tag = '<span style="font-size:0.5rem;color:var(--color-accent);border:1px solid var(--color-accent);border-radius:3px;padding:1px 4px;flex-shrink:0;margin-right:6px">🔒 LAZY MODE</span>';
+
   var opDisplay = _stickyOp === '*' ? '×' : (_stickyOp === '/' ? '÷' : _stickyOp);
 
   var fullText = '';
@@ -6527,10 +6526,23 @@ function updateStickyDisplay() {
     fullText = _stickyFullExpr || _stickyLastExpr || fmtNum(_stickyResult);
   }
 
-  display.textContent = fmtNum(_stickyResult);
-  expr.innerHTML = tag + '<span id="sticky-expr-text" style="color:var(--color-accent);font-weight:700;flex:1;text-align:right;white-space:nowrap;overflow-x:auto;overflow-y:hidden">' + escHtml(fullText) + '</span>';
-  var spanEl = document.getElementById('sticky-expr-text');
-  if (spanEl) spanEl.scrollLeft = spanEl.scrollWidth;
+  // Top expression row: full expression only, right aligned
+  expr.style.display = 'block';
+  expr.style.whiteSpace = 'nowrap';
+  expr.style.overflowX = 'auto';
+  expr.style.overflowY = 'hidden';
+  expr.style.textAlign = 'right';
+  expr.style.color = 'var(--color-accent)';
+  expr.style.fontWeight = '700';
+  expr.innerHTML = escHtml(fullText);
+  expr.scrollLeft = expr.scrollWidth;
+
+  // Final output row: 🔒 LAZY MODE sticker on left, total on right
+  display.style.display = 'flex';
+  display.style.justifyContent = 'space-between';
+  display.style.alignItems = 'center';
+  var tag = '<span style="font-size:0.65rem;color:var(--color-accent);border:1px solid var(--color-accent);border-radius:4px;padding:2px 6px;letter-spacing:0.5px;font-weight:700;flex-shrink:0;line-height:1.2;">🔒 LAZY MODE</span>';
+  display.innerHTML = tag + '<span style="flex:1;text-align:right;overflow-x:auto;white-space:nowrap;">' + fmtNum(_stickyResult) + '</span>';
 }
 function updateStickyOpHighlight() {
   var ids = {'×':'mul','÷':'div','-':'minus','+':'plus','*':'mul','/':'div'};
