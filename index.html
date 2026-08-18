@@ -6459,7 +6459,6 @@ function deactivateSticky() {
   /* re-render expression in white */
   var expr = document.getElementById('calc-expression');
   if (expr) {
-    expr.style.fontSize = '1.7rem';
     var parts = [];
     calcTokens.forEach(function(t, i) {
       if (['+','-','*','/','%'].indexOf(t.v) !== -1) {
@@ -6470,7 +6469,7 @@ function deactivateSticky() {
       }
     });
     expr.innerHTML = parts.join('');
-    expr.scrollLeft = expr.scrollWidth;
+    fitExprFontSize(expr);
   }
 }
 function stickyInputDigit(d) {
@@ -6539,7 +6538,7 @@ function updateStickyDisplay() {
   expr.style.color = 'var(--color-accent)';
   expr.style.fontWeight = '700';
   expr.innerHTML = escHtml(fullText);
-  expr.scrollLeft = expr.scrollWidth;
+  fitExprFontSize(expr);
 
   // Final output row: 🔒 LAZY MODE sticker on left, total on right
   display.style.display = 'flex';
@@ -6561,6 +6560,18 @@ function updateStickyOpHighlight() {
   }
 }
 
+function fitExprFontSize(expr) {
+  if (!expr) return;
+  expr.style.fontSize = '1.7rem';
+  _exprFontSize = 1.7;
+  if (expr.scrollWidth > expr.clientWidth) {
+    var ratio = expr.clientWidth / expr.scrollWidth;
+    _exprFontSize = Math.max(1.1, 1.7 * ratio);
+    expr.style.fontSize = _exprFontSize.toFixed(2) + 'rem';
+  }
+  expr.scrollLeft = expr.scrollWidth;
+}
+
 function triggerResultPulse() {
   var display = document.getElementById('calc-display');
   if (display) {
@@ -6575,7 +6586,6 @@ function calcUpdateDisplay(skipEditor) {
   try { localStorage.setItem('calc_active_tokens', JSON.stringify(calcTokens)); } catch(e){}
   var display = document.getElementById('calc-display');
   var expr = document.getElementById('calc-expression');
-  if (_exprResetTimer) { clearTimeout(_exprResetTimer); _exprResetTimer = null; }
 
   if (!_calcShowExpr) {
     try {
@@ -6651,17 +6661,7 @@ function calcUpdateDisplay(skipEditor) {
     }
   });
   expr.innerHTML = parts.join('');
-  expr.scrollLeft = expr.scrollWidth;
-
-  if (expr.scrollWidth > expr.clientWidth) {
-    var ratio = expr.clientWidth / expr.scrollWidth;
-    _exprFontSize = Math.max(1.1, _exprFontSize * ratio);
-    expr.style.fontSize = _exprFontSize + 'rem';
-  }
-  _exprResetTimer = setTimeout(function() {
-    var e = document.getElementById('calc-expression');
-    if (e && _calcShowExpr) { e.style.fontSize = '1.7rem'; _exprFontSize = 1.7; e.scrollLeft = e.scrollWidth; }
-  }, 1500);
+  fitExprFontSize(expr);
 
   try {
     var live = evalExpr(str);
