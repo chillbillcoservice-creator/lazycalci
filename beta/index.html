@@ -3401,9 +3401,22 @@ function parsePastedCalcText(rawText) {
     .trim();
   if (!text) return false;
 
-  var isSummaryHeader = /^(?:pending\s+balance|pending\s+amount|pending|total\s+balance|net\s+balance|balance|bal|grand\s+total|subtotal|net\s+total|final\s+total|final\s+amount|total\s+amount|total|you\s+will\s+get|you\s+will\s+give|you'll\s+get|you'll\s+give|net\s+you\s+will\s+get|net\s+you\s+will\s+give|lena\s+hai|dena\s+hai|baki|baqi|hisab|hisaab)/i;
+  // If text contains '=', check if there is an expression before '='
+  var textToProcess = text;
+  if (text.indexOf('=') !== -1) {
+    var eqParts = text.split('=');
+    var beforeEq = eqParts[0].trim();
+    var afterEq = eqParts.slice(1).join('=').trim();
+    if (/\d/.test(beforeEq)) {
+      textToProcess = beforeEq;
+    } else if (/\d/.test(afterEq)) {
+      textToProcess = afterEq;
+    }
+  }
 
-  var lines = text.split(/\r?\n/).map(function(l) { return l.trim(); }).filter(Boolean);
+  var isSummaryHeader = /^(?:pending\s+balance|pending\s+amount|pending|total\s+balance|net\s+balance|balance|bal|grand\s+total|subtotal|net\s+total|final\s+total|final\s+amount|total\s+amount|total|you\s+will\s+get|you\s+will\s+give|you'll\s+get|you'll\s+give|net\s+you\s+will\s+get|net\s+you\s+will\s+give|lena\s+hai|dena\s+hai|baki|baqi|hisab|hisaab)\b/i;
+
+  var lines = textToProcess.split(/\r?\n/).map(function(l) { return l.trim(); }).filter(Boolean);
 
   var itemLines = [];
   var summaryLines = [];
@@ -3413,7 +3426,7 @@ function parsePastedCalcText(rawText) {
     var hasNum = /\d/.test(line);
     if (!hasNum) continue;
 
-    var isSumm = isSummaryHeader.test(line) || /(?:pending\s+balance|total\s+balance|net\s+balance|balance|bal|total|grand\s+total|subtotal|final\s+amount|you\s+will\s+(?:give|get)|baki|baqi|hisab|hisaab)\s*[:\-=]/i.test(line);
+    var isSumm = isSummaryHeader.test(line) || /(?:pending\s+balance|total\s+balance|net\s+balance|balance|bal|total|grand\s+total|subtotal|final\s+amount|you\s+will\s+(?:give|get)|baki|baqi|hisab|hisaab)\s*[:\-=]/i.test(line) || /^=\s*\d/.test(line);
     if (isSumm) {
       summaryLines.push(line);
     } else {
@@ -3421,18 +3434,13 @@ function parsePastedCalcText(rawText) {
     }
   }
 
-  var linesToProcess = itemLines.length > 0 ? itemLines : summaryLines;
-  if (linesToProcess.length === 0) {
-    linesToProcess = [text];
+  var linesToUse = itemLines.length > 0 ? itemLines : summaryLines;
+  if (linesToUse.length === 0) {
+    linesToUse = [textToProcess];
   }
 
-  var combinedText = linesToProcess.join('\n');
+  var combinedText = linesToUse.join('\n');
   var cleaned = combinedText.replace(/[₹$€£]/g, '');
-
-  if (cleaned.indexOf('=') !== -1 && linesToProcess.length === 1) {
-    var parts = cleaned.split('=');
-    cleaned = parts[0].trim();
-  }
 
   var regex = /(\d[\d,]*\.?\d*)|([\+\-\*\x\×\/\÷\%])|(\([^\)]+\)|\[[^\]]+\])/gi;
   var matches = cleaned.match(regex);
