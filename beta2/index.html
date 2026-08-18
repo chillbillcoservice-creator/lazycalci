@@ -10431,8 +10431,7 @@ function renderSplitterModeContent(container) {
       
             html += '<div class="sp-expense">';
       html += '<div class="sp-expense-top">';
-      html += '<div class="sp-expense-desc" style="font-size:0.92rem;font-weight:700;color:#fff;line-height:1.3"><span style="display:inline-block;vertical-align:middle;">' + escHtml(e.desc||_t('📝 Expense', '📝 खर्च', '📝 Expense')) + '</span></div>';
-      if (e.photo) { html += '<img src="'+escHtml(e.photo)+'" style="max-height:36px;border-radius:5px;border:1px solid var(--border-color);cursor:pointer;margin-right:0.3rem;" onclick="aepShowPhotoById('+e.id+')">'; }
+      html += '<div class="sp-expense-desc" style="font-size:0.92rem;font-weight:700;color:#fff;line-height:1.3"><span style="display:inline-block;vertical-align:middle;">' + escHtml(e.desc||_t('📝 Expense', '📝 खर्च', '📝 Expense')) + '</span>' + (e.photo ? ' <img src="'+escHtml(e.photo)+'" style="max-height:36px;border-radius:5px;border:1px solid var(--border-color);cursor:pointer;margin-left:0.3rem;" onclick="aepShowPhotoById('+e.id+')">' : '') + '</div>';
       html += '<div style="font-size:1.05rem;font-weight:700;color:var(--color-accent);white-space:nowrap;margin-left:auto;margin-right:0.4rem">₹'+fmtNum(parseFloat(e.amount)||0)+'</div>';
       html += (_isCreator && !_tripEnded) ? '<span class="rm-exp" onclick="removeSplitExpense('+e.id+')">🗑️</span>' : '';
       html += '</div>';
