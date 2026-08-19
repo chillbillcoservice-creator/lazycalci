@@ -145,22 +145,14 @@ html, body, .modal-container { touch-action: manipulation; }
 body.mode-pos #h-btn-history,
 body.mode-pos #calc-history-btn,
 body.mode-pos #exp-wa-btn-wrap,
+body.mode-pos #wa-btn-wrap,
 body.mode-pos #calc-voice-btn,
 .is-pos-mode #h-btn-history,
 .is-pos-mode #calc-history-btn,
 .is-pos-mode #exp-wa-btn-wrap,
+.is-pos-mode #wa-btn-wrap,
 .is-pos-mode #calc-voice-btn {
   display: none !important;
-}
-
-body.mode-pos #calc-buttons,
-.is-pos-mode #calc-buttons {
-  margin-top: 0.3rem !important;
-}
-
-body.mode-pos #calc-buttons button,
-.is-pos-mode #calc-buttons button {
-  min-height: 68px !important;
 }
 
 .theme-silver {
@@ -764,6 +756,7 @@ body {
   animation: btCardGlowPulse 2.8s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
 }
 #modal-add-expense, #modal-create-group, #modal-join-group { z-index:1001; }
+#modal-add-expense { align-items:flex-start !important; padding-top:0.8rem !important; }
 #modal-add-expense .modal-container { max-width:340px; }
 #modal-add-expense .field-row { display:flex; flex-direction:column; gap:0.25rem; margin-bottom:0.7rem; }
 #modal-add-expense .field-row label { font-size:1rem; color:#fff; display:block; }
@@ -774,7 +767,7 @@ body {
 #modal-add-expense .sp-chip { font-size:0.95rem; padding:0.3rem 0.55rem; }
 .aep-sc { font-size:0.88rem; font-weight:600; padding:0.5rem 0.85rem; border-radius:6px; border:1px solid var(--border-color); cursor:pointer; color:var(--text-muted); background:transparent; white-space:nowrap; }
 .aep-sc:hover { color:#fff; border-color:var(--color-accent); }
-.aep-sc.on { color:#fff; border-color:var(--color-accent); background:var(--color-accent); }
+.aep-sc.on { color:#111; border-color:var(--color-accent); background:var(--color-accent); }
 @media print {
   @page { size: auto; margin: 8mm; }
   body * {
@@ -876,7 +869,7 @@ body {
 .modal-body::-webkit-scrollbar { display:none; }
 .modal-body.sp-mode { height:calc(100vh - 52px); max-height:calc(100vh - 52px); padding:0.4rem 0.5rem; overflow-y:auto !important; scrollbar-width:none; -ms-overflow-style:none; }
 .modal-body.sp-mode .calc-mode-body { margin-top:0; }
-.calc-mode-body { padding-top:1.15rem; }
+.calc-mode-body { padding-top:0.75rem; }
 #calc-expression {
   background: var(--bg-tertiary);
   border-radius: var(--radius-sm);
@@ -1399,13 +1392,8 @@ body {
     </button>
 
     <button id="pos-btn-app-settings" onclick="closePosDrawer();openSettingsModal();" style="width:100%;padding:0.7rem 0.9rem;border-radius:10px;border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);font-weight:600;font-size:0.88rem;cursor:pointer;display:flex;align-items:center;gap:10px;text-align:left;">
-      <span style="font-size:1.1rem;">??</span> App Settings
+      <span style="font-size:1.1rem;">⚙️</span> App Settings
     </button>
-  </div>
-
-  <div style="display:flex;flex-direction:column;gap:0.45rem;padding-top:0.8rem;border-top:1px solid var(--border-color);margin-top:0.8rem;">
-    <div style="font-size:0.62rem;font-weight:700;letter-spacing:0.5px;color:var(--text-muted);text-transform:uppercase;text-align:left;line-height:1.5;">👆 TAP ON ITEM IN CART TO EDIT ORDER QTY, OR CLEAR CART</div>
-    <div style="font-size:0.62rem;font-weight:700;letter-spacing:0.5px;color:var(--text-muted);text-transform:uppercase;text-align:left;line-height:1.5;">✋ LONG PRESS MENU ITEM TO EDIT</div>
   </div>
 </div>
 
@@ -2030,21 +2018,18 @@ body {
     <div class="field-row" style="display:flex;flex-direction:row;align-items:center;gap:0.5rem;margin-bottom:1rem;">
       <div style="flex:1;display:flex;flex-direction:column;gap:0.2rem;">
         <label style="font-size:0.85rem;color:#ccc;">What for?</label>
-        <input id="aep-desc" placeholder="E.g. Dinner" style="width:100%;padding:0.6rem 0.5rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-primary);color:var(--text-primary);font-size:0.95rem;">
+        <input id="aep-desc" placeholder="E.g. Dinner" style="width:100%;padding:0.7rem 0.6rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-primary);color:var(--text-primary);font-size:1rem;">
       </div>
-      <div style="width:110px;display:flex;flex-direction:column;gap:0.2rem;">
+      <div style="width:100px;display:flex;flex-direction:column;gap:0.2rem;">
         <label style="font-size:0.85rem;color:#ccc;">Amount</label>
-        <input id="aep-amount" inputmode="decimal" placeholder="₹0" style="width:100%;padding:0.6rem 0.5rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-primary);color:#fff;font-size:0.95rem;">
+        <input id="aep-amount" inputmode="decimal" placeholder="₹0" style="width:100%;padding:0.7rem 0.6rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-primary);color:#fff;font-size:1rem;">
       </div>
     </div>
     
-    <!-- SPLIT MODE SELECTOR -->
-    <div class="field-row" style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1rem;">
-      <label style="font-size:0.85rem;white-space:nowrap;color:#ccc;min-width:65px;">Split Mode</label>
-      <select id="aep-split-mode" onchange="aepUpdateUI()" style="flex:1;padding:0.6rem 0.5rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-primary);color:#fff;font-size:0.95rem;">
-        <option value="equal">⚖️ Equally</option>
-        <option value="custom">✂️ Custom ₹ (Rupees)</option>
-      </select>
+    <!-- SPLIT MODE TOGGLE -->
+    <div style="display:flex;gap:0.4rem;margin-bottom:1rem;">
+      <button class="aep-sc on" id="aep-btn-equal" onclick="aepSetMode('equal')">⚖️ Equal</button>
+      <button class="aep-sc" id="aep-btn-custom" onclick="aepSetMode('custom')">✂️ Custom</button>
     </div>
     
     <div style="font-size:0.85rem;color:#ccc;margin-bottom:0.5rem">Split among:</div>
@@ -2052,6 +2037,12 @@ body {
     <div id="aep-split-label" style="font-size:0.8rem;color:var(--color-accent);margin-bottom:0.4rem;font-weight:600;"></div>
     <div id="aep-custom-amts" style="margin-bottom:0.5rem"></div>
     
+    <input type="file" id="aep-photo" accept="image/*" capture="environment" onchange="aepPreviewPhoto(this)" style="display:none">
+    <div id="aep-photo-row" style="display:flex;align-items:center;gap:0.5rem;margin-top:0.5rem;margin-bottom:0.3rem;">
+      <button onclick="document.getElementById('aep-photo').click()" style="padding:0.45rem 0.7rem;border:1px dashed var(--border-color);border-radius:var(--radius-sm);background:transparent;color:var(--text-muted);cursor:pointer;font-size:0.85rem;">📷 Bill Photo</button>
+      <img id="aep-photo-preview" style="display:none;max-height:40px;border-radius:6px;border:1px solid var(--border-color);">
+    </div>
+
     <div style="display:flex;gap:0.5rem;justify-content:flex-end;margin-top:0.75rem;">
       <button onclick="closeAddExpensePopup()" style="padding:0.6rem 1.2rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-tertiary);color:#fff;cursor:pointer;font-size:0.9rem">Cancel</button>
       <button onclick="confirmAddExpense()" style="padding:0.6rem 1.2rem;border:none;border-radius:var(--radius-sm);background:var(--color-accent);color:#fff;cursor:pointer;font-weight:600;font-size:0.9rem">Add</button>
@@ -2122,9 +2113,9 @@ body {
   <div class="modal-container">
     <div class="modal-header" style="display:flex;align-items:center;padding:0.65rem 0.85rem;border-bottom:1px solid var(--border-color);position:relative;height:52px;box-sizing:border-box;">
       <div class="modal-header-left" style="position:absolute;left:0.85rem;top:50%;transform:translateY(-50%);display:flex;align-items:center;gap:0.45rem;z-index:5;">
-        <button id="calc-back-btn" class="settings-btn" onclick="setCalcMode('basic')" title="Back to Calculator" style="display:none;font-size:1.35rem;cursor:pointer;padding:0 2px;">⬅️</button>
         <button id="settings-btn" class="settings-btn" onclick="handleSettingsBtnClick()" title="Settings" style="border:1px solid var(--border-color);border-radius:8px;background:var(--bg-secondary);padding:0.3rem 0.5rem;font-size:1.1rem;cursor:pointer;">⚙️</button>
-        <button id="calc-back-hist-btn" class="settings-btn" onclick="toggleCalcHistory()" title="Calculation History" style="display:none;border:none;background:none;font-size:1.3rem;cursor:pointer;padding:0 2px;margin-left:0.55rem;align-items:center;justify-content:center;transition:all 0.15s;opacity:0.9;color:var(--text-primary);"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:block;"><circle cx="12" cy="12" r="9"></circle><polyline points="12 7 12 12 15 15"></polyline></svg></button>
+        <button id="calc-back-btn" class="settings-btn" onclick="setCalcMode('basic')" title="Back to Calculator" style="display:none;font-size:1.35rem;cursor:pointer;padding:0 2px;">⬅️</button>
+        <button id="calc-back-hist-btn" class="settings-btn" onclick="toggleCalcHistory()" title="Calculation History" style="display:none;border:none;background:none;font-size:1.3rem;cursor:pointer;padding:0 2px;align-items:center;justify-content:center;transition:all 0.15s;opacity:0.9;color:var(--text-primary);"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:block;"><circle cx="12" cy="12" r="9"></circle><polyline points="12 7 12 12 15 15"></polyline></svg></button>
       </div>
 
       <div id="expense-icon-wrap" style="position:absolute;left:26%;top:50%;transform:translate(-50%,-50%);z-index:5;display:flex;align-items:center;justify-content:center;">
@@ -2152,7 +2143,7 @@ body {
         <button id="calc-voice-btn" class="settings-btn" onclick="toggleVoiceCalc()" title="Voice Calculator (Bol ke Calculate karo)" style="border:none;background:none;font-size:1.25rem;cursor:pointer;padding:0 2px;display:inline-flex;align-items:center;justify-content:center;transition:all 0.15s;opacity:0.9;">🎙️</button>
       </div>
 
-      <div class="modal-header-right" style="position:absolute;right:0.85rem;top:50%;transform:translateY(-50%);display:flex;align-items:center;gap:0.45rem;z-index:5;">
+      <div class="modal-header-right" style="position:absolute;right:0.85rem;top:50%;transform:translateY(-50%);display:flex;align-items:center;gap:0.4rem;z-index:5;">
         <span id="exp-wa-btn-wrap" style="display:none"><button class="whatsapp-btn" onclick="shareExpensesWA()" title="Share Expenses on WhatsApp">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="#25D366">
             <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
@@ -2164,7 +2155,7 @@ body {
           </svg>
         </button></span>
         <button id="pos-edit-toggle-btn" onclick="toggleQbEditMode()" style="display:none;background:none;border:none !important;outline:none !important;border-radius:8px;font-size:0.95rem;cursor:pointer;padding:0.2rem 0.45rem;transition:all 0.2s;align-items:center;justify-content:center;" title="Toggle Menu Edit Mode">✏️</button>
-        <button id="mode-close-btn" onclick="setCalcMode('basic')" style="display:none;background:none;border:none;font-size:1.35rem;cursor:pointer;padding:0 2px;margin-left:0.55rem;" title="Close">✖️</button>
+        <button id="mode-close-btn" onclick="setCalcMode('basic')" style="display:none;background:none;border:none;font-size:1.35rem;cursor:pointer;padding:0 2px;" title="Close">✖️</button>
       </div>
     </div>
     <div class="modal-body">
@@ -2176,7 +2167,10 @@ body {
           🖨️ Print Receipt
         </button>
         <div style="flex:1;height:40px;min-height:40px;max-height:40px;display:flex;border-radius:8px;background:#25D366;overflow:hidden;box-shadow:0 2px 8px rgba(37,211,102,0.25);cursor:pointer;">
-          <span onclick="window.openPosWhatsAppModal()" title="WhatsApp Bill" style="flex:1;display:flex;align-items:center;justify-content:center;gap:5px;color:#fff;font-weight:800;font-size:0.85rem;white-space:nowrap;touch-action:manipulation;-webkit-tap-highlight-color:transparent;">💬 WhatsApp Bill</span>
+          <span onclick="window.openPosWhatsAppModal()" title="WhatsApp Bill" style="flex:0 0 75%;display:flex;align-items:center;justify-content:center;gap:5px;color:#fff;font-weight:800;font-size:0.85rem;white-space:nowrap;touch-action:manipulation;-webkit-tap-highlight-color:transparent;">💬 WhatsApp Bill</span>
+          <span onclick="window.sharePosBillViaSheet()" title="Share Bill anywhere" style="flex:0 0 25%;display:flex;align-items:center;justify-content:center;background:var(--bg-secondary);border-left:1.5px solid rgba(255,255,255,0.25);color:var(--text-primary);touch-action:manipulation;-webkit-tap-highlight-color:transparent;">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16"><path style="fill:var(--text-primary)" d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg>
+          </span>
         </div>
       </div>
       <div class="calc-result-area">
@@ -2958,38 +2952,12 @@ function updateSettingsBtnIcon() {
   if (_calcMode === 'quickbilling') {
     settingsBtn.innerHTML = '☰';
     settingsBtn.title = 'POS Menu';
-    settingsBtn.style.marginLeft = '0.55rem';
+  } else if (_navStyle === 'centre') {
+    settingsBtn.innerHTML = '⚙️';
+    settingsBtn.title = 'Settings';
   } else {
-    settingsBtn.style.marginLeft = '';
-    if (_navStyle === 'centre') {
-      settingsBtn.innerHTML = '⚙️';
-      settingsBtn.title = 'Settings';
-    } else {
-      settingsBtn.innerHTML = '☰';
-      settingsBtn.title = 'Menu';
-    }
-  }
-}
-
-function getModeHeadingHTML() {
-  var isMono = (_calcTheme === 'monochrome');
-  var isHi = _appLang === 'hi';
-  var isHn = _appLang === 'hn';
-  var name = _calcMode;
-  function span(emoji, color, text) {
-    return '<span style="display:inline-flex;align-items:center;gap:4px;color:' + (isMono ? '#fff' : color) + (isMono ? '' : ';text-shadow:0 0 10px ' + color + '99') + '">' + emoji + ' ' + text + '</span>';
-  }
-  switch (name) {
-    case 'quickbilling': return span('🛒', '#eab308', isHi ? 'बिलिंग - POS' : 'Billing - POS');
-    case 'expenses': return span('💸', '#25D366', isHi ? 'खर्च' : 'Expenses');
-    case 'date': return span('🗓️', '#f43f5e', isHi ? 'तारीख व अवधि' : 'Date & Duration');
-    case 'splitter': return span('👥', '#c084fc', isHi ? 'स्प्लिटर (हिसाब)' : 'Splitter');
-    case 'fuel': return span('⛽', '#fb923c', isHi ? 'ईंधन व ट्रिप' : 'Fuel & Trip');
-    case 'emi': return span('📈', '#34d399', isHi ? 'लोन EMI' : 'Loan EMI');
-    case 'converter': return span('📏', '#60a5fa', isHi ? 'इकाई कनवर्टर' : 'Unit Converter');
-    case 'scientific': return span('📐', '#a78bfa', isHi ? 'साइंटिफिक' : 'Scientific');
-    case 'staff': return span('👤', '#38bdf8', isHi ? 'स्टाफ ट्रैकर' : 'Staff Tracker');
-    default: return 'Lazy Calc';
+    settingsBtn.innerHTML = '☰';
+    settingsBtn.title = 'Menu';
   }
 }
 
@@ -3004,7 +2972,7 @@ function applyNavStyle() {
       modesBtn.style.borderRadius = '10px';
       modesBtn.style.background = 'transparent';
       modesBtn.style.padding = '0.25rem 0.65rem';
-      modesBtn.innerHTML = getModeHeadingHTML() + ' ' + getHeaderChevronSvg();
+      modesBtn.innerHTML = 'Lazy Calc ' + getHeaderChevronSvg();
     } else {
       modesBtn.removeAttribute('onclick');
       modesBtn.style.pointerEvents = 'none';
@@ -3012,13 +2980,10 @@ function applyNavStyle() {
       modesBtn.style.border = 'none';
       modesBtn.style.background = 'transparent';
       modesBtn.style.padding = '0.25rem 0.65rem';
-      modesBtn.innerHTML = getModeHeadingHTML();
+      modesBtn.innerHTML = 'Lazy Calc';
       var mm = document.getElementById('modes-menu');
       if (mm) mm.classList.remove('active');
     }
-    modesBtn.style.fontFamily = (_calcMode === 'basic') ? "'Parisienne', 'Alex Brush', 'Great Vibes', cursive" : "var(--font-sans, system-ui, sans-serif)";
-    modesBtn.style.fontSize = (_calcMode === 'basic') ? '1.25rem' : ((_navStyle === 'drawer') ? '1.1rem' : '1rem');
-    modesBtn.style.fontWeight = (_calcMode === 'basic') ? '700' : '800';
   }
   updateSettingsBtnIcon();
   var c1 = document.getElementById('navstyle-card-centre');
@@ -3174,7 +3139,32 @@ function numToWords(n) {
   if (decPart > 0) { words += ' Point ' + convertChunk(decPart).trim(); }
   return words;
 }
-function evalExpr(str) { try { return eval(str.replace(/([\d.]+)%([\d.]+)/g, '$1*$2/100')); } catch(e) { return NaN; } }
+function evalExpr(str) {
+  try {
+    str = str.replace(/([\d.]+)%([\d.]+)/g, '$1*$2/100');
+    if (str.charAt(0) === '+') str = str.slice(1);
+    var tokens = [];
+    var num = '';
+    for (var i = 0; i < str.length; i++) {
+      var ch = str[i];
+      if ((ch >= '0' && ch <= '9') || ch === '.') { num += ch; }
+      else if (ch === '-' && (i === 0 || '+-*/('.indexOf(str[i-1]) >= 0)) { num += ch; }
+      else if (ch === '+' && (i === 0 || '+-*/('.indexOf(str[i-1]) >= 0)) { /* unary plus */ }
+      else if ('+-*/'.indexOf(ch) >= 0) { if (num !== '') { tokens.push(parseFloat(num)); num = ''; } tokens.push(ch); }
+    }
+    if (num !== '') tokens.push(parseFloat(num));
+    if (tokens.length === 0) return NaN;
+    var result = tokens[0];
+    for (var i = 1; i < tokens.length; i += 2) {
+      var op = tokens[i], val = tokens[i+1];
+      if (op === '+') result += val;
+      else if (op === '-') result -= val;
+      else if (op === '*') result *= val;
+      else if (op === '/') result = val !== 0 ? result / val : NaN;
+    }
+    return result;
+  } catch(e) { return NaN; }
+}
 
 function showToast(msg, durationMs) {
   var el = document.getElementById('calc-toast');
@@ -3436,7 +3426,7 @@ function parsePastedCalcText(rawText) {
     var hasNum = /\d/.test(line);
     if (!hasNum) continue;
 
-    var isSumm = isSummaryHeader.test(line) || /(?:pending\s+balance|total\s+balance|net\s+balance|balance|bal|total|grand\s+total|subtotal|final\s+amount|you\s+will\s+(?:give|get)|baki|baqi|hisab|hisaab)\s*[:=\-]/i.test(line) || /^=\s*\d/.test(line);
+    var isSumm = isSummaryHeader.test(line) || /(?:pending\s+balance|total\s+balance|net\s+balance|balance|bal|total|grand\s+total|subtotal|final\s+amount|you\s+will\s+(?:give|get)|baki|baqi|hisab|hisaab)\s*[:\-=]/i.test(line) || /^=\s*\d/.test(line);
     if (isSumm) {
       summaryLines.push(line);
     } else {
@@ -3452,7 +3442,7 @@ function parsePastedCalcText(rawText) {
   var combinedText = linesToUse.join('\n');
   var cleaned = combinedText.replace(/[₹$€£]/g, '');
 
-  var regex = /(\d[\d,]*\.?\d*)|([\+\-\*x×\/÷%])|(\([^\)]+\)|\[[^\]]+\])/gi;
+  var regex = /(\d[\d,]*\.?\d*)|([\+\-\*\x\×\/\÷\%])|(\([^\)]+\)|\[[^\]]+\])/gi;
   var matches = cleaned.match(regex);
 
   if (!matches || matches.length === 0) {
@@ -3477,7 +3467,7 @@ function parsePastedCalcText(rawText) {
     var m = matches[i].trim();
     if (!m) continue;
 
-    if (/^[\+\-\*x×\/÷%]$/i.test(m)) {
+    if (/^[\+\-\*\x\×\/\÷\%]$/i.test(m)) {
       var op = m;
       if (op === 'x' || op === '×') op = '*';
       if (op === '÷') op = '/';
@@ -4600,9 +4590,8 @@ function applyCalcMode(name) {
     if (display) display.style.display = 'none';
     if (resArea) resArea.style.display = 'none';
     var isExpOrDate = (name === 'expenses' || name === 'date');
-    var isSubMode = (name === 'splitter' || name === 'fuel' || name === 'emi' || name === 'converter' || name === 'scientific');
-    if (settingsBtn) settingsBtn.style.display = (isExpOrDate || isSubMode) ? 'none' : '';
-    if (backBtn) backBtn.style.display = (isExpOrDate || isSubMode || name === 'quickbilling') ? '' : 'none';
+    if (settingsBtn) settingsBtn.style.display = isExpOrDate ? 'none' : '';
+    if (backBtn) backBtn.style.display = isExpOrDate ? '' : 'none';
     if (backHistBtn) backHistBtn.style.display = (name === 'expenses' || name === 'splitter' || name === 'date') ? 'none' : 'inline-flex';
     if (mainHistBtn) mainHistBtn.style.display = 'none';
     if (closeBtn) closeBtn.style.display = '';
@@ -4647,7 +4636,6 @@ function applyCalcMode(name) {
       renderQuickBillingGrid();
     }
   }
-  applyNavStyle();
 }
 
 function setCalcMode(name) {
@@ -4891,11 +4879,8 @@ var _quickBillingItems = (function() {
 
 var _quickBillingQty = 1;
 var _quickBillingOrder = [];
-
-function ensurePosMockItems() {
-  try {
-    if (localStorage.getItem('calc_pos_mock_deleted') === '1') return;
-    if (_quickBillingOrder.length > 0) return;
+try {
+  if (localStorage.getItem('calc_pos_seeded') !== '1') {
     var _seedCount = 0;
     for (var _qsi = 0; _qsi < _quickBillingItems.length && _seedCount < 2; _qsi++) {
       var _qsiItem = _quickBillingItems[_qsi];
@@ -4904,12 +4889,9 @@ function ensurePosMockItems() {
         _seedCount++;
       }
     }
-  } catch(e) {}
-}
-
-function markPosMockDeleted() {
-  try { localStorage.setItem('calc_pos_mock_deleted', '1'); } catch(e) {}
-}
+    try { localStorage.setItem('calc_pos_seeded', '1'); } catch(e) {}
+  }
+} catch(e) {}
 
 function setQuickBillingQty(deltaOrVal) {
   if (typeof deltaOrVal === 'number') {
@@ -4983,14 +4965,12 @@ function addQuickBillingItemToBill(idx) {
 function removeQuickBillingOrderLine(i) {
   if (i >= 0 && i < _quickBillingOrder.length) {
     _quickBillingOrder.splice(i, 1);
-    markPosMockDeleted();
     renderQuickBillingScreen();
   }
 }
 
 function clearQuickBillingOrder() {
   _quickBillingOrder = [];
-  markPosMockDeleted();
   renderQuickBillingScreen();
   showToast('🗑️ POS Bill Cleared');
 }
@@ -5114,7 +5094,6 @@ window.checkAndAutoRestoreNextHeldBill = checkAndAutoRestoreNextHeldBill;
 function renderQuickBillingScreen(targetOrderIdx) {
   var screenEl = document.getElementById('pos-live-screen');
   if (!screenEl) return;
-  ensurePosMockItems();
 
   var posHeader = document.querySelector('.calc-header-controls');
   if (posHeader) {
@@ -5209,7 +5188,7 @@ function openPosQtyEditModal(idx) {
   if (!item) return;
   document.getElementById('pos-qty-line-idx').value = idx;
   var iconStr = item.icon ? (item.icon + ' ') : '';
-  document.getElementById('lbl-pos-qty-title').textContent = '✏️ ' + iconStr + item.name;
+  document.getElementById('pos-qty-modal-title').textContent = '✏️ ' + iconStr + item.name;
   document.getElementById('pos-qty-item-subtitle').textContent = _t('Rate', 'दर', 'Rate') + ': ₹' + item.price + ' ' + _t('per unit', 'प्रति इकाई', 'per unit');
   document.getElementById('pos-modal-qty-input').value = item.qty || 1;
   openModal('modal-pos-qty-edit');
@@ -5258,7 +5237,6 @@ function deletePosLineFromModal() {
   var idx = parseInt(document.getElementById('pos-qty-line-idx').value);
   if (!isNaN(idx) && idx >= 0 && idx < _quickBillingOrder.length) {
     _quickBillingOrder.splice(idx, 1);
-    markPosMockDeleted();
     renderQuickBillingScreen();
     closeModal('modal-pos-qty-edit');
     showToast('🗑️ ' + _t('Line item removed', 'लाइन आइटम हटाया गया', 'Line item hataya gaya'));
@@ -5272,7 +5250,6 @@ function clearEntirePosCartFromModal() {
   }
   if (confirm('🧹 ' + _t('Are you sure you want to clear ALL items from the cart?', 'क्या आप सच में कार्ट से सभी आइटम हटाना चाहते हैं?', 'Kya aap sach me cart se saare items hatana chahte hain?'))) {
     _quickBillingOrder = [];
-    markPosMockDeleted();
     renderQuickBillingScreen();
     closeModal('modal-pos-qty-edit');
     showToast('🧹 ' + _t('Entire cart cleared', 'पूरा कार्ट साफ हुआ', 'Poora cart saaf hua'));
@@ -6631,6 +6608,10 @@ function calcUpdateDisplay(skipEditor) {
           var valForWords = _kMode ? live * 1000 : live;
           var w = numToWords(valForWords);
           if (w) {
+            expr.style.display = 'flex';
+            expr.style.alignItems = 'center';
+            expr.style.justifyContent = 'flex-end';
+            expr.style.textAlign = 'right';
             if (w.length > 35) {
               expr.style.whiteSpace = 'normal';
               expr.style.wordBreak = 'break-word';
@@ -7252,10 +7233,11 @@ function renderDateMode(container, display) {
   var lblDaysToFrom = isHi ? 'दिन (FROM तिथि से)' : (isHn ? 'days to FROM date' : 'days to FROM date');
 
   var html =
-      '<div style="padding:0.2rem 0.1rem;box-sizing:border-box;">' +
-        '<div style="display:flex;align-items:center;justify-content:flex-end;margin-bottom:0.6rem;">' +
-          '<button onclick="calGoToday()" style="padding:0.3rem 0.65rem;font-size:0.82rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">' + btnToday + '</button>' +
-        '</div>' +
+    '<div style="padding:0.2rem 0.1rem;box-sizing:border-box;">' +
+      '<div style="font-weight:700;font-size:1.05rem;margin-bottom:0.6rem;color:var(--color-accent);display:flex;align-items:center;justify-content:space-between;">' +
+        '<span>' + titleText + '</span>' +
+        '<button onclick="calGoToday()" style="padding:0.3rem 0.65rem;font-size:0.82rem;font-weight:700;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;">' + btnToday + '</button>' +
+      '</div>' +
 
       /* OPEN VISUAL CALENDAR BOX */
       '<div style="background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:var(--radius-sm);padding:0.7rem;margin-bottom:0.7rem;">' +
@@ -8487,6 +8469,53 @@ function callSplitPerson(personId) {
   if (person && person.tel) { location.href = 'tel:' + person.tel; }
   else { openAddExpensePopup(personId); }
 }
+var _aepPhotoData = '';
+function compressPhoto(dataUrl, cb) {
+  var img = new Image();
+  img.onload = function() {
+    var maxW = 600, w = img.width, h = img.height;
+    if (w > maxW) { h = Math.round(h * maxW / w); w = maxW; }
+    var c = document.createElement('canvas');
+    c.width = w; c.height = h;
+    c.getContext('2d').drawImage(img, 0, 0, w, h);
+    cb(c.toDataURL('image/jpeg', 0.5));
+  };
+  img.src = dataUrl;
+}
+function aepPreviewPhoto(input) {
+  var file = input.files && input.files[0];
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(ev) {
+    compressPhoto(ev.target.result, function(compressed) {
+      _aepPhotoData = compressed;
+      var img = document.getElementById('aep-photo-preview');
+      img.src = compressed;
+      img.style.display = 'block';
+    });
+  };
+  reader.readAsDataURL(file);
+}
+function aepShowPhotoById(expId) {
+  var exp = null;
+  for (var i = 0; i < splitExpenses.length; i++) { if (splitExpenses[i].id === expId) { exp = splitExpenses[i]; break; } }
+  if (exp && exp.photo) aepShowPhoto(exp.photo);
+}
+function aepShowPhoto(src) {
+  var overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.92);display:flex;align-items:center;justify-content:center;cursor:pointer;touch-action:manipulation;';
+  overlay.onclick = function() { overlay.remove(); };
+  var img = document.createElement('img');
+  img.src = src;
+  img.style.cssText = 'max-width:95vw;max-height:90vh;border-radius:8px;box-shadow:0 8px 30px rgba(0,0,0,0.5);';
+  overlay.appendChild(img);
+  document.body.appendChild(overlay);
+}
+function aepSetMode(mode) {
+  document.getElementById('aep-btn-equal').classList.toggle('on', mode === 'equal');
+  document.getElementById('aep-btn-custom').classList.toggle('on', mode === 'custom');
+  aepUpdateUI();
+}
 function openAddExpensePopup(personId) {
   var person = null;
   splitPeople.forEach(function(p){ if (p.id === personId) person = p; });
@@ -8502,8 +8531,12 @@ function openAddExpensePopup(personId) {
   document.getElementById('aep-amount').value = '';
   var catSelect = document.getElementById('aep-category');
   if (catSelect) catSelect.value = '🛒 Grocery';
-  var modeSelect = document.getElementById('aep-split-mode');
-  if (modeSelect) modeSelect.value = 'equal';
+  aepSetMode('equal');
+  _aepPhotoData = '';
+  var photoPreview = document.getElementById('aep-photo-preview');
+  if (photoPreview) { photoPreview.style.display = 'none'; photoPreview.src = ''; }
+  var photoInput = document.getElementById('aep-photo');
+  if (photoInput) photoInput.value = '';
   
   var chips = document.getElementById('aep-chips');
   chips.innerHTML = '';
@@ -8519,8 +8552,7 @@ function aepToggleChip(el) {
   aepUpdateUI();
 }
 function aepUpdateUI() {
-  var modeSelect = document.getElementById('aep-split-mode');
-  var splitMode = modeSelect ? modeSelect.value : 'equal';
+  var splitMode = document.getElementById('aep-btn-equal').classList.contains('on') ? 'equal' : 'custom';
   var allChips = document.querySelectorAll('#aep-chips .sp-chip');
   var onChips = document.querySelectorAll('#aep-chips .sp-chip.on');
   
@@ -8554,7 +8586,7 @@ function aepUpdateUI() {
       var name = chip.getAttribute('data-name');
       var inputHtml = '<div style="display:flex;align-items:center;gap:0.3rem;margin-bottom:0.25rem">' +
         '<span style="font-size:0.85rem;color:#fff;min-width:65px">' + escHtml(name) + '</span>' +
-        '<input class="aep-ca-input" data-pid="' + pid + '" placeholder="' + placeholder + '" value="' + defaultVal + '" inputmode="decimal" style="width:50px;padding:0.4rem 0.3rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-primary);color:var(--text-primary);font-size:0.85rem">';
+        '<input class="aep-ca-input" data-pid="' + pid + '" placeholder="' + placeholder + '" value="' + defaultVal + '" inputmode="decimal" style="width:80px;padding:0.4rem 0.3rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-primary);color:var(--text-primary);font-size:0.85rem">';
       if (splitMode === 'percentages') {
         inputHtml += '<span style="color:var(--text-muted);font-size:0.85rem">%</span>';
       } else if (splitMode === 'shares') {
@@ -8574,7 +8606,7 @@ function confirmAddExpense() {
   var amount = document.getElementById('aep-amount').value.trim();
   var paidBy = _aepPersonId;
   var category = document.getElementById('aep-category') ? document.getElementById('aep-category').value : '📦 Other';
-  var splitMode = document.getElementById('aep-split-mode').value;
+  var splitMode = document.getElementById('aep-btn-equal').classList.contains('on') ? 'equal' : 'custom';
   
   if (!desc && !amount) { document.getElementById('aep-desc').focus(); return; }
   var id = spPersonId();
@@ -8601,7 +8633,8 @@ function confirmAddExpense() {
     checked: checked,
     customAmounts: customAmounts,
     category: category,
-    isSettlement: false
+    isSettlement: false,
+    photo: _aepPhotoData || ''
   });
   
   closeAddExpensePopup();
@@ -8940,7 +8973,7 @@ function seedExpensesMockData() {
   function d(offset) { var d = new Date(today); d.setDate(d.getDate()+offset); return d.toISOString().split('T')[0]; }
   expensesList.push({ id:expId(), desc:'Hotel Booking', amount:'4500', date:d(0), category:'🏠 Rent & Bills' });
   expensesList.push({ id:expId(), desc:'Dinner at Fisherman\'s', amount:'1200', date:d(0), category:'🍔 Food' });
-  expensesList.push({ id:expId(), desc:'Groceries', amount:'2000', date:d(-7), category:'🍔 Food' });
+  expensesList.push({ id:expId(), desc:'Groceries', amount:'2000', date:d(-1), category:'🍔 Food' });
   expensesList.push({ id:expId(), desc:'Taxi Fare', amount:'350', date:d(-1), category:'⛽ Travel' });
   expensesList.push({ id:expId(), desc:'Petrol', amount:'800', date:d(-3), category:'⛽ Travel' });
   expensesList.push({ id:expId(), desc:'Flight Ticket', amount:'6500', date:d(-32), category:'⛽ Travel' });
@@ -9192,7 +9225,6 @@ function renderExpensesBarGraph(expenses) {
 
 function renderExpensesMode(container) {
   if (!container) return;
-  container.style.padding = '0.45rem 0 0 0';
   container.innerHTML = '';
   seedExpensesMockData();
   var total = 0;
@@ -9287,9 +9319,9 @@ function renderExpensesMode(container) {
     var dates = Object.keys(groups).sort().reverse();
     var todayItems = [], weekItems = [], monthItems = [];
     dates.forEach(function(d){
-      if (d === today) todayItems = groups[d];
-      if (inRange(d, monStr, sunStr)) weekItems = weekItems.concat(groups[d]);
-      if (d.slice(0,7) === thisMon) monthItems = monthItems.concat(groups[d]);
+      if (d === today) { todayItems = groups[d]; return; }
+      if (inRange(d, monStr, sunStr)) { weekItems = weekItems.concat(groups[d]); return; }
+      if (d.slice(0,7) === thisMon) { monthItems = monthItems.concat(groups[d]); return; }
     });
     function getCatBadge(desc) {
       if (!desc) return '<span class="exp-cat-badge">📝 ' + _t('Item', 'वस्तु', 'Item') + '</span>';
@@ -9300,18 +9332,14 @@ function renderExpensesMode(container) {
       if (/shopping|cloth|shoe|amazon|flipkart|खरीदारी/.test(d)) return '<span class="exp-cat-badge">🛍️ ' + _t('Shop', 'खरीदारी', 'Shopping') + '</span>';
       return '<span class="exp-cat-badge">📝 ' + _t('General', 'सामान्य', 'General') + '</span>';
     }
-    function expSection(title, items, open, bold, alwaysShow) {
-      if (!items.length && !alwaysShow) return '';
+    function expSection(title, items, open, bold) {
+      if (!items.length) return '';
       var t = 0; items.forEach(function(e){ t += parseFloat(e.amount)||0; });
       var o = open ? ' open' : '';
       var h = '<details'+o+' style="margin-bottom:0.3rem"><summary class="exp-summary">'+title+' <span style="font-weight:'+(bold?'700':'400')+';font-size:1rem;color:var(--color-accent);margin-left:auto">₹'+fmtNum(t)+'</span></summary>';
-      if (!items.length) {
-        h += '<div class="exp-item animated-card" style="justify-content:center;"><span style="font-size:0.85rem;color:var(--text-muted);padding:0.2rem 0;">' + _t('No expenses this month', 'इस महीने कोई खर्च नहीं', 'Is mahine koi kharch nahi') + '</span></div>';
-      } else {
-        items.forEach(function(e){
-          h += '<div class="exp-item animated-card" id="exp-item-' + e.id + '"><span class="exp-date" style="display:flex;flex-direction:column;align-items:flex-start;gap:2px;">'+fmtDateShort(e.date)+getCatBadge(e.desc)+'</span><span class="exp-desc">' + escHtml(e.desc) + '</span><span class="rm-exp" onclick="editExpenseItem('+e.id+')" title="' + _t('Edit', 'संपादित करें', 'Edit karein') + '" style="cursor:pointer;margin:0 4px;font-size:0.85rem;">✏️</span><span class="exp-amt-val">₹'+fmtNum(parseFloat(e.amount)||0)+'</span><span class="rm-exp" onclick="removeExpenseItem('+e.id+')" title="' + _t('Delete', 'हटाएं', 'Hatayein') + '" style="cursor:pointer;margin-left:4px;">🗑️</span></div>';
-        });
-      }
+      items.forEach(function(e){
+        h += '<div class="exp-item animated-card" id="exp-item-' + e.id + '"><span class="exp-date">'+fmtDateShort(e.date)+'</span><span class="exp-desc" style="display:flex;flex-direction:column;align-items:flex-start;gap:2px;"><span style="font-weight:600;">' + escHtml(e.desc) + '</span>' + getCatBadge(e.desc) + (e.photo ? ' <img src="'+escHtml(e.photo)+'" style="max-height:36px;border-radius:5px;border:1px solid var(--border-color);cursor:pointer;margin-left:0.3rem;" onclick="aepShowPhotoById('+e.id+')">' : '') + '</span><span class="rm-exp" onclick="editExpenseItem('+e.id+')" title="' + _t('Edit', 'संपादित करें', 'Edit karein') + '" style="cursor:pointer;margin:0 4px;font-size:0.85rem;">✏️</span><span class="exp-amt-val">₹'+fmtNum(parseFloat(e.amount)||0)+'</span><span class="rm-exp" onclick="removeExpenseItem('+e.id+')" title="' + _t('Delete', 'हटाएं', 'Hatayein') + '" style="cursor:pointer;margin-left:4px;">🗑️</span></div>';
+      });
       h += '</details>';
       return h;
     }
@@ -9320,7 +9348,7 @@ function renderExpensesMode(container) {
     html += '<div id="exp-sections-list">';
     html += expSection('📅 ' + _t('Today', 'आज', 'Aaj'), todayItems, openToday, true);
     html += expSection('📅 ' + _t('This Week', 'इस सप्ताह', 'Is Hafta'), weekItems, false);
-    html += expSection('📅 ' + _t('This Month', 'इस महीने', 'Is Mahina'), monthItems, false, false, true);
+    html += expSection('📅 ' + _t('This Month', 'इस महीने', 'Is Mahina'), monthItems, false);
     html += '</div>';
   } else {
     html += '<div style="font-size:0.85rem;color:var(--text-muted);padding:0.5rem 0">' + _t('No expenses yet', 'अभी कोई खर्च नहीं', 'Abhi koi kharch nahi') + ( _recordExpenses ? '<br><br>💡 ' + _t('Tap above digit to add a label, tap again to record', 'ऊपर अंक पर टैप करके लेबल जोड़ें, दोबारा टैप करके रिकॉर्ड करें', 'Upar ank pe tap karke label jodein, dobara tap karke record karein') : '')+'</div>';
@@ -9624,6 +9652,11 @@ function renderFuelMode(container) {
   var quickTitle = isHi ? '⚡ दूरी के त्वरित विकल्प' : (isHn ? '⚡ Quick Distance Presets' : '⚡ QUICK DISTANCE PRESETS');
   
   var html = '<div style="display:flex;flex-direction:column;gap:0.9rem;box-sizing:border-box;">' +
+    '<div style="display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,0.08);padding-bottom:0.4rem;">' +
+      '<div style="display:flex;align-items:center;gap:0.45rem;font-size:0.95rem;font-weight:800;color:#fb923c;text-transform:uppercase;letter-spacing:0.5px;">' +
+        titleText +
+      '</div>' +
+    '</div>' +
     '<div style="display:flex;flex-direction:column;gap:0.65rem;background:var(--bg-tertiary);padding:0.9rem 1rem;border-radius:16px;border:1px solid var(--border-color);">' +
       '<div class="field-row" style="display:flex;align-items:center;justify-content:space-between;gap:0.6rem;">' +
         '<span class="field-label" style="font-size:0.92rem;font-weight:700;color:var(--text-primary);">' + lblDist + '</span>' +
@@ -9762,6 +9795,11 @@ function renderEmiMode(container) {
   var pLakh = isHi ? 'लाख' : 'Lakh';
 
   var html = '<div style="display:flex;flex-direction:column;gap:0.9rem;box-sizing:border-box;">' +
+    '<div style="display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,0.08);padding-bottom:0.4rem;">' +
+      '<div style="display:flex;align-items:center;gap:0.45rem;font-size:0.95rem;font-weight:800;color:#34d399;text-transform:uppercase;letter-spacing:0.5px;">' +
+        titleText +
+      '</div>' +
+    '</div>' +
     '<div>' +
       '<div style="font-size:0.78rem;font-weight:700;color:var(--text-muted);margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.04em;">' + qAmt + '</div>' +
       '<div style="display:flex;gap:0.45rem;flex-wrap:wrap;">' +
@@ -10044,6 +10082,11 @@ function renderConverterMode(container) {
   var optTmp = isHi ? 'तापमान (°C, °F, K)' : (isHn ? 'Temperature (°C, °F, K)' : 'Temperature (°C, °F, K)');
 
   var html = '<div style="background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:20px;padding:1.1rem;box-shadow:0 12px 32px rgba(0,0,0,0.5);display:flex;flex-direction:column;gap:1.1rem;box-sizing:border-box;">' +
+    '<div style="display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,0.08);padding-bottom:0.6rem;">' +
+      '<div style="display:flex;align-items:center;gap:0.45rem;font-size:0.92rem;font-weight:800;color:var(--color-accent);text-transform:uppercase;letter-spacing:0.5px;">' +
+        titleText +
+      '</div>' +
+    '</div>' +
     '<div style="background:var(--bg-tertiary);border:1px solid var(--border-color);border-radius:14px;padding:0.85rem;display:flex;flex-direction:column;gap:0.75rem;">' +
       '<div class="field-row" style="display:flex;align-items:center;justify-content:space-between;gap:0.6rem;">' +
         '<span class="field-label" style="font-size:0.9rem;font-weight:700;color:var(--text-primary);">' + lblCat + '</span>' +
@@ -10198,68 +10241,61 @@ function sciEvalExpr(expr) {
 
 function renderScientificMode(container) {
   if (!container) return;
-  container.style.display = 'flex';
-  container.style.flexDirection = 'column';
-  container.style.height = '100%';
-  container.style.boxSizing = 'border-box';
-  container.style.padding = '0.5rem 0 0 0';
-  container.style.margin = '0';
-  container.style.gap = '0.5rem';
+  var isHi = _appLang === 'hi';
+  var isHn = _appLang === 'hn';
+  var titleText = isHi ? '📐 साइंटिफिक कैलकुलेटर' : (isHn ? '📐 Scientific Calculator' : '📐 SCIENTIFIC CALCULATOR');
 
-  var html = '<div style="display:flex;flex-direction:column;gap:0.5rem;box-sizing:border-box;width:100%;flex:1;min-height:0;">' +
-    '<div id="sci-expr-screen" style="background:var(--bg-tertiary);border-radius:var(--radius-sm);text-align:right;font-size:1.5rem;min-height:3.2rem;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none;white-space:nowrap;border-bottom:1px solid var(--border-color);padding:0.6rem 0.85rem;user-select:none;-webkit-user-select:none;flex-shrink:0;box-sizing:border-box;">' + (_sciExpr || '0') + '</div>' +
-    '<div style="display:flex;align-items:center;justify-content:flex-end;flex-shrink:0;">' +
+  var html = '<div style="display:flex;flex-direction:column;gap:0.5rem;box-sizing:border-box;width:100%;padding-bottom:0.8rem;">' +
+    '<div style="display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,0.08);padding-bottom:0.3rem;flex-shrink:0;">' +
+      '<div style="display:flex;align-items:center;gap:0.45rem;font-size:0.95rem;font-weight:800;color:#a78bfa;text-transform:uppercase;letter-spacing:0.5px;">' +
+        titleText +
+      '</div>' +
       '<button id="sci-rad-deg-btn" onclick="toggleSciRadDeg()" style="padding:0.3rem 0.8rem;font-size:0.85rem;font-weight:800;background:rgba(167,139,250,0.15);border:1px solid rgba(167,139,250,0.4);color:#a78bfa;border-radius:20px;cursor:pointer;transition:all 0.15s ease;">' + (_sciIsRad ? 'RAD' : 'DEG') + '</button>' +
     '</div>' +
-    '<div id="sci-res-screen" style="background:linear-gradient(135deg, var(--bg-display-start, #1a1a2e), var(--bg-tertiary));border-radius:var(--radius-sm);font-size:2.1rem;font-weight:700;min-height:3.4rem;text-align:right;padding:0.6rem 1.2rem 0.6rem 0.85rem;box-sizing:border-box;overflow-x:auto;white-space:nowrap;scrollbar-width:none;-ms-overflow-style:none;user-select:none;-webkit-user-select:none;flex-shrink:0;display:flex;align-items:center;justify-content:flex-end;">= 0</div>' +
-    '<div style="display:grid;grid-template-columns:repeat(5,1fr);grid-template-rows:repeat(6,1fr);gap:0.6rem;width:100%;box-sizing:border-box;flex:1;min-height:0;margin-top:0.3rem;">' +
-      '<button onclick="sciPress(\'sin\')" style="padding:0;font-size:1.1rem;font-weight:800;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;min-height:50px;flex:1;">sin</button>' +
-      '<button onclick="sciPress(\'cos\')" style="padding:0;font-size:1.1rem;font-weight:800;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;min-height:50px;flex:1;">cos</button>' +
-      '<button onclick="sciPress(\'tan\')" style="padding:0;font-size:1.1rem;font-weight:800;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;min-height:50px;flex:1;">tan</button>' +
-      '<button onclick="sciPress(\'AC\')" style="padding:0;font-size:1.2rem;font-weight:800;background:#ef4444;border:none;color:#fff;border-radius:var(--radius-sm);cursor:pointer;min-height:50px;flex:1;box-shadow:0 4px 12px rgba(239,68,68,0.35);">AC</button>' +
-      '<button onclick="sciPress(\'DEL\')" style="padding:0;font-size:1.2rem;font-weight:800;background:#f97316;border:none;color:#fff;border-radius:var(--radius-sm);cursor:pointer;min-height:50px;flex:1;box-shadow:0 4px 12px rgba(249,115,22,0.35);">⌫</button>' +
+    '<div style="background:rgba(167,139,250,0.08);border:1px solid rgba(167,139,250,0.25);border-radius:16px;padding:1.1rem 1.2rem;text-align:right;flex-shrink:0;min-height:115px;display:flex;flex-direction:column;justify-content:center;box-shadow:0 8px 24px rgba(167,139,250,0.12);box-sizing:border-box;">' +
+      '<div id="sci-expr-screen" style="font-size:1.25rem;color:var(--text-muted);min-height:26px;word-break:break-all;font-family:monospace;">' + (_sciExpr || '0') + '</div>' +
+      '<div id="sci-res-screen" style="font-size:2.6rem;font-weight:800;color:#a78bfa;margin-top:2px;font-family:monospace;letter-spacing:-0.5px;">= 0</div>' +
+    '</div>' +
+    '<div style="display:grid;grid-template-columns:repeat(5,1fr);grid-template-rows:repeat(6,1fr);gap:6px;width:100%;box-sizing:border-box;">' +
+      '<button onclick="sciPress(\'sin\')" style="padding:0;font-size:1.1rem;font-weight:800;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:14px;cursor:pointer;min-height:50px;">sin</button>' +
+      '<button onclick="sciPress(\'cos\')" style="padding:0;font-size:1.1rem;font-weight:800;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:14px;cursor:pointer;min-height:50px;">cos</button>' +
+      '<button onclick="sciPress(\'tan\')" style="padding:0;font-size:1.1rem;font-weight:800;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:14px;cursor:pointer;min-height:50px;">tan</button>' +
+      '<button onclick="sciPress(\'AC\')" style="padding:0;font-size:1.2rem;font-weight:800;background:#ef4444;border:none;color:#fff;border-radius:14px;cursor:pointer;min-height:50px;box-shadow:0 4px 12px rgba(239,68,68,0.35);">AC</button>' +
+      '<button onclick="sciPress(\'DEL\')" style="padding:0;font-size:1.2rem;font-weight:800;background:#f97316;border:none;color:#fff;border-radius:14px;cursor:pointer;min-height:50px;box-shadow:0 4px 12px rgba(249,115,22,0.35);">⌫</button>' +
 
-      '<button onclick="sciPress(\'sqrt\')" style="padding:0;font-size:1.2rem;font-weight:800;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;min-height:50px;flex:1;">√</button>' +
-      '<button onclick="sciPress(\'log\')" style="padding:0;font-size:1.1rem;font-weight:800;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;min-height:50px;flex:1;">log</button>' +
-      '<button onclick="sciPress(\'ln\')" style="padding:0;font-size:1.1rem;font-weight:800;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;min-height:50px;flex:1;">ln</button>' +
-      '<button onclick="sciPress(\'(\')" style="padding:0;font-size:1.25rem;font-weight:800;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;min-height:50px;flex:1;">(</button>' +
-      '<button onclick="sciPress(\')\')" style="padding:0;font-size:1.25rem;font-weight:800;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;min-height:50px;flex:1;">)</button>' +
+      '<button onclick="sciPress(\'sqrt\')" style="padding:0;font-size:1.2rem;font-weight:800;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:14px;cursor:pointer;min-height:50px;">√</button>' +
+      '<button onclick="sciPress(\'log\')" style="padding:0;font-size:1.1rem;font-weight:800;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:14px;cursor:pointer;min-height:50px;">log</button>' +
+      '<button onclick="sciPress(\'ln\')" style="padding:0;font-size:1.1rem;font-weight:800;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:14px;cursor:pointer;min-height:50px;">ln</button>' +
+      '<button onclick="sciPress(\'(\')" style="padding:0;font-size:1.25rem;font-weight:800;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:14px;cursor:pointer;min-height:50px;">(</button>' +
+      '<button onclick="sciPress(\')\')" style="padding:0;font-size:1.25rem;font-weight:800;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:14px;cursor:pointer;min-height:50px;">)</button>' +
 
-      '<button onclick="sciPress(\'pow\')" style="padding:0;font-size:1.1rem;font-weight:800;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;min-height:50px;flex:1;">x^y</button>' +
-      '<button onclick="sciPress(\'7\')" style="padding:0;font-size:1.45rem;font-weight:800;background:var(--bg-primary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;min-height:50px;flex:1;">7</button>' +
-      '<button onclick="sciPress(\'8\')" style="padding:0;font-size:1.45rem;font-weight:800;background:var(--bg-primary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;min-height:50px;flex:1;">8</button>' +
-      '<button onclick="sciPress(\'9\')" style="padding:0;font-size:1.45rem;font-weight:800;background:var(--bg-primary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;min-height:50px;flex:1;">9</button>' +
-      '<button onclick="sciPress(\'÷\')" style="padding:0;font-size:1.45rem;font-weight:800;background:var(--bg-tertiary);border:1px solid var(--border-color);color:#a78bfa;border-radius:var(--radius-sm);cursor:pointer;min-height:50px;flex:1;">÷</button>' +
+      '<button onclick="sciPress(\'pow\')" style="padding:0;font-size:1.1rem;font-weight:800;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:14px;cursor:pointer;min-height:50px;">x^y</button>' +
+      '<button onclick="sciPress(\'7\')" style="padding:0;font-size:1.45rem;font-weight:800;background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:14px;cursor:pointer;min-height:50px;">7</button>' +
+      '<button onclick="sciPress(\'8\')" style="padding:0;font-size:1.45rem;font-weight:800;background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:14px;cursor:pointer;min-height:50px;">8</button>' +
+      '<button onclick="sciPress(\'9\')" style="padding:0;font-size:1.45rem;font-weight:800;background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:14px;cursor:pointer;min-height:50px;">9</button>' +
+      '<button onclick="sciPress(\'÷\')" style="padding:0;font-size:1.45rem;font-weight:800;background:var(--bg-tertiary);border:1px solid var(--border-color);color:#a78bfa;border-radius:14px;cursor:pointer;min-height:50px;">÷</button>' +
 
-      '<button onclick="sciPress(\'pi\')" style="padding:0;font-size:1.25rem;font-weight:800;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;min-height:50px;flex:1;">π</button>' +
-      '<button onclick="sciPress(\'4\')" style="padding:0;font-size:1.45rem;font-weight:800;background:var(--bg-primary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;min-height:50px;flex:1;">4</button>' +
-      '<button onclick="sciPress(\'5\')" style="padding:0;font-size:1.45rem;font-weight:800;background:var(--bg-primary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;min-height:50px;flex:1;">5</button>' +
-      '<button onclick="sciPress(\'6\')" style="padding:0;font-size:1.45rem;font-weight:800;background:var(--bg-primary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;min-height:50px;flex:1;">6</button>' +
-      '<button onclick="sciPress(\'×\')" style="padding:0;font-size:1.45rem;font-weight:800;background:var(--bg-tertiary);border:1px solid var(--border-color);color:#a78bfa;border-radius:var(--radius-sm);cursor:pointer;min-height:50px;flex:1;">×</button>' +
+      '<button onclick="sciPress(\'pi\')" style="padding:0;font-size:1.25rem;font-weight:800;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:14px;cursor:pointer;min-height:50px;">π</button>' +
+      '<button onclick="sciPress(\'4\')" style="padding:0;font-size:1.45rem;font-weight:800;background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:14px;cursor:pointer;min-height:50px;">4</button>' +
+      '<button onclick="sciPress(\'5\')" style="padding:0;font-size:1.45rem;font-weight:800;background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:14px;cursor:pointer;min-height:50px;">5</button>' +
+      '<button onclick="sciPress(\'6\')" style="padding:0;font-size:1.45rem;font-weight:800;background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:14px;cursor:pointer;min-height:50px;">6</button>' +
+      '<button onclick="sciPress(\'×\')" style="padding:0;font-size:1.45rem;font-weight:800;background:var(--bg-tertiary);border:1px solid var(--border-color);color:#a78bfa;border-radius:14px;cursor:pointer;min-height:50px;">×</button>' +
 
-      '<button onclick="sciPress(\'e\')" style="padding:0;font-size:1.25rem;font-weight:800;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;min-height:50px;flex:1;">e</button>' +
-      '<button onclick="sciPress(\'1\')" style="padding:0;font-size:1.45rem;font-weight:800;background:var(--bg-primary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;min-height:50px;flex:1;">1</button>' +
-      '<button onclick="sciPress(\'2\')" style="padding:0;font-size:1.45rem;font-weight:800;background:var(--bg-primary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;min-height:50px;flex:1;">2</button>' +
-      '<button onclick="sciPress(\'3\')" style="padding:0;font-size:1.45rem;font-weight:800;background:var(--bg-primary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;min-height:50px;flex:1;">3</button>' +
-      '<button onclick="sciPress(\'-\')" style="padding:0;font-size:1.45rem;font-weight:800;background:var(--bg-tertiary);border:1px solid var(--border-color);color:#a78bfa;border-radius:var(--radius-sm);cursor:pointer;min-height:50px;flex:1;">-</button>' +
+      '<button onclick="sciPress(\'e\')" style="padding:0;font-size:1.25rem;font-weight:800;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:14px;cursor:pointer;min-height:50px;">e</button>' +
+      '<button onclick="sciPress(\'1\')" style="padding:0;font-size:1.45rem;font-weight:800;background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:14px;cursor:pointer;min-height:50px;">1</button>' +
+      '<button onclick="sciPress(\'2\')" style="padding:0;font-size:1.45rem;font-weight:800;background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:14px;cursor:pointer;min-height:50px;">2</button>' +
+      '<button onclick="sciPress(\'3\')" style="padding:0;font-size:1.45rem;font-weight:800;background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:14px;cursor:pointer;min-height:50px;">3</button>' +
+      '<button onclick="sciPress(\'-\')" style="padding:0;font-size:1.45rem;font-weight:800;background:var(--bg-tertiary);border:1px solid var(--border-color);color:#a78bfa;border-radius:14px;cursor:pointer;min-height:50px;">-</button>' +
 
-      '<button onclick="sciPress(\'fact\')" style="padding:0;font-size:1.1rem;font-weight:800;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;min-height:50px;flex:1;">n!</button>' +
-      '<button onclick="sciPress(\'0\')" style="padding:0;font-size:1.45rem;font-weight:800;background:var(--bg-primary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;min-height:50px;flex:1;">0</button>' +
-      '<button onclick="sciPress(\'.\')" style="padding:0;font-size:1.45rem;font-weight:800;background:var(--bg-primary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:var(--radius-sm);cursor:pointer;min-height:50px;flex:1;">.</button>' +
-      '<button onclick="sciPress(\'=\')" style="padding:0;font-size:1.55rem;font-weight:800;background:#a78bfa;border:none;color:#fff;border-radius:var(--radius-sm);cursor:pointer;min-height:50px;flex:1;box-shadow:0 4px 15px rgba(167,139,250,0.4);">=</button>' +
-      '<button onclick="sciPress(\'+\')" style="padding:0;font-size:1.45rem;font-weight:800;background:var(--bg-tertiary);border:1px solid var(--border-color);color:#a78bfa;border-radius:var(--radius-sm);cursor:pointer;min-height:50px;flex:1;">+</button>' +
+      '<button onclick="sciPress(\'fact\')" style="padding:0;font-size:1.1rem;font-weight:800;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:14px;cursor:pointer;min-height:50px;">n!</button>' +
+      '<button onclick="sciPress(\'0\')" style="padding:0;font-size:1.45rem;font-weight:800;background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:14px;cursor:pointer;min-height:50px;">0</button>' +
+      '<button onclick="sciPress(\'.\')" style="padding:0;font-size:1.45rem;font-weight:800;background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:14px;cursor:pointer;min-height:50px;">.</button>' +
+      '<button onclick="sciPress(\'=\')" style="padding:0;font-size:1.55rem;font-weight:800;background:#a78bfa;border:none;color:#fff;border-radius:14px;cursor:pointer;min-height:50px;box-shadow:0 4px 15px rgba(167,139,250,0.4);">=</button>' +
+      '<button onclick="sciPress(\'+\')" style="padding:0;font-size:1.45rem;font-weight:800;background:var(--bg-tertiary);border:1px solid var(--border-color);color:#a78bfa;border-radius:14px;cursor:pointer;min-height:50px;">+</button>' +
     '</div>' +
   '</div>';
   container.innerHTML = html;
   sciEvalLive();
-  if (!container._sciFeedbackBound) {
-    container._sciFeedbackBound = true;
-    container.addEventListener('pointerdown', function(e) {
-      var btn = e.target.closest('button');
-      if (!btn) return;
-      triggerKeyFeedback(btn);
-    });
-  }
 }
 
 function renderSplitterMode(container) {
@@ -11435,23 +11471,11 @@ function renderCalcHistory() {
 
   var isHistActive = (_activeHistorySubTab === 'history' && !_historyFolded);
   var isLedgerActive = (_activeHistorySubTab === 'ledger' && !_historyFolded);
-  var isLedgerAllowed = (_calcMode === 'basic');
-  if (!isLedgerAllowed && _activeHistorySubTab === 'ledger') {
-    _activeHistorySubTab = 'history';
-    isLedgerActive = false;
-  }
 
-  var tabHeader;
-  if (isLedgerAllowed) {
-    tabHeader = '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0.65rem;margin-bottom:0.5rem;width:100%;box-sizing:border-box;">' +
-      '<button onclick="switchHistoryTab(\'history\')" style="grid-column:span 3;height:36px;box-sizing:border-box;background:' + (isHistActive ? 'var(--color-accent)' : 'var(--bg-tertiary)') + ';color:' + (isHistActive ? '#fff' : 'var(--text-primary)') + ';border:1px solid var(--border-color);border-radius:var(--radius-sm);font-size:0.86rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;">📜 ' + (isHistActive ? _t('Hide History', 'इतिहास छुपाएं', 'History Chhupayein') : _t('Show History', 'इतिहास दिखाएं', 'History Dikhayein')) + '</button>' +
-      '<button onclick="' + (isLedgerActive ? 'exitKhataMode()' : 'switchHistoryTab(\'ledger\')') + '" style="grid-column:span 1;height:36px;box-sizing:border-box;margin-left:-5px;background:' + (isLedgerActive ? 'var(--color-accent)' : 'var(--bg-tertiary)') + ';color:' + (isLedgerActive ? '#fff' : 'var(--color-accent)') + ';border:1px solid var(--border-color);border-radius:var(--radius-sm);font-size:0.86rem;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;">' + (isLedgerActive ? '🚪 ' + _t('Exit', 'बाहर निकलें', 'Exit') : '📖 ' + _t('Ledger', 'खाता', 'Khata')) + '</button>' +
-    '</div>';
-  } else {
-    tabHeader = '<div style="display:grid;grid-template-columns:1fr;margin-bottom:0.5rem;width:100%;box-sizing:border-box;">' +
-      '<button onclick="switchHistoryTab(\'history\')" style="grid-column:span 1;height:36px;box-sizing:border-box;background:' + (isHistActive ? 'var(--color-accent)' : 'var(--bg-tertiary)') + ';color:' + (isHistActive ? '#fff' : 'var(--text-primary)') + ';border:1px solid var(--border-color);border-radius:var(--radius-sm);font-size:0.86rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;">📜 ' + (isHistActive ? _t('Hide History', 'इतिहास छुपाएं', 'History Chhupayein') : _t('Show History', 'इतिहास दिखाएं', 'History Dikhayein')) + '</button>' +
-    '</div>';
-  }
+  var tabHeader = '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0.65rem;margin-bottom:0.5rem;width:100%;box-sizing:border-box;">' +
+    '<button onclick="switchHistoryTab(\'history\')" style="grid-column:span 3;height:36px;box-sizing:border-box;background:' + (isHistActive ? 'var(--color-accent)' : 'var(--bg-tertiary)') + ';color:' + (isHistActive ? '#fff' : 'var(--text-primary)') + ';border:1px solid var(--border-color);border-radius:var(--radius-sm);font-size:0.86rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;">📜 ' + (isHistActive ? _t('Hide History', 'इतिहास छुपाएं', 'History Chhupayein') : _t('Show History', 'इतिहास दिखाएं', 'History Dikhayein')) + '</button>' +
+    '<button onclick="' + (isLedgerActive ? 'exitKhataMode()' : 'switchHistoryTab(\'ledger\')') + '" style="grid-column:span 1;height:36px;box-sizing:border-box;margin-left:-5px;background:' + (isLedgerActive ? 'var(--color-accent)' : 'var(--bg-tertiary)') + ';color:' + (isLedgerActive ? '#fff' : 'var(--color-accent)') + ';border:1px solid var(--border-color);border-radius:var(--radius-sm);font-size:0.86rem;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;">' + (isLedgerActive ? '🚪 ' + _t('Exit', 'बाहर निकलें', 'Exit') : '📖 ' + _t('Ledger', 'खाता', 'Khata')) + '</button>' +
+  '</div>';
 
   if (_historyFolded) {
     container.innerHTML = tabHeader;
@@ -11703,6 +11727,10 @@ function toggleCalcHistory() {
   if (_calcHistoryVisible) {
     _historyFolded = false;
     _activeHistorySubTab = 'history';
+  } else {
+    if (typeof setCalcMode === 'function') {
+      setCalcMode('basic');
+    }
   }
   var btn = document.getElementById('calc-history-btn');
   if (btn) btn.textContent = _calcHistoryVisible ? _t('Hide History', 'इतिहास छुपाएं', 'History Chhupayein') : _t('Show History', 'इतिहास दिखाएं', 'History Dikhayein');
