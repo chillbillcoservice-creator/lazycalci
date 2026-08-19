@@ -764,6 +764,7 @@ body {
   animation: btCardGlowPulse 2.8s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
 }
 #modal-add-expense, #modal-create-group, #modal-join-group { z-index:1001; }
+#modal-add-expense { align-items:flex-start !important; padding-top:0.8rem !important; }
 #modal-add-expense .modal-container { max-width:340px; }
 #modal-add-expense .field-row { display:flex; flex-direction:column; gap:0.25rem; margin-bottom:0.7rem; }
 #modal-add-expense .field-row label { font-size:1rem; color:#fff; display:block; }
@@ -774,7 +775,7 @@ body {
 #modal-add-expense .sp-chip { font-size:0.95rem; padding:0.3rem 0.55rem; }
 .aep-sc { font-size:0.88rem; font-weight:600; padding:0.5rem 0.85rem; border-radius:6px; border:1px solid var(--border-color); cursor:pointer; color:var(--text-muted); background:transparent; white-space:nowrap; }
 .aep-sc:hover { color:#fff; border-color:var(--color-accent); }
-.aep-sc.on { color:#fff; border-color:var(--color-accent); background:var(--color-accent); }
+.aep-sc.on { color:#111; border-color:var(--color-accent); background:var(--color-accent); }
 @media print {
   @page { size: auto; margin: 8mm; }
   body * {
@@ -876,7 +877,7 @@ body {
 .modal-body::-webkit-scrollbar { display:none; }
 .modal-body.sp-mode { height:calc(100vh - 52px); max-height:calc(100vh - 52px); padding:0.4rem 0.5rem; overflow-y:auto !important; scrollbar-width:none; -ms-overflow-style:none; }
 .modal-body.sp-mode .calc-mode-body { margin-top:0; }
-.calc-mode-body { padding-top:1.15rem; }
+.calc-mode-body { padding-top:0.75rem; }
 #calc-expression {
   background: var(--bg-tertiary);
   border-radius: var(--radius-sm);
@@ -2030,27 +2031,31 @@ body {
     <div class="field-row" style="display:flex;flex-direction:row;align-items:center;gap:0.5rem;margin-bottom:1rem;">
       <div style="flex:1;display:flex;flex-direction:column;gap:0.2rem;">
         <label style="font-size:0.85rem;color:#ccc;">What for?</label>
-        <input id="aep-desc" placeholder="E.g. Dinner" style="width:100%;padding:0.6rem 0.5rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-primary);color:var(--text-primary);font-size:0.95rem;">
+        <input id="aep-desc" placeholder="E.g. Dinner" style="width:100%;padding:0.7rem 0.6rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-primary);color:var(--text-primary);font-size:1rem;">
       </div>
       <div style="width:110px;display:flex;flex-direction:column;gap:0.2rem;">
         <label style="font-size:0.85rem;color:#ccc;">Amount</label>
-        <input id="aep-amount" inputmode="decimal" placeholder="₹0" style="width:100%;padding:0.6rem 0.5rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-primary);color:#fff;font-size:0.95rem;">
+        <input id="aep-amount" inputmode="decimal" placeholder="₹0" style="width:100%;padding:0.7rem 0.6rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-primary);color:#fff;font-size:1rem;">
       </div>
     </div>
     
     <!-- SPLIT MODE SELECTOR -->
     <div class="field-row" style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1rem;">
       <label style="font-size:0.85rem;white-space:nowrap;color:#ccc;min-width:65px;">Split Mode</label>
-      <select id="aep-split-mode" onchange="aepUpdateUI()" style="flex:1;padding:0.6rem 0.5rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-primary);color:#fff;font-size:0.95rem;">
-        <option value="equal">⚖️ Equally</option>
-        <option value="custom">✂️ Custom ₹ (Rupees)</option>
-      </select>
+      <button class="aep-sc on" id="aep-btn-equal" onclick="aepSetMode('equal')">⚖️ Equal</button>
+      <button class="aep-sc" id="aep-btn-custom" onclick="aepSetMode('custom')">✂️ Custom</button>
     </div>
     
     <div style="font-size:0.85rem;color:#ccc;margin-bottom:0.5rem">Split among:</div>
     <div id="aep-chips" style="display:flex;flex-direction:row;flex-wrap:wrap;align-items:center;gap:0.4rem;margin-bottom:0.5rem"></div>
     <div id="aep-split-label" style="font-size:0.8rem;color:var(--color-accent);margin-bottom:0.4rem;font-weight:600;"></div>
     <div id="aep-custom-amts" style="margin-bottom:0.5rem"></div>
+    
+    <input type="file" id="aep-photo" accept="image/*" capture="environment" onchange="aepPreviewPhoto(this)" style="display:none">
+    <div id="aep-photo-row" style="display:flex;align-items:center;gap:0.5rem;margin-top:0.5rem;margin-bottom:0.3rem;">
+      <button onclick="document.getElementById('aep-photo').click()" style="padding:0.45rem 0.7rem;border:1px dashed var(--border-color);border-radius:var(--radius-sm);background:transparent;color:var(--text-muted);cursor:pointer;font-size:0.85rem;">📷 Bill Photo</button>
+      <img id="aep-photo-preview" style="display:none;max-height:40px;border-radius:6px;border:1px solid var(--border-color);">
+    </div>
     
     <div style="display:flex;gap:0.5rem;justify-content:flex-end;margin-top:0.75rem;">
       <button onclick="closeAddExpensePopup()" style="padding:0.6rem 1.2rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-tertiary);color:#fff;cursor:pointer;font-size:0.9rem">Cancel</button>
@@ -8470,6 +8475,53 @@ function callSplitPerson(personId) {
   if (person && person.tel) { location.href = 'tel:' + person.tel; }
   else { openAddExpensePopup(personId); }
 }
+var _aepPhotoData = '';
+function compressPhoto(dataUrl, cb) {
+  var img = new Image();
+  img.onload = function() {
+    var maxW = 600, w = img.width, h = img.height;
+    if (w > maxW) { h = Math.round(h * maxW / w); w = maxW; }
+    var c = document.createElement('canvas');
+    c.width = w; c.height = h;
+    c.getContext('2d').drawImage(img, 0, 0, w, h);
+    cb(c.toDataURL('image/jpeg', 0.5));
+  };
+  img.src = dataUrl;
+}
+function aepPreviewPhoto(input) {
+  var file = input.files && input.files[0];
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(ev) {
+    compressPhoto(ev.target.result, function(compressed) {
+      _aepPhotoData = compressed;
+      var img = document.getElementById('aep-photo-preview');
+      img.src = compressed;
+      img.style.display = 'block';
+    });
+  };
+  reader.readAsDataURL(file);
+}
+function aepShowPhotoById(expId) {
+  var exp = null;
+  for (var i = 0; i < splitExpenses.length; i++) { if (splitExpenses[i].id === expId) { exp = splitExpenses[i]; break; } }
+  if (exp && exp.photo) aepShowPhoto(exp.photo);
+}
+function aepShowPhoto(src) {
+  var overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.92);display:flex;align-items:center;justify-content:center;cursor:pointer;touch-action:manipulation;';
+  overlay.onclick = function() { overlay.remove(); };
+  var img = document.createElement('img');
+  img.src = src;
+  img.style.cssText = 'max-width:95vw;max-height:90vh;border-radius:8px;box-shadow:0 8px 30px rgba(0,0,0,0.5);';
+  overlay.appendChild(img);
+  document.body.appendChild(overlay);
+}
+function aepSetMode(mode) {
+  document.getElementById('aep-btn-equal').classList.toggle('on', mode === 'equal');
+  document.getElementById('aep-btn-custom').classList.toggle('on', mode === 'custom');
+  aepUpdateUI();
+}
 function openAddExpensePopup(personId) {
   var person = null;
   splitPeople.forEach(function(p){ if (p.id === personId) person = p; });
@@ -8485,8 +8537,12 @@ function openAddExpensePopup(personId) {
   document.getElementById('aep-amount').value = '';
   var catSelect = document.getElementById('aep-category');
   if (catSelect) catSelect.value = '🛒 Grocery';
-  var modeSelect = document.getElementById('aep-split-mode');
-  if (modeSelect) modeSelect.value = 'equal';
+  aepSetMode('equal');
+  _aepPhotoData = '';
+  var photoPreview = document.getElementById('aep-photo-preview');
+  if (photoPreview) { photoPreview.style.display = 'none'; photoPreview.src = ''; }
+  var photoInput = document.getElementById('aep-photo');
+  if (photoInput) photoInput.value = '';
   
   var chips = document.getElementById('aep-chips');
   chips.innerHTML = '';
@@ -8502,8 +8558,7 @@ function aepToggleChip(el) {
   aepUpdateUI();
 }
 function aepUpdateUI() {
-  var modeSelect = document.getElementById('aep-split-mode');
-  var splitMode = modeSelect ? modeSelect.value : 'equal';
+  var splitMode = document.getElementById('aep-btn-equal').classList.contains('on') ? 'equal' : 'custom';
   var allChips = document.querySelectorAll('#aep-chips .sp-chip');
   var onChips = document.querySelectorAll('#aep-chips .sp-chip.on');
   
@@ -8537,7 +8592,7 @@ function aepUpdateUI() {
       var name = chip.getAttribute('data-name');
       var inputHtml = '<div style="display:flex;align-items:center;gap:0.3rem;margin-bottom:0.25rem">' +
         '<span style="font-size:0.85rem;color:#fff;min-width:65px">' + escHtml(name) + '</span>' +
-        '<input class="aep-ca-input" data-pid="' + pid + '" placeholder="' + placeholder + '" value="' + defaultVal + '" inputmode="decimal" style="width:50px;padding:0.4rem 0.3rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-primary);color:var(--text-primary);font-size:0.85rem">';
+        '<input class="aep-ca-input" data-pid="' + pid + '" placeholder="' + placeholder + '" value="' + defaultVal + '" inputmode="decimal" style="width:80px;padding:0.4rem 0.3rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-primary);color:var(--text-primary);font-size:0.85rem">';
       if (splitMode === 'percentages') {
         inputHtml += '<span style="color:var(--text-muted);font-size:0.85rem">%</span>';
       } else if (splitMode === 'shares') {
@@ -8557,7 +8612,7 @@ function confirmAddExpense() {
   var amount = document.getElementById('aep-amount').value.trim();
   var paidBy = _aepPersonId;
   var category = document.getElementById('aep-category') ? document.getElementById('aep-category').value : '📦 Other';
-  var splitMode = document.getElementById('aep-split-mode').value;
+  var splitMode = document.getElementById('aep-btn-equal').classList.contains('on') ? 'equal' : 'custom';
   
   if (!desc && !amount) { document.getElementById('aep-desc').focus(); return; }
   var id = spPersonId();
@@ -8584,6 +8639,7 @@ function confirmAddExpense() {
     checked: checked,
     customAmounts: customAmounts,
     category: category,
+    photo: _aepPhotoData || '',
     isSettlement: false
   });
   
