@@ -3602,47 +3602,19 @@ document.addEventListener('paste', function(e) {
 function triggerMobilePaste() {
   if (navigator.clipboard && navigator.clipboard.readText) {
     navigator.clipboard.readText().then(function(text) {
-      if (text && parsePastedCalcText(text)) {
-        // Success
-      } else if (text) {
-        showToast('⚠️ ' + _t('No numbers found in clipboard', 'क्लिपबोर्ड में कोई संख्या नहीं मिली', 'Clipboard me koi sankhya nahi mili'));
+      if (text && typeof text === 'string' && text.trim()) {
+        parsePastedCalcText(text.trim());
+        showToast('📋 ' + _t('Pasted calculation!', 'गणना पेस्ट हुई!', 'Calculation paste hui!'));
+        hidePasteButton();
       } else {
-        openPasteFallbackModal();
+        showToast(_t('Clipboard is empty', 'क्लिपबोर्ड खाली है', 'Clipboard khaali hai'));
+        hidePasteButton();
       }
     }).catch(function(err) {
-      openPasteFallbackModal();
+      hidePasteButton();
     });
   } else {
-    openPasteFallbackModal();
-  }
-}
-
-function openPasteFallbackModal() {
-  var popup = document.getElementById('modal-paste-fallback');
-  if (!popup) {
-    var div = document.createElement('div');
-    div.id = 'modal-paste-fallback';
-    div.className = 'modal-overlay';
-    div.innerHTML = '<div class="modal-container" style="max-width:340px;padding:1.2rem;text-align:center;">' +
-      '<div style="font-size:1.05rem;font-weight:700;margin-bottom:0.4rem;color:var(--text-primary);">📋 Paste WhatsApp Text</div>' +
-      '<div style="font-size:0.82rem;color:var(--text-muted);margin-bottom:0.8rem;">Tap & hold in box below ➔ Tap <b>Paste</b>:</div>' +
-      '<input id="paste-fallback-input" placeholder="Tap & Hold ➔ Paste here..." style="width:100%;padding:0.75rem;font-size:0.95rem;border:1.5px dashed var(--color-accent);border-radius:8px;background:var(--bg-primary);color:var(--text-primary);outline:none;margin-bottom:0.85rem;" oninput="handleFallbackInputPaste(this.value)">' +
-      '<div style="display:flex;gap:0.5rem;"><button class="sp-btn-secondary" onclick="closeModal(\'modal-paste-fallback\')">Close</button></div>' +
-      '</div>';
-    document.body.appendChild(div);
-    popup = div;
-  }
-  document.getElementById('paste-fallback-input').value = '';
-  openModal('modal-paste-fallback');
-  setTimeout(function() {
-    var inp = document.getElementById('paste-fallback-input');
-    if (inp) inp.focus();
-  }, 200);
-}
-
-function handleFallbackInputPaste(val) {
-  if (val && parsePastedCalcText(val)) {
-    closeModal('modal-paste-fallback');
+    hidePasteButton();
   }
 }
 
