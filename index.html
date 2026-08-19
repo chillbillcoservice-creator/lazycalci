@@ -2039,8 +2039,11 @@ body {
       </div>
     </div>
     
-    <!-- SPLIT MODE TOGGLE -->
-    <div style="display:flex;gap:0.4rem;margin-bottom:1rem;">
+    <!-- PHOTO + SPLIT MODE TOGGLE — ONE ROW -->
+    <input type="file" id="aep-photo" accept="image/*" capture="environment" onchange="aepPreviewPhoto(this)" style="display:none">
+    <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1rem;">
+      <button onclick="document.getElementById('aep-photo').click()" style="padding:0.45rem 0.7rem;border:1px dashed var(--border-color);border-radius:var(--radius-sm);background:transparent;color:var(--text-muted);cursor:pointer;font-size:0.85rem;">📷 Bill Photo</button>
+      <img id="aep-photo-preview" style="display:none;max-height:40px;border-radius:6px;border:1px solid var(--border-color);cursor:pointer;" onclick="if(_aepPhotoData)aepShowPhoto(_aepPhotoData)">
       <button class="aep-sc on" id="aep-btn-equal" onclick="aepSetMode('equal')">⚖️ Equal</button>
       <button class="aep-sc" id="aep-btn-custom" onclick="aepSetMode('custom')">✂️ Custom</button>
     </div>
@@ -2049,12 +2052,6 @@ body {
     <div id="aep-chips" style="display:flex;flex-direction:row;flex-wrap:wrap;align-items:center;gap:0.4rem;margin-bottom:0.5rem"></div>
     <div id="aep-split-label" style="font-size:0.8rem;color:var(--color-accent);margin-bottom:0.4rem;font-weight:600;"></div>
     <div id="aep-custom-amts" style="margin-bottom:0.5rem"></div>
-    
-    <input type="file" id="aep-photo" accept="image/*" capture="environment" onchange="aepPreviewPhoto(this)" style="display:none">
-    <div id="aep-photo-row" style="display:flex;align-items:center;gap:0.5rem;margin-top:0.5rem;margin-bottom:0.3rem;">
-      <button onclick="document.getElementById('aep-photo').click()" style="padding:0.45rem 0.7rem;border:1px dashed var(--border-color);border-radius:var(--radius-sm);background:transparent;color:var(--text-muted);cursor:pointer;font-size:0.85rem;">📷 Bill Photo</button>
-      <img id="aep-photo-preview" style="display:none;max-height:40px;border-radius:6px;border:1px solid var(--border-color);">
-    </div>
     
     <div style="display:flex;gap:0.5rem;justify-content:flex-end;margin-top:0.75rem;">
       <button onclick="closeAddExpensePopup()" style="padding:0.6rem 1.2rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-tertiary);color:#fff;cursor:pointer;font-size:0.9rem">Cancel</button>
