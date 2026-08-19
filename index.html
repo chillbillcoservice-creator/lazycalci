@@ -10512,7 +10512,7 @@ function renderSplitterModeContent(container) {
         html += '<div class="sp-expense-top">';
         html += '<div class="sp-expense-desc" style="font-size:0.9rem;font-weight:600;color:#2ecc71;line-height:1.3">🤝 ' + escHtml(payerName) + ' ' + paidMsg + ' ' + escHtml(receiverName) + '</div>';
         html += '<div style="font-size:1rem;font-weight:700;color:#2ecc71;white-space:nowrap;margin-left:auto;margin-right:0.4rem">₹' + fmtNum(parseFloat(e.amount)||0) + '</div>';
-        html += (_isCreator && !_tripEnded) ? '<span class="rm-exp" onclick="removeSplitExpense('+e.id+')">🗑️</span>' : '';
+        html += (_isCreator && !_tripEnded) ? '<span class="rm-exp" onclick="if(confirm(\'🗑️ Delete this expense?\'))removeSplitExpense('+e.id+')">🗑️</span>' : '';
         html += '</div></div>';
         return;
       }
@@ -10522,7 +10522,7 @@ function renderSplitterModeContent(container) {
       html += '<div class="sp-expense-desc" style="font-size:0.92rem;font-weight:700;color:#fff;line-height:1.3"><span style="display:inline-block;vertical-align:middle;">' + escHtml(e.desc||_t('📝 Expense', '📝 खर्च', '📝 Expense')) + '</span></div>';
       if (e.photo) { html += '<img src="'+escHtml(e.photo)+'" style="max-height:36px;border-radius:5px;border:1px solid var(--border-color);cursor:pointer;margin-right:0.3rem;" onclick="aepShowPhotoById('+e.id+')">'; }
       html += '<div style="font-size:1.05rem;font-weight:700;color:var(--color-accent);white-space:nowrap;margin-left:auto;margin-right:0.4rem">₹'+fmtNum(parseFloat(e.amount)||0)+'</div>';
-      html += (_isCreator && !_tripEnded) ? '<span class="rm-exp" onclick="removeSplitExpense('+e.id+')">🗑️</span>' : '';
+      html += (_isCreator && !_tripEnded) ? '<span class="rm-exp" onclick="if(confirm(\'🗑️ Delete this expense?\'))removeSplitExpense('+e.id+')">🗑️</span>' : '';
       html += '</div>';
       var paidByText = isHi ? 'द्वारा भुगतान' : (isHn ? 'Paid by' : 'Paid by');
       html += '<div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:0.35rem">' + paidByText + ' <span style="color:#fff;font-weight:600">'+escHtml(payerName)+'</span></div>';
@@ -10590,7 +10590,7 @@ function renderSplitterModeContent(container) {
       settlements.forEach(function(s){
         var markPaidBtn = '';
         if (_isCreator && !_tripEnded) {
-          markPaidBtn = ' <span class="sp-wa-btn" onclick="settleTransaction('+s.from.id+','+s.to.id+','+s.amt+')" title="' + _t('Mark as Paid', 'भुगतान हुआ', 'Bhugtan hua') + '" style="color:#2ecc71;font-weight:bold;margin-left:8px;">✔ ' + _t('Mark Paid', 'भुगतान हुआ', 'Mark Paid') + '</span>';
+          markPaidBtn = ' <span class="sp-wa-btn" onclick="if(confirm(\'✔ Mark as paid?\'))settleTransaction('+s.from.id+','+s.to.id+','+s.amt+')" title="' + _t('Mark as Paid', 'भुगतान हुआ', 'Bhugtan hua') + '" style="color:#2ecc71;font-weight:bold;margin-left:8px;">✔ ' + _t('Mark Paid', 'भुगतान हुआ', 'Mark Paid') + '</span>';
         }
         var htmlSett = '🧾 '+escHtml(s.from.name)+' → '+escHtml(s.to.name)+' ₹'+fmtNum(s.amt) + markPaidBtn;
         if (s.from.tel) htmlSett += ' <span class="sp-wa-btn" onclick="waPerson('+s.from.id+','+s.to.id+','+s.amt+',\''+s.from.tel.replace(/'/g,'')+'\',event,false)" title="' + _t('Request via WhatsApp', 'WhatsApp पर मांगें', 'WhatsApp par maangein') + '">💬</span>';
