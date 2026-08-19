@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -2225,11 +2225,11 @@ if (localStorage.getItem('theme_v2_reset') !== 'true' || !_calcTheme || _calcThe
 }
 var _calcMode = localStorage.getItem('calc_mode') || 'basic';
 var _fastInput = true;
-var _fastLazy = localStorage.getItem('fast_lazy') === 'true';
+var _fastLazy = localStorage.getItem('fast_lazy') !== 'false';
 var _recordExpenses = localStorage.getItem('calc_record_expenses') !== 'false';
 var _showWords = localStorage.getItem('calc_show_words') !== 'false';
 var _vibeEnabled = localStorage.getItem('calc_vibe_enabled') !== 'false';
-var _soundEnabled = localStorage.getItem('calc_sound_enabled') !== 'false';
+var _soundEnabled = localStorage.getItem('calc_sound_enabled') === 'true';
 var _audioCtx = null;
 
 function unlockAudioContext() {
@@ -3411,26 +3411,60 @@ function parsePastedCalcText(rawText) {
     .trim();
   if (!text) return false;
 
-  var cleaned = text.replace(/[₹$€£]/g, '');
-
-  var exprPart = cleaned;
-  if (cleaned.indexOf('=') !== -1) {
-    var parts = cleaned.split('=');
-    exprPart = parts[0].trim();
+  // If text contains '=', check if there is an expression before '='
+  var textToProcess = text;
+  if (text.indexOf('=') !== -1) {
+    var eqParts = text.split('=');
+    var beforeEq = eqParts[0].trim();
+    var afterEq = eqParts.slice(1).join('=').trim();
+    if (/\d/.test(beforeEq)) {
+      textToProcess = beforeEq;
+    } else if (/\d/.test(afterEq)) {
+      textToProcess = afterEq;
+    }
   }
 
-  var regex = /(\d[\d,]*\.?\d*)|([\+\-\*\x\×\/\÷\%])|(\([^\)]+\)|\[[^\]]+\])/gi;
-  var matches = exprPart.match(regex);
+  var isSummaryHeader = /^(?:pending\s+balance|pending\s+amount|pending|total\s+balance|net\s+balance|balance|bal|grand\s+total|subtotal|net\s+total|final\s+total|final\s+amount|total\s+amount|total|you\s+will\s+get|you\s+will\s+give|you'll\s+get|you'll\s+give|net\s+you\s+will\s+get|net\s+you\s+will\s+give|lena\s+hai|dena\s+hai|baki|baqi|hisab|hisaab)\b/i;
+
+  var lines = textToProcess.split(/\r?\n/).map(function(l) { return l.trim(); }).filter(Boolean);
+
+  var itemLines = [];
+  var summaryLines = [];
+
+  for (var i = 0; i < lines.length; i++) {
+    var line = lines[i];
+    var hasNum = /\d/.test(line);
+    if (!hasNum) continue;
+
+    var isSumm = isSummaryHeader.test(line) || /(?:pending\s+balance|total\s+balance|net\s+balance|balance|bal|total|grand\s+total|subtotal|final\s+amount|you\s+will\s+(?:give|get)|baki|baqi|hisab|hisaab)\s*[:=\-]/i.test(line) || /^=\s*\d/.test(line);
+    if (isSumm) {
+      summaryLines.push(line);
+    } else {
+      itemLines.push(line);
+    }
+  }
+
+  var linesToUse = itemLines.length > 0 ? itemLines : summaryLines;
+  if (linesToUse.length === 0) {
+    linesToUse = [textToProcess];
+  }
+
+  var combinedText = linesToUse.join('\n');
+  var cleaned = combinedText.replace(/[₹$€£]/g, '');
+
+  var regex = /(\d[\d,]*\.?\d*)|([\+\-\*x×\/÷%])|(\([^\)]+\)|\[[^\]]+\])/gi;
+  var matches = cleaned.match(regex);
 
   if (!matches || matches.length === 0) {
     var numOnly = cleaned.replace(/,/g, '').match(/\d+\.?\d*/);
     if (numOnly) {
-      calcTokens = [{ v: numOnly[0], label: '' }];
+      var isNeg = /-\s*\d/.test(cleaned);
+      calcTokens = isNeg ? [{ v: '-', label: '' }, { v: numOnly[0], label: '' }] : [{ v: numOnly[0], label: '' }];
       _calcSavedExpr = '';
       _calcShowExpr = true;
       calcUpdateDisplay();
       triggerResultPulse();
-      showToast('📋 Pasted ₹' + fmtNum(parseFloat(numOnly[0]) || 0));
+      showToast('📋 Pasted ' + (isNeg ? '-' : '') + '₹' + fmtNum(parseFloat(numOnly[0]) || 0));
       return true;
     }
     return false;
@@ -3443,10 +3477,11 @@ function parsePastedCalcText(rawText) {
     var m = matches[i].trim();
     if (!m) continue;
 
-    if (/^[\+\-\*\x\×\/\÷\%]$/i.test(m)) {
+    if (/^[\+\-\*x×\/÷%]$/i.test(m)) {
       var op = m;
       if (op === 'x' || op === '×') op = '*';
       if (op === '÷') op = '/';
+      if (op === '+' && newTokens.length === 0) continue;
       newTokens.push({ v: op, label: '' });
       lastNumToken = null;
     } else if (/^[\(\[]/.test(m)) {
@@ -3457,6 +3492,12 @@ function parsePastedCalcText(rawText) {
     } else {
       var nStr = m.replace(/,/g, '');
       if (!isNaN(parseFloat(nStr))) {
+        if (newTokens.length > 0) {
+          var prev = newTokens[newTokens.length - 1];
+          if (['+','-','*','/','%'].indexOf(prev.v) === -1) {
+            newTokens.push({ v: '+', label: '' });
+          }
+        }
         lastNumToken = { v: nStr, label: '' };
         newTokens.push(lastNumToken);
       }
@@ -6413,11 +6454,11 @@ function activateStickyMode(op) {
   if (!formattedFullExpr) {
     var cur = parseFloat(document.getElementById('calc-display').textContent.replace(/^=\s*/, ''));
     currentTotal = isFinite(cur) ? cur : 0;
-    formattedFullExpr = fmtNum(currentTotal);
+    formattedFullExpr = currentTotal !== 0 ? fmtNum(currentTotal) : '';
   }
   _stickyResult = currentTotal;
   _stickyFullExpr = formattedFullExpr;
-  _stickyLastExpr = _stickyFullExpr + ' ' + _stickyOp;
+  _stickyLastExpr = _stickyFullExpr;
   _stickyInput = ''; _stickyActive = true;
   var toggle = document.getElementById('sticky-mode-toggle');
   if (toggle) toggle.checked = true;
@@ -6428,7 +6469,9 @@ function deactivateSticky() {
   var toggle = document.getElementById('sticky-mode-toggle');
   if (toggle) toggle.checked = false;
   var expr = document.getElementById('calc-expression');
-  if (expr) { expr.style.display = ''; expr.style.justifyContent = ''; expr.style.alignItems = ''; }
+  if (expr) { expr.style.display = ''; expr.style.justifyContent = ''; expr.style.alignItems = ''; expr.style.color = ''; expr.style.fontWeight = ''; }
+  var display = document.getElementById('calc-display');
+  if (display) { display.style.display = ''; display.style.justifyContent = ''; display.style.alignItems = ''; }
   if (_stickyTimer) { clearTimeout(_stickyTimer); _stickyTimer = null; }
   if (_stickyPendingTimer) { clearTimeout(_stickyPendingTimer); _stickyPendingTimer = null; }
   _stickyPendingOp = null;
@@ -6439,7 +6482,6 @@ function deactivateSticky() {
   /* re-render expression in white */
   var expr = document.getElementById('calc-expression');
   if (expr) {
-    expr.style.fontSize = '1.7rem';
     var parts = [];
     calcTokens.forEach(function(t, i) {
       if (['+','-','*','/','%'].indexOf(t.v) !== -1) {
@@ -6450,7 +6492,7 @@ function deactivateSticky() {
       }
     });
     expr.innerHTML = parts.join('');
-    expr.scrollLeft = expr.scrollWidth;
+    fitExprFontSize(expr);
   }
 }
 function stickyInputDigit(d) {
@@ -6475,30 +6517,59 @@ function stickyFlush() {
   var num = parseFloat(_stickyInput);
   if (isNaN(num)) return;
   var res = _stickyResult;
-  switch (_stickyOp) {
-    case '+': res += num; break;
-    case '-': res -= num; break;
-    case '×': res *= num; break;
-    case '÷': if (num === 0) { deactivateSticky(); document.getElementById('calc-display').textContent = 'Error'; return; } res /= num; break;
+  var opDisplay = _stickyOp === '*' ? '×' : (_stickyOp === '/' ? '÷' : _stickyOp);
+  if (!_stickyFullExpr && _stickyResult === 0) {
+    res = num;
+  } else {
+    switch (_stickyOp) {
+      case '+': res += num; break;
+      case '-': res -= num; break;
+      case '×':
+      case '*': res *= num; break;
+      case '÷':
+      case '/': if (num === 0) { deactivateSticky(); document.getElementById('calc-display').textContent = 'Error'; return; } res /= num; break;
+    }
   }
-  _stickyLastExpr = fmtNum(_stickyResult) + ' ' + _stickyOp + ' ' + _stickyInput;
-  _stickyFullExpr += ' ' + _stickyOp + ' ' + _stickyInput;
+  var inputFormatted = fmtNum(num);
+  _stickyFullExpr = (_stickyFullExpr ? _stickyFullExpr + ' ' + opDisplay + ' ' : '') + inputFormatted;
+  _stickyLastExpr = _stickyFullExpr;
   _stickyResult = res; _stickyInput = '';
   updateStickyDisplay();
 }
 function updateStickyDisplay() {
   var display = document.getElementById('calc-display');
   var expr = document.getElementById('calc-expression');
-  expr.style.display = 'flex'; expr.style.justifyContent = 'space-between'; expr.style.alignItems = 'center';
-  var tag = '<span style="font-size:0.5rem;color:var(--color-accent);border:1px solid var(--color-accent);border-radius:3px;padding:1px 4px;flex-shrink:0">🔒 LAZY MODE</span>';
+  if (!display || !expr) return;
+
+  var opDisplay = _stickyOp === '*' ? '×' : (_stickyOp === '/' ? '÷' : _stickyOp);
+
+  var fullText = '';
   if (_stickyInput) {
     var n = parseFloat(_stickyInput);
-    display.textContent = fmtNum(_stickyResult);
-    expr.innerHTML = tag + '<span style="color:var(--color-accent);font-weight:700;flex:1;text-align:right">' + fmtNum(_stickyResult) + ' ' + _stickyOp + ' ' + (isNaN(n) ? _stickyInput : fmtNum(n)) + '</span>';
+    var formattedInput = isNaN(n) ? _stickyInput : fmtNum(n);
+    fullText = (_stickyFullExpr ? _stickyFullExpr + ' ' + opDisplay + ' ' : '') + formattedInput;
   } else {
-    display.textContent = fmtNum(_stickyResult);
-    expr.innerHTML = tag + '<span style="color:var(--color-accent);font-weight:700;flex:1;text-align:right">' + escHtml(_stickyLastExpr) + '</span>';
+    fullText = _stickyFullExpr || _stickyLastExpr || '0';
   }
+
+  // Top expression row: full expression only, right aligned
+  expr.style.display = 'block';
+  expr.style.whiteSpace = 'nowrap';
+  expr.style.overflowX = 'auto';
+  expr.style.overflowY = 'hidden';
+  expr.style.textAlign = 'right';
+  expr.style.color = 'var(--color-accent)';
+  expr.style.fontWeight = '700';
+  expr.innerHTML = escHtml(fullText);
+  fitExprFontSize(expr);
+
+  // Final output row: 🔒 LAZY MODE sticker on left, total on right
+  display.style.display = 'flex';
+  display.style.justifyContent = 'space-between';
+  display.style.alignItems = 'center';
+  var tag = '<span style="font-size:0.65rem;color:var(--color-accent);border:1px solid var(--color-accent);border-radius:4px;padding:2px 6px;letter-spacing:0.5px;font-weight:700;flex-shrink:0;line-height:1.2;">🔒 LAZY MODE</span>';
+  display.innerHTML = tag + '<span style="flex:1;text-align:right;overflow-x:auto;white-space:nowrap;">' + fmtNum(_stickyResult) + '</span>';
+  updateOutputWords(_stickyResult);
 }
 function updateStickyOpHighlight() {
   var ids = {'×':'mul','÷':'div','-':'minus','+':'plus','*':'mul','/':'div'};
@@ -6511,6 +6582,29 @@ function updateStickyOpHighlight() {
     var el = document.getElementById('sticky-btn-' + id);
     if (el) el.classList.add('sticky-on');
   }
+}
+
+function fitExprFontSize(expr) {
+  if (!expr) return;
+  if (_exprResetTimer) { clearTimeout(_exprResetTimer); _exprResetTimer = null; }
+  expr.style.fontSize = '1.7rem';
+  _exprFontSize = 1.7;
+  if (expr.scrollWidth > expr.clientWidth) {
+    var ratio = expr.clientWidth / expr.scrollWidth;
+    _exprFontSize = Math.max(1.1, 1.7 * ratio);
+    expr.style.fontSize = _exprFontSize.toFixed(2) + 'rem';
+
+    _exprResetTimer = setTimeout(function() {
+      var e = document.getElementById('calc-expression');
+      if (e) {
+        e.style.fontSize = '1.7rem';
+        _exprFontSize = 1.7;
+        e.scrollLeft = e.scrollWidth;
+      }
+      _exprResetTimer = null;
+    }, 1500);
+  }
+  expr.scrollLeft = expr.scrollWidth;
 }
 
 function triggerResultPulse() {
@@ -6527,7 +6621,6 @@ function calcUpdateDisplay(skipEditor) {
   try { localStorage.setItem('calc_active_tokens', JSON.stringify(calcTokens)); } catch(e){}
   var display = document.getElementById('calc-display');
   var expr = document.getElementById('calc-expression');
-  if (_exprResetTimer) { clearTimeout(_exprResetTimer); _exprResetTimer = null; }
 
   if (!_calcShowExpr) {
     try {
@@ -6603,17 +6696,7 @@ function calcUpdateDisplay(skipEditor) {
     }
   });
   expr.innerHTML = parts.join('');
-  expr.scrollLeft = expr.scrollWidth;
-
-  if (expr.scrollWidth > expr.clientWidth) {
-    var ratio = expr.clientWidth / expr.scrollWidth;
-    _exprFontSize = Math.max(1.1, _exprFontSize * ratio);
-    expr.style.fontSize = _exprFontSize + 'rem';
-  }
-  _exprResetTimer = setTimeout(function() {
-    var e = document.getElementById('calc-expression');
-    if (e && _calcShowExpr) { e.style.fontSize = '1.7rem'; _exprFontSize = 1.7; e.scrollLeft = e.scrollWidth; }
-  }, 1500);
+  fitExprFontSize(expr);
 
   try {
     var live = evalExpr(str);
@@ -7500,7 +7583,7 @@ function fbCleanTripData() {
     name: splitTripName || '',
     date: splitTripDate || '',
     people: splitPeople.map(function(p){return {id:p.id,name:p.name,tel:p.tel||''}}),
-    expenses: splitExpenses.map(function(e){return {id:e.id,paidBy:e.paidBy,desc:e.desc||'',amount:e.amount,splitMode:e.splitMode||'equal',checked:e.checked,customAmounts:e.customAmounts||{},isSettlement:e.isSettlement||false,category:e.category||'📦 Other'}}),
+    expenses: splitExpenses.map(function(e){return {id:e.id,paidBy:e.paidBy,desc:e.desc||'',amount:e.amount,splitMode:e.splitMode||'equal',checked:e.checked,customAmounts:e.customAmounts||{},isSettlement:e.isSettlement||false,category:e.category||'📦 Other',photo:e.photo||''}}),
     createdBy: _fbCreatorPhone || '',
     pendingApprovals: splitPendingApprovals || [],
     ended: _tripEnded,
@@ -7508,27 +7591,111 @@ function fbCleanTripData() {
   };
 }
 
-function fbCreateTrip(cb) {
-  if (!fdb) {
-    if (cb) cb(_fbTripId || ('local_' + Date.now()));
-    return;
+function saveTripToRegistry(tripId) {
+  if (!tripId || tripId === 'mock' || tripId === 'dashboard') return;
+  try {
+    var history = JSON.parse(localStorage.getItem('trip_history') || '[]');
+    var total = Math.round((splitExpenses || []).reduce(function(acc, e) {
+      return acc + (typeof e.amount === 'number' ? e.amount : (parseFloat(e.amount) || 0));
+    }, 0) * 100) / 100;
+    
+    var idx = -1;
+    for (var i = 0; i < history.length; i++) {
+      if (history[i].id === tripId) { idx = i; break; }
+    }
+    
+    var tripEntry = {
+      id: tripId,
+      name: splitTripName || 'Unnamed Trip',
+      date: splitTripDate || new Date().toISOString().split('T')[0],
+      total: total,
+      peopleCount: (splitPeople || []).length,
+      ended: !!_tripEnded,
+      createdBy: _fbCreatorPhone || ''
+    };
+    
+    if (idx >= 0) {
+      history[idx] = tripEntry;
+    } else {
+      history.push(tripEntry);
+    }
+    localStorage.setItem('trip_history', JSON.stringify(history));
+  } catch(e) {
+    console.warn('saveTripToRegistry warning:', e);
   }
+}
+
+function deleteTripFromHistory(tripId, e) {
+  if (e) e.stopPropagation();
+  if (!confirm(_t('Delete this trip from your list?', 'क्या आप इस ट्रिप को सूची से हटाना चाहते हैं?', 'Kya aap is trip ko list se hatana chahte hain?'))) return;
+  try {
+    var history = JSON.parse(localStorage.getItem('trip_history') || '[]');
+    history = history.filter(function(t) { return t.id !== tripId; });
+    localStorage.setItem('trip_history', JSON.stringify(history));
+    localStorage.removeItem('trip_data_' + tripId);
+    if (localStorage.getItem('current_trip_id') === tripId) {
+      localStorage.removeItem('current_trip_id');
+      _fbTripId = null;
+    }
+    showToast(_t('Trip deleted', 'ट्रिप हटा दी गई', 'Trip hata di gayi'));
+    if (_calcMode === 'splitter') {
+      renderSplitterMode(document.getElementById('calc-mode-body'));
+    }
+  } catch(err) {
+    console.warn('deleteTrip error:', err);
+  }
+}
+
+function openTrip(id) {
+  fbStopListening();
+  _fbTripId = id;
+  localStorage.setItem('current_trip_id', id);
+  setUrlParam('trip', id);
+  
+  var localData = null;
+  try { localData = localStorage.getItem('trip_data_' + id); } catch(e) {}
+  if (localData) {
+    try {
+      fbCleanLoadedData(JSON.parse(localData));
+    } catch(e) {}
+  }
+  
+  renderSplitterMode(document.getElementById('calc-mode-body'));
+  
+  fbListenTrip(id, function(err) {
+    if (!err && _calcMode === 'splitter') {
+      renderSplitterModeContent(document.getElementById('calc-mode-body'));
+    }
+  });
+}
+
+function fbCreateTrip(cb) {
   if (!_fbTripId) {
     try {
-      _fbTripId = fdb.collection('trips').doc().id;
+      _fbTripId = (fdb && typeof fdb.collection === 'function') ? fdb.collection('trips').doc().id : 'local_' + Date.now();
     } catch(e) {
       _fbTripId = 'local_' + Date.now();
     }
   }
-  var data = fbCleanTripData();
-  data.createdAt = (typeof firebase !== 'undefined' && firebase.firestore && firebase.firestore.FieldValue)
+  
+  saveTripLocal(_fbTripId);
+  saveTripToRegistry(_fbTripId);
+  
+  if (!fdb) {
+    if (cb) cb(_fbTripId);
+    return;
+  }
+  
+  var fsData = fbCleanTripData(true);
+  fsData.createdAt = (typeof firebase !== 'undefined' && firebase.firestore && firebase.firestore.FieldValue)
     ? firebase.firestore.FieldValue.serverTimestamp()
     : new Date().toISOString();
-  fdb.collection('trips').doc(_fbTripId).set(data).then(function() {
+    
+  fdb.collection('trips').doc(_fbTripId).set(fsData).then(function() {
     _fbUpdating = false;
     if (cb) cb(_fbTripId);
   }).catch(function(err) {
-    console.log('Firebase create error:', err);
+    console.log('Firebase create notice (local storage active):', err);
     _fbUpdating = false;
     if (cb) cb(_fbTripId);
   });
@@ -7550,9 +7717,41 @@ function fbCleanLoadedData(d) {
 }
 
 function fbListenTrip(tripId, onData) {
+  if (!tripId || tripId === 'mock' || tripId === 'dashboard') {
+    if (onData) onData();
+    return;
+  }
+  if (!fdb) {
+    var localData = localStorage.getItem('trip_data_' + tripId);
+    if (localData) {
+      try {
+        fbCleanLoadedData(JSON.parse(localData));
+        _fbTripId = tripId;
+        localStorage.setItem('current_trip_id', tripId);
+        saveTripToRegistry(tripId);
+        if (onData) onData();
+      } catch(e) { if (onData) onData('local_parse_error'); }
+    } else {
+      if (onData) onData('offline_no_data');
+    }
+    return;
+  }
   var first = true;
+  try {
   _fbUnsubscribe = fdb.collection('trips').doc(tripId).onSnapshot(function(doc) {
     if (!doc.exists) {
+      var localFallback = localStorage.getItem('trip_data_' + tripId);
+      if (localFallback) {
+        try {
+          fbCleanLoadedData(JSON.parse(localFallback));
+          _fbTripId = tripId;
+          localStorage.setItem('current_trip_id', tripId);
+          saveTripToRegistry(tripId);
+          if (first) { first = false; if (onData) onData(); }
+          fbUpdateTrip();
+          return;
+        } catch(e) {}
+      }
       if (first && onData) { onData('not_found'); }
       return;
     }
@@ -7560,6 +7759,8 @@ function fbListenTrip(tripId, onData) {
     
     _fbUpdating = true;
     fbCleanLoadedData(doc.data());
+    saveTripLocal(tripId);
+    saveTripToRegistry(tripId);
     
     if (!first) {
       var prev = JSON.parse(oldPeople);
@@ -7591,14 +7792,69 @@ function fbListenTrip(tripId, onData) {
     }
     _fbUpdating = false;
   }, function(error) {
-    console.log("Listen failed: ", error);
+    console.log("Listen notice / fallback to local:", error);
+    var _errFallback = null;
+    try { _errFallback = localStorage.getItem('trip_data_' + tripId); } catch(e) {}
+    if (_errFallback) {
+      try {
+        fbCleanLoadedData(JSON.parse(_errFallback));
+        _fbTripId = tripId;
+        localStorage.setItem('current_trip_id', tripId);
+        saveTripToRegistry(tripId);
+        if (first) {
+          first = false;
+          if (onData) onData();
+        } else {
+          if (_calcMode === 'splitter') {
+            renderSplitterModeContent(document.getElementById('calc-mode-body'));
+          }
+        }
+        return;
+      } catch(e) {}
+    }
     if (first && onData) onData(error);
   });
+  } catch(syncErr) {
+    console.warn("onSnapshot sync exception:", syncErr);
+    var _syncFallback = null;
+    try { _syncFallback = localStorage.getItem('trip_data_' + tripId); } catch(e) {}
+    if (_syncFallback) {
+      try {
+        fbCleanLoadedData(JSON.parse(_syncFallback));
+        _fbTripId = tripId;
+        localStorage.setItem('current_trip_id', tripId);
+        saveTripToRegistry(tripId);
+        if (onData) onData();
+        return;
+      } catch(e) {}
+    }
+    if (onData) onData(syncErr);
+  }
+}
+
+function saveTripLocal(tripId) {
+  if (!tripId || tripId === 'mock' || tripId === 'dashboard') return;
+  var localData = fbCleanTripData();
+  try {
+    localStorage.setItem('trip_data_' + tripId, JSON.stringify(localData));
+  } catch(e) {
+    try {
+      var stripped = JSON.parse(JSON.stringify(localData));
+      if (stripped.expenses) stripped.expenses.forEach(function(ex){ delete ex.photo; });
+      localStorage.setItem('trip_data_' + tripId, JSON.stringify(stripped));
+    } catch(e2) {
+      console.warn('saveTripLocal failed even after stripping photos:', e2);
+    }
+  }
 }
 
 function fbUpdateTrip() {
   if (!_fbTripId || _fbUpdating) return;
-  fdb.collection('trips').doc(_fbTripId).set(fbCleanTripData(), {merge:true});
+  saveTripLocal(_fbTripId);
+  saveTripToRegistry(_fbTripId);
+  if (fdb && typeof fdb.collection === 'function') {
+    fdb.collection('trips').doc(_fbTripId).set(fbCleanTripData(true), {merge:true});
+  }
 }
 
 function fbStopListening() {
@@ -10008,7 +10264,6 @@ function renderScientificMode(container) {
 
 function renderSplitterMode(container) {
   if (!container) return;
-  container.style.padding = '0.45rem 0 0 0';
   /* Firestore init — first run */
   if (_fbTripId === null) {
     var tripParam = getUrlParam('trip');
@@ -10020,10 +10275,42 @@ function renderSplitterMode(container) {
       }
     }
     if (tripParam) {
+      var _localTripData = null;
+      try { _localTripData = localStorage.getItem('trip_data_' + tripParam); } catch(e) {}
+      if (_localTripData) {
+        try {
+          fbCleanLoadedData(JSON.parse(_localTripData));
+          _fbTripId = tripParam;
+          localStorage.setItem('current_trip_id', tripParam);
+          setUrlParam('trip', tripParam);
+          renderSplitterModeContent(container);
+          fbListenTrip(tripParam, function(err) {
+            if (!err && _calcMode === 'splitter') {
+              renderSplitterModeContent(document.getElementById('calc-mode-body'));
+            }
+          });
+          return;
+        } catch(e) {}
+      }
       container.innerHTML = '<div style="padding:1rem;text-align:center;color:var(--text-muted);font-size:0.85rem">' + _t('Loading trip...', 'ट्रिप लोड हो रही है...', 'Trip load ho rahi hai...') + '</div>';
       fbListenTrip(tripParam, function(err) {
         if (err) {
-          container.innerHTML = '<div style="padding:2rem;color:var(--text-muted);text-align:center">🚫 ' + _t('Trip not found or loading failed', 'ट्रिप नहीं मिली या लोड नहीं हुई', 'Trip nahi mili ya load nahi hui') + '<br><br><button onclick="window.location.href=window.location.pathname" style="margin-top:0.5rem;padding:0.5rem 1rem;border:none;border-radius:var(--radius-sm);background:var(--color-accent);color:#fff;cursor:pointer;font-size:1rem">' + _t('Retry / Start New Trip', 'फिर कोशिश करें / नई ट्रिप शुरू करें', 'Phir koshish karein / nayi trip shuru karein') + '</button></div>';
+          var _retryData = null;
+          try { _retryData = localStorage.getItem('trip_data_' + tripParam); } catch(e2) {}
+          if (_retryData) {
+            try {
+              fbCleanLoadedData(JSON.parse(_retryData));
+              _fbTripId = tripParam;
+              localStorage.setItem('current_trip_id', tripParam);
+              setUrlParam('trip', tripParam);
+              renderSplitterMode(container);
+              return;
+            } catch(e3) {}
+          }
+          var errMsg = (typeof err === 'string' && err.indexOf('offline') !== -1)
+            ? _t('You are offline. Trip data saved locally.', 'आप ऑफलाइन हैं। ट्रिप डेटा स्थानीय रूप से सहेजा गया।', 'Aap offline hain. Trip data locally save hai.')
+            : _t('Trip not found or loading failed', 'ट्रिप नहीं मिली या लोड नहीं हुई', 'Trip nahi mili ya load nahi hui');
+          container.innerHTML = '<div style="padding:2rem;color:var(--text-muted);text-align:center">🚫 ' + errMsg + '<br><br><div style="display:flex;gap:0.5rem;justify-content:center;flex-wrap:wrap;"><button onclick="goToDashboard()" style="margin-top:0.5rem;padding:0.5rem 1rem;border:none;border-radius:var(--radius-sm);background:var(--color-accent);color:#fff;cursor:pointer;font-size:0.95rem;font-weight:600">🏠 ' + _t('Go to Dashboard', 'डैशबोर्ड पर जाएं', 'Dashboard par jayein') + '</button><button onclick="createGroupPopup()" style="margin-top:0.5rem;padding:0.5rem 1rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-tertiary);color:#fff;cursor:pointer;font-size:0.95rem;font-weight:600">➕ ' + _t('New Trip', 'नई ट्रिप', 'Nayi Trip') + '</button></div></div>';
           return;
         }
         renderSplitterMode(container);
@@ -10198,6 +10485,7 @@ function renderSplitterModeContent(container) {
             html += '<div class="sp-expense">';
       html += '<div class="sp-expense-top">';
       html += '<div class="sp-expense-desc" style="font-size:0.92rem;font-weight:700;color:#fff;line-height:1.3"><span style="display:inline-block;vertical-align:middle;">' + escHtml(e.desc||_t('📝 Expense', '📝 खर्च', '📝 Expense')) + '</span></div>';
+      if (e.photo) { html += '<img src="'+escHtml(e.photo)+'" style="max-height:36px;border-radius:5px;border:1px solid var(--border-color);cursor:pointer;margin-right:0.3rem;" onclick="aepShowPhotoById('+e.id+')">'; }
       html += '<div style="font-size:1.05rem;font-weight:700;color:var(--color-accent);white-space:nowrap;margin-left:auto;margin-right:0.4rem">₹'+fmtNum(parseFloat(e.amount)||0)+'</div>';
       html += (_isCreator && !_tripEnded) ? '<span class="rm-exp" onclick="removeSplitExpense('+e.id+')">🗑️</span>' : '';
       html += '</div>';
@@ -11356,9 +11644,7 @@ function showTripHistory() {
 
 function viewPastTrip(id) {
   closeTripHistory();
-  _fbTripId = id;
-  localStorage.setItem('current_trip_id', id);
-  window.location.reload();
+  openTrip(id);
 }
 
 function confirmEndTrip() {
@@ -11385,8 +11671,9 @@ function confirmEndTrip() {
 }
 
 function goToDashboard() {
+  fbStopListening();
   localStorage.removeItem('current_trip_id');
-  _fbTripId = null;
+  _fbTripId = 'dashboard';
   setUrlParam('trip', '');
   renderSplitterMode(document.getElementById('calc-mode-body'));
 }
