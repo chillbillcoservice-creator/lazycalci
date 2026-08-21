@@ -4798,9 +4798,9 @@ function renderCalcButtons() {
       }
     }
     if (oid) {
-      return '<button id="sticky-btn-' + oid + '" data-label="' + label + '" onpointerdown="triggerKeyFeedback(this);opPressStart(this,event)" onpointermove="opPressMove(this,event)" onpointerup="releaseKeyFeedback(this);stickyOpUp()" onpointercancel="releaseKeyFeedback(this);stickyOpLeave()" onpointerleave="releaseKeyFeedback(this);stickyOpLeave()" style="padding:1.2rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:' + bg + ';color:' + color + ';font-size:1.3rem;font-weight:600;cursor:pointer;">' + label + '</button>';
+      return '<button id="sticky-btn-' + oid + '" data-label="' + label + '" onpointerdown="triggerKeyFeedback(this);opPressStart(this,event)" onpointermove="opPressMove(this,event)" onpointerup="releaseKeyFeedback(this);stickyOpUp()" onpointercancel="releaseKeyFeedback(this);stickyOpLeave()" style="padding:1.2rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:' + bg + ';color:' + color + ';font-size:1.3rem;font-weight:600;cursor:pointer;">' + label + '</button>';
     }
-    return '<button data-label="' + label.replace(/'/g, "\\'") + '" onpointerdown="triggerKeyFeedback(this);calcBtnPressStart(this,event)" onpointermove="calcBtnPressMove(this,event)" onpointerup="releaseKeyFeedback(this);calcBtnPressEnd(this)" onpointercancel="releaseKeyFeedback(this);calcBtnPressCancel(this)" onpointerleave="releaseKeyFeedback(this);calcBtnPressLeave(this)" style="padding:1.2rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:' + bg + ';color:' + color + ';font-size:1.3rem;font-weight:600;cursor:pointer;">' + label + '</button>';
+    return '<button data-label="' + label.replace(/'/g, "\\'") + '" onpointerdown="triggerKeyFeedback(this);calcBtnPressStart(this,event)" onpointermove="calcBtnPressMove(this,event)" onpointerup="releaseKeyFeedback(this);calcBtnPressEnd(this)" onpointercancel="releaseKeyFeedback(this);calcBtnPressCancel(this)" style="padding:1.2rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:' + bg + ';color:' + color + ';font-size:1.3rem;font-weight:600;cursor:pointer;">' + label + '</button>';
   }).join('');
   updateKhataKeypadButtons();
 }
