@@ -6572,12 +6572,10 @@ function fitExprFontSize(expr) {
       if (e && _calcShowExpr && !_stickyActive) {
         e.style.fontSize = '1.7rem';
         _exprFontSize = 1.7;
-        e.scrollLeft = e.scrollWidth;
       }
       _exprResetTimer = null;
     }, 1500);
   }
-  expr.scrollLeft = expr.scrollWidth;
 }
 
 function triggerResultPulse() {
@@ -6612,14 +6610,14 @@ function calcUpdateDisplay(skipEditor) {
             if (w.length > 65) {
               expr.style.whiteSpace = 'normal';
               expr.style.wordBreak = 'break-word';
-              expr.style.overflowX = 'hidden';
+              expr.style.overflowX = 'auto';
               expr.style.overflowY = 'hidden';
               expr.style.lineHeight = '1.2';
               expr.style.fontSize = '0.80rem';
             } else if (w.length > 35) {
               expr.style.whiteSpace = 'normal';
               expr.style.wordBreak = 'break-word';
-              expr.style.overflowX = 'hidden';
+              expr.style.overflowX = 'auto';
               expr.style.overflowY = 'hidden';
               expr.style.lineHeight = '1.25';
               expr.style.fontSize = '0.90rem';
@@ -6680,6 +6678,7 @@ function calcUpdateDisplay(skipEditor) {
   });
   expr.innerHTML = parts.join('');
   fitExprFontSize(expr);
+  expr.scrollLeft = expr.scrollWidth;
 
   try {
     var live = evalExpr(str);
