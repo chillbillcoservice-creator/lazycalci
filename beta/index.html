@@ -894,12 +894,9 @@ body {
   user-select: none !important;
   -webkit-user-select: none !important;
 }
+#calc-expression::-webkit-scrollbar { display: none; }
 #calc-label-editor { padding:0.4rem 0; font-size:1rem; min-height:2.8rem; display:flex; align-items:center; }
 #calc-expr-words-row::-webkit-scrollbar { display: none; }
-.feature-pills-row { display:flex; align-items:center; justify-content:center; gap:0.45rem; width:100%; box-sizing:border-box; }
-.feature-pill { padding:0.28rem 0.65rem; border-radius:20px; font-size:0.78rem; font-weight:700; border:1px solid var(--border-color); background:var(--bg-tertiary); color:var(--text-primary); cursor:pointer; transition:all 0.2s ease; white-space:nowrap; display:inline-flex; align-items:center; gap:4px; touch-action:manipulation; outline:none; -webkit-tap-highlight-color:transparent; }
-.feature-pill:hover { border-color:var(--color-accent); }
-.feature-pill.active { border-color:var(--color-accent) !important; background:rgba(243,139,168,0.18) !important; color:var(--color-accent) !important; font-weight:800; box-shadow:0 0 8px rgba(243,139,168,0.25); }
 .calc-result-area {
   position: relative;
   margin-top: 0.5rem;
@@ -4427,35 +4424,6 @@ function toggleKMode(v) {
   _kMode = v;
   localStorage.setItem('calc_k_mode', v);
   calcUpdateDisplay();
-  renderCalcLabelEditor();
-}
-function togglePillLazyMode() {
-  if (_stickyActive) {
-    deactivateSticky();
-    showToast('🔒 ' + _t('Lazy Mode OFF', 'लैज़ी मोड बंद', 'Lazy Mode OFF'));
-  } else {
-    activateStickyMode('+');
-    showToast('🔒 ' + _t('Lazy Mode ON: Add numbers continuously without pressing \'+\'!', 'लैज़ी मोड चालू: बिना + दबाए लगातार जोड़ें!', 'Lazy Mode ON: Bina + dabaye lagataar jodein!'), 2500);
-  }
-  renderCalcLabelEditor();
-}
-function togglePillWordsMode() {
-  _showWords = !_showWords;
-  localStorage.setItem('calc_show_words', _showWords ? 'true' : 'false');
-  var toggleEl = document.getElementById('show-words-toggle');
-  if (toggleEl) toggleEl.checked = _showWords;
-  calcUpdateDisplay();
-  renderCalcLabelEditor();
-  showToast(_showWords ? '💬 ' + _t('Words Mode ON: Shows calculation in words', 'शब्द मोड चालू: गणना शब्दों में दिखेगी', 'Words Mode ON: Calculation words me dikhegi') : _t('Words Mode OFF', 'शब्द मोड बंद', 'Words Mode OFF'));
-}
-function togglePillKMode() {
-  _kMode = !_kMode;
-  localStorage.setItem('calc_k_mode', _kMode ? 'true' : 'false');
-  var toggleEl = document.getElementById('k-mode-toggle');
-  if (toggleEl) toggleEl.checked = _kMode;
-  calcUpdateDisplay();
-  renderCalcLabelEditor();
-  showToast(_kMode ? '🔤 ' + _t('K Mode ON: Thousands (1k + 2k = 3k)', 'K मोड चालू: हज़ारों में (1k + 2k = 3k)', 'K Mode ON: Thousands (1k + 2k = 3k)') : _t('K Mode OFF', 'K मोड बंद', 'K Mode OFF'));
 }
 function toggleShareMode(v) {
   _shareMode = v ? 'whatsapp' : 'system';
@@ -4890,8 +4858,7 @@ function renderCalcButtons() {
       }
     }
     if (oid) {
-      var lockBadge = (label === '+') ? '<span style="position:absolute;top:4px;right:6px;font-size:0.55rem;opacity:0.65;font-weight:800;line-height:1;" title="Hold for Lazy Mode">🔒</span>' : '';
-      return '<button id="sticky-btn-' + oid + '" data-label="' + label + '" onpointerdown="triggerKeyFeedback(this);opPressStart(this,event)" onpointermove="opPressMove(this,event)" onpointerup="releaseKeyFeedback(this);stickyOpUp()" onpointercancel="releaseKeyFeedback(this);stickyOpLeave()" style="position:relative;padding:1.2rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:' + bg + ';color:' + color + ';font-size:1.3rem;font-weight:600;cursor:pointer;">' + label + lockBadge + '</button>';
+      return '<button id="sticky-btn-' + oid + '" data-label="' + label + '" onpointerdown="triggerKeyFeedback(this);opPressStart(this,event)" onpointermove="opPressMove(this,event)" onpointerup="releaseKeyFeedback(this);stickyOpUp()" onpointercancel="releaseKeyFeedback(this);stickyOpLeave()" style="padding:1.2rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:' + bg + ';color:' + color + ';font-size:1.3rem;font-weight:600;cursor:pointer;">' + label + '</button>';
     }
     return '<button data-label="' + label.replace(/'/g, "\\'") + '" onpointerdown="triggerKeyFeedback(this);calcBtnPressStart(this,event)" onpointermove="calcBtnPressMove(this,event)" onpointerup="releaseKeyFeedback(this);calcBtnPressEnd(this)" onpointercancel="releaseKeyFeedback(this);calcBtnPressCancel(this)" style="padding:1.2rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:' + bg + ';color:' + color + ';font-size:1.3rem;font-weight:600;cursor:pointer;">' + label + '</button>';
   }).join('');
@@ -6994,19 +6961,7 @@ function renderCalcLabelEditor() {
         var wRow = document.getElementById('calc-expr-words-row');
         if (wRow) wRow.scrollLeft = wRow.scrollWidth;
       } else {
-        var isLazyOn = Boolean(_stickyActive);
-        var isWordsOn = Boolean(_showWords);
-        var isKOn = Boolean(_kMode);
-
-        var lazyLabel = isLazyOn ? '🔒 Lazy: ON' : '🔒 Lazy Mode';
-        var wordsLabel = isWordsOn ? '💬 Words: ON' : '💬 Words';
-        var kLabel = isKOn ? '🔤 \'k\': ON' : '🔤 \'k\' Mode';
-
-        container.innerHTML = '<div class="feature-pills-row">' +
-          '<button id="pill-lazy-mode" class="feature-pill ' + (isLazyOn ? 'active' : '') + '" onclick="togglePillLazyMode()" title="' + _t('Toggle Lazy Mode', 'लैज़ी मोड चालू/बंद करें', 'Lazy Mode toggle karein') + '">' + lazyLabel + '</button>' +
-          '<button id="pill-words-mode" class="feature-pill ' + (isWordsOn ? 'active' : '') + '" onclick="togglePillWordsMode()" title="' + _t('Toggle Expression in Words', 'गणना शब्दों में देखें', 'Expression words me dekhein') + '">' + wordsLabel + '</button>' +
-          '<button id="pill-k-mode" class="feature-pill ' + (isKOn ? 'active' : '') + '" onclick="togglePillKMode()" title="' + _t('Toggle Thousands K Mode', 'हज़ार K मोड चालू/बंद करें', 'Thousands K Mode toggle karein') + '">' + kLabel + '</button>' +
-        '</div>';
+        container.innerHTML = '<div style="font-size:0.75rem;color:var(--text-muted);padding:0.3rem 0">' + helpTxt + '</div>';
       }
     }
     return;
