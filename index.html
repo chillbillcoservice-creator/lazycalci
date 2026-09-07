@@ -3130,26 +3130,56 @@ function numToWords(n) {
   var decPart = Math.round((n - intPart) * 100);
 
   if (isHi) {
-    var unitsHi = ['', 'एक', 'दो', 'तीन', 'चार', 'पाँच', 'छह', 'सात', 'आठ', 'नौ', 'दस', 'ग्यारह', 'बारह', 'तेरह', 'चौदह', 'पंद्रह', 'सोलह', 'सत्रह', 'अठारह', 'उन्नीस'];
-    var tensHi = ['', '', 'बीस', 'तीस', 'चालीस', 'पचास', 'साठ', 'सत्तर', 'अस्सी', 'नब्बे'];
+    var hindiNums = [
+      '', 'एक', 'दो', 'तीन', 'चार', 'पाँच', 'छह', 'सात', 'आठ', 'नौ', 'दस',
+      'ग्यारह', 'बारह', 'तेरह', 'चौदह', 'पंद्रह', 'सोलह', 'सत्रह', 'अठारह', 'उन्नीस', 'बीस',
+      'इक्कीस', 'बाईस', 'तेईस', 'चौबीस', 'पच्चीस', 'छब्बीस', 'सत्ताईस', 'अट्ठाइस', 'उनतीस', 'तीस',
+      'इकतीस', 'बत्तीस', 'तैंतीस', 'चौंतीस', 'पैंतीस', 'छत्तीस', 'सैंतीस', 'अड़तीस', 'उनतालीस', 'चालीस',
+      'इकतालीस', 'बयालीस', 'तैंतालीस', 'चवालीस', 'पैंतालीस', 'छियालीस', 'सैंतालीस', 'अड़तालीस', 'उनचास', 'पचास',
+      'इक्यावन', 'बावन', 'तिरेपन', 'चौवन', 'पचपन', 'छप्पन', 'सत्तावन', 'अट्ठावन', 'उनसठ', 'साठ',
+      'इकसठ', 'बासठ', 'तिरेसठ', 'चौंसठ', 'पैंसठ', 'छियासठ', 'सरसठ', 'अड़सठ', 'उनहत्तर', 'सत्तर',
+      'इकहत्तर', 'बहत्तर', 'तिहत्तर', 'चौहत्तर', 'पचहत्तर', 'छहत्तर', 'सतहत्तर', 'अठहत्तर', 'उनासी', 'अस्सी',
+      'इक्यासी', 'बयासी', 'तिरासी', 'चौरासी', 'पचासी', 'छियासी', 'सत्तासी', 'अट्ठासी', 'नवासी', 'नब्बे',
+      'इक्यानवे', 'बानवे', 'तिरानवे', 'चौरानवे', 'पंचानवे', 'छियानवे', 'सत्तानवे', 'अट्ठानवे', 'निन्यानवे'
+    ];
     function convertChunkHi(num) {
       var str = '';
-      if (num >= 100) { str += unitsHi[Math.floor(num / 100)] + ' सौ '; num %= 100; }
-      if (num >= 20) { str += tensHi[Math.floor(num / 10)] + ' '; num %= 10; }
-      if (num > 0) { str += unitsHi[num] + ' '; }
+      if (num >= 100) {
+        str += (hindiNums[Math.floor(num / 100)] || '') + ' सौ ';
+        num %= 100;
+      }
+      if (num > 0) {
+        str += (hindiNums[num] || '') + ' ';
+      }
       return str;
     }
     function convertIntegerHi(num) {
       if (num === 0) return 'शून्य';
       var res = '';
-      if (num >= 10000000) { res += convertChunkHi(Math.floor(num / 10000000)).trim() + ' करोड़, '; num %= 10000000; }
-      if (num >= 100000) { res += convertChunkHi(Math.floor(num / 100000)).trim() + ' लाख, '; num %= 100000; }
-      if (num >= 1000) { res += convertChunkHi(Math.floor(num / 1000)).trim() + ' हज़ार, '; num %= 1000; }
-      if (num > 0) { res += convertChunkHi(num); }
+      if (num >= 10000000) {
+        var cr = Math.floor(num / 10000000);
+        res += (cr >= 100 ? convertChunkHi(cr).trim() : (hindiNums[cr] || convertChunkHi(cr).trim())) + ' करोड़, ';
+        num %= 10000000;
+      }
+      if (num >= 100000) {
+        var lk = Math.floor(num / 100000);
+        res += (hindiNums[lk] || convertChunkHi(lk).trim()) + ' लाख, ';
+        num %= 100000;
+      }
+      if (num >= 1000) {
+        var th = Math.floor(num / 1000);
+        res += (hindiNums[th] || convertChunkHi(th).trim()) + ' हज़ार, ';
+        num %= 1000;
+      }
+      if (num > 0) {
+        res += convertChunkHi(num);
+      }
       return res.trim().replace(/,\s*$/, '');
     }
     var wordsHi = (isNeg ? 'माइनस ' : '') + convertIntegerHi(intPart).trim();
-    if (decPart > 0) { wordsHi += ' दशमलव ' + convertChunkHi(decPart).trim(); }
+    if (decPart > 0) {
+      wordsHi += ' दशमलव ' + (decPart < 100 ? (hindiNums[decPart] || convertChunkHi(decPart)) : convertChunkHi(decPart)).trim();
+    }
     return wordsHi;
   }
 
