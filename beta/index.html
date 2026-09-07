@@ -6681,6 +6681,7 @@ function calcUpdateDisplay(skipEditor) {
       var live = typeof _calcSavedResult !== 'undefined' && isFinite(_calcSavedResult) ? _calcSavedResult : evalExpr(calcExprFromTokens());
       if (isFinite(live)) {
         display.textContent = '= ' + fmtNum(live);
+        updateOutputWords(live);
         if (_showWords || _kMode) {
           var valForWords = _kMode ? live * 1000 : live;
           var w = numToWords(valForWords);
@@ -6715,10 +6716,19 @@ function calcUpdateDisplay(skipEditor) {
           } else {
             expr.innerHTML = '';
           }
-          updateOutputWords(live);
         } else {
-          expr.innerHTML = '';
-          updateOutputWords(null);
+          if (_calcSavedExpr) {
+            expr.style.display = 'block';
+            expr.style.textAlign = 'right';
+            expr.style.whiteSpace = 'nowrap';
+            expr.style.overflowX = 'auto';
+            expr.style.color = '';
+            expr.style.fontSize = '1.7rem';
+            expr.innerHTML = '<span onclick="toggleResultExpr()" style="cursor:pointer;font-weight:600;">' + escHtml(_calcSavedExpr) + '</span>';
+            fitExprFontSize(expr);
+          } else {
+            expr.innerHTML = '';
+          }
         }
       } else {
         expr.innerHTML = '';
