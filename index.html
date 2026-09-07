@@ -896,6 +896,7 @@ body {
 }
 #calc-expression::-webkit-scrollbar { display: none; }
 #calc-label-editor { padding:0.4rem 0; font-size:1rem; min-height:2.8rem; display:flex; align-items:center; }
+#calc-expr-words-row::-webkit-scrollbar { display: none; }
 .calc-result-area {
   position: relative;
   margin-top: 0.5rem;
@@ -1107,7 +1108,7 @@ body {
       <div class="toggle-row">
         <div>
           <span class="toggle-label" id="lbl-words">💬 WORDS MODE (EXPRESSION IN WORDS)</span>
-          <span class="toggle-desc" id="desc-words">Shows live calculation expression in words (50 + 60 = Fifty + Sixty)</span>
+          <span class="toggle-desc" id="desc-words">Shows active number in words (50 = Fifty)</span>
         </div>
         <label class="toggle-switch">
           <input type="checkbox" id="show-words-toggle" onchange="toggleShowWords(this.checked)">
@@ -3233,6 +3234,27 @@ function calcExprToWords(tokens) {
   }
   return parts.join(' ');
 }
+function calcLatestTokenToWords(tokens) {
+  var tList = tokens || calcTokens;
+  if (!tList || !tList.length) return '';
+  var lastNumToken = null;
+  for (var i = tList.length - 1; i >= 0; i--) {
+    var t = tList[i];
+    if (t && ['+', '-', '*', '/', '%', '×', '÷'].indexOf(t.v) === -1) {
+      lastNumToken = t;
+      break;
+    }
+  }
+  if (!lastNumToken) return '';
+  var num = parseFloat(lastNumToken.v);
+  if (isNaN(num)) return '';
+  var valForWords = _kMode ? num * 1000 : num;
+  var w = numToWords(valForWords);
+  if (w && lastNumToken.label) {
+    w += ' (' + lastNumToken.label + ')';
+  }
+  return w || '';
+}
 function evalExpr(str) { try { return eval(str.replace(/([\d.]+)%([\d.]+)/g, '$1*$2/100')); } catch(e) { return NaN; } }
 
 function showToast(msg, durationMs) {
@@ -3950,8 +3972,8 @@ function setAppLanguage(lang) {
     if (dLazyFast) dLazyFast.textContent = 'कुल तुरंत और अपने आप दिखता है (2-3 संख्याओं के लिए बेस्ट)';
     if (lKMode) lKMode.textContent = '🔤 हज़ार (K) मोड';
     if (dKMode) dKMode.textContent = 'संख्याओं को हज़ारों में दिखाता है (1k + 2k = 3k)';
-    if (lWords) lWords.textContent = '💬 शब्द मोड (गणना शब्दों में)';
-    if (dWords) dWords.textContent = 'लाइव गणना को शब्दों में दिखाता है (50 + 60 = Fifty + Sixty)';
+    if (lWords) lWords.textContent = '💬 शब्द मोड (सक्रिय संख्या शब्दों में)';
+    if (dWords) dWords.textContent = 'टाइप किए जा रहे नंबर को शब्दों में दिखाता है (50 = Fifty)';
     if (lShareWA) lShareWA.textContent = '💬 व्हाट्सएप पर शेयर करें';
     if (dShareWA) dShareWA.textContent = 'सिस्टम शेयर के बजाय सीधे व्हाट्सएप पर भेजें';
     if (lRecExp) lRecExp.textContent = '💸 खर्च रिकॉर्ड करें';
@@ -3988,8 +4010,8 @@ function setAppLanguage(lang) {
     if (dLazyFast) dLazyFast.textContent = 'Total turant dikhta hai (2-3 terms ke liye best)';
     if (lKMode) lKMode.textContent = '🔤 K Mode (Thousands)';
     if (dKMode) dKMode.textContent = 'Numbers ko thousands me convert karta hai (1k + 2k = 3k)';
-    if (lWords) lWords.textContent = '💬 Words Mode (Expression In Words)';
-    if (dWords) dWords.textContent = 'Live calculation ko words me dikhata hai (50 + 60 = Fifty + Sixty)';
+    if (lWords) lWords.textContent = '💬 Words Mode (Active Number In Words)';
+    if (dWords) dWords.textContent = 'Active number ko words me dikhata hai (50 = Fifty)';
     if (lShareWA) lShareWA.textContent = '💬 Send On WhatsApp';
     if (dShareWA) dShareWA.textContent = 'Directly WhatsApp par send karein';
     if (lRecExp) lRecExp.textContent = '💸 Record Expenses';
@@ -4026,8 +4048,8 @@ function setAppLanguage(lang) {
     if (dLazyFast) dLazyFast.textContent = 'Total appears automatically & instantly (best for 2-3 terms like 25+26+27)';
     if (lKMode) lKMode.textContent = '🔤 K MODE (THOUSANDS)';
     if (dKMode) dKMode.textContent = 'Formats numbers in thousands (1k + 2k = 3k)';
-    if (lWords) lWords.textContent = '💬 WORDS MODE (EXPRESSION IN WORDS)';
-    if (dWords) dWords.textContent = 'Shows live calculation expression in words (50 + 60 = Fifty + Sixty)';
+    if (lWords) lWords.textContent = '💬 WORDS MODE (ACTIVE NUMBER IN WORDS)';
+    if (dWords) dWords.textContent = 'Shows active number in words (50 = Fifty)';
     if (lShareWA) lShareWA.textContent = '💬 SEND ON WHATSAPP';
     if (dShareWA) dShareWA.textContent = 'Send directly via WhatsApp instead of System Share';
     if (lRecExp) lRecExp.textContent = '💸 RECORD EXPENSES';
@@ -4417,6 +4439,7 @@ function toggleShowWords(v) {
   _showWords = v;
   localStorage.setItem('calc_show_words', v);
   calcUpdateDisplay();
+  renderCalcLabelEditor();
 }
 function toggleKMode(v) {
   _kMode = v;
@@ -6601,6 +6624,7 @@ function updateStickyDisplay() {
   var tag = '<span style="font-size:0.5rem;color:var(--color-accent);border:1px solid var(--color-accent);border-radius:3px;padding:1px 4px;letter-spacing:0.5px;font-weight:700;flex-shrink:0;line-height:1.2;">🔒 LAZY MODE</span>';
   display.innerHTML = tag + '<span style="flex:1;text-align:right;overflow-x:auto;white-space:nowrap;">' + fmtNum(_stickyResult) + '</span>';
   updateOutputWords(_stickyResult);
+  renderCalcLabelEditor();
 }
 function updateStickyOpHighlight() {
   var ids = {'×':'mul','÷':'div','-':'minus','+':'plus','*':'mul','/':'div'};
@@ -6657,6 +6681,7 @@ function calcUpdateDisplay(skipEditor) {
       var live = typeof _calcSavedResult !== 'undefined' && isFinite(_calcSavedResult) ? _calcSavedResult : evalExpr(calcExprFromTokens());
       if (isFinite(live)) {
         display.textContent = '= ' + fmtNum(live);
+        updateOutputWords(live);
         if (_showWords || _kMode) {
           var valForWords = _kMode ? live * 1000 : live;
           var w = numToWords(valForWords);
@@ -6691,10 +6716,19 @@ function calcUpdateDisplay(skipEditor) {
           } else {
             expr.innerHTML = '';
           }
-          updateOutputWords(live);
         } else {
-          expr.innerHTML = '';
-          updateOutputWords(null);
+          if (_calcSavedExpr) {
+            expr.style.display = 'block';
+            expr.style.textAlign = 'right';
+            expr.style.whiteSpace = 'nowrap';
+            expr.style.overflowX = 'auto';
+            expr.style.color = '';
+            expr.style.fontSize = '1.7rem';
+            expr.innerHTML = '<span onclick="toggleResultExpr()" style="cursor:pointer;font-weight:600;">' + escHtml(_calcSavedExpr) + '</span>';
+            fitExprFontSize(expr);
+          } else {
+            expr.innerHTML = '';
+          }
         }
       } else {
         expr.innerHTML = '';
@@ -6918,23 +6952,35 @@ function renderCalcLabelEditor() {
 
       var exprWords = '';
       if (_showWords) {
-        if (_calcShowExpr) {
+        if (_stickyActive) {
+          if (_stickyInput) {
+            var sn = parseFloat(_stickyInput);
+            if (!isNaN(sn)) {
+              exprWords = numToWords(_kMode ? sn * 1000 : sn);
+            }
+          } else if (_stickyFullExpr) {
+            var parts = _stickyFullExpr.split(' ');
+            for (var p = parts.length - 1; p >= 0; p--) {
+              var cleanP = parts[p].replace(/,/g, '');
+              var pn = parseFloat(cleanP);
+              if (!isNaN(pn)) {
+                exprWords = numToWords(_kMode ? pn * 1000 : pn);
+                break;
+              }
+            }
+          }
+        } else if (_calcShowExpr) {
           var isInitZero = calcTokens.length === 1 && calcTokens[0].v === '0' && !calcTokens[0].label;
           if (!isInitZero && calcTokens.length > 0) {
-            exprWords = calcExprToWords(calcTokens);
+            exprWords = calcLatestTokenToWords(calcTokens);
           }
-        } else if (_calcSavedTokens) {
-          try {
-            var savedTokens = JSON.parse(_calcSavedTokens);
-            if (savedTokens && savedTokens.length > 0) {
-              exprWords = calcExprToWords(savedTokens);
-            }
-          } catch(e) {}
         }
       }
 
       if (exprWords) {
-        container.innerHTML = '<div style="font-size:0.82rem;font-style:italic;font-weight:600;color:var(--text-muted);padding:0.25rem 0;white-space:nowrap;overflow-x:auto;text-overflow:clip;line-height:1.2;" title="' + escHtml(exprWords) + '">' + escHtml(exprWords) + '</div>';
+        container.innerHTML = '<div id="calc-expr-words-row" style="width:100%;text-align:right;padding:0.25rem 0.85rem;box-sizing:border-box;white-space:nowrap;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none;font-size:0.85rem;font-style:italic;font-weight:600;color:var(--text-muted);line-height:1.2;" title="' + escHtml(exprWords) + '">' + escHtml(exprWords) + '</div>';
+        var wRow = document.getElementById('calc-expr-words-row');
+        if (wRow) wRow.scrollLeft = wRow.scrollWidth;
       } else {
         container.innerHTML = '<div style="font-size:0.75rem;color:var(--text-muted);padding:0.3rem 0">' + helpTxt + '</div>';
       }
