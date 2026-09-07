@@ -1106,8 +1106,8 @@ body {
       </div>
       <div class="toggle-row">
         <div>
-          <span class="toggle-label" id="lbl-words">💬 AMOUNT IN WORDS</span>
-          <span class="toggle-desc" id="desc-words">Translates output totals into written words</span>
+          <span class="toggle-label" id="lbl-words">💬 WORDS MODE (EXPRESSION IN WORDS)</span>
+          <span class="toggle-desc" id="desc-words">Shows live calculation expression in words (50 + 60 = Fifty + Sixty)</span>
         </div>
         <label class="toggle-switch">
           <input type="checkbox" id="show-words-toggle" onchange="toggleShowWords(this.checked)">
@@ -3205,6 +3205,34 @@ function numToWords(n) {
   if (decPart > 0) { words += ' Point ' + convertChunk(decPart).trim(); }
   return words;
 }
+
+function calcExprToWords(tokens) {
+  var tList = tokens || calcTokens;
+  if (!tList || !tList.length) return '';
+  var parts = [];
+  for (var i = 0; i < tList.length; i++) {
+    var t = tList[i];
+    if (!t) continue;
+    var v = t.v;
+    if (['+', '-', '*', '/', '%'].indexOf(v) !== -1) {
+      var op = v === '*' ? '×' : (v === '/' ? '÷' : v);
+      parts.push(op);
+    } else {
+      var num = parseFloat(v);
+      if (isNaN(num)) {
+        parts.push(v);
+      } else {
+        var valForWords = _kMode ? num * 1000 : num;
+        var w = numToWords(valForWords);
+        if (t.label) {
+          w += ' (' + t.label + ')';
+        }
+        parts.push(w);
+      }
+    }
+  }
+  return parts.join(' ');
+}
 function evalExpr(str) { try { return eval(str.replace(/([\d.]+)%([\d.]+)/g, '$1*$2/100')); } catch(e) { return NaN; } }
 
 function showToast(msg, durationMs) {
@@ -3922,8 +3950,8 @@ function setAppLanguage(lang) {
     if (dLazyFast) dLazyFast.textContent = 'कुल तुरंत और अपने आप दिखता है (2-3 संख्याओं के लिए बेस्ट)';
     if (lKMode) lKMode.textContent = '🔤 हज़ार (K) मोड';
     if (dKMode) dKMode.textContent = 'संख्याओं को हज़ारों में दिखाता है (1k + 2k = 3k)';
-    if (lWords) lWords.textContent = '💬 शब्दों में कुल राशि';
-    if (dWords) dWords.textContent = 'कुल उत्तर को शब्दों में अनुवाद करता है';
+    if (lWords) lWords.textContent = '💬 शब्द मोड (गणना शब्दों में)';
+    if (dWords) dWords.textContent = 'लाइव गणना को शब्दों में दिखाता है (50 + 60 = Fifty + Sixty)';
     if (lShareWA) lShareWA.textContent = '💬 व्हाट्सएप पर शेयर करें';
     if (dShareWA) dShareWA.textContent = 'सिस्टम शेयर के बजाय सीधे व्हाट्सएप पर भेजें';
     if (lRecExp) lRecExp.textContent = '💸 खर्च रिकॉर्ड करें';
@@ -3960,8 +3988,8 @@ function setAppLanguage(lang) {
     if (dLazyFast) dLazyFast.textContent = 'Total turant dikhta hai (2-3 terms ke liye best)';
     if (lKMode) lKMode.textContent = '🔤 K Mode (Thousands)';
     if (dKMode) dKMode.textContent = 'Numbers ko thousands me convert karta hai (1k + 2k = 3k)';
-    if (lWords) lWords.textContent = '💬 Amount In Words';
-    if (dWords) dWords.textContent = 'Total output ko words me convert karta hai';
+    if (lWords) lWords.textContent = '💬 Words Mode (Expression In Words)';
+    if (dWords) dWords.textContent = 'Live calculation ko words me dikhata hai (50 + 60 = Fifty + Sixty)';
     if (lShareWA) lShareWA.textContent = '💬 Send On WhatsApp';
     if (dShareWA) dShareWA.textContent = 'Directly WhatsApp par send karein';
     if (lRecExp) lRecExp.textContent = '💸 Record Expenses';
@@ -3998,8 +4026,8 @@ function setAppLanguage(lang) {
     if (dLazyFast) dLazyFast.textContent = 'Total appears automatically & instantly (best for 2-3 terms like 25+26+27)';
     if (lKMode) lKMode.textContent = '🔤 K MODE (THOUSANDS)';
     if (dKMode) dKMode.textContent = 'Formats numbers in thousands (1k + 2k = 3k)';
-    if (lWords) lWords.textContent = '💬 AMOUNT IN WORDS';
-    if (dWords) dWords.textContent = 'Translates output totals into written words';
+    if (lWords) lWords.textContent = '💬 WORDS MODE (EXPRESSION IN WORDS)';
+    if (dWords) dWords.textContent = 'Shows live calculation expression in words (50 + 60 = Fifty + Sixty)';
     if (lShareWA) lShareWA.textContent = '💬 SEND ON WHATSAPP';
     if (dShareWA) dShareWA.textContent = 'Send directly via WhatsApp instead of System Share';
     if (lRecExp) lRecExp.textContent = '💸 RECORD EXPENSES';
@@ -6730,7 +6758,7 @@ function calcUpdateDisplay(skipEditor) {
 function updateOutputWords(num) {
   var el = document.getElementById('calc-display-words');
   if (!el) return;
-  if ((_showWords || _kMode) && num !== null && num !== undefined && isFinite(num)) {
+  if (num !== null && num !== undefined && isFinite(num)) {
     var valForWords = _kMode ? num * 1000 : num;
     var w = numToWords(valForWords);
     if (w) {
@@ -6887,7 +6915,29 @@ function renderCalcLabelEditor() {
       } else {
         helpTxt = isHi ? 'रकम या नाम एडिट करने के लिए ऊपर किसी संख्या पर टैप करें' : (isHn ? 'Amount ya label edit karne ke liye upar kisi number par tap karein' : 'Tap a digit above to edit amount or label');
       }
-      container.innerHTML = '<div style="font-size:0.75rem;color:var(--text-muted);padding:0.3rem 0">' + helpTxt + '</div>';
+
+      var exprWords = '';
+      if (_showWords) {
+        if (_calcShowExpr) {
+          var isInitZero = calcTokens.length === 1 && calcTokens[0].v === '0' && !calcTokens[0].label;
+          if (!isInitZero && calcTokens.length > 0) {
+            exprWords = calcExprToWords(calcTokens);
+          }
+        } else if (_calcSavedTokens) {
+          try {
+            var savedTokens = JSON.parse(_calcSavedTokens);
+            if (savedTokens && savedTokens.length > 0) {
+              exprWords = calcExprToWords(savedTokens);
+            }
+          } catch(e) {}
+        }
+      }
+
+      if (exprWords) {
+        container.innerHTML = '<div style="font-size:0.82rem;font-style:italic;font-weight:600;color:var(--text-muted);padding:0.25rem 0;white-space:nowrap;overflow-x:auto;text-overflow:clip;line-height:1.2;" title="' + escHtml(exprWords) + '">' + escHtml(exprWords) + '</div>';
+      } else {
+        container.innerHTML = '<div style="font-size:0.75rem;color:var(--text-muted);padding:0.3rem 0">' + helpTxt + '</div>';
+      }
     }
     return;
   }
