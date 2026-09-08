@@ -1504,57 +1504,93 @@ body {
 
 <!-- Modal Add Khata Contact -->
 <div id="modal-add-khata-contact" class="modal-overlay" onclick="dismissModalOnBackdrop(event, 'modal-add-khata-contact')" style="display:none;z-index:10010 !important;align-items:flex-start !important;padding-top:1.5rem !important;">
-  <div class="modal-card" style="max-width:440px;width:94%;border-radius:18px;background:var(--bg-secondary);border:1px solid var(--border-color);padding:1.2rem;box-sizing:border-box;">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;">
-      <h3 id="lbl-khata-add-title" style="margin:0;font-size:1.15rem;font-weight:800;color:var(--color-accent);display:flex;align-items:center;gap:6px;">
-        👤 Add Contact to Khata
-      </h3>
-      <button onclick="closeModal('modal-add-khata-contact')" class="close-btn" style="background:none;border:none;color:var(--text-muted);font-size:1.2rem;cursor:pointer;">✕</button>
-    </div>
-
-    <!-- Phone Contact Picker Button if supported -->
-    <div id="khata-phone-contact-btn-wrap" style="margin-bottom:0.8rem;">
-      <button id="lbl-khata-pick-contact" onclick="pickPhoneContactForKhata()" style="width:100%;padding:0.65rem;border-radius:10px;background:rgba(37,211,102,0.15);color:#25D366;border:1px solid rgba(37,211,102,0.4);font-weight:800;font-size:0.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;">
-        📱 Pick From Phone Contacts
-      </button>
+  <div class="modal-card" style="max-width:430px;width:93%;border-radius:20px;background:var(--bg-secondary);border:1px solid var(--border-color);box-shadow:0 20px 45px rgba(0,0,0,0.6);padding:1.15rem 1.15rem 1rem 1.15rem;box-sizing:border-box;">
+    
+    <!-- Modal Header with Avatar Icon and Close Button -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.9rem;padding-bottom:0.75rem;border-bottom:1px solid var(--border-color);">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div style="width:36px;height:36px;border-radius:10px;background:color-mix(in srgb, var(--color-accent) 15%, transparent);color:var(--color-accent);display:flex;align-items:center;justify-content:center;font-size:1.15rem;font-weight:700;flex-shrink:0;">
+          👤
+        </div>
+        <div>
+          <h3 id="lbl-khata-add-title" style="margin:0;font-size:1.05rem;font-weight:800;color:var(--text-primary);letter-spacing:0.2px;">
+            👤 Add Contact to Khata
+          </h3>
+          <div style="font-size:0.75rem;color:var(--text-muted);margin-top:1px;">Customer or Staff Ledger</div>
+        </div>
+      </div>
+      <button onclick="closeModal('modal-add-khata-contact')" class="close-btn" style="width:32px;height:32px;border-radius:50%;background:var(--bg-primary);border:1px solid var(--border-color);color:var(--text-muted);display:flex;align-items:center;justify-content:center;font-size:0.95rem;cursor:pointer;flex-shrink:0;">✕</button>
     </div>
 
     <div style="display:flex;flex-direction:column;gap:0.75rem;">
+      <!-- Field 1: Contact Name -->
       <div>
-        <label id="lbl-khata-contact-name" style="font-size:0.78rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">CONTACT NAME</label>
-        <input type="text" id="khata-new-name" placeholder="e.g. Ramesh Kumar" style="width:100%;padding:0.6rem 0.75rem;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);font-size:0.9rem;box-sizing:border-box;">
-      </div>
-
-      <div>
-        <label id="lbl-khata-phone" style="font-size:0.78rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">PHONE NUMBER (OPTIONAL)</label>
-        <input type="tel" id="khata-new-phone" placeholder="e.g. 9876543210" style="width:100%;padding:0.6rem 0.75rem;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);font-size:0.9rem;box-sizing:border-box;">
-      </div>
-
-      <!-- Clear Easy Language Option Selection -->
-      <div style="background:var(--bg-primary);padding:0.65rem;border-radius:10px;border:1px solid var(--border-color);">
-        <label id="lbl-khata-bal-type" style="font-size:0.75rem;font-weight:800;color:var(--text-muted);display:block;margin-bottom:6px;">BALANCE TYPE (WHAT HAPPENED?):</label>
-        <div style="display:flex;flex-direction:column;gap:6px;">
-          <button type="button" id="btn-khata-type-udhar" onclick="setKhataBalType('udhar')" style="padding:0.6rem 0.75rem;border-radius:8px;background:rgba(16,185,129,0.18);color:#10b981;border:1px solid #10b981;font-weight:800;font-size:0.85rem;cursor:pointer;text-align:left;">
-            🟢 <span id="lbl-khata-gave-money">You Gave Money (+₹)</span> — <span style="font-size:0.78rem;font-weight:600;">(<span id="lbl-khata-they-owe-you">They owe you</span>)</span>
-          </button>
-          <button type="button" id="btn-khata-type-jama" onclick="setKhataBalType('jama')" style="padding:0.6rem 0.75rem;border-radius:8px;background:transparent;color:var(--text-muted);border:1px solid var(--border-color);font-weight:800;font-size:0.85rem;cursor:pointer;text-align:left;">
-            🔴 <span id="lbl-khata-took-money">You Took Money (-₹)</span> — <span style="font-size:0.78rem;font-weight:600;">(<span id="lbl-khata-you-owe-them">You owe them</span>)</span>
-          </button>
+        <label id="lbl-khata-contact-name" style="font-size:0.73rem;font-weight:800;letter-spacing:0.5px;color:var(--text-muted);display:block;margin-bottom:5px;">CONTACT NAME</label>
+        <div style="position:relative;display:flex;align-items:center;">
+          <span style="position:absolute;left:11px;font-size:0.95rem;color:var(--text-muted);pointer-events:none;">👤</span>
+          <input type="text" id="khata-new-name" placeholder="e.g. Ramesh Kumar" style="width:100%;padding:0.68rem 0.8rem 0.68rem 2.2rem;border-radius:10px;border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);font-size:0.92rem;font-weight:600;outline:none;box-sizing:border-box;">
         </div>
       </div>
 
+      <!-- Field 2: Phone Number + Inline Contacts Button -->
       <div>
-        <label id="lbl-khata-opening-bal" style="font-size:0.78rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">OPENING BALANCE (OPTIONAL)</label>
+        <label id="lbl-khata-phone" style="font-size:0.73rem;font-weight:800;letter-spacing:0.5px;color:var(--text-muted);display:block;margin-bottom:5px;">PHONE NUMBER (OPTIONAL)</label>
         <div style="display:flex;gap:6px;align-items:center;">
-          <button type="button" id="khata-bal-sign-btn" onclick="toggleKhataBalSign()" style="width:42px;height:42px;flex-shrink:0;padding:0;display:flex;align-items:center;justify-content:center;border-radius:10px;background:rgba(16,185,129,0.2);color:#10b981;border:1px solid rgba(16,185,129,0.4);font-weight:900;font-size:1.3rem;cursor:pointer;box-sizing:border-box;" title="Tap to toggle (+) or (-)">+</button>
-          <input type="text" inputmode="decimal" id="khata-new-bal" placeholder="0" oninput="onKhataOpeningBalInput(this)" style="flex:1;padding:0.6rem 0.75rem;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);font-size:0.95rem;font-weight:700;box-sizing:border-box;">
+          <div style="position:relative;flex:1;display:flex;align-items:center;">
+            <span style="position:absolute;left:11px;font-size:0.95rem;color:var(--text-muted);pointer-events:none;">📞</span>
+            <input type="tel" id="khata-new-phone" placeholder="e.g. 9876543210" style="width:100%;padding:0.68rem 0.8rem 0.68rem 2.2rem;border-radius:10px;border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);font-size:0.92rem;font-weight:600;outline:none;box-sizing:border-box;">
+          </div>
+          <div id="khata-phone-contact-btn-wrap" style="display:inline-flex;">
+            <button type="button" id="lbl-khata-pick-contact" onclick="pickPhoneContactForKhata()" style="padding:0.68rem 0.75rem;border-radius:10px;background:rgba(37,211,102,0.12);color:#25D366;border:1px solid rgba(37,211,102,0.35);font-weight:700;font-size:0.82rem;cursor:pointer;display:flex;align-items:center;gap:4px;white-space:nowrap;flex-shrink:0;">
+              📱 Contacts
+            </button>
+          </div>
         </div>
-        <div id="khata-bal-words" style="font-size:0.80rem;font-style:italic;font-weight:600;color:var(--color-accent);text-align:right;min-height:1.2rem;margin-top:4px;padding-right:4px;"></div>
       </div>
 
-      <div style="display:flex;gap:8px;margin-top:0.4rem;">
-        <button id="lbl-khata-cancel" onclick="closeModal('modal-add-khata-contact')" style="flex:1;padding:0.65rem;border-radius:10px;background:var(--bg-primary);color:var(--text-primary);border:1px solid var(--border-color);font-weight:700;font-size:0.88rem;cursor:pointer;">Cancel</button>
-        <button id="lbl-khata-save" onclick="saveNewKhataContact()" style="flex:2;padding:0.65rem;border-radius:10px;background:var(--color-accent);color:#fff;border:none;font-weight:800;font-size:0.9rem;cursor:pointer;">Save 💾</button>
+      <!-- Field 3: Balance Type 2-Column Segmented Cards -->
+      <div>
+        <label id="lbl-khata-bal-type" style="font-size:0.73rem;font-weight:800;letter-spacing:0.5px;color:var(--text-muted);display:block;margin-bottom:5px;">BALANCE TYPE (WHAT HAPPENED?):</label>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <button type="button" id="btn-khata-type-udhar" onclick="setKhataBalType('udhar')" style="padding:0.65rem 0.4rem;border-radius:12px;background:rgba(16,185,129,0.14);color:#10b981;border:2px solid #10b981;cursor:pointer;display:flex;flex-direction:column;align-items:center;text-align:center;gap:3px;box-sizing:border-box;box-shadow:0 2px 10px rgba(16,185,129,0.15);">
+            <div style="display:flex;align-items:center;gap:4px;font-weight:800;font-size:0.84rem;">
+              <span>🟢</span>
+              <span id="lbl-khata-gave-money">You Gave Money (+₹)</span>
+            </div>
+            <span style="font-size:0.71rem;font-weight:600;opacity:0.9;">
+              (<span id="lbl-khata-they-owe-you">They owe you</span>)
+            </span>
+          </button>
+          <button type="button" id="btn-khata-type-jama" onclick="setKhataBalType('jama')" style="padding:0.65rem 0.4rem;border-radius:12px;background:transparent;color:var(--text-muted);border:1.5px solid var(--border-color);cursor:pointer;display:flex;flex-direction:column;align-items:center;text-align:center;gap:3px;box-sizing:border-box;">
+            <div style="display:flex;align-items:center;gap:4px;font-weight:800;font-size:0.84rem;">
+              <span>🔴</span>
+              <span id="lbl-khata-took-money">You Took Money (-₹)</span>
+            </div>
+            <span style="font-size:0.71rem;font-weight:600;opacity:0.9;">
+              (<span id="lbl-khata-you-owe-them">You owe them</span>)
+            </span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Field 4: Opening Balance Input Group + Words Preview Pill -->
+      <div>
+        <label id="lbl-khata-opening-bal" style="font-size:0.73rem;font-weight:800;letter-spacing:0.5px;color:var(--text-muted);display:block;margin-bottom:5px;">OPENING BALANCE (OPTIONAL)</label>
+        <div id="khata-bal-input-wrap" style="display:flex;gap:8px;align-items:center;background:var(--bg-primary);border:1px solid var(--border-color);border-radius:12px;padding:4px 8px;box-sizing:border-box;">
+          <button type="button" id="khata-bal-sign-btn" onclick="toggleKhataBalSign()" style="height:36px;padding:0 10px;display:flex;align-items:center;justify-content:center;border-radius:8px;background:rgba(16,185,129,0.18);color:#10b981;border:1px solid rgba(16,185,129,0.4);font-weight:900;font-size:0.95rem;cursor:pointer;flex-shrink:0;letter-spacing:1px;" title="Tap to toggle (+) or (-)">+ ₹</button>
+          <input type="text" inputmode="decimal" id="khata-new-bal" placeholder="0" oninput="onKhataOpeningBalInput(this)" onfocus="var w=document.getElementById('khata-bal-input-wrap');if(w)w.style.borderColor='var(--color-accent)'" onblur="var w=document.getElementById('khata-bal-input-wrap');if(w)w.style.borderColor='var(--border-color)'" style="flex:1;min-width:0;padding:0.4rem 0.2rem;border:none;background:transparent;color:var(--text-primary);font-size:1.15rem;font-weight:800;outline:none;box-sizing:border-box;">
+          <button type="button" id="khata-bal-clear-btn" onclick="clearKhataBalInput()" style="display:none;background:none;border:none;color:var(--text-muted);font-size:1.1rem;cursor:pointer;padding:4px 8px;border-radius:6px;" title="Clear">✕</button>
+        </div>
+        <div id="khata-bal-words-wrap" style="display:none;margin-top:6px;padding:6px 10px;border-radius:8px;background:rgba(255,255,255,0.04);border:1px dashed var(--border-color);align-items:center;gap:6px;box-sizing:border-box;">
+          <span style="font-size:0.85rem;flex-shrink:0;">🗣️</span>
+          <span id="khata-bal-words" style="font-size:0.80rem;font-weight:700;color:var(--color-accent);line-height:1.3;word-break:break-word;"></span>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div style="display:flex;gap:10px;margin-top:0.5rem;">
+        <button id="lbl-khata-cancel" onclick="closeModal('modal-add-khata-contact')" style="flex:1;padding:0.72rem;border-radius:12px;background:transparent;color:var(--text-muted);border:1px solid var(--border-color);font-weight:700;font-size:0.9rem;cursor:pointer;">Cancel</button>
+        <button id="lbl-khata-save" onclick="saveNewKhataContact()" style="flex:2;padding:0.72rem;border-radius:12px;background:var(--color-accent);color:#fff;border:none;font-weight:800;font-size:0.92rem;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,0.25);">Save 💾</button>
       </div>
     </div>
   </div>
@@ -4131,7 +4167,7 @@ function setAppLanguage(lang) {
     'lbl-sales-orders': ['TOTAL ORDERS', 'कुल ऑर्डर', 'Kul orders'],
     'lbl-sales-log': ['Billed Orders Log', 'बिल किए गए ऑर्डर लॉग', 'Bill kiye gaye orders log'],
     'lbl-khata-add-title': ['👤 Add Contact to Khata', '👤 खाते में संपर्क जोड़ें', '👤 Khate me contact jodein'],
-    'lbl-khata-pick-contact': ['📱 Pick From Phone Contacts', '📱 फोन संपर्कों में से चुनें', '📱 Phone contacts me se chunein'],
+    'lbl-khata-pick-contact': ['📱 Contacts', '📱 संपर्क', '📱 Contacts'],
     'lbl-khata-contact-name': ['CONTACT NAME', 'संपर्क नाम', 'Contact naam'],
     'lbl-khata-phone': ['PHONE NUMBER (OPTIONAL)', 'फोन नंबर (वैकल्पिक)', 'Phone number (optional)'],
     'lbl-khata-opening-bal': ['OPENING BALANCE (OPTIONAL)', 'प्रारंभिक बैलेंस (वैकल्पिक)', 'Opening balance (optional)'],
@@ -11308,34 +11344,42 @@ function setKhataBalType(type) {
 
   if (type === 'udhar') {
     if (btnUdhar) {
-      btnUdhar.style.background = 'rgba(16,185,129,0.18)';
+      btnUdhar.style.background = 'rgba(16,185,129,0.14)';
       btnUdhar.style.color = '#10b981';
       btnUdhar.style.borderColor = '#10b981';
+      btnUdhar.style.borderWidth = '2px';
+      btnUdhar.style.boxShadow = '0 2px 10px rgba(16,185,129,0.18)';
     }
     if (btnJama) {
       btnJama.style.background = 'transparent';
       btnJama.style.color = 'var(--text-muted)';
       btnJama.style.borderColor = 'var(--border-color)';
+      btnJama.style.borderWidth = '1.5px';
+      btnJama.style.boxShadow = 'none';
     }
     if (signBtn) {
-      signBtn.textContent = '+';
-      signBtn.style.background = 'rgba(16,185,129,0.2)';
+      signBtn.textContent = '+ ₹';
+      signBtn.style.background = 'rgba(16,185,129,0.18)';
       signBtn.style.color = '#10b981';
       signBtn.style.borderColor = 'rgba(16,185,129,0.4)';
     }
   } else {
     if (btnJama) {
-      btnJama.style.background = 'rgba(239,68,68,0.18)';
+      btnJama.style.background = 'rgba(239,68,68,0.14)';
       btnJama.style.color = '#ef4444';
       btnJama.style.borderColor = '#ef4444';
+      btnJama.style.borderWidth = '2px';
+      btnJama.style.boxShadow = '0 2px 10px rgba(239,68,68,0.18)';
     }
     if (btnUdhar) {
       btnUdhar.style.background = 'transparent';
       btnUdhar.style.color = 'var(--text-muted)';
       btnUdhar.style.borderColor = 'var(--border-color)';
+      btnUdhar.style.borderWidth = '1.5px';
+      btnUdhar.style.boxShadow = 'none';
     }
     if (signBtn) {
-      signBtn.textContent = '-';
+      signBtn.textContent = '- ₹';
       signBtn.style.background = 'rgba(239,68,68,0.2)';
       signBtn.style.color = '#ef4444';
       signBtn.style.borderColor = 'rgba(239,68,68,0.4)';
@@ -11367,8 +11411,12 @@ async function pickPhoneContactForKhata() {
 
         var balInput = document.getElementById('khata-new-bal');
         var balWords = document.getElementById('khata-bal-words');
+        var wordsWrap = document.getElementById('khata-bal-words-wrap');
+        var clearBtn = document.getElementById('khata-bal-clear-btn');
         if (balInput) balInput.value = '';
         if (balWords) balWords.textContent = '';
+        if (wordsWrap) wordsWrap.style.display = 'none';
+        if (clearBtn) clearBtn.style.display = 'none';
         setKhataBalType('udhar');
 
         if (typeof showToast === 'function') showToast('📱 ' + _t('Contact selected', 'संपर्क चुना गया', 'Contact chuna gaya') + ': ' + (cName || cPhone));
@@ -11398,11 +11446,18 @@ function onKhataOpeningBalInput(el) {
   }
 
   var wordsEl = document.getElementById('khata-bal-words');
+  var wordsWrap = document.getElementById('khata-bal-words-wrap');
+  var clearBtn = document.getElementById('khata-bal-clear-btn');
+
   if (!clean) {
     el.value = '';
     if (wordsEl) wordsEl.textContent = '';
+    if (wordsWrap) wordsWrap.style.display = 'none';
+    if (clearBtn) clearBtn.style.display = 'none';
     return;
   }
+
+  if (clearBtn) clearBtn.style.display = 'block';
 
   var parts = clean.split('.');
   var intPart = parts[0];
@@ -11436,9 +11491,20 @@ function onKhataOpeningBalInput(el) {
     if (!isNaN(numVal) && numVal > 0) {
       var wordsText = numToWords(numVal);
       wordsEl.textContent = wordsText ? wordsText : '';
+      if (wordsWrap) wordsWrap.style.display = wordsText ? 'flex' : 'none';
     } else {
       wordsEl.textContent = '';
+      if (wordsWrap) wordsWrap.style.display = 'none';
     }
+  }
+}
+
+function clearKhataBalInput() {
+  var balInput = document.getElementById('khata-new-bal');
+  if (balInput) {
+    balInput.value = '';
+    onKhataOpeningBalInput(balInput);
+    balInput.focus();
   }
 }
 
@@ -11447,10 +11513,14 @@ function addInlineLedgerCustomer() {
   var phoneInput = document.getElementById('khata-new-phone');
   var balInput = document.getElementById('khata-new-bal');
   var balWords = document.getElementById('khata-bal-words');
+  var wordsWrap = document.getElementById('khata-bal-words-wrap');
+  var clearBtn = document.getElementById('khata-bal-clear-btn');
   if (nameInput) nameInput.value = '';
   if (phoneInput) phoneInput.value = '';
   if (balInput) balInput.value = '';
   if (balWords) balWords.textContent = '';
+  if (wordsWrap) wordsWrap.style.display = 'none';
+  if (clearBtn) clearBtn.style.display = 'none';
 
   setKhataBalType('udhar');
 
