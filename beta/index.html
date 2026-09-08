@@ -1530,14 +1530,6 @@ body {
         <input type="tel" id="khata-new-phone" placeholder="e.g. 9876543210" style="width:100%;padding:0.6rem 0.75rem;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);font-size:0.9rem;box-sizing:border-box;">
       </div>
 
-      <div>
-        <label id="lbl-khata-opening-bal" style="font-size:0.78rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">OPENING BALANCE (OPTIONAL)</label>
-        <div style="display:flex;gap:6px;align-items:center;">
-          <button type="button" id="khata-bal-sign-btn" onclick="toggleKhataBalSign()" style="width:42px;height:42px;flex-shrink:0;padding:0;display:flex;align-items:center;justify-content:center;border-radius:10px;background:rgba(16,185,129,0.2);color:#10b981;border:1px solid rgba(16,185,129,0.4);font-weight:900;font-size:1.3rem;cursor:pointer;box-sizing:border-box;" title="Tap to toggle (+) or (-)">+</button>
-          <input type="number" id="khata-new-bal" placeholder="0" style="flex:1;padding:0.6rem 0.75rem;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);font-size:0.95rem;font-weight:700;box-sizing:border-box;">
-        </div>
-      </div>
-
       <!-- Clear Easy Language Option Selection -->
       <div style="background:var(--bg-primary);padding:0.65rem;border-radius:10px;border:1px solid var(--border-color);">
         <label id="lbl-khata-bal-type" style="font-size:0.75rem;font-weight:800;color:var(--text-muted);display:block;margin-bottom:6px;">BALANCE TYPE (WHAT HAPPENED?):</label>
@@ -1549,6 +1541,15 @@ body {
             🔴 <span id="lbl-khata-took-money">You Took Money (-₹)</span> — <span style="font-size:0.78rem;font-weight:600;">(<span id="lbl-khata-you-owe-them">You owe them</span>)</span>
           </button>
         </div>
+      </div>
+
+      <div>
+        <label id="lbl-khata-opening-bal" style="font-size:0.78rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:4px;">OPENING BALANCE (OPTIONAL)</label>
+        <div style="display:flex;gap:6px;align-items:center;">
+          <button type="button" id="khata-bal-sign-btn" onclick="toggleKhataBalSign()" style="width:42px;height:42px;flex-shrink:0;padding:0;display:flex;align-items:center;justify-content:center;border-radius:10px;background:rgba(16,185,129,0.2);color:#10b981;border:1px solid rgba(16,185,129,0.4);font-weight:900;font-size:1.3rem;cursor:pointer;box-sizing:border-box;" title="Tap to toggle (+) or (-)">+</button>
+          <input type="text" inputmode="decimal" id="khata-new-bal" placeholder="0" oninput="onKhataOpeningBalInput(this)" style="flex:1;padding:0.6rem 0.75rem;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);font-size:0.95rem;font-weight:700;box-sizing:border-box;">
+        </div>
+        <div id="khata-bal-words" style="font-size:0.80rem;font-style:italic;font-weight:600;color:var(--color-accent);text-align:right;min-height:1.2rem;margin-top:4px;padding-right:4px;"></div>
       </div>
 
       <div style="display:flex;gap:8px;margin-top:0.4rem;">
@@ -11364,6 +11365,12 @@ async function pickPhoneContactForKhata() {
         if (nameInput && cName) nameInput.value = cName;
         if (phoneInput && cPhone) phoneInput.value = cPhone.replace(/[^\d+]/g, '');
 
+        var balInput = document.getElementById('khata-new-bal');
+        var balWords = document.getElementById('khata-bal-words');
+        if (balInput) balInput.value = '';
+        if (balWords) balWords.textContent = '';
+        setKhataBalType('udhar');
+
         if (typeof showToast === 'function') showToast('📱 ' + _t('Contact selected', 'संपर्क चुना गया', 'Contact chuna gaya') + ': ' + (cName || cPhone));
         openModal('modal-add-khata-contact');
         return;
@@ -11377,13 +11384,73 @@ async function pickPhoneContactForKhata() {
   openModal('modal-add-khata-contact');
 }
 
+function onKhataOpeningBalInput(el) {
+  if (!el) return;
+  var cursor = el.selectionStart;
+  var oldVal = el.value;
+  var numDigitsBefore = (oldVal.slice(0, cursor).match(/[\d.]/g) || []).length;
+
+  var raw = oldVal.replace(/,/g, '');
+  var clean = raw.replace(/[^\d.]/g, '');
+  var dotIdx = clean.indexOf('.');
+  if (dotIdx !== -1) {
+    clean = clean.slice(0, dotIdx + 1) + clean.slice(dotIdx + 1).replace(/\./g, '');
+  }
+
+  var wordsEl = document.getElementById('khata-bal-words');
+  if (!clean) {
+    el.value = '';
+    if (wordsEl) wordsEl.textContent = '';
+    return;
+  }
+
+  var parts = clean.split('.');
+  var intPart = parts[0];
+  var decPart = parts.length > 1 ? '.' + parts[1] : '';
+
+  var formattedInt = intPart;
+  if (intPart !== '') {
+    var num = Number(intPart);
+    if (!isNaN(num)) {
+      formattedInt = num.toLocaleString('en-IN');
+    }
+  }
+
+  var formattedVal = formattedInt + decPart;
+  el.value = formattedVal;
+
+  if (cursor !== null && typeof el.setSelectionRange === 'function') {
+    var newCursor = 0;
+    var digitsCount = 0;
+    while (newCursor < formattedVal.length && digitsCount < numDigitsBefore) {
+      if (/[\d.]/.test(formattedVal[newCursor])) {
+        digitsCount++;
+      }
+      newCursor++;
+    }
+    el.setSelectionRange(newCursor, newCursor);
+  }
+
+  var numVal = parseFloat(clean);
+  if (wordsEl) {
+    if (!isNaN(numVal) && numVal > 0) {
+      var wordsText = numToWords(numVal);
+      wordsEl.textContent = wordsText ? wordsText : '';
+    } else {
+      wordsEl.textContent = '';
+    }
+  }
+}
+
 function addInlineLedgerCustomer() {
   var nameInput = document.getElementById('khata-new-name');
   var phoneInput = document.getElementById('khata-new-phone');
   var balInput = document.getElementById('khata-new-bal');
+  var balWords = document.getElementById('khata-bal-words');
   if (nameInput) nameInput.value = '';
   if (phoneInput) phoneInput.value = '';
   if (balInput) balInput.value = '';
+  if (balWords) balWords.textContent = '';
 
   setKhataBalType('udhar');
 
@@ -11432,7 +11499,8 @@ function saveNewKhataContact() {
     }
   }
 
-  var rawBal = parseFloat(balInput ? balInput.value : '0') || 0;
+  var rawBalStr = balInput ? String(balInput.value).replace(/,/g, '').trim() : '0';
+  var rawBal = parseFloat(rawBalStr) || 0;
   rawBal = Math.abs(rawBal);
 
   var initBal = (_selectedKhataBalType === 'jama') ? -rawBal : rawBal;
