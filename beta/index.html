@@ -1117,6 +1117,16 @@ body {
       </div>
       <div class="toggle-row">
         <div>
+          <span class="toggle-label" id="lbl-smart-hints">💡 SMART FEATURE HINTS</span>
+          <span class="toggle-desc" id="desc-smart-hints">Helpful pro-tips for Lazy Mode, Notes, and Voice in help row</span>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" id="smart-hints-toggle" onchange="toggleSmartHints(this.checked)" checked>
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+      <div class="toggle-row">
+        <div>
           <span class="toggle-label" id="lbl-share-wa">💬 SEND ON WHATSAPP</span>
           <span class="toggle-desc" id="desc-share-wa">Send directly via WhatsApp instead of System Share</span>
         </div>
@@ -1431,6 +1441,7 @@ body {
     <button id="main-drawer-expenses" onclick="selectModeFromMainDrawer('expenses')" style="width:100%;padding:0.75rem 0.9rem;border-radius:12px;border:1px solid rgba(37,211,102,0.3);background:rgba(37,211,102,0.1);color:#25D366;font-weight:700;font-size:0.92rem;cursor:pointer;display:flex;align-items:center;gap:10px;text-align:left;">💸 Expenses</button>
     <button id="main-drawer-splitter" onclick="selectModeFromMainDrawer('splitter')" style="width:100%;padding:0.75rem 0.9rem;border-radius:12px;border:1px solid rgba(192,132,252,0.3);background:rgba(192,132,252,0.1);color:#c084fc;font-weight:700;font-size:0.92rem;cursor:pointer;display:flex;align-items:center;gap:10px;text-align:left;">👥 Splitter</button>
     <button id="main-drawer-quickbilling" onclick="selectModeFromMainDrawer('quickbilling')" style="width:100%;padding:0.75rem 0.9rem;border-radius:12px;border:1px solid rgba(234,179,8,0.3);background:rgba(234,179,8,0.1);color:#eab308;font-weight:700;font-size:0.92rem;cursor:pointer;display:flex;align-items:center;gap:10px;text-align:left;">🛒 Billing - POS</button>
+    <button id="main-drawer-cash" onclick="selectModeFromMainDrawer('cash')" style="width:100%;padding:0.75rem 0.9rem;border-radius:12px;border:1px solid rgba(16,185,129,0.35);background:rgba(16,185,129,0.12);color:#10b981;font-weight:700;font-size:0.92rem;cursor:pointer;display:flex;align-items:center;gap:10px;text-align:left;">💵 Cash Counter (Galla)</button>
     <button id="main-drawer-fuel" onclick="selectModeFromMainDrawer('fuel')" style="width:100%;padding:0.75rem 0.9rem;border-radius:12px;border:1px solid rgba(251,146,60,0.3);background:rgba(251,146,60,0.1);color:#fb923c;font-weight:700;font-size:0.92rem;cursor:pointer;display:flex;align-items:center;gap:10px;text-align:left;">⛽ Fuel & Trip</button>
     <button id="main-drawer-emi" onclick="selectModeFromMainDrawer('emi')" style="width:100%;padding:0.75rem 0.9rem;border-radius:12px;border:1px solid rgba(52,211,153,0.3);background:rgba(52,211,153,0.1);color:#34d399;font-weight:700;font-size:0.92rem;cursor:pointer;display:flex;align-items:center;gap:10px;text-align:left;">📈 Loan EMI</button>
     <button id="main-drawer-converter" onclick="selectModeFromMainDrawer('converter')" style="width:100%;padding:0.75rem 0.9rem;border-radius:12px;border:1px solid rgba(96,165,250,0.3);background:rgba(96,165,250,0.1);color:#60a5fa;font-weight:700;font-size:0.92rem;cursor:pointer;display:flex;align-items:center;gap:10px;text-align:left;">📏 Unit Converter</button>
@@ -2175,6 +2186,7 @@ body {
         <div id="modes-menu" class="modes-menu-popup" onclick="event.stopPropagation()">
           <div id="mitem-date" class="modes-menu-item" onclick="selectModeFromMenu('date')">🗓️ Date & Duration</div>
           <div id="mitem-billing" class="modes-menu-item" onclick="selectModeFromMenu('quickbilling')">🛒 Billing - POS</div>
+          <div id="mitem-cash" class="modes-menu-item" onclick="selectModeFromMenu('cash')">💵 Cash Counter (Galla)</div>
           <div id="mitem-splitter" class="modes-menu-item" onclick="selectModeFromMenu('splitter')">👥 Splitter</div>
           <div id="mitem-fuel" class="modes-menu-item" onclick="selectModeFromMenu('fuel')">⛽ Fuel & Trip</div>
           <div id="mitem-emi" class="modes-menu-item" onclick="selectModeFromMenu('emi')">📈 Loan EMI</div>
@@ -2265,6 +2277,7 @@ if (localStorage.getItem('theme_v2_reset') !== 'true' || !_calcTheme || _calcThe
 var _calcMode = localStorage.getItem('calc_mode') || 'basic';
 var _fastInput = true;
 var _fastLazy = localStorage.getItem('fast_lazy') !== 'false';
+var _smartHintsEnabled = localStorage.getItem('calc_smart_hints') !== 'false';
 var _recordExpenses = localStorage.getItem('calc_record_expenses') !== 'false';
 var _showWords = localStorage.getItem('calc_show_words') !== 'false';
 var _vibeEnabled = localStorage.getItem('calc_vibe_enabled') !== 'false';
@@ -3972,6 +3985,8 @@ function setAppLanguage(lang) {
   var dKMode = document.getElementById('desc-k-mode');
   var lWords = document.getElementById('lbl-words');
   var dWords = document.getElementById('desc-words');
+  var lHints = document.getElementById('lbl-smart-hints');
+  var dHints = document.getElementById('desc-smart-hints');
   var lShareWA = document.getElementById('lbl-share-wa');
   var dShareWA = document.getElementById('desc-share-wa');
   var lRecExp = document.getElementById('lbl-record-expenses');
@@ -4011,6 +4026,8 @@ function setAppLanguage(lang) {
     if (dKMode) dKMode.textContent = 'संख्याओं को हज़ारों में दिखाता है (1k + 2k = 3k)';
     if (lWords) lWords.textContent = '💬 शब्द मोड (सक्रिय संख्या शब्दों में)';
     if (dWords) dWords.textContent = 'टाइप किए जा रहे नंबर को शब्दों में दिखाता है (50 = Fifty)';
+    if (lHints) lHints.textContent = '💡 स्मार्ट फीचर हिंट्स';
+    if (dHints) dHints.textContent = 'हेल्प रो में लेज़ी मोड, नोट्स व वॉइस के उपयोगी टिप्स';
     if (lShareWA) lShareWA.textContent = '💬 व्हाट्सएप पर शेयर करें';
     if (dShareWA) dShareWA.textContent = 'सिस्टम शेयर के बजाय सीधे व्हाट्सएप पर भेजें';
     if (lRecExp) lRecExp.textContent = '💸 खर्च रिकॉर्ड करें';
@@ -4049,6 +4066,8 @@ function setAppLanguage(lang) {
     if (dKMode) dKMode.textContent = 'Numbers ko thousands me convert karta hai (1k + 2k = 3k)';
     if (lWords) lWords.textContent = '💬 Words Mode (Active Number In Words)';
     if (dWords) dWords.textContent = 'Active number ko words me dikhata hai (50 = Fifty)';
+    if (lHints) lHints.textContent = '💡 SMART FEATURE HINTS';
+    if (dHints) dHints.textContent = 'Help row me Lazy Mode, Notes aur Voice ke smart tips';
     if (lShareWA) lShareWA.textContent = '💬 Send On WhatsApp';
     if (dShareWA) dShareWA.textContent = 'Directly WhatsApp par send karein';
     if (lRecExp) lRecExp.textContent = '💸 Record Expenses';
@@ -4087,6 +4106,8 @@ function setAppLanguage(lang) {
     if (dKMode) dKMode.textContent = 'Formats numbers in thousands (1k + 2k = 3k)';
     if (lWords) lWords.textContent = '💬 WORDS MODE (ACTIVE NUMBER IN WORDS)';
     if (dWords) dWords.textContent = 'Shows active number in words (50 = Fifty)';
+    if (lHints) lHints.textContent = '💡 SMART FEATURE HINTS';
+    if (dHints) dHints.textContent = 'Helpful pro-tips for Lazy Mode, Notes, and Voice in help row';
     if (lShareWA) lShareWA.textContent = '💬 SEND ON WHATSAPP';
     if (dShareWA) dShareWA.textContent = 'Send directly via WhatsApp instead of System Share';
     if (lRecExp) lRecExp.textContent = '💸 RECORD EXPENSES';
@@ -4187,6 +4208,8 @@ function setAppLanguage(lang) {
     'main-drawer-ledger': ['📜 Ledger', '📜 खाता', '📜 Khata'],
     'main-drawer-expenses': ['💸 Expenses', '💸 खर्च', '💸 Expenses'],
     'main-drawer-quickbilling': ['🛒 Billing - POS', '🛒 बिलिंग - POS', '🛒 Billing - POS'],
+    'main-drawer-cash': ['💵 Cash Counter (Galla)', '💵 गल्ला हिसाब (Cash Counter)', '💵 Cash Counter (Galla)'],
+    'mitem-cash': ['💵 Cash Counter (Galla)', '💵 गल्ला हिसाब (Cash Counter)', '💵 Cash Counter (Galla)'],
     'main-drawer-date': ['🗓️ Date & Duration', '🗓️ तारीख व अवधि', '🗓️ Date & Duration'],
     'main-drawer-splitter': ['👥 Splitter', '👥 स्प्लिटर (हिसाब)', '👥 Splitter'],
     'main-drawer-fuel': ['⛽ Fuel & Trip', '⛽ ईंधन व ट्रिप', '⛽ Fuel & Trip'],
@@ -4470,7 +4493,20 @@ function toggleRecordExpenses(v) {
 }
 function toggleFastLazy(v) {
   _fastLazy = v;
-  localStorage.setItem('fast_lazy', v);
+  localStorage.setItem('fast_lazy', v ? 'true' : 'false');
+  var el = document.getElementById('fast-lazy-toggle');
+  if (el) el.checked = v;
+  try { localStorage.setItem('calc_learned_lazy_fast', '1'); } catch(e) {}
+  showToast(v ? _t('⚡ Fast Lazy Mode ON (0.3s)', '⚡ फ़ास्ट लेज़ी मोड चालू (0.3s)', '⚡ Fast Lazy Mode ON (0.3s)') : _t('🔒 Lazy Mode Normal (1s)', '🔒 लेज़ी मोड सामान्य (1s)', '🔒 Lazy Mode Normal (1s)'));
+  renderCalcLabelEditor();
+}
+function toggleSmartHints(v) {
+  _smartHintsEnabled = v;
+  localStorage.setItem('calc_smart_hints', v ? 'true' : 'false');
+  var el = document.getElementById('smart-hints-toggle');
+  if (el) el.checked = v;
+  showToast(v ? _t('💡 Smart Hints Enabled', '💡 स्मार्ट हिंट्स चालू', '💡 Smart Hints Chalu') : _t('💡 Smart Hints Disabled', '💡 स्मार्ट हिंट्स बंद', '💡 Smart Hints Band'));
+  renderCalcLabelEditor();
 }
 function toggleShowWords(v) {
   _showWords = v;
@@ -4691,10 +4727,10 @@ function applyCalcMode(name) {
     if (display) display.style.display = 'none';
     if (resArea) resArea.style.display = 'none';
     var isExpOrDate = (name === 'expenses' || name === 'date');
-    var isSubMode = (name === 'splitter' || name === 'fuel' || name === 'emi' || name === 'converter' || name === 'scientific');
+    var isSubMode = (name === 'splitter' || name === 'fuel' || name === 'emi' || name === 'converter' || name === 'scientific' || name === 'cash');
     if (settingsBtn) settingsBtn.style.display = (isExpOrDate || isSubMode) ? 'none' : '';
     if (backBtn) backBtn.style.display = (isExpOrDate || isSubMode || name === 'quickbilling') ? '' : 'none';
-    if (backHistBtn) backHistBtn.style.display = (name === 'expenses' || name === 'splitter' || name === 'date') ? 'none' : 'inline-flex';
+    if (backHistBtn) backHistBtn.style.display = (name === 'expenses' || name === 'splitter' || name === 'date' || name === 'cash') ? 'none' : 'inline-flex';
     if (mainHistBtn) mainHistBtn.style.display = 'none';
     if (closeBtn) closeBtn.style.display = '';
     if (waBtn) waBtn.style.display = (name === 'date' || name === 'expenses' || name === 'splitter') ? 'none' : '';
@@ -4712,8 +4748,8 @@ function applyCalcMode(name) {
       hModesBtn.style.pointerEvents = 'none';
     }
     if (expWaBtn) expWaBtn.style.display = name === 'expenses' ? '' : 'none';
-    if (histBtn) histBtn.style.display = (name === 'expenses' || name === 'splitter' || name === 'date') ? 'none' : '';
-    if (histContainer) histContainer.style.display = (name === 'expenses' || name === 'splitter') ? 'none' : '';
+    if (histBtn) histBtn.style.display = (name === 'expenses' || name === 'splitter' || name === 'date' || name === 'cash') ? 'none' : '';
+    if (histContainer) histContainer.style.display = (name === 'expenses' || name === 'splitter' || name === 'cash') ? 'none' : '';
     updateCalcHistoryVisibility();
 
     if (name === 'date') { if (modalBody) modalBody.classList.remove('sp-mode'); renderDateMode(modeBody, display); }
@@ -4723,6 +4759,7 @@ function applyCalcMode(name) {
     else if (name === 'emi') { if (modalBody) modalBody.classList.remove('sp-mode'); renderEmiMode(modeBody); }
     else if (name === 'converter') { if (modalBody) modalBody.classList.remove('sp-mode'); renderConverterMode(modeBody); }
     else if (name === 'scientific') { if (modalBody) modalBody.classList.add('sp-mode'); renderScientificMode(modeBody); }
+    else if (name === 'cash') { if (modalBody) modalBody.classList.remove('sp-mode'); renderCashCounterMode(modeBody); }
     else if (name === 'quickbilling') {
       if (modalBody) modalBody.classList.remove('sp-mode');
       expr.style.display = 'none';
@@ -4768,7 +4805,7 @@ function setCalcMode(name) {
     renderCalcHistory();
     return;
   }
-  if (['date','expenses','splitter','fuel','emi','converter','scientific','quickbilling'].indexOf(name) !== -1 && _calcMode === name) { setCalcMode('basic'); return; }
+  if (['date','expenses','splitter','fuel','emi','converter','scientific','quickbilling','cash'].indexOf(name) !== -1 && _calcMode === name) { setCalcMode('basic'); return; }
   if (_calcMode === name) return;
   _calcMode = name;
   localStorage.setItem('calc_mode', name);
@@ -6460,6 +6497,7 @@ window.openRazorpayPaymentPage = openRazorpayPaymentPage;
 window.confirmCompletedPayment = confirmCompletedPayment;
 
 function calcBtn(label) {
+  if (typeof clearSmartHint === 'function') clearSmartHint();
   if (_stickyActive) {
     if (['0','1','2','3','4','5','6','7','8','9','.'].indexOf(label) !== -1) {
       stickyInputDigit(label); return;
@@ -6470,7 +6508,24 @@ function calcBtn(label) {
       else { deactivateSticky(); calcClear(); }
       return;
     }
-    if (label === "=") { stickyFlush(); var finalResult = _stickyResult; var fullExpr = _stickyFullExpr; deactivateSticky(); calcTokens = parseExprToTokens(fullExpr); _calcSavedExpr = ""; _calcShowExpr = true; calcUpdateDisplay(); var _cd = document.getElementById("calc-display"); _cd.style.display = ''; _cd.textContent = "= " + fmtNum(finalResult); return; }
+    if (label === "=") {
+      stickyFlush();
+      var finalResult = _stickyResult;
+      var fullExpr = _stickyFullExpr;
+      deactivateSticky();
+      calcTokens = parseExprToTokens(fullExpr);
+      _calcSavedExpr = "";
+      _calcShowExpr = true;
+      calcUpdateDisplay();
+      var _cd = document.getElementById("calc-display");
+      if (_cd) { _cd.style.display = ''; _cd.textContent = "= " + fmtNum(finalResult); }
+      if (!localStorage.getItem('calc_learned_notes') && typeof setSmartHint === 'function') {
+        setTimeout(function() {
+          if (!_stickyActive && !_isVoiceListening) setSmartHint('tag_notes_hint', 5000);
+        }, 1500);
+      }
+      return;
+    }
     if (label === '±' && _stickyInput) { _stickyInput = String(-parseFloat(_stickyInput)); updateStickyDisplay(); return; }
     if (label === '%' && _stickyInput) { _stickyInput = String(parseFloat(_stickyInput) / 100); updateStickyDisplay(); return; }
     return;
@@ -6495,6 +6550,7 @@ function stickyOpDown(op) {
   _stickyOpPending = op;
   _stickyOpTimer = setTimeout(function() {
     activateStickyMode(op);
+    try { localStorage.setItem('calc_learned_lazy', '1'); } catch(e) {}
     _stickyOpTimer = null;
   }, 400);
 }
@@ -6995,16 +7051,6 @@ function renderCalcLabelEditor() {
             if (!isNaN(sn)) {
               exprWords = numToWords(_kMode ? sn * 1000 : sn);
             }
-          } else if (_stickyFullExpr) {
-            var parts = _stickyFullExpr.split(' ');
-            for (var p = parts.length - 1; p >= 0; p--) {
-              var cleanP = parts[p].replace(/,/g, '');
-              var pn = parseFloat(cleanP);
-              if (!isNaN(pn)) {
-                exprWords = numToWords(_kMode ? pn * 1000 : pn);
-                break;
-              }
-            }
           }
         } else if (_calcShowExpr) {
           var isInitZero = calcTokens.length === 1 && calcTokens[0].v === '0' && !calcTokens[0].label;
@@ -7019,7 +7065,15 @@ function renderCalcLabelEditor() {
         var wRow = document.getElementById('calc-expr-words-row');
         if (wRow) wRow.scrollLeft = wRow.scrollWidth;
       } else {
-        container.innerHTML = '<div style="font-size:0.75rem;color:var(--text-muted);padding:0.3rem 0">' + helpTxt + '</div>';
+        var rowContent = helpTxt;
+        if (typeof _smartHintsEnabled !== 'undefined' && _smartHintsEnabled && typeof getSmartHintString === 'function') {
+          if (_stickyActive) {
+            rowContent = _fastLazy ? getSmartHintString('lazy_active_fast') : getSmartHintString('lazy_active_normal');
+          } else if (_currentSmartHint) {
+            rowContent = getSmartHintString(_currentSmartHint);
+          }
+        }
+        container.innerHTML = '<div style="font-size:0.75rem;color:var(--text-muted);padding:0.3rem 0;line-height:1.35;">' + rowContent + '</div>';
       }
     }
     return;
@@ -7081,6 +7135,8 @@ function liveUpdateTokenEdit() {
 }
 
 function editCalcTokenLabel(index) {
+  if (typeof clearSmartHint === 'function') clearSmartHint();
+  try { localStorage.setItem('calc_learned_notes', '1'); } catch(e) {}
   if (_editingCalcToken === index) {
     _editingCalcToken = -1;
   } else {
@@ -7173,12 +7229,25 @@ function calcInput(val) {
     } else {
       calcTokens.push({v: mapped, label: ''});
     }
+    if (mapped === '+' && typeof setSmartHint === 'function') {
+      var plusCount = calcTokens.filter(function(t) { return t && t.v === '+'; }).length;
+      if (plusCount >= 2 && !localStorage.getItem('calc_learned_lazy')) {
+        setTimeout(function() {
+          if (!_stickyActive && !_isVoiceListening) setSmartHint('lazy_lock_hint', 4500);
+        }, 150);
+      }
+    }
   } else {
     if (last && ['+','-','*','/'].indexOf(last.v) === -1) {
       if (last.v === '0' && mapped !== '.') {
         last.v = mapped;
       } else {
         last.v += mapped;
+      }
+      if (last.v.length >= 4 && last.v.slice(-3) === '000' && !_kMode && !localStorage.getItem('calc_learned_kmode') && typeof setSmartHint === 'function') {
+        setTimeout(function() {
+          if (!_stickyActive && !_isVoiceListening) setSmartHint('kmode_hint', 4000);
+        }, 150);
       }
     } else {
       calcTokens.push({v: mapped, label: ''});
@@ -7244,6 +7313,11 @@ function calcEqual() {
     calcUpdateDisplay();
     document.getElementById('calc-display').textContent = '= ' + fmtNum(result);
     triggerResultPulse();
+    if (hasOp && !localStorage.getItem('calc_learned_notes') && typeof setSmartHint === 'function') {
+      setTimeout(function() {
+        if (!_stickyActive && !_isVoiceListening) setSmartHint('tag_notes_hint', 5000);
+      }, 1500);
+    }
   } catch(e) {}
 }
 
@@ -7284,6 +7358,11 @@ function calcClear() {
   _editingCalcToken = -1;
   _calcShowExpr = true;
   calcUpdateDisplay();
+  if (!localStorage.getItem('calc_learned_voice') && typeof setSmartHint === 'function') {
+    setTimeout(function() {
+      if (!_stickyActive && !_isVoiceListening) setSmartHint('voice_hint', 4000);
+    }, 200);
+  }
 }
 
 function calcBackspace() {
@@ -9589,6 +9668,9 @@ function shareSpecializedMode() {
     var exprText = (_sciExpr || (exprEl ? exprEl.textContent : '') || '0').trim();
     var resText = (resEl ? resEl.textContent.replace(/^=\s*/, '') : '0').trim();
     text = '📐 Scientific Calculation:\nFormula: ' + exprText + '\nResult: ' + resText;
+  } else if (mode === 'cash') {
+    shareCashCounterWA();
+    return;
   } else if (mode === 'splitter') {
     shareSplitterTrip();
     return;
@@ -10458,6 +10540,316 @@ function renderScientificMode(container) {
     });
   }
 }
+
+/* ==========================================================================
+   Cash Denomination Counter ("Galla / Cash Drawer" Mode)
+   ========================================================================== */
+var _cashDenoms = [500, 200, 100, 50, 20, 10, 5];
+var _cashCounts = { 500: 0, 200: 0, 100: 0, 50: 0, 20: 0, 10: 0, 5: 0 };
+var _cashCoins = 0;
+
+function loadCashCounterData() {
+  try {
+    var raw = localStorage.getItem('calc_cash_counter_data');
+    if (raw) {
+      var d = JSON.parse(raw);
+      if (d && typeof d === 'object') {
+        _cashCounts = d.counts || _cashCounts;
+        _cashCoins = parseFloat(d.coins) || 0;
+      }
+    }
+  } catch(e) {}
+}
+
+function saveCashCounterData() {
+  try {
+    localStorage.setItem('calc_cash_counter_data', JSON.stringify({
+      counts: _cashCounts,
+      coins: _cashCoins,
+      updatedAt: Date.now()
+    }));
+  } catch(e) {}
+}
+
+function getCashCounterTotals() {
+  var totalNotes = 0;
+  var totalCash = 0;
+  _cashDenoms.forEach(function(d) {
+    var cnt = parseInt(_cashCounts[d], 10) || 0;
+    if (cnt < 0) cnt = 0;
+    totalNotes += cnt;
+    totalCash += d * cnt;
+  });
+  var c = parseFloat(_cashCoins) || 0;
+  if (c < 0) c = 0;
+  totalCash += c;
+  return { totalNotes: totalNotes, totalCash: totalCash, coins: c };
+}
+
+function renderCashCounterMode(container) {
+  if (!container) return;
+  loadCashCounterData();
+  var totals = getCashCounterTotals();
+  var isHi = _appLang === 'hi';
+  var isHn = _appLang === 'hn';
+
+  var lblTotal = isHi ? '💰 कुल रोकड़ (Total Cash)' : (isHn ? '💰 Total Cash (Galla)' : '💰 TOTAL CASH');
+  var lblNotes = isHi ? 'कुल नोट:' : (isHn ? 'Total Notes:' : 'Total Notes:');
+  var lblCoins = isHi ? '🪙 सिक्के / चिल्लर' : (isHn ? '🪙 Coins / Chhutta' : '🪙 Coins / Other');
+  var btnReset = isHi ? '🧹 साफ़ करें' : (isHn ? '🧹 Reset' : '🧹 Reset');
+  var btnShare = isHi ? '📲 क्लोजिंग शेयर करें (WhatsApp)' : (isHn ? '📲 Share Closing on WA' : '📲 Share Closing on WhatsApp');
+
+  var words = numToWords(totals.totalCash);
+  if (!words || totals.totalCash === 0) words = isHi ? 'शून्य रुपये' : 'Zero Rupees';
+
+  var html = '<div style="display:flex;flex-direction:column;gap:0.75rem;box-sizing:border-box;max-width:480px;margin:0 auto;padding-bottom:1.5rem;">';
+
+  // Hero Summary Card
+  html += '<div style="background:var(--bg-tertiary);border:1px solid var(--border-color);border-radius:16px;padding:0.9rem 1rem;text-align:center;position:relative;box-shadow:0 4px 16px rgba(0,0,0,0.06);">';
+  html += '<div style="font-size:0.8rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;">' + lblTotal + '</div>';
+  html += '<div id="cash-grand-total" style="font-size:1.85rem;font-weight:900;color:#10b981;margin:0.2rem 0;letter-spacing:-0.5px;">₹' + fmtNum(totals.totalCash) + '</div>';
+  html += '<div id="cash-total-words" style="font-size:0.82rem;font-style:italic;font-weight:600;color:var(--text-muted);min-height:1.2rem;line-height:1.3;padding:0 0.5rem;">' + escHtml(words) + '</div>';
+  html += '<div style="display:flex;justify-content:center;gap:12px;margin-top:0.45rem;font-size:0.8rem;font-weight:700;color:var(--text-muted);">';
+  html += '<span>📝 ' + lblNotes + ' <b id="cash-total-notes" style="color:var(--text-primary);font-size:0.9rem;">' + totals.totalNotes + '</b></span>';
+  html += '</div>';
+  html += '</div>';
+
+  // Denominations List Card
+  html += '<div style="display:flex;flex-direction:column;gap:0.45rem;background:var(--bg-tertiary);border:1px solid var(--border-color);border-radius:16px;padding:0.75rem 0.85rem;">';
+
+  _cashDenoms.forEach(function(denom) {
+    var count = _cashCounts[denom] || 0;
+    var subtotal = denom * count;
+    html += '<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:3px 0;">';
+    html += '<span style="font-size:0.95rem;font-weight:800;width:52px;flex-shrink:0;color:var(--text-primary);">₹' + denom + '</span>';
+    html += '<div style="display:flex;align-items:center;gap:4px;">';
+    html += '<button type="button" onclick="stepCashCount(' + denom + ', -1)" style="width:34px;height:34px;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);font-size:1.15rem;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;touch-action:manipulation;">-</button>';
+    html += '<input id="cash-inp-' + denom + '" type="number" inputmode="numeric" min="0" placeholder="0" value="' + (count > 0 ? count : '') + '" oninput="onCashCountInput(' + denom + ', this)" style="width:58px;height:34px;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);font-size:1rem;font-weight:800;text-align:center;box-sizing:border-box;">';
+    html += '<button type="button" onclick="stepCashCount(' + denom + ', 1)" style="width:34px;height:34px;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);font-size:1.15rem;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;touch-action:manipulation;">+</button>';
+    html += '</div>';
+    html += '<span id="cash-sub-' + denom + '" style="font-size:0.92rem;font-weight:800;width:82px;text-align:right;color:var(--text-primary);flex-shrink:0;">₹' + fmtNum(subtotal) + '</span>';
+    html += '</div>';
+  });
+
+  // Coins / Sikka Row
+  html += '<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:5px 0 2px 0;border-top:1px dashed var(--border-color);margin-top:2px;">';
+  html += '<span style="font-size:0.86rem;font-weight:700;color:var(--text-muted);width:90px;flex-shrink:0;">' + lblCoins + '</span>';
+  html += '<div style="display:flex;align-items:center;gap:4px;flex:1;justify-content:flex-end;">';
+  html += '<span style="font-weight:700;color:var(--text-muted);font-size:0.9rem;">₹</span>';
+  html += '<input id="cash-inp-coins" type="number" inputmode="decimal" min="0" placeholder="0" value="' + (totals.coins > 0 ? totals.coins : '') + '" oninput="onCashCoinsInput(this)" style="width:105px;height:34px;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);font-size:1rem;font-weight:800;text-align:right;padding-right:8px;box-sizing:border-box;">';
+  html += '</div>';
+  html += '</div>';
+  html += '</div>';
+
+  // Action Buttons
+  html += '<div style="display:flex;gap:8px;">';
+  html += '<button type="button" onclick="resetCashCounter()" style="flex:1;padding:0.75rem 0.5rem;border-radius:12px;border:1px solid var(--border-color);background:var(--bg-tertiary);color:var(--text-muted);font-weight:700;font-size:0.88rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;touch-action:manipulation;">' + btnReset + '</button>';
+  html += '<button type="button" onclick="shareCashCounterWA()" style="flex:2;padding:0.75rem 0.5rem;border-radius:12px;border:none;background:#25D366;color:#ffffff;font-weight:800;font-size:0.92rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;box-shadow:0 4px 12px rgba(37,211,102,0.3);touch-action:manipulation;">' + btnShare + '</button>';
+  html += '</div>';
+
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+function updateCashCounterDisplay() {
+  var totals = getCashCounterTotals();
+  var grandEl = document.getElementById('cash-grand-total');
+  var wordsEl = document.getElementById('cash-total-words');
+  var notesEl = document.getElementById('cash-total-notes');
+  if (grandEl) grandEl.textContent = '₹' + fmtNum(totals.totalCash);
+  if (notesEl) notesEl.textContent = String(totals.totalNotes);
+  if (wordsEl) {
+    var words = numToWords(totals.totalCash);
+    if (!words || totals.totalCash === 0) words = (_appLang === 'hi') ? 'शून्य रुपये' : 'Zero Rupees';
+    wordsEl.textContent = words;
+  }
+  _cashDenoms.forEach(function(denom) {
+    var count = _cashCounts[denom] || 0;
+    var subEl = document.getElementById('cash-sub-' + denom);
+    if (subEl) subEl.textContent = '₹' + fmtNum(denom * count);
+  });
+  saveCashCounterData();
+}
+
+function stepCashCount(denom, delta) {
+  var cur = parseInt(_cashCounts[denom], 10) || 0;
+  var next = Math.max(0, cur + delta);
+  _cashCounts[denom] = next;
+  var inp = document.getElementById('cash-inp-' + denom);
+  if (inp) inp.value = next > 0 ? next : '';
+  updateCashCounterDisplay();
+}
+
+function onCashCountInput(denom, el) {
+  var val = parseInt(el.value, 10);
+  if (isNaN(val) || val < 0) val = 0;
+  _cashCounts[denom] = val;
+  updateCashCounterDisplay();
+}
+
+function onCashCoinsInput(el) {
+  var val = parseFloat(el.value);
+  if (isNaN(val) || val < 0) val = 0;
+  _cashCoins = val;
+  updateCashCounterDisplay();
+}
+
+function resetCashCounter() {
+  var isHi = _appLang === 'hi';
+  var isHn = _appLang === 'hn';
+  var msg = isHi ? 'क्या सभी नोट संख्या साफ़ करनी है?' : (isHn ? 'Kya sabhi note count reset karna hai?' : 'Reset all cash counts to 0?');
+  if (confirm(msg)) {
+    _cashDenoms.forEach(function(d) { _cashCounts[d] = 0; });
+    _cashCoins = 0;
+    saveCashCounterData();
+    var container = document.getElementById('calc-mode-body');
+    if (container) renderCashCounterMode(container);
+  }
+}
+
+function shareCashCounterWA() {
+  var totals = getCashCounterTotals();
+  if (totals.totalCash === 0 && totals.totalNotes === 0) {
+    showToast(_t('Please enter note counts first', 'पहले नोटों की संख्या भरें', 'Pehle note count enter karein'));
+    return;
+  }
+  var isHi = _appLang === 'hi';
+  var isHn = _appLang === 'hn';
+
+  var d = new Date();
+  var dateStr = d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+  var timeStr = d.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true });
+
+  var title = isHi ? '🏪 *गल्ला हिसाब (Cash Drawer Closing)*' : '🏪 *Cash Drawer Closing (Galla Hisaab)*';
+  var lines = [
+    title,
+    '📅 *' + dateStr + ', ' + timeStr + '*',
+    '--------------------------------'
+  ];
+
+  _cashDenoms.forEach(function(denom) {
+    var c = parseInt(_cashCounts[denom], 10) || 0;
+    if (c > 0) {
+      lines.push('₹' + denom + ' × ' + c + ' = ₹' + fmtNum(denom * c));
+    }
+  });
+
+  if (totals.coins > 0) {
+    lines.push((isHi ? 'सिक्के / चिल्लर = ₹' : 'Coins / Chhutta = ₹') + fmtNum(totals.coins));
+  }
+
+  lines.push('--------------------------------');
+  lines.push('💰 *TOTAL CASH: ₹' + fmtNum(totals.totalCash) + '*');
+
+  var words = numToWords(totals.totalCash);
+  if (words) {
+    lines.push('🗣️ *' + words + '*');
+  }
+  lines.push('📝 ' + (isHi ? 'कुल नोट: ' : 'Total Notes: ') + totals.totalNotes);
+  lines.push('--------------------------------');
+  lines.push('_Shared via Lazy Calc ⚡_');
+
+  var text = lines.join('\n');
+  doShare(text, 'Cash Drawer Closing');
+}
+
+/* ==========================================================================
+   Contextual Smart Hints Engine
+   ========================================================================== */
+var _smartHints = {
+  lazy_active_fast: [
+    '⚡ <b>Lazy Fast Active:</b> 0.3s auto-total (best for quick 2-3 numbers: 25+26+27). Tap = to finish. <span style="text-decoration:underline;cursor:pointer;opacity:0.85;" onclick="toggleFastLazy(false)">[Switch to Normal]</span>',
+    '⚡ <b>लेज़ी फ़ास्ट चालू:</b> 0.3s में तुरंत जुड़ेगा (2-3 छोटे हिसाब के लिए)। पूरा होने पर = दबाएं। <span style="text-decoration:underline;cursor:pointer;opacity:0.85;" onclick="toggleFastLazy(false)">[सामान्य करें]</span>',
+    '⚡ <b>Lazy Fast Active:</b> 0.3s me turant jodega (2-3 quick numbers ke liye best). Pura hone par = dabayein. <span style="text-decoration:underline;cursor:pointer;opacity:0.85;" onclick="toggleFastLazy(false)">[Normal karein]</span>'
+  ],
+  lazy_active_normal: [
+    '🔒 <b>Lazy Normal (1s):</b> <span style="color:#fbbf24;text-decoration:underline;cursor:pointer;font-weight:700;" onclick="toggleFastLazy(true)">⚡ Tap for Fast Mode (0.3s)</span> — great for small calculations!',
+    '🔒 <b>लेज़ी नॉर्मल (1s):</b> <span style="color:#fbbf24;text-decoration:underline;cursor:pointer;font-weight:700;" onclick="toggleFastLazy(true)">⚡ 0.3s फ़ास्ट मोड चालू करें</span> — छोटे हिसाब के लिए बेस्ट!',
+    '🔒 <b>Lazy Normal (1s):</b> <span style="color:#fbbf24;text-decoration:underline;cursor:pointer;font-weight:700;" onclick="toggleFastLazy(true)">⚡ Fast Mode (0.3s) switch karein</span> — small math ke liye best!'
+  ],
+  lazy_lock_hint: [
+    '💡 <b>Lazy Mode:</b> Press & hold "+" to lock it! Then type numbers without pressing "+"',
+    '💡 <b>लेज़ी मोड:</b> "+" को दबाकर रखें! फिर बिना "+" दबाए सीधे संख्या टाइप करते जाएं',
+    '💡 <b>Lazy Mode:</b> "+" ko daba kar rakhein! Fir bina "+" dabaye direct numbers type karein'
+  ],
+  tag_notes_hint: [
+    '🏷️ <b>Tag Notes:</b> Tap numbers above to write what it was for (e.g. Chai, Petrol)',
+    '🏷️ <b>नाम जोड़ें:</b> ऊपर संख्या पर टैप करके नाम लिखें (जैसे चाय, पेट्रोल)',
+    '🏷️ <b>Notes:</b> Upar number par tap karke likhein kiske liye tha (Chai, Petrol)'
+  ],
+  kmode_hint: [
+    '💡 <b>Pro-Tip:</b> Turn on "K Mode" in ⚙️ Settings for fast thousands (50k = 50,000)!',
+    '💡 <b>टिप:</b> हज़ारों के लिए सेटिंग्स में "K Mode" चालू करें (50k = 50,000)!',
+    '💡 <b>Pro-Tip:</b> 50k = 50,000 ke liye ⚙️ Settings me "K Mode" on karein!'
+  ],
+  voice_hint: [
+    '💡 <b>Voice Calc:</b> Tap 🎙️ mic in top bar to calculate hands-free by speaking!',
+    '💡 <b>बोल कर हिसाब:</b> ऊपर 🎙️ माइक दबाकर बोलें (हिन्दी/English)!',
+    '💡 <b>Voice Calc:</b> Upar 🎙️ mic tap karke bol kar hisaab karein!'
+  ],
+  coach_galla: [
+    '💵 <b>Cash Counter:</b> Open Modes 🎛️ to count daily cash notes & coins in drawer',
+    '💵 <b>गल्ला हिसाब:</b> दुकान के नोट व सिक्के गिनने के लिए Modes 🎛️ में Cash Counter खोलें',
+    '💵 <b>Cash Counter:</b> Daily galla hisaab ke liye Modes 🎛️ me Cash Counter use karein'
+  ]
+};
+
+var _currentSmartHint = null;
+var _smartHintTimer = null;
+var _idleCoachIndex = 0;
+
+function getSmartHintString(key) {
+  var arr = _smartHints[key];
+  if (!arr) return '';
+  var idx = _appLang === 'hi' ? 1 : (_appLang === 'hn' ? 2 : 0);
+  return arr[idx] || arr[0];
+}
+
+function setSmartHint(key, durationMs) {
+  if (!_smartHintsEnabled) return;
+  if (_smartHintTimer) { clearTimeout(_smartHintTimer); _smartHintTimer = null; }
+  _currentSmartHint = key;
+  renderCalcLabelEditor();
+  if (durationMs) {
+    _smartHintTimer = setTimeout(function() {
+      _currentSmartHint = null;
+      _smartHintTimer = null;
+      renderCalcLabelEditor();
+    }, durationMs);
+  }
+}
+
+function clearSmartHint() {
+  if (_smartHintTimer) { clearTimeout(_smartHintTimer); _smartHintTimer = null; }
+  if (_currentSmartHint) {
+    _currentSmartHint = null;
+    renderCalcLabelEditor();
+  }
+}
+
+function getNextIdleCoachKey() {
+  var keys = [];
+  if (!localStorage.getItem('calc_learned_lazy')) keys.push('lazy_lock_hint');
+  if (!localStorage.getItem('calc_learned_notes')) keys.push('tag_notes_hint');
+  if (!localStorage.getItem('calc_learned_voice')) keys.push('voice_hint');
+  keys.push('coach_galla');
+  if (keys.length === 0) return null;
+  _idleCoachIndex = (_idleCoachIndex + 1) % keys.length;
+  return keys[_idleCoachIndex];
+}
+
+function checkIdleCoach() {
+  if (!_smartHintsEnabled) return;
+  var isIdleZero = calcTokens.length === 1 && calcTokens[0].v === '0' && !calcTokens[0].label && !_stickyActive && _editingCalcToken === -1;
+  if (isIdleZero && !_currentSmartHint) {
+    var nextKey = getNextIdleCoachKey();
+    if (nextKey) {
+      setSmartHint(nextKey, 5500);
+    }
+  }
+}
+
+setInterval(checkIdleCoach, 7000);
 
 function renderSplitterMode(container) {
   if (!container) return;
@@ -12183,6 +12575,7 @@ updateMonochromeIcons();
 var el;
 el = document.getElementById('record-expenses-toggle'); if (el) el.checked = _recordExpenses;
 el = document.getElementById('fast-lazy-toggle'); if (el) el.checked = _fastLazy;
+el = document.getElementById('smart-hints-toggle'); if (el) el.checked = _smartHintsEnabled;
 el = document.getElementById('show-words-toggle'); if (el) el.checked = _showWords;
 el = document.getElementById('k-mode-toggle'); if (el) el.checked = _kMode;
 el = document.getElementById('share-mode-toggle'); if (el) el.checked = _shareMode === 'whatsapp';
