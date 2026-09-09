@@ -4510,7 +4510,16 @@ function activateKModeFromHint() {
   if (el) el.checked = true;
   try { localStorage.setItem('calc_learned_kmode', '1'); } catch(e) {}
   showToast(_t('🔤 K-Mode Enabled (50k = 50,000)', '🔤 K-मोड चालू (50k = 50,000)', '🔤 K-Mode Chalu (50k = 50,000)'));
-  clearSmartHint();
+  calcUpdateDisplay();
+  renderCalcLabelEditor();
+}
+function deactivateKModeFromHint() {
+  toggleKMode(false);
+  var el = document.getElementById('k-mode-toggle');
+  if (el) el.checked = false;
+  showToast(_t('🔤 K-Mode Disabled', '🔤 K-मोड बंद हुआ', '🔤 K-Mode Band Hua'));
+  calcUpdateDisplay();
+  renderCalcLabelEditor();
 }
 function activateLazyFromHint() {
   try { localStorage.setItem('calc_learned_lazy', '1'); } catch(e) {}
@@ -7070,11 +7079,13 @@ function renderCalcLabelEditor() {
       }
 
       var exprWords = '';
+      var latestNum = 0;
       if (_showWords) {
         if (_stickyActive) {
           if (_stickyInput) {
             var sn = parseFloat(_stickyInput);
             if (!isNaN(sn)) {
+              latestNum = sn;
               exprWords = numToWords(_kMode ? sn * 1000 : sn);
             }
           } else if (_stickyFullExpr) {
@@ -7083,6 +7094,7 @@ function renderCalcLabelEditor() {
               var cleanP = parts[p].replace(/,/g, '');
               var pn = parseFloat(cleanP);
               if (!isNaN(pn)) {
+                latestNum = pn;
                 exprWords = numToWords(_kMode ? pn * 1000 : pn);
                 break;
               }
@@ -7092,25 +7104,52 @@ function renderCalcLabelEditor() {
           var isInitZero = calcTokens.length === 1 && calcTokens[0].v === '0' && !calcTokens[0].label;
           if (!isInitZero && calcTokens.length > 0) {
             exprWords = calcLatestTokenToWords(calcTokens);
+            for (var ti = calcTokens.length - 1; ti >= 0; ti--) {
+              var tok = calcTokens[ti];
+              if (tok && ['+','-','*','/','%','×','÷'].indexOf(tok.v) === -1) {
+                var parsedN = parseFloat(tok.v.replace(/,/g, ''));
+                if (!isNaN(parsedN)) { latestNum = parsedN; break; }
+              }
+            }
+          }
+        }
+      }
+
+      // Compute Contextual Action Button
+      var btnHtml = '';
+      if (_smartHintsEnabled) {
+        if (_stickyActive) {
+          if (_fastLazy) {
+            btnHtml = '<button onclick="toggleFastLazy(false)" style="flex-shrink:0;background:var(--bg-primary);color:var(--text-primary);border:1px solid var(--border-color);border-radius:var(--radius-sm);padding:4px 9px;font-size:0.72rem;font-weight:700;cursor:pointer;line-height:1.3;touch-action:manipulation;">🔒 Normal 1s</button>';
+          } else {
+            btnHtml = '<button onclick="toggleFastLazy(true)" style="flex-shrink:0;background:#fbbf24;color:#000;border:none;border-radius:var(--radius-sm);padding:4px 9px;font-size:0.72rem;font-weight:700;cursor:pointer;line-height:1.3;touch-action:manipulation;">⚡ Fast 0.3s</button>';
+          }
+        } else if (latestNum >= 1000 && !_kMode) {
+          btnHtml = '<button onclick="activateKModeFromHint()" style="flex-shrink:0;background:#fbbf24;color:#000;border:none;border-radius:var(--radius-sm);padding:4px 9px;font-size:0.72rem;font-weight:700;cursor:pointer;line-height:1.3;touch-action:manipulation;">⚡ K-Mode</button>';
+        } else if (_kMode && latestNum > 0) {
+          btnHtml = '<button onclick="deactivateKModeFromHint()" style="flex-shrink:0;background:var(--color-accent);color:#fff;border:none;border-radius:var(--radius-sm);padding:4px 9px;font-size:0.72rem;font-weight:700;cursor:pointer;line-height:1.3;touch-action:manipulation;">🔤 K-Mode ON</button>';
+        } else if (_currentSmartHint === 'tag_notes_hint') {
+          btnHtml = '<button onclick="tagLastTokenFromHint()" style="flex-shrink:0;background:var(--color-accent);color:#fff;border:none;border-radius:var(--radius-sm);padding:4px 9px;font-size:0.72rem;font-weight:700;cursor:pointer;line-height:1.3;touch-action:manipulation;">✏️ Add Note</button>';
+        } else {
+          var plusCount = calcTokens.filter(function(t) { return t && t.v === '+'; }).length;
+          if (plusCount >= 2 && !_stickyActive) {
+            btnHtml = '<button onclick="activateLazyFromHint()" style="flex-shrink:0;background:var(--color-accent);color:#fff;border:none;border-radius:var(--radius-sm);padding:4px 9px;font-size:0.72rem;font-weight:700;cursor:pointer;line-height:1.3;touch-action:manipulation;">🔒 Lock Lazy</button>';
           }
         }
       }
 
       if (exprWords) {
-        container.innerHTML = '<div id="calc-expr-words-row" style="width:100%;text-align:right;padding:0.25rem 0.85rem;box-sizing:border-box;white-space:nowrap;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none;font-size:0.85rem;font-style:italic;font-weight:600;color:var(--text-muted);line-height:1.2;" title="' + escHtml(exprWords) + '">' + escHtml(exprWords) + '</div>';
+        if (btnHtml) {
+          container.innerHTML = '<div style="display:flex;align-items:center;justify-content:space-between;width:100%;gap:0.4rem;padding:0.15rem 0.2rem;box-sizing:border-box;"><div id="calc-expr-words-row" style="flex:1;min-width:0;text-align:right;white-space:nowrap;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none;font-size:0.85rem;font-style:italic;font-weight:600;color:var(--text-muted);line-height:1.2;" title="' + escHtml(exprWords) + '">' + escHtml(exprWords) + '</div>' + btnHtml + '</div>';
+        } else {
+          container.innerHTML = '<div id="calc-expr-words-row" style="width:100%;text-align:right;padding:0.25rem 0.85rem;box-sizing:border-box;white-space:nowrap;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none;font-size:0.85rem;font-style:italic;font-weight:600;color:var(--text-muted);line-height:1.2;" title="' + escHtml(exprWords) + '">' + escHtml(exprWords) + '</div>';
+        }
         var wRow = document.getElementById('calc-expr-words-row');
         if (wRow) wRow.scrollLeft = wRow.scrollWidth;
       } else {
-        var hintKey = _stickyActive ? (_fastLazy ? 'lazy_active_fast' : 'lazy_active_normal') : _currentSmartHint;
-        var hintData = (_smartHintsEnabled && hintKey && typeof getSmartHintData === 'function') ? getSmartHintData(hintKey) : null;
-
-        if (hintData) {
-          var btnHtml = '';
-          if (hintData.btnText && hintData.action) {
-            btnHtml = '<button onclick="' + hintData.action + '" style="flex-shrink:0;' + hintData.btnStyle + 'border-radius:var(--radius-sm);padding:4px 9px;font-size:0.72rem;font-weight:700;cursor:pointer;line-height:1.3;touch-action:manipulation;">' + hintData.btnText + '</button>';
-          }
-          var dismissHtml = !_stickyActive ? '<span onclick="clearSmartHint()" style="cursor:pointer;opacity:0.6;font-size:0.8rem;padding:0 2px;flex-shrink:0;" title="Dismiss">✕</span>' : '';
-          container.innerHTML = '<div style="display:flex;align-items:center;justify-content:space-between;width:100%;gap:0.4rem;padding:0.15rem 0.2rem;box-sizing:border-box;"><div style="font-size:0.74rem;color:var(--text-muted);line-height:1.25;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + hintData.text + '</div>' + btnHtml + dismissHtml + '</div>';
+        if (btnHtml) {
+          var promptTxt = _stickyActive ? (_fastLazy ? '⚡ <b>Lazy Fast:</b> 0.3s auto-total.' : '🔒 <b>Lazy Normal:</b> 1s delay.') : (_currentSmartHint === 'tag_notes_hint' ? '🏷️ Tag Note (Chai, Petrol):' : '💡 Auto-total without pressing "+":');
+          container.innerHTML = '<div style="display:flex;align-items:center;justify-content:space-between;width:100%;gap:0.4rem;padding:0.15rem 0.2rem;box-sizing:border-box;"><div style="font-size:0.74rem;color:var(--text-muted);line-height:1.25;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + promptTxt + '</div>' + btnHtml + '</div>';
         } else {
           container.innerHTML = '<div style="font-size:0.75rem;color:var(--text-muted);padding:0.3rem 0;line-height:1.35;">' + helpTxt + '</div>';
         }
@@ -7283,11 +7322,6 @@ function calcInput(val) {
         last.v = mapped;
       } else {
         last.v += mapped;
-      }
-      if (last.v.length >= 4 && last.v.slice(-3) === '000' && !_kMode && !localStorage.getItem('calc_learned_kmode') && typeof setSmartHint === 'function') {
-        setTimeout(function() {
-          if (!_stickyActive && !_isVoiceListening) setSmartHint('kmode_hint', 4000);
-        }, 150);
       }
     } else {
       calcTokens.push({v: mapped, label: ''});
