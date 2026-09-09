@@ -4508,6 +4508,7 @@ function activateKModeFromHint() {
   toggleKMode(true);
   var el = document.getElementById('k-mode-toggle');
   if (el) el.checked = true;
+  if (typeof clearSmartHint === 'function') clearSmartHint();
   try { localStorage.setItem('calc_learned_kmode', '1'); } catch(e) {}
   showToast(_t('🔤 K-Mode Enabled (50k = 50,000)', '🔤 K-मोड चालू (50k = 50,000)', '🔤 K-Mode Chalu (50k = 50,000)'));
   calcUpdateDisplay();
@@ -6530,7 +6531,11 @@ window.openRazorpayPaymentPage = openRazorpayPaymentPage;
 window.confirmCompletedPayment = confirmCompletedPayment;
 
 function calcBtn(label) {
-  if (typeof clearSmartHint === 'function') clearSmartHint();
+  if (typeof clearSmartHint === 'function') {
+    if (_currentSmartHint !== 'kmode_hint' || ['0','1','2','3','4','5','6','7','8','9','.'].indexOf(label) === -1) {
+      clearSmartHint();
+    }
+  }
   if (_stickyActive) {
     if (['0','1','2','3','4','5','6','7','8','9','.'].indexOf(label) !== -1) {
       stickyInputDigit(label); return;
@@ -7124,17 +7129,21 @@ function renderCalcLabelEditor() {
           } else {
             btnHtml = '<button onclick="toggleFastLazy(true)" style="flex-shrink:0;background:#fbbf24;color:#000;border:none;border-radius:var(--radius-sm);padding:4px 9px;font-size:0.72rem;font-weight:700;cursor:pointer;line-height:1.3;touch-action:manipulation;">⚡ Fast 0.3s</button>';
           }
-        } else if (latestNum >= 1000 && !_kMode) {
-          btnHtml = '<button onclick="activateKModeFromHint()" style="flex-shrink:0;background:#fbbf24;color:#000;border:none;border-radius:var(--radius-sm);padding:4px 9px;font-size:0.72rem;font-weight:700;cursor:pointer;line-height:1.3;touch-action:manipulation;">⚡ K-Mode</button>';
-        } else if (_kMode && latestNum > 0) {
-          btnHtml = '<button onclick="deactivateKModeFromHint()" style="flex-shrink:0;background:var(--color-accent);color:#fff;border:none;border-radius:var(--radius-sm);padding:4px 9px;font-size:0.72rem;font-weight:700;cursor:pointer;line-height:1.3;touch-action:manipulation;">🔤 K-Mode ON</button>';
+        } else if (_currentSmartHint === 'kmode_hint' && !_kMode) {
+          btnHtml = '<div style="display:flex;align-items:center;gap:4px;flex-shrink:0;">' +
+            '<button onclick="activateKModeFromHint()" style="background:#fbbf24;color:#000;border:none;border-radius:var(--radius-sm);padding:4px 9px;font-size:0.72rem;font-weight:700;cursor:pointer;line-height:1.3;touch-action:manipulation;">⚡ K-Mode</button>' +
+            '<span onclick="clearSmartHint()" style="cursor:pointer;opacity:0.6;font-size:0.8rem;padding:0 2px;" title="Dismiss">✕</span>' +
+          '</div>';
         } else if (_currentSmartHint === 'tag_notes_hint') {
-          btnHtml = '<button onclick="tagLastTokenFromHint()" style="flex-shrink:0;background:var(--color-accent);color:#fff;border:none;border-radius:var(--radius-sm);padding:4px 9px;font-size:0.72rem;font-weight:700;cursor:pointer;line-height:1.3;touch-action:manipulation;">✏️ Add Note</button>';
-        } else {
-          var plusCount = calcTokens.filter(function(t) { return t && t.v === '+'; }).length;
-          if (plusCount >= 2 && !_stickyActive) {
-            btnHtml = '<button onclick="activateLazyFromHint()" style="flex-shrink:0;background:var(--color-accent);color:#fff;border:none;border-radius:var(--radius-sm);padding:4px 9px;font-size:0.72rem;font-weight:700;cursor:pointer;line-height:1.3;touch-action:manipulation;">🔒 Lock Lazy</button>';
-          }
+          btnHtml = '<div style="display:flex;align-items:center;gap:4px;flex-shrink:0;">' +
+            '<button onclick="tagLastTokenFromHint()" style="background:var(--color-accent);color:#fff;border:none;border-radius:var(--radius-sm);padding:4px 9px;font-size:0.72rem;font-weight:700;cursor:pointer;line-height:1.3;touch-action:manipulation;">✏️ Add Note</button>' +
+            '<span onclick="clearSmartHint()" style="cursor:pointer;opacity:0.6;font-size:0.8rem;padding:0 2px;" title="Dismiss">✕</span>' +
+          '</div>';
+        } else if (_currentSmartHint === 'lazy_lock_hint' && !_stickyActive) {
+          btnHtml = '<div style="display:flex;align-items:center;gap:4px;flex-shrink:0;">' +
+            '<button onclick="activateLazyFromHint()" style="background:var(--color-accent);color:#fff;border:none;border-radius:var(--radius-sm);padding:4px 9px;font-size:0.72rem;font-weight:700;cursor:pointer;line-height:1.3;touch-action:manipulation;">🔒 Lock Lazy</button>' +
+            '<span onclick="clearSmartHint()" style="cursor:pointer;opacity:0.6;font-size:0.8rem;padding:0 2px;" title="Dismiss">✕</span>' +
+          '</div>';
         }
       }
 
@@ -7148,7 +7157,7 @@ function renderCalcLabelEditor() {
         if (wRow) wRow.scrollLeft = wRow.scrollWidth;
       } else {
         if (btnHtml) {
-          var promptTxt = _stickyActive ? (_fastLazy ? '⚡ <b>Lazy Fast:</b> 0.3s auto-total.' : '🔒 <b>Lazy Normal:</b> 1s delay.') : (_currentSmartHint === 'tag_notes_hint' ? '🏷️ Tag Note (Chai, Petrol):' : '💡 Auto-total without pressing "+":');
+          var promptTxt = _stickyActive ? (_fastLazy ? '⚡ <b>Lazy Fast:</b> 0.3s auto-total.' : '🔒 <b>Lazy Normal:</b> 1s delay.') : (_currentSmartHint === 'tag_notes_hint' ? '🏷️ Tag Note (Chai, Petrol):' : (_currentSmartHint === 'kmode_hint' ? '💡 50k = 50,000:' : '💡 Auto-total without pressing "+":'));
           container.innerHTML = '<div style="display:flex;align-items:center;justify-content:space-between;width:100%;gap:0.4rem;padding:0.15rem 0.2rem;box-sizing:border-box;"><div style="font-size:0.74rem;color:var(--text-muted);line-height:1.25;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + promptTxt + '</div>' + btnHtml + '</div>';
         } else {
           container.innerHTML = '<div style="font-size:0.75rem;color:var(--text-muted);padding:0.3rem 0;line-height:1.35;">' + helpTxt + '</div>';
@@ -7326,6 +7335,15 @@ function calcInput(val) {
     } else {
       calcTokens.push({v: mapped, label: ''});
     }
+    var curTok = calcTokens[calcTokens.length - 1];
+    if (curTok && curTok.v) {
+      var rawNum = curTok.v.replace(/,/g, '');
+      if (rawNum.length >= 4 && rawNum.slice(-3) === '000' && !_kMode && typeof setSmartHint === 'function') {
+        setTimeout(function() {
+          if (!_stickyActive && !_isVoiceListening && !_kMode && !_currentSmartHint) setSmartHint('kmode_hint', 3500);
+        }, 100);
+      }
+    }
   }
 
   _editingCalcToken = -1;
@@ -7403,6 +7421,7 @@ function calcClear() {
     return;
   }
   deactivateSticky();
+  if (typeof clearSmartHint === 'function') clearSmartHint();
   _calcSavedTokens = null;
   if (!_calcSavedExpr || _calcSavedExpr === '0') {
     var str = calcExprFromTokens();
