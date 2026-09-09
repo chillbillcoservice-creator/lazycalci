@@ -7107,7 +7107,7 @@ function renderCalcLabelEditor() {
         if (hintData) {
           var btnHtml = '';
           if (hintData.btnText && hintData.action) {
-            btnHtml = '<button onclick="' + hintData.action + '" style="flex-shrink:0;' + hintData.btnStyle + 'border-radius:12px;padding:3px 9px;font-size:0.72rem;font-weight:700;cursor:pointer;line-height:1.3;touch-action:manipulation;">' + hintData.btnText + '</button>';
+            btnHtml = '<button onclick="' + hintData.action + '" style="flex-shrink:0;' + hintData.btnStyle + 'border-radius:var(--radius-sm);padding:4px 9px;font-size:0.72rem;font-weight:700;cursor:pointer;line-height:1.3;touch-action:manipulation;">' + hintData.btnText + '</button>';
           }
           var dismissHtml = !_stickyActive ? '<span onclick="clearSmartHint()" style="cursor:pointer;opacity:0.6;font-size:0.8rem;padding:0 2px;flex-shrink:0;" title="Dismiss">✕</span>' : '';
           container.innerHTML = '<div style="display:flex;align-items:center;justify-content:space-between;width:100%;gap:0.4rem;padding:0.15rem 0.2rem;box-sizing:border-box;"><div style="font-size:0.74rem;color:var(--text-muted);line-height:1.25;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + hintData.text + '</div>' + btnHtml + dismissHtml + '</div>';
@@ -10583,7 +10583,7 @@ var _smartHints = {
       '⚡ <b>लेज़ी फ़ास्ट:</b> 0.3s में तुरंत जुड़ेगा (2-3 छोटे हिसाब के लिए)।',
       '⚡ <b>Lazy Fast:</b> 0.3s me turant jodega (2-3 quick numbers ke liye best).'
     ],
-    btnText: ['[🔒 Normal 1s]', '[🔒 सामान्य 1s]', '[🔒 Normal 1s]'],
+    btnText: ['🔒 Normal 1s', '🔒 सामान्य 1s', '🔒 Normal 1s'],
     btnStyle: 'background:var(--bg-primary);color:var(--text-primary);border:1px solid var(--border-color);',
     action: 'toggleFastLazy(false)'
   },
@@ -10641,7 +10641,6 @@ var _smartHints = {
 
 var _currentSmartHint = null;
 var _smartHintTimer = null;
-var _idleCoachIndex = 0;
 
 function getSmartHintData(key) {
   var h = _smartHints[key];
@@ -10676,30 +10675,6 @@ function clearSmartHint() {
     renderCalcLabelEditor();
   }
 }
-
-function getNextIdleCoachKey() {
-  var keys = [];
-  if (!localStorage.getItem('calc_learned_lazy')) keys.push('lazy_lock_hint');
-  if (!localStorage.getItem('calc_learned_notes')) keys.push('tag_notes_hint');
-  if (!localStorage.getItem('calc_learned_kmode')) keys.push('kmode_hint');
-  if (!localStorage.getItem('calc_learned_voice')) keys.push('voice_hint');
-  if (keys.length === 0) return null;
-  _idleCoachIndex = (_idleCoachIndex + 1) % keys.length;
-  return keys[_idleCoachIndex];
-}
-
-function checkIdleCoach() {
-  if (!_smartHintsEnabled) return;
-  var isIdleZero = calcTokens.length === 1 && calcTokens[0].v === '0' && !calcTokens[0].label && !_stickyActive && _editingCalcToken === -1;
-  if (isIdleZero && !_currentSmartHint) {
-    var nextKey = getNextIdleCoachKey();
-    if (nextKey) {
-      setSmartHint(nextKey, 5500);
-    }
-  }
-}
-
-setInterval(checkIdleCoach, 7000);
 
 function renderSplitterMode(container) {
   if (!container) return;
