@@ -4525,10 +4525,6 @@ function deactivateKModeFromHint() {
 var _kModeHintShownInCalc = false;
 function dismissKModeHintPermanently() {
   _kModeHintShownInCalc = true;
-  try {
-    sessionStorage.setItem('calc_kmode_hint_done', '1');
-    localStorage.setItem('calc_learned_kmode', '1');
-  } catch(e) {}
   if (typeof clearSmartHint === 'function') clearSmartHint();
 }
 var _lazyDismissedInCalc = false;
@@ -6588,11 +6584,6 @@ function calcBtn(label) {
       calcUpdateDisplay();
       var _cd = document.getElementById("calc-display");
       if (_cd) { _cd.style.display = ''; _cd.textContent = "= " + fmtNum(finalResult); }
-      if (!localStorage.getItem('calc_learned_notes') && typeof setSmartHint === 'function') {
-        setTimeout(function() {
-          if (!_stickyActive && !_isVoiceListening) setSmartHint('tag_notes_hint', 5000);
-        }, 1500);
-      }
       return;
     }
     if (label === '±' && _stickyInput) { _stickyInput = String(-parseFloat(_stickyInput)); updateStickyDisplay(); return; }
@@ -7165,11 +7156,6 @@ function renderCalcLabelEditor() {
             '<button onclick="activateKModeFromHint()" style="background:#fbbf24;color:#000;border:none;border-radius:var(--radius-sm);padding:4px 9px;font-size:0.72rem;font-weight:700;cursor:pointer;line-height:1.3;touch-action:manipulation;">⚡ Use K-Mode</button>' +
             '<span onclick="dismissKModeHintPermanently()" style="cursor:pointer;opacity:0.6;font-size:0.8rem;padding:0 2px;" title="Dismiss">✕</span>' +
           '</div>';
-        } else if (_currentSmartHint === 'tag_notes_hint') {
-          btnHtml = '<div style="display:flex;align-items:center;gap:4px;flex-shrink:0;">' +
-            '<button onclick="tagLastTokenFromHint()" style="background:var(--color-accent);color:#fff;border:none;border-radius:var(--radius-sm);padding:4px 9px;font-size:0.72rem;font-weight:700;cursor:pointer;line-height:1.3;touch-action:manipulation;">✏️ Add Note</button>' +
-            '<span onclick="clearSmartHint()" style="cursor:pointer;opacity:0.6;font-size:0.8rem;padding:0 2px;" title="Dismiss">✕</span>' +
-          '</div>';
         } else if (!_stickyActive && !_lazyDismissedInCalc && calcTokens && calcTokens.filter(function(t) { return t && t.v === '+'; }).length >= 3) {
           btnHtml = '<div style="display:flex;align-items:center;gap:4px;flex-shrink:0;">' +
             '<button onclick="activateLazyFromHint()" style="background:#fbbf24;color:#000;border:none;border-radius:var(--radius-sm);padding:4px 9px;font-size:0.72rem;font-weight:700;cursor:pointer;line-height:1.3;touch-action:manipulation;">⚡ Turn on Lazy Mode</button>' +
@@ -7188,7 +7174,7 @@ function renderCalcLabelEditor() {
         if (wRow) wRow.scrollLeft = wRow.scrollWidth;
       } else {
         if (btnHtml) {
-          var promptTxt = _stickyActive ? (_fastLazy ? '⚡ <b>Lazy Fast:</b> 0.3s auto-total.' : '🔒 <b>Lazy Normal:</b> 1s delay.') : (_currentSmartHint === 'tag_notes_hint' ? '🏷️ Tag Note (Chai, Petrol):' : (_currentSmartHint === 'kmode_hint' ? '💡 50k = 50,000:' : '💡 Auto-total without pressing "+":'));
+          var promptTxt = _stickyActive ? (_fastLazy ? '⚡ <b>Lazy Fast:</b> 0.3s auto-total.' : '🔒 <b>Lazy Normal:</b> 1s delay.') : (_currentSmartHint === 'kmode_hint' ? '💡 50k = 50,000:' : '💡 Auto-total without pressing "+":');
           container.innerHTML = '<div style="display:flex;align-items:center;justify-content:space-between;width:100%;gap:0.4rem;padding:0.15rem 0.2rem;box-sizing:border-box;">' + btnHtml + '<div style="font-size:0.74rem;color:var(--text-muted);line-height:1.25;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;text-align:right;">' + promptTxt + '</div></div>';
         } else {
           container.innerHTML = '<div style="font-size:0.75rem;color:var(--text-muted);padding:0.3rem 0;line-height:1.35;">' + helpTxt + '</div>';
@@ -7335,6 +7321,8 @@ function calcInput(val) {
   if (!_calcShowExpr) {
     _calcShowExpr = true;
     _calcSavedExpr = '';
+    _kModeHintShownInCalc = false;
+    _lazyDismissedInCalc = false;
     if (['+','-','*','/','%'].indexOf(mapped) === -1) {
       calcTokens = [{v: '0', label: ''}];
     }
@@ -7362,13 +7350,8 @@ function calcInput(val) {
     if (curTok && curTok.v) {
       var rawNum = curTok.v.replace(/,/g, '');
       if (rawNum.length >= 4 && rawNum.slice(-3) === '000' && !_kMode && !_kModeHintShownInCalc) {
-        var isDismissed = false;
-        try {
-          isDismissed = sessionStorage.getItem('calc_kmode_hint_done') === '1' || localStorage.getItem('calc_learned_kmode') === '1';
-        } catch(e) {}
-        if (!isDismissed && typeof setSmartHint === 'function') {
+        if (typeof setSmartHint === 'function') {
           _kModeHintShownInCalc = true;
-          try { sessionStorage.setItem('calc_kmode_hint_done', '1'); } catch(e) {}
           setTimeout(function() {
             if (!_stickyActive && !_isVoiceListening && !_kMode && !_currentSmartHint) setSmartHint('kmode_hint', 4000);
           }, 100);
@@ -7436,11 +7419,6 @@ function calcEqual() {
     calcUpdateDisplay();
     document.getElementById('calc-display').textContent = '= ' + fmtNum(result);
     triggerResultPulse();
-    if (hasOp && !localStorage.getItem('calc_learned_notes') && typeof setSmartHint === 'function') {
-      setTimeout(function() {
-        if (!_stickyActive && !_isVoiceListening) setSmartHint('tag_notes_hint', 5000);
-      }, 1500);
-    }
   } catch(e) {}
 }
 
