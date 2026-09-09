@@ -4522,6 +4522,15 @@ function deactivateKModeFromHint() {
   calcUpdateDisplay();
   renderCalcLabelEditor();
 }
+var _kModeHintShownInCalc = false;
+function dismissKModeHintPermanently() {
+  _kModeHintShownInCalc = true;
+  try {
+    sessionStorage.setItem('calc_kmode_hint_done', '1');
+    localStorage.setItem('calc_learned_kmode', '1');
+  } catch(e) {}
+  if (typeof clearSmartHint === 'function') clearSmartHint();
+}
 function activateLazyFromHint() {
   try { localStorage.setItem('calc_learned_lazy', '1'); } catch(e) {}
   clearSmartHint();
@@ -7147,8 +7156,8 @@ function renderCalcLabelEditor() {
           }
         } else if (_currentSmartHint === 'kmode_hint' && !_kMode) {
           btnHtml = '<div style="display:flex;align-items:center;gap:4px;flex-shrink:0;">' +
-            '<button onclick="activateKModeFromHint()" style="background:#fbbf24;color:#000;border:none;border-radius:var(--radius-sm);padding:4px 9px;font-size:0.72rem;font-weight:700;cursor:pointer;line-height:1.3;touch-action:manipulation;">⚡ K-Mode</button>' +
-            '<span onclick="clearSmartHint()" style="cursor:pointer;opacity:0.6;font-size:0.8rem;padding:0 2px;" title="Dismiss">✕</span>' +
+            '<button onclick="activateKModeFromHint()" style="background:#fbbf24;color:#000;border:none;border-radius:var(--radius-sm);padding:4px 9px;font-size:0.72rem;font-weight:700;cursor:pointer;line-height:1.3;touch-action:manipulation;">⚡ Use K-Mode</button>' +
+            '<span onclick="dismissKModeHintPermanently()" style="cursor:pointer;opacity:0.6;font-size:0.8rem;padding:0 2px;" title="Dismiss">✕</span>' +
           '</div>';
         } else if (_currentSmartHint === 'tag_notes_hint') {
           btnHtml = '<div style="display:flex;align-items:center;gap:4px;flex-shrink:0;">' +
@@ -7165,7 +7174,7 @@ function renderCalcLabelEditor() {
 
       if (exprWords) {
         if (btnHtml) {
-          container.innerHTML = '<div style="display:flex;align-items:center;justify-content:space-between;width:100%;gap:0.4rem;padding:0.15rem 0.2rem;box-sizing:border-box;"><div id="calc-expr-words-row" style="flex:1;min-width:0;text-align:right;white-space:nowrap;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none;font-size:0.85rem;font-style:italic;font-weight:600;color:var(--text-muted);line-height:1.2;" title="' + escHtml(exprWords) + '">' + escHtml(exprWords) + '</div>' + btnHtml + '</div>';
+          container.innerHTML = '<div style="display:flex;align-items:center;justify-content:space-between;width:100%;gap:0.4rem;padding:0.15rem 0.2rem;box-sizing:border-box;">' + btnHtml + '<div id="calc-expr-words-row" style="flex:1;min-width:0;text-align:right;white-space:nowrap;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none;font-size:0.85rem;font-style:italic;font-weight:600;color:var(--text-muted);line-height:1.2;" title="' + escHtml(exprWords) + '">' + escHtml(exprWords) + '</div></div>';
         } else {
           container.innerHTML = '<div id="calc-expr-words-row" style="width:100%;text-align:right;padding:0.25rem 0.85rem;box-sizing:border-box;white-space:nowrap;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none;font-size:0.85rem;font-style:italic;font-weight:600;color:var(--text-muted);line-height:1.2;" title="' + escHtml(exprWords) + '">' + escHtml(exprWords) + '</div>';
         }
@@ -7174,7 +7183,7 @@ function renderCalcLabelEditor() {
       } else {
         if (btnHtml) {
           var promptTxt = _stickyActive ? (_fastLazy ? '⚡ <b>Lazy Fast:</b> 0.3s auto-total.' : '🔒 <b>Lazy Normal:</b> 1s delay.') : (_currentSmartHint === 'tag_notes_hint' ? '🏷️ Tag Note (Chai, Petrol):' : (_currentSmartHint === 'kmode_hint' ? '💡 50k = 50,000:' : '💡 Auto-total without pressing "+":'));
-          container.innerHTML = '<div style="display:flex;align-items:center;justify-content:space-between;width:100%;gap:0.4rem;padding:0.15rem 0.2rem;box-sizing:border-box;"><div style="font-size:0.74rem;color:var(--text-muted);line-height:1.25;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + promptTxt + '</div>' + btnHtml + '</div>';
+          container.innerHTML = '<div style="display:flex;align-items:center;justify-content:space-between;width:100%;gap:0.4rem;padding:0.15rem 0.2rem;box-sizing:border-box;">' + btnHtml + '<div style="font-size:0.74rem;color:var(--text-muted);line-height:1.25;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;text-align:right;">' + promptTxt + '</div></div>';
         } else {
           container.innerHTML = '<div style="font-size:0.75rem;color:var(--text-muted);padding:0.3rem 0;line-height:1.35;">' + helpTxt + '</div>';
         }
@@ -7354,10 +7363,18 @@ function calcInput(val) {
     var curTok = calcTokens[calcTokens.length - 1];
     if (curTok && curTok.v) {
       var rawNum = curTok.v.replace(/,/g, '');
-      if (rawNum.length >= 4 && rawNum.slice(-3) === '000' && !_kMode && typeof setSmartHint === 'function') {
-        setTimeout(function() {
-          if (!_stickyActive && !_isVoiceListening && !_kMode && !_currentSmartHint) setSmartHint('kmode_hint', 3500);
-        }, 100);
+      if (rawNum.length >= 4 && rawNum.slice(-3) === '000' && !_kMode && !_kModeHintShownInCalc) {
+        var isDismissed = false;
+        try {
+          isDismissed = sessionStorage.getItem('calc_kmode_hint_done') === '1' || localStorage.getItem('calc_learned_kmode') === '1';
+        } catch(e) {}
+        if (!isDismissed && typeof setSmartHint === 'function') {
+          _kModeHintShownInCalc = true;
+          try { sessionStorage.setItem('calc_kmode_hint_done', '1'); } catch(e) {}
+          setTimeout(function() {
+            if (!_stickyActive && !_isVoiceListening && !_kMode && !_currentSmartHint) setSmartHint('kmode_hint', 4000);
+          }, 100);
+        }
       }
     }
   }
@@ -7439,6 +7456,7 @@ function calcClear() {
   deactivateSticky();
   if (typeof clearSmartHint === 'function') clearSmartHint();
   _calcSavedTokens = null;
+  _kModeHintShownInCalc = false;
   if (!_calcSavedExpr || _calcSavedExpr === '0') {
     var str = calcExprFromTokens();
     if (str !== '0') {
