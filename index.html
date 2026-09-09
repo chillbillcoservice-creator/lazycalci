@@ -4798,6 +4798,7 @@ function openCalculator() {
     this.style.fontSize = '1.7rem';
     _exprFontSize = 1.7;
     if (_exprResetTimer) clearTimeout(_exprResetTimer);
+    scrollExprToEnd();
   };
   var savedMode = localStorage.getItem('calc_mode') || 'basic';
   if (savedMode !== 'basic') {
@@ -6653,6 +6654,7 @@ function updateStickyDisplay() {
   expr.style.fontWeight = '700';
   expr.innerHTML = escHtml(fullText);
   fitExprFontSize(expr);
+  scrollExprToEnd();
 
   // Final output row: 🔒 LAZY MODE sticker on left, total on right
   display.style.display = 'flex';
@@ -6676,6 +6678,20 @@ function updateStickyOpHighlight() {
   }
 }
 
+function scrollExprToEnd() {
+  var expr = document.getElementById('calc-expression');
+  if (!expr) return;
+  expr.scrollLeft = expr.scrollWidth;
+  if (typeof requestAnimationFrame === 'function') {
+    requestAnimationFrame(function() {
+      if (expr) expr.scrollLeft = expr.scrollWidth;
+    });
+  }
+  setTimeout(function() {
+    if (expr) expr.scrollLeft = expr.scrollWidth;
+  }, 10);
+}
+
 function fitExprFontSize(expr) {
   if (!expr) return;
   if (_exprResetTimer) { clearTimeout(_exprResetTimer); _exprResetTimer = null; }
@@ -6685,16 +6701,8 @@ function fitExprFontSize(expr) {
     var ratio = expr.clientWidth / expr.scrollWidth;
     _exprFontSize = Math.max(1.1, 1.7 * ratio);
     expr.style.fontSize = _exprFontSize.toFixed(2) + 'rem';
-
-    _exprResetTimer = setTimeout(function() {
-      var e = document.getElementById('calc-expression');
-      if (e && _calcShowExpr && !_stickyActive) {
-        e.style.fontSize = '1.7rem';
-        _exprFontSize = 1.7;
-      }
-      _exprResetTimer = null;
-    }, 1500);
   }
+  scrollExprToEnd();
 }
 
 function triggerResultPulse() {
@@ -6807,7 +6815,7 @@ function calcUpdateDisplay(skipEditor) {
   });
   expr.innerHTML = parts.join('');
   fitExprFontSize(expr);
-  expr.scrollLeft = expr.scrollWidth;
+  scrollExprToEnd();
 
   try {
     var live = evalExpr(str);
