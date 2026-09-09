@@ -4549,8 +4549,24 @@ function toggleShowWords(v) {
   renderCalcLabelEditor();
 }
 function toggleKMode(v) {
+  var prev = _kMode;
   _kMode = v;
   localStorage.setItem('calc_k_mode', v);
+  if (prev !== v && calcTokens && calcTokens.length > 0) {
+    calcTokens.forEach(function(tok) {
+      if (tok && ['+','-','*','/','%','×','÷'].indexOf(tok.v) === -1) {
+        var clean = String(tok.v).replace(/,/g, '');
+        var n = parseFloat(clean);
+        if (!isNaN(n)) {
+          if (v && n >= 1000) {
+            tok.v = String(n / 1000);
+          } else if (!v && n > 0) {
+            tok.v = String(n * 1000);
+          }
+        }
+      }
+    });
+  }
   calcUpdateDisplay();
 }
 function toggleShareMode(v) {
