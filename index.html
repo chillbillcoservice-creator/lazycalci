@@ -6581,7 +6581,7 @@ function calcBtn(label) {
       deactivateSticky();
       calcTokens = parseExprToTokens(fullExpr);
       _calcSavedExpr = "";
-      _calcShowExpr = true;
+      _calcShowExpr = false;
       calcUpdateDisplay();
       var _cd = document.getElementById("calc-display");
       if (_cd) { _cd.style.display = ''; _cd.textContent = "= " + fmtNum(finalResult); }
@@ -7377,10 +7377,20 @@ function calcInput(val) {
 
 function calcEqual() {
   if (!_calcShowExpr) {
+    if (_kMode) {
+      _kMode = false;
+      try { localStorage.setItem('calc_k_mode', 'false'); } catch(e) {}
+      var kEl = document.getElementById('k-mode-toggle');
+      if (kEl) kEl.checked = false;
+    }
+    _kModeHintShownInCalc = false;
+    _lazyDismissedInCalc = false;
+    if (typeof clearSmartHint === 'function') clearSmartHint();
     calcTokens = [{v: '0', label: ''}];
     _calcShowExpr = true;
     _calcSavedExpr = '';
     calcUpdateDisplay();
+    renderCalcLabelEditor();
     return;
   }
 
