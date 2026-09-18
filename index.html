@@ -4501,20 +4501,17 @@ function toggleSmartHints(v) {
   localStorage.setItem('calc_smart_hints', v ? 'true' : 'false');
   var el = document.getElementById('smart-hints-toggle');
   if (el) el.checked = v;
-  showToast(v ? _t('💡 Smart Hints Enabled', '💡 स्मार्ट हिंट्स चालू', '💡 Smart Hints Chalu') : _t('💡 Smart Hints Disabled', '💡 स्मार्ट हिंट्स बंद', '💡 Smart Hints Band'));
   renderCalcLabelEditor();
 }
 function activateKModeFromHint() {
   toggleKMode(true, false);
   if (typeof clearSmartHint === 'function') clearSmartHint();
-  showToast(_t('🔤 K-Mode Enabled (50k = 50,000)', '🔤 K-मोड चालू (50k = 50,000)', '🔤 K-Mode Chalu (50k = 50,000)'));
   calcUpdateDisplay();
   renderCalcLabelEditor();
 }
 function deactivateKModeFromHint() {
   toggleKMode(false, false);
   try { localStorage.setItem('calc_k_mode', 'false'); } catch(e) {}
-  showToast(_t('🔤 K-Mode Disabled', '🔤 K-मोड बंद हुआ', '🔤 K-Mode Band Hua'));
   calcUpdateDisplay();
   renderCalcLabelEditor();
 }
@@ -4532,7 +4529,6 @@ function activateLazyFromHint() {
   _lazyDismissedInCalc = true;
   if (typeof clearSmartHint === 'function') clearSmartHint();
   activateStickyMode('+');
-  showToast(_t('🔒 Lazy Mode Locked! Direct numbers type karein', '🔒 लेज़ी मोड चालू! सीधे संख्या टाइप करें', '🔒 Lazy Mode Locked! Direct numbers type karein'));
   renderCalcLabelEditor();
 }
 function tagLastTokenFromHint() {
@@ -6633,10 +6629,8 @@ function stickyOpLeave() {
 function toggleStickySetting(checked) {
   if (checked) {
     if (!_stickyActive) activateStickyMode('+');
-    showToast('🔒 ' + _t('Lazy Mode Active', 'लैज़ी मोड एक्टिव', 'Lazy mode active'));
   } else {
     if (_stickyActive) deactivateSticky();
-    showToast(_t('Lazy Mode Disabled', 'लैज़ी मोड बंद हुआ', 'Lazy mode band hua'));
   }
 }
 function activateStickyMode(op) {
@@ -7153,19 +7147,11 @@ function renderCalcLabelEditor() {
             btnHtml = '<button onclick="toggleFastLazy(true)" style="flex-shrink:0;background:#fbbf24;color:#000;border:none;border-radius:var(--radius-sm);padding:4px 9px;font-size:0.72rem;font-weight:700;cursor:pointer;line-height:1.3;touch-action:manipulation;">⚡ Fast 0.3s</button>';
           }
         } else if (_kMode) {
-          btnHtml = '<div style="display:flex;align-items:center;gap:4px;flex-shrink:0;">' +
-            '<button onclick="deactivateKModeFromHint()" style="background:rgba(251,191,36,0.18);color:#fbbf24;border:1px solid rgba(251,191,36,0.4);border-radius:var(--radius-sm);padding:3px 8px;font-size:0.72rem;font-weight:700;cursor:pointer;line-height:1.3;touch-action:manipulation;" title="Turn off K-Mode">🔤 K-Mode: ON ✕</button>' +
-          '</div>';
+          btnHtml = '<button onclick="deactivateKModeFromHint()" style="flex-shrink:0;background:rgba(251,191,36,0.18);color:#fbbf24;border:1px solid rgba(251,191,36,0.4);border-radius:var(--radius-sm);padding:3px 8px;font-size:0.72rem;font-weight:700;cursor:pointer;line-height:1.3;touch-action:manipulation;" title="Turn off K-Mode">🔤 K-Mode: ON</button>';
         } else if (_currentSmartHint === 'kmode_hint' && !_kMode) {
-          btnHtml = '<div style="display:flex;align-items:center;gap:4px;flex-shrink:0;">' +
-            '<button onclick="activateKModeFromHint()" style="background:#fbbf24;color:#000;border:none;border-radius:var(--radius-sm);padding:4px 9px;font-size:0.72rem;font-weight:700;cursor:pointer;line-height:1.3;touch-action:manipulation;">⚡ Use K-Mode</button>' +
-            '<span onclick="dismissKModeHintPermanently()" style="cursor:pointer;opacity:0.6;font-size:0.8rem;padding:0 2px;" title="Dismiss">✕</span>' +
-          '</div>';
+          btnHtml = '<button onclick="activateKModeFromHint()" style="flex-shrink:0;background:#fbbf24;color:#000;border:none;border-radius:var(--radius-sm);padding:4px 9px;font-size:0.72rem;font-weight:700;cursor:pointer;line-height:1.3;touch-action:manipulation;">⚡ Use K-Mode</button>';
         } else if (!_stickyActive && !_lazyDismissedInCalc && calcTokens && calcTokens.filter(function(t) { return t && t.v === '+'; }).length >= 3) {
-          btnHtml = '<div style="display:flex;align-items:center;gap:4px;flex-shrink:0;">' +
-            '<button onclick="activateLazyFromHint()" style="background:#fbbf24;color:#000;border:none;border-radius:var(--radius-sm);padding:4px 9px;font-size:0.72rem;font-weight:700;cursor:pointer;line-height:1.3;touch-action:manipulation;">⚡ Turn on Lazy Mode</button>' +
-            '<span onclick="dismissLazyHintInCalc()" style="cursor:pointer;opacity:0.6;font-size:0.8rem;padding:0 2px;" title="Dismiss">✕</span>' +
-          '</div>';
+          btnHtml = '<button onclick="activateLazyFromHint()" style="flex-shrink:0;background:#fbbf24;color:#000;border:none;border-radius:var(--radius-sm);padding:4px 9px;font-size:0.72rem;font-weight:700;cursor:pointer;line-height:1.3;touch-action:manipulation;">⚡ Turn on Lazy Mode</button>';
         }
       }
 
@@ -7179,7 +7165,7 @@ function renderCalcLabelEditor() {
         if (wRow) wRow.scrollLeft = wRow.scrollWidth;
       } else {
         if (btnHtml) {
-          var promptTxt = _stickyActive ? (_fastLazy ? '⚡ <b>Lazy Fast:</b> 0.3s auto-total.' : '🔒 <b>Lazy Normal:</b> 1s delay.') : (_kMode ? '🔤 K-Mode Active (Tap ✕ to exit):' : (_currentSmartHint === 'kmode_hint' ? '💡 50k = 50,000:' : '💡 Auto-total without pressing "+":'));
+          var promptTxt = _stickyActive ? (_fastLazy ? '⚡ <b>Lazy Fast:</b> 0.3s auto-total.' : '🔒 <b>Lazy Normal:</b> 1s delay.') : (_kMode ? '🔤 K-Mode Active (Tap button to exit):' : (_currentSmartHint === 'kmode_hint' ? '💡 50k = 50,000:' : '💡 Auto-total without pressing "+":'));
           container.innerHTML = '<div style="display:flex;align-items:center;justify-content:space-between;width:100%;gap:0.4rem;padding:0.15rem 0.2rem;box-sizing:border-box;">' + btnHtml + '<div style="font-size:0.74rem;color:var(--text-muted);line-height:1.25;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;text-align:right;">' + promptTxt + '</div></div>';
         } else {
           container.innerHTML = '<div style="font-size:0.75rem;color:var(--text-muted);padding:0.3rem 0;line-height:1.35;">' + helpTxt + '</div>';
