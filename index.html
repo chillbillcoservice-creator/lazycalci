@@ -6923,14 +6923,21 @@ function calcUpdateDisplay(skipEditor) {
   scrollExprToEnd();
 
   try {
-    var live = evalExpr(str);
+    var evalTokens = calcTokens.slice();
+    while (evalTokens.length > 0 && ['+','-','*','/','%'].indexOf(evalTokens[evalTokens.length - 1].v) !== -1) {
+      evalTokens.pop();
+    }
+    var evalStr = evalTokens.map(function(t) { return t.v; }).join('');
+    var live = evalStr ? evalExpr(evalStr) : 0;
     if (isFinite(live)) {
       display.textContent = fmtNum(live);
       updateOutputWords(live);
     } else {
+      display.textContent = '0';
       updateOutputWords(null);
     }
   } catch(e) {
+    display.textContent = '0';
     updateOutputWords(null);
   }
 
