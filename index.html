@@ -3134,7 +3134,8 @@ function calcExprFromTokens() {
 
 function parseExprToTokens(expr) {
   var tokens = [];
-  var parts = expr.replace(/×/g, '*').replace(/÷/g, '/').match(/(\d+(?:\.\d+)?)|([+\-*/%])/g);
+  var cleanStr = (expr || '').replace(/,/g, '').replace(/×/g, '*').replace(/÷/g, '/');
+  var parts = cleanStr.match(/(\d+(?:\.\d+)?)|([+\-*/%])/g);
   if (parts) {
     parts.forEach(function(p) {
       if (/^[\d.]+$/.test(p)) tokens.push({v: p, label: ''});
@@ -6599,27 +6600,56 @@ function stickyOpDown(op) {
   if (_stickyActive) {
     _stickyOpPending = op;
     _stickyOpTimer = setTimeout(function() {
-      if (op === _stickyOp) { var finalR = _stickyResult; var fullExpr = _stickyFullExpr; deactivateSticky(); calcTokens = parseExprToTokens(fullExpr); _calcSavedExpr = ""; _calcShowExpr = true; calcUpdateDisplay(); document.getElementById("calc-display").textContent = "= " + fmtNum(finalR); return; }
-      else { stickyFlush(); _stickyOp = op; updateStickyOpHighlight(); updateStickyDisplay(); }
+      if (op === _stickyOp) {
+        var finalR = _stickyResult;
+        var fullExpr = _stickyFullExpr;
+        _stickyOpTimer = null;
+        _stickyOpPending = null;
+        deactivateSticky();
+        calcTokens = parseExprToTokens(fullExpr);
+        _calcSavedExpr = "";
+        _calcShowExpr = true;
+        calcUpdateDisplay();
+        document.getElementById("calc-display").textContent = "= " + fmtNum(finalR);
+        return;
+      } else {
+        if (_stickyInput) stickyFlush();
+        _stickyOp = op;
+        updateStickyOpHighlight();
+        updateStickyDisplay();
+      }
       _stickyOpTimer = null;
+      _stickyOpPending = null;
     }, 400);
     return;
   }
   _stickyOpPending = op;
   _stickyOpTimer = setTimeout(function() {
-    activateStickyMode(op);
     _stickyOpTimer = null;
+    _stickyOpPending = null;
+    activateStickyMode(op);
   }, 400);
 }
 function stickyOpUp() {
   if (_stickyActive && _stickyOpTimer) {
-    clearTimeout(_stickyOpTimer); _stickyOpTimer = null;
-    var op = _stickyOpPending; _stickyOpPending = null;
-    stickyFlush(); _stickyOp = op; updateStickyOpHighlight(); updateStickyDisplay();
+    clearTimeout(_stickyOpTimer);
+    _stickyOpTimer = null;
+    var op = _stickyOpPending;
+    _stickyOpPending = null;
+    if (_stickyInput) {
+      stickyFlush();
+    }
+    _stickyOp = op;
+    updateStickyOpHighlight();
+    updateStickyDisplay();
     return;
   }
   if (_stickyActive) return;
-  if (_stickyOpTimer) { clearTimeout(_stickyOpTimer); _stickyOpTimer = null; calcBtn(_stickyOpPending); }
+  if (_stickyOpTimer) {
+    clearTimeout(_stickyOpTimer);
+    _stickyOpTimer = null;
+    calcBtn(_stickyOpPending);
+  }
   _stickyOpPending = null;
 }
 function stickyOpLeave() {
@@ -6639,12 +6669,16 @@ function activateStickyMode(op) {
   var currentTotal = 0;
   var formattedFullExpr = '';
   if (calcTokens && calcTokens.length) {
+    var evalTokens = calcTokens.slice();
+    while (evalTokens.length > 0 && ['+','-','*','/','%'].indexOf(evalTokens[evalTokens.length - 1].v) !== -1) {
+      evalTokens.pop();
+    }
+    var evalStr = evalTokens.map(function(t) { return t.v; }).join('');
     try {
-      var exprStr = calcExprFromTokens();
-      var evaluated = evalExpr(exprStr);
+      var evaluated = evalStr ? evalExpr(evalStr) : 0;
       if (isFinite(evaluated)) currentTotal = evaluated;
     } catch(e) {}
-    var validTokens = calcTokens.filter(function(t) { return t && t.v !== undefined; });
+    var validTokens = evalTokens.filter(function(t) { return t && t.v !== undefined; });
     if (validTokens.length > 1 || (validTokens.length === 1 && validTokens[0].v !== '0' && validTokens[0].v !== '')) {
       formattedFullExpr = validTokens.map(function(t) {
         if (['+','-','*','/','%'].indexOf(t.v) !== -1) return ' ' + (t.v === '*' ? '×' : t.v === '/' ? '÷' : t.v) + ' ';
@@ -6659,7 +6693,8 @@ function activateStickyMode(op) {
     formattedFullExpr = currentTotal !== 0 ? fmtNum(currentTotal) : '';
   }
   _stickyResult = currentTotal;
-  _stickyFullExpr = formattedFullExpr;
+  _stickyFullExpr = formattedFullExpr ? formattedFullExpr.replace(/\s*[+\-×÷*\/]\s*$/, '').trim() : '';
+  _stickyFullExpr = _stickyFullExpr.replace(/([+\-×÷*\/])\s*([+\-×÷*\/])+/g, '$1');
   _stickyLastExpr = _stickyFullExpr;
   _stickyInput = ''; _stickyActive = true;
   _fastLazy = false;
@@ -6711,10 +6746,49 @@ function stickyInputDigit(d) {
   updateStickyDisplay();
 }
 function stickyBackspace() {
-  if (!_stickyActive || !_stickyInput) return;
+  if (!_stickyActive) return;
   if (_stickyTimer) { clearTimeout(_stickyTimer); _stickyTimer = null; }
-  _stickyInput = _stickyInput.slice(0, -1);
-  updateStickyDisplay();
+  if (_stickyInput) {
+    _stickyInput = _stickyInput.slice(0, -1);
+    if (_stickyInput) {
+      _stickyTimer = setTimeout(function() { stickyFlush(); }, _fastLazy ? 300 : 1000);
+    }
+    updateStickyDisplay();
+    return;
+  }
+  // When _stickyInput is empty, pull the last number back from _stickyFullExpr
+  if (_stickyFullExpr) {
+    var cleanBase = _stickyFullExpr.replace(/,/g, '').replace(/\s*[+\-×÷*\/]\s*$/, '').trim();
+    var tokens = parseExprToTokens(cleanBase);
+    if (tokens && tokens.length) {
+      var lastNumToken = tokens.pop(); // pop the last number
+      // if there's an operator before it, pop operator too
+      if (tokens.length && ['+','-','*','/','%'].indexOf(tokens[tokens.length - 1].v) !== -1) {
+        tokens.pop();
+      }
+      var rawVal = lastNumToken.v || '';
+      _stickyInput = rawVal.length > 1 ? rawVal.slice(0, -1) : '';
+      if (_stickyInput) {
+        _stickyTimer = setTimeout(function() { stickyFlush(); }, _fastLazy ? 300 : 1000);
+      }
+      // Reconstruct remaining _stickyFullExpr and _stickyResult
+      if (tokens.length) {
+        var evalStr = tokens.map(function(t) { return t.v; }).join('');
+        _stickyResult = evalStr ? evalExpr(evalStr) : 0;
+        if (!isFinite(_stickyResult)) _stickyResult = 0;
+        _stickyFullExpr = tokens.map(function(t) {
+          if (['+','-','*','/','%'].indexOf(t.v) !== -1) return ' ' + (t.v === '*' ? '×' : t.v === '/' ? '÷' : t.v) + ' ';
+          var valFormatted = fmtTokenVal(t.v);
+          return t.label ? valFormatted + '(' + t.label + ')' : valFormatted;
+        }).join('');
+      } else {
+        _stickyFullExpr = '';
+        _stickyResult = 0;
+      }
+      _stickyLastExpr = _stickyFullExpr;
+      updateStickyDisplay();
+    }
+  }
 }
 function stickyFlush() {
   if (!_stickyActive) return;
@@ -6737,9 +6811,12 @@ function stickyFlush() {
     }
   }
   var inputFormatted = fmtNum(num);
-  _stickyFullExpr = (_stickyFullExpr ? _stickyFullExpr + ' ' + opDisplay + ' ' : '') + inputFormatted;
+  var cleanBase = _stickyFullExpr ? _stickyFullExpr.replace(/\s*[+\-×÷*\/]\s*$/, '').trim() : '';
+  _stickyFullExpr = (cleanBase ? cleanBase + ' ' + opDisplay + ' ' : '') + inputFormatted;
+  _stickyFullExpr = _stickyFullExpr.replace(/([+\-×÷*\/])\s*([+\-×÷*\/])+/g, '$1');
   _stickyLastExpr = _stickyFullExpr;
-  _stickyResult = res; _stickyInput = '';
+  _stickyResult = res;
+  _stickyInput = '';
   updateStickyDisplay();
 }
 function updateStickyDisplay() {
@@ -6750,13 +6827,35 @@ function updateStickyDisplay() {
   var opDisplay = _stickyOp === '*' ? '×' : (_stickyOp === '/' ? '÷' : _stickyOp);
 
   var fullText = '';
+  var displayVal = _stickyResult;
   if (_stickyInput) {
     var n = parseFloat(_stickyInput);
     var formattedInput = isNaN(n) ? _stickyInput : fmtNum(n);
-    fullText = (_stickyFullExpr ? _stickyFullExpr + ' ' + opDisplay + ' ' : '') + formattedInput;
+    var cleanBase = _stickyFullExpr ? _stickyFullExpr.replace(/\s*[+\-×÷*\/]\s*$/, '').trim() : '';
+    fullText = (cleanBase ? cleanBase + ' ' + opDisplay + ' ' : '') + formattedInput;
+    if (!isNaN(n)) {
+      if (!_stickyFullExpr && _stickyResult === 0) {
+        displayVal = n;
+      } else {
+        switch (_stickyOp) {
+          case '+': displayVal = _stickyResult + n; break;
+          case '-': displayVal = _stickyResult - n; break;
+          case '×':
+          case '*': displayVal = _stickyResult * n; break;
+          case '÷':
+          case '/': if (n !== 0) displayVal = _stickyResult / n; break;
+        }
+      }
+    }
   } else {
     fullText = _stickyFullExpr || _stickyLastExpr || '0';
+    if (_stickyFullExpr && !/\s*[+\-×÷*\/]\s*$/.test(fullText)) {
+      fullText = fullText + ' ' + opDisplay;
+    }
   }
+
+  // Strictly collapse any duplicate operators: e.g. "+ +" -> "+"
+  fullText = fullText.replace(/([+\-×÷*\/])\s*([+\-×÷*\/])+/g, '$1');
 
   // Top expression row: full expression only, right aligned
   expr.style.display = 'block';
@@ -6774,12 +6873,12 @@ function updateStickyDisplay() {
   display.style.display = '';
   display.style.justifyContent = '';
   display.style.alignItems = '';
-  display.textContent = fmtNum(_stickyResult);
+  display.textContent = fmtNum(displayVal);
   var oldSpans = display.querySelectorAll('span');
   if (oldSpans && oldSpans.length) {
     oldSpans.forEach(function(s) { s.remove(); });
   }
-  updateOutputWords(_stickyResult);
+  updateOutputWords(displayVal);
   renderCalcLabelEditor();
 }
 function updateStickyOpHighlight() {
