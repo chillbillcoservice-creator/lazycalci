@@ -6775,6 +6775,10 @@ function updateStickyDisplay() {
   display.style.justifyContent = '';
   display.style.alignItems = '';
   display.textContent = fmtNum(_stickyResult);
+  var oldSpans = display.querySelectorAll('span');
+  if (oldSpans && oldSpans.length) {
+    oldSpans.forEach(function(s) { s.remove(); });
+  }
   updateOutputWords(_stickyResult);
   renderCalcLabelEditor();
 }
@@ -12513,8 +12517,18 @@ updateShareIconUI();
 updateExpensesBadge();
 updateNavPositionUI();
 
+if ('caches' in window) {
+  caches.keys().then(function(names) {
+    names.forEach(function(name) {
+      if (name !== 'lazy-calc-v2.6.0') caches.delete(name);
+    });
+  });
+}
+
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js?v=2.4.0').catch(function(err) {
+  navigator.serviceWorker.register('sw.js?v=2.6.0').then(function(reg) {
+    reg.update();
+  }).catch(function(err) {
     console.log('SW registration failed:', err);
   });
 }

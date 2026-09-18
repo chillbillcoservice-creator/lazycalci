@@ -1,8 +1,8 @@
 node_modules
 .vercel
 .netlify
-sw.js
 *.log
+beta/sw.js
 backup-*/
 *.backup.*
 
