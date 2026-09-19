@@ -1077,21 +1077,11 @@ body {
       </div>
       <div class="toggle-row">
         <div>
-          <span class="toggle-label" id="lbl-lazy-normal">🔒 LAZY MODE NORMAL</span>
-          <span class="toggle-desc" id="desc-lazy-normal">Locks operator for fast repetitive calculations, Total appears automatically. Good for long expressions (long-press + - × ÷ to activate).</span>
+          <span class="toggle-label" id="lbl-lazy-normal">⚡ LAZY MODE</span>
+          <span class="toggle-desc" id="desc-lazy-normal">Auto-totals calculations without pressing "+". (Long-press + - × ÷ to activate).</span>
         </div>
         <label class="toggle-switch">
           <input type="checkbox" id="sticky-mode-toggle" onchange="toggleStickySetting(this.checked)">
-          <span class="toggle-slider"></span>
-        </label>
-      </div>
-      <div class="toggle-row">
-        <div>
-          <span class="toggle-label" id="lbl-lazy-fast">⚡ LAZY MODE FAST</span>
-          <span class="toggle-desc" id="desc-lazy-fast">Total appears automatically & instantly (best for 2-3 terms like 25+26+27)</span>
-        </div>
-        <label class="toggle-switch">
-          <input type="checkbox" id="fast-lazy-toggle" onchange="toggleFastLazy(this.checked)">
           <span class="toggle-slider"></span>
         </label>
       </div>
@@ -4017,10 +4007,8 @@ function setAppLanguage(lang) {
     if (dHaptic) dHaptic.textContent = 'बटन दबाने पर हल्का वाइब्रेशन फीडबैक';
     if (lSound) lSound.textContent = '🔊 बटन क्लिक साउंड';
     if (dSound) dSound.textContent = 'बटन दबाने पर ऑडियो क्लीक आवाज़';
-    if (lLazyNorm) lLazyNorm.textContent = '🔒 लेज़ी मोड (नॉर्मल)';
-    if (dLazyNorm) dLazyNorm.textContent = 'तेज़ गणना के लिए ऑपरेटर लॉक रखता है, कुल अपने आप आता है।';
-    if (lLazyFast) lLazyFast.textContent = '⚡ लेज़ी मोड (फास्ट)';
-    if (dLazyFast) dLazyFast.textContent = 'कुल तुरंत और अपने आप दिखता है (2-3 संख्याओं के लिए बेस्ट)';
+    if (lLazyNorm) lLazyNorm.textContent = '⚡ लेज़ी मोड (ऑटो-टोटल)';
+    if (dLazyNorm) dLazyNorm.textContent = 'बिना "+" दबाए अपने आप कुल हिसाब करता है (एक्टिवेट करने के लिए + - × ÷ दबाकर रखें)';
     if (lKMode) lKMode.textContent = '🔤 हज़ार (K) मोड';
     if (dKMode) dKMode.textContent = 'संख्याओं को हज़ारों में दिखाता है (1k + 2k = 3k)';
     if (lWords) lWords.textContent = '💬 शब्द मोड (सक्रिय संख्या शब्दों में)';
@@ -4057,10 +4045,8 @@ function setAppLanguage(lang) {
     if (dHaptic) dHaptic.textContent = 'Button press par halka vibration feedback';
     if (lSound) lSound.textContent = '🔊 Key Click Sound';
     if (dSound) dSound.textContent = 'Button press par audio click sound';
-    if (lLazyNorm) lLazyNorm.textContent = '🔒 Lazy Mode Normal';
-    if (dLazyNorm) dLazyNorm.textContent = 'Fast calculation ke liye operator lock rehta hai';
-    if (lLazyFast) lLazyFast.textContent = '⚡ Lazy Mode Fast';
-    if (dLazyFast) dLazyFast.textContent = 'Total turant dikhta hai (2-3 terms ke liye best)';
+    if (lLazyNorm) lLazyNorm.textContent = '⚡ Lazy Mode';
+    if (dLazyNorm) dLazyNorm.textContent = 'Bina "+" dabaye auto-total calculate karta hai (long-press + - × ÷ to activate)';
     if (lKMode) lKMode.textContent = '🔤 K Mode (Thousands)';
     if (dKMode) dKMode.textContent = 'Numbers ko thousands me convert karta hai (1k + 2k = 3k)';
     if (lWords) lWords.textContent = '💬 Words Mode (Active Number In Words)';
@@ -4097,10 +4083,8 @@ function setAppLanguage(lang) {
     if (dHaptic) dHaptic.textContent = 'Subtle tactile vibration feedback on button press';
     if (lSound) lSound.textContent = '🔊 KEY CLICK SOUND';
     if (dSound) dSound.textContent = 'Subtle audio click feedback on button press';
-    if (lLazyNorm) lLazyNorm.textContent = '🔒 LAZY MODE NORMAL';
-    if (dLazyNorm) dLazyNorm.textContent = 'Locks operator for fast repetitive calculations, Total appears automatically. Good for long expressions (long-press + - × ÷ to activate).';
-    if (lLazyFast) lLazyFast.textContent = '⚡ LAZY MODE FAST';
-    if (dLazyFast) dLazyFast.textContent = 'Total appears automatically & instantly (best for 2-3 terms like 25+26+27)';
+    if (lLazyNorm) lLazyNorm.textContent = '⚡ LAZY MODE';
+    if (dLazyNorm) dLazyNorm.textContent = 'Auto-totals calculations without pressing "+". (Long-press + - × ÷ to activate).';
     if (lKMode) lKMode.textContent = '🔤 K MODE (THOUSANDS)';
     if (dKMode) dKMode.textContent = 'Formats numbers in thousands (1k + 2k = 3k)';
     if (lWords) lWords.textContent = '💬 WORDS MODE (ACTIVE NUMBER IN WORDS)';
@@ -6703,10 +6687,6 @@ function activateStickyMode(op) {
   _stickyFullExpr = _stickyFullExpr.replace(/([+\-×÷*\/])\s*([+\-×÷*\/])+/g, '$1');
   _stickyLastExpr = _stickyFullExpr;
   _stickyInput = ''; _stickyActive = true;
-  _fastLazy = false;
-  try { localStorage.setItem('fast_lazy', 'false'); } catch(e) {}
-  var flToggle = document.getElementById('fast-lazy-toggle');
-  if (flToggle) flToggle.checked = false;
   var toggle = document.getElementById('sticky-mode-toggle');
   if (toggle) toggle.checked = true;
   updateStickyOpHighlight(); updateStickyDisplay();
@@ -6748,7 +6728,7 @@ function stickyInputDigit(d) {
   if (_stickyInput === '0' && d !== '.') _stickyInput = d;
   else _stickyInput += d;
   if (_stickyTimer) clearTimeout(_stickyTimer);
-  _stickyTimer = setTimeout(function() { stickyFlush(); }, _fastLazy ? 300 : 1000);
+  _stickyTimer = setTimeout(function() { stickyFlush(); }, 800);
   updateStickyDisplay();
 }
 function stickyBackspace() {
@@ -6757,7 +6737,7 @@ function stickyBackspace() {
   if (_stickyInput) {
     _stickyInput = _stickyInput.slice(0, -1);
     if (_stickyInput) {
-      _stickyTimer = setTimeout(function() { stickyFlush(); }, _fastLazy ? 300 : 1000);
+      _stickyTimer = setTimeout(function() { stickyFlush(); }, 800);
     }
     updateStickyDisplay();
     return;
@@ -6775,7 +6755,7 @@ function stickyBackspace() {
       var rawVal = lastNumToken.v || '';
       _stickyInput = rawVal.length > 1 ? rawVal.slice(0, -1) : '';
       if (_stickyInput) {
-        _stickyTimer = setTimeout(function() { stickyFlush(); }, _fastLazy ? 300 : 1000);
+        _stickyTimer = setTimeout(function() { stickyFlush(); }, 800);
       }
       // Reconstruct remaining _stickyFullExpr and _stickyResult
       if (tokens.length) {
@@ -7259,17 +7239,7 @@ function renderCalcLabelEditor() {
       // Compute Contextual Action Button
       var btnHtml = '';
       if (_smartHintsEnabled) {
-        if (_stickyActive) {
-          if (_fastLazy) {
-            var fastTxt = _t('⚡ Fast', '⚡ फ़ास्ट', '⚡ Fast');
-            var fastTitle = _t('Fast Mode Active (0.3s) - Tap for Slow', 'फ़ास्ट मोड सक्रिय (0.3s) - धीमा के लिए टैप करें', 'Fast mode active (0.3s) - Slow ke liye tap karein');
-            btnHtml = '<button onclick="toggleFastLazy(false)" style="flex-shrink:0;background:#fbbf24;color:#000;border:none;border-radius:var(--radius-sm);padding:3px 7px;font-size:0.72rem;font-weight:700;cursor:pointer;line-height:1.3;touch-action:manipulation;" title="' + fastTitle + '">' + fastTxt + '</button>';
-          } else {
-            var slowTxt = _t('🔒 Slow', '🔒 धीमा', '🔒 Slow');
-            var slowTitle = _t('Slow Mode Active (1s) - Tap for Fast', 'धीमा मोड सक्रिय (1s) - फ़ास्ट के लिए टैप करें', 'Slow mode active (1s) - Fast ke liye tap karein');
-            btnHtml = '<button onclick="toggleFastLazy(true)" style="flex-shrink:0;background:rgba(251,191,36,0.14);color:#fbbf24;border:1px solid rgba(251,191,36,0.4);border-radius:var(--radius-sm);padding:3px 7px;font-size:0.72rem;font-weight:700;cursor:pointer;line-height:1.3;touch-action:manipulation;" title="' + slowTitle + '">' + slowTxt + '</button>';
-          }
-        } else if (_kMode) {
+        if (_kMode) {
           btnHtml = '<button onclick="deactivateKModeFromHint()" style="flex-shrink:0;background:rgba(251,191,36,0.18);color:#fbbf24;border:1px solid rgba(251,191,36,0.4);border-radius:var(--radius-sm);padding:3px 8px;font-size:0.72rem;font-weight:700;cursor:pointer;line-height:1.3;touch-action:manipulation;" title="Turn off K-Mode">🔤 K-Mode: ON</button>';
         } else if (_currentSmartHint === 'kmode_hint' && !_kMode) {
           btnHtml = '<button onclick="activateKModeFromHint()" style="flex-shrink:0;background:#fbbf24;color:#000;border:none;border-radius:var(--radius-sm);padding:4px 9px;font-size:0.72rem;font-weight:700;cursor:pointer;line-height:1.3;touch-action:manipulation;">⚡ Use K-Mode</button>';
@@ -7291,13 +7261,7 @@ function renderCalcLabelEditor() {
           var isHi = _appLang === 'hi';
           var isHn = _appLang === 'hn';
           var promptTxt = '';
-          if (_stickyActive) {
-            if (_fastLazy) {
-              promptTxt = isHi ? '⚡ <b>फ़ास्ट (0.3s):</b> 2-3 छोटी संख्याओं के लिए। लंबे हिसाब के लिए 🔒 धीमा करें।' : (isHn ? '⚡ <b>Fast (0.3s):</b> 2-3 quick numbers ke liye best. Lambe hisaab ke liye 🔒 Slow karein.' : '⚡ <b>Fast (0.3s):</b> Best for 2-3 quick terms. Tap 🔒 Slow for long math.');
-            } else {
-              promptTxt = isHi ? '🔒 <b>धीमा (1s):</b> लंबे हिसाब के लिए सबसे सही। 2-3 संख्याओं के लिए ⚡ फ़ास्ट करें।' : (isHn ? '🔒 <b>Slow (1s):</b> Lambe hisaab ke liye best. 2-3 quick numbers ke liye ⚡ Fast karein.' : '🔒 <b>Slow (1s):</b> Best for long math. Tap ⚡ Fast for 2-3 quick numbers.');
-            }
-          } else if (_kMode) {
+          if (_kMode) {
             promptTxt = '🔤 K-Mode Active (Tap button to exit):';
           } else if (_currentSmartHint === 'kmode_hint') {
             promptTxt = '💡 50k = 50,000:';
@@ -7306,7 +7270,11 @@ function renderCalcLabelEditor() {
           }
           container.innerHTML = '<div style="display:flex;align-items:center;justify-content:space-between;width:100%;gap:0.4rem;padding:0.15rem 0.2rem;box-sizing:border-box;">' + btnHtml + '<div style="font-size:0.74rem;color:var(--text-muted);line-height:1.25;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;text-align:right;">' + promptTxt + '</div></div>';
         } else {
-          container.innerHTML = '<div style="font-size:0.75rem;color:var(--text-muted);padding:0.3rem 0;line-height:1.35;">' + helpTxt + '</div>';
+          var lHelp = helpTxt;
+          if (_stickyActive) {
+            lHelp = _t('💡 <b>Lazy Mode:</b> Auto-totals calculations without pressing "+"', '💡 <b>लेज़ी मोड:</b> बिना "+" दबाए अपने आप कुल हिसाब होगा', '💡 <b>Lazy Mode:</b> Bina "+" dabaye auto total calculate hoga');
+          }
+          container.innerHTML = '<div style="font-size:0.75rem;color:var(--text-muted);padding:0.3rem 0;line-height:1.35;text-align:right;">' + lHelp + '</div>';
         }
       }
     }
@@ -10792,26 +10760,6 @@ function renderScientificMode(container) {
    Contextual Smart Hints Engine (with Inline 1-Tap Feature Toggles)
    ========================================================================== */
 var _smartHints = {
-  lazy_active_fast: {
-    text: [
-      '⚡ <b>Fast (0.3s):</b> Best for 2-3 quick terms. Tap 🔒 Slow for long math.',
-      '⚡ <b>फ़ास्ट (0.3s):</b> 2-3 छोटी संख्याओं के लिए। लंबे हिसाब के लिए 🔒 धीमा करें।',
-      '⚡ <b>Fast (0.3s):</b> 2-3 quick numbers ke liye best. Lambe hisaab ke liye 🔒 Slow karein.'
-    ],
-    btnText: ['⚡ Fast', '⚡ फ़ास्ट', '⚡ Fast'],
-    btnStyle: 'background:#fbbf24;color:#000;border:none;',
-    action: 'toggleFastLazy(false)'
-  },
-  lazy_active_normal: {
-    text: [
-      '🔒 <b>Slow (1s):</b> Best for long math. Tap ⚡ Fast for 2-3 quick numbers.',
-      '🔒 <b>धीमा (1s):</b> लंबे हिसाब के लिए सबसे सही। 2-3 संख्याओं के लिए ⚡ फ़ास्ट करें।',
-      '🔒 <b>Slow (1s):</b> Lambe hisaab ke liye best. 2-3 quick numbers ke liye ⚡ Fast karein.'
-    ],
-    btnText: ['🔒 Slow', '🔒 धीमा', '🔒 Slow'],
-    btnStyle: 'background:rgba(251,191,36,0.14);color:#fbbf24;border:1px solid rgba(251,191,36,0.4);',
-    action: 'toggleFastLazy(true)'
-  },
   lazy_lock_hint: {
     text: [
       '💡 Type math without pressing "+":',
