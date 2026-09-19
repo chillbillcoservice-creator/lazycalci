@@ -7255,9 +7255,13 @@ function renderCalcLabelEditor() {
       if (_smartHintsEnabled) {
         if (_stickyActive) {
           if (_fastLazy) {
-            btnHtml = '<button onclick="toggleFastLazy(false)" style="flex-shrink:0;background:var(--bg-primary);color:var(--text-primary);border:1px solid var(--border-color);border-radius:var(--radius-sm);padding:4px 9px;font-size:0.72rem;font-weight:700;cursor:pointer;line-height:1.3;touch-action:manipulation;" title="Switch to Slow mode">🔒 Slow 1s</button>';
+            var fastTxt = _t('⚡ Fast', '⚡ फ़ास्ट', '⚡ Fast');
+            var fastTitle = _t('Fast Mode Active (0.3s) - Tap for Slow', 'फ़ास्ट मोड सक्रिय (0.3s) - धीमा के लिए टैप करें', 'Fast mode active (0.3s) - Slow ke liye tap karein');
+            btnHtml = '<button onclick="toggleFastLazy(false)" style="flex-shrink:0;background:#fbbf24;color:#000;border:none;border-radius:var(--radius-sm);padding:3px 7px;font-size:0.72rem;font-weight:700;cursor:pointer;line-height:1.3;touch-action:manipulation;" title="' + fastTitle + '">' + fastTxt + '</button>';
           } else {
-            btnHtml = '<button onclick="toggleFastLazy(true)" style="flex-shrink:0;background:#fbbf24;color:#000;border:none;border-radius:var(--radius-sm);padding:4px 9px;font-size:0.72rem;font-weight:700;cursor:pointer;line-height:1.3;touch-action:manipulation;" title="Switch to Fast mode">⚡ Fast 0.3s</button>';
+            var slowTxt = _t('🔒 Slow', '🔒 धीमा', '🔒 Slow');
+            var slowTitle = _t('Slow Mode Active (1s) - Tap for Fast', 'धीमा मोड सक्रिय (1s) - फ़ास्ट के लिए टैप करें', 'Slow mode active (1s) - Fast ke liye tap karein');
+            btnHtml = '<button onclick="toggleFastLazy(true)" style="flex-shrink:0;background:rgba(251,191,36,0.14);color:#fbbf24;border:1px solid rgba(251,191,36,0.4);border-radius:var(--radius-sm);padding:3px 7px;font-size:0.72rem;font-weight:700;cursor:pointer;line-height:1.3;touch-action:manipulation;" title="' + slowTitle + '">' + slowTxt + '</button>';
           }
         } else if (_kMode) {
           btnHtml = '<button onclick="deactivateKModeFromHint()" style="flex-shrink:0;background:rgba(251,191,36,0.18);color:#fbbf24;border:1px solid rgba(251,191,36,0.4);border-radius:var(--radius-sm);padding:3px 8px;font-size:0.72rem;font-weight:700;cursor:pointer;line-height:1.3;touch-action:manipulation;" title="Turn off K-Mode">🔤 K-Mode: ON</button>';
@@ -10788,8 +10792,8 @@ var _smartHints = {
       '⚡ <b>फ़ास्ट (0.3s):</b> 2-3 छोटी संख्याओं के लिए। लंबे हिसाब के लिए 🔒 धीमा करें।',
       '⚡ <b>Fast (0.3s):</b> 2-3 quick numbers ke liye best. Lambe hisaab ke liye 🔒 Slow karein.'
     ],
-    btnText: ['🔒 Slow 1s', '🔒 धीमा 1s', '🔒 Slow 1s'],
-    btnStyle: 'background:var(--bg-primary);color:var(--text-primary);border:1px solid var(--border-color);',
+    btnText: ['⚡ Fast', '⚡ फ़ास्ट', '⚡ Fast'],
+    btnStyle: 'background:#fbbf24;color:#000;border:none;',
     action: 'toggleFastLazy(false)'
   },
   lazy_active_normal: {
@@ -10798,8 +10802,8 @@ var _smartHints = {
       '🔒 <b>धीमा (1s):</b> लंबे हिसाब के लिए सबसे सही। 2-3 संख्याओं के लिए ⚡ फ़ास्ट करें।',
       '🔒 <b>Slow (1s):</b> Lambe hisaab ke liye best. 2-3 quick numbers ke liye ⚡ Fast karein.'
     ],
-    btnText: ['⚡ Fast 0.3s', '⚡ फ़ास्ट 0.3s', '⚡ Fast 0.3s'],
-    btnStyle: 'background:#fbbf24;color:#000;border:none;',
+    btnText: ['🔒 Slow', '🔒 धीमा', '🔒 Slow'],
+    btnStyle: 'background:rgba(251,191,36,0.14);color:#fbbf24;border:1px solid rgba(251,191,36,0.4);',
     action: 'toggleFastLazy(true)'
   },
   lazy_lock_hint: {
