@@ -7173,13 +7173,30 @@ function renderCalcLabelEditor() {
       var balText = effectiveBal > 0 ? _t('Owes You ₹', 'आपको देगा ₹', 'Aapko Dega ₹') + fmtNum(effectiveBal) : (isNegChip ? _t('You Owe ₹', 'आपको देना है ₹', 'Aapko Dena Hai ₹') + fmtNum(Math.abs(effectiveBal)) + _t(' to', ' को', ' ko') : '₹0');
       var chipNameSpan = '<span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:0.95rem;font-weight:700;">👤 ' + escHtml(c.name) + '</span>';
 
+      var hasPendingToSave = false;
+      if (hasPending && pendingExpr) {
+        try {
+          var ev = evalExpr(pendingExpr);
+          if (isFinite(ev) && ev !== 0) hasPendingToSave = true;
+        } catch(e) {}
+      }
+
+      var actionBtnHtml = '';
+      if (hasPendingToSave) {
+        var saveTxt = _t('💾 Save', '💾 सेव करें', '💾 Save');
+        actionBtnHtml = '<button id="khata-save-btn" onclick="saveActiveKhataCustomer()" style="background:#10b981;color:#fff;border:none;font-weight:800;cursor:pointer;font-size:0.82rem;padding:4px 10px;border-radius:var(--radius-sm);flex-shrink:0;box-shadow:0 2px 8px rgba(16,185,129,0.4);display:flex;align-items:center;gap:4px;touch-action:manipulation;" title="' + _t('Save transaction to ledger', 'खाते में लेनदेन सेव करें', 'Khate me entry save karein') + '">' + saveTxt + '</button>';
+      } else {
+        var exitTxt = _t('✕ Exit', '✕ बाहर', '✕ Exit');
+        actionBtnHtml = '<button id="khata-exit-btn" onclick="exitKhataMode()" style="background:none;border:none;color:var(--text-muted);font-weight:800;cursor:pointer;font-size:0.9rem;padding:0 4px;flex-shrink:0;touch-action:manipulation;" title="' + _t('Exit Customer Khata Mode', 'खाता मोड से बाहर निकलें', 'Khata mode se bahar niklein') + '">' + exitTxt + '</button>';
+      }
+
       container.innerHTML = '<div style="display:flex;align-items:center;justify-content:space-between;width:100%;gap:6px;white-space:nowrap;overflow:hidden;padding:2px 0;">' +
         '<div onclick="selectKhataCustomer(' + _activeKhataCustomerIndex + ')" style="display:flex;align-items:center;gap:6px;min-width:0;overflow:hidden;cursor:pointer;" title="Tap to reload balance">' +
           (isNegChip ? '' : chipNameSpan) +
           '<span style="font-size:0.8rem;font-weight:800;color:var(--color-accent);background:rgba(243,139,168,0.18);padding:2px 7px;border-radius:6px;white-space:nowrap;">' + balText + '</span>' +
           (isNegChip ? chipNameSpan : '') +
         '</div>' +
-        '<button onclick="exitKhataMode()" style="background:none;border:none;color:var(--text-muted);font-weight:800;cursor:pointer;font-size:0.9rem;padding:0 4px;flex-shrink:0;">✕ Exit</button>' +
+        actionBtnHtml +
       '</div>';
       return;
     }
@@ -7516,8 +7533,9 @@ function calcEqual() {
     if (_activeKhataCustomerIndex >= 0 && typeof _calcLedgerCustomers !== 'undefined' && _calcLedgerCustomers && _calcLedgerCustomers[_activeKhataCustomerIndex]) {
       var khataDefaultType = _khataPicked === 'take' ? 'jama' : (_khataPicked === 'give' ? 'udhar' : 'udhar');
       var res = getKhataAmountAndTypeFromTokens(khataDefaultType);
-      if (res.amount > 0) {
-        recordKhataTransaction(res.type, res.amount, true);
+      var pDelta = getKhataPendingDelta();
+      if (res.amount > 0 || pDelta !== 0) {
+        saveActiveKhataCustomer();
         return;
       } else {
         exitKhataMode();
@@ -11548,11 +11566,11 @@ function recordKhataTransaction(type, amount, shouldScroll) {
   if (type === 'jama') {
     c.balance -= amount;
     c.transactions.unshift({ date: new Date().toLocaleString(), type: 'jama', amount: amount, note: '' });
-    if (typeof showToast === 'function') showToast('🟢 Taken -₹' + fmtNum(amount) + ' | ' + c.name);
+    if (typeof showToast === 'function') showToast('🟢 ' + _t('Saved: Taken -₹', 'सेव हुआ: जमा लिए ₹', 'Saved: Jama -₹') + fmtNum(amount) + ' | ' + c.name);
   } else {
     c.balance += amount;
     c.transactions.unshift({ date: new Date().toLocaleString(), type: 'udhar', amount: amount, note: '' });
-    if (typeof showToast === 'function') showToast('🔴 Given +₹' + fmtNum(amount) + ' | ' + c.name);
+    if (typeof showToast === 'function') showToast('🔴 ' + _t('Saved: Given +₹', 'सेव हुआ: उधार दिए ₹', 'Saved: Udhaar +₹') + fmtNum(amount) + ' | ' + c.name);
   }
 
   localStorage.setItem('calc_ledger_customers', JSON.stringify(_calcLedgerCustomers));
@@ -11582,6 +11600,39 @@ function recordKhataTransaction(type, amount, shouldScroll) {
       }
     }, 80);
   }
+}
+
+function saveActiveKhataCustomer() {
+  if (_activeKhataCustomerIndex < 0 || !_calcLedgerCustomers || !_calcLedgerCustomers[_activeKhataCustomerIndex]) return;
+  var c = _calcLedgerCustomers[_activeKhataCustomerIndex];
+
+  var pendingDelta = getKhataPendingDelta();
+  var defaultType = _khataPicked === 'take' ? 'jama' : (_khataPicked === 'give' ? 'udhar' : (pendingDelta < 0 ? 'jama' : 'udhar'));
+  var res = getKhataAmountAndTypeFromTokens(defaultType);
+  var amount = res.amount;
+  var type = res.type;
+
+  if ((!amount || amount <= 0 || (calcTokens && calcTokens.length > 3)) && pendingDelta !== 0) {
+    amount = Math.abs(pendingDelta);
+    type = pendingDelta < 0 ? 'jama' : 'udhar';
+  }
+
+  if (!amount || amount <= 0) {
+    if (typeof showToast === 'function') {
+      showToast(_t('⚠️ Enter an amount to save', '⚠️ सेव करने के लिए रकम दर्ज करें', '⚠️ Save karne ke liye amount dalein'));
+    }
+    return;
+  }
+
+  recordKhataTransaction(type, amount, true);
+
+  calcTokens = [{v: String(c.balance || 0), label: ''}];
+  _khataPicked = null;
+  _khataBalancePreloaded = true;
+  _calcShowExpr = true;
+  calcUpdateDisplay();
+  renderCalcButtons();
+  renderCalcLabelEditor();
 }
 
 var _foldedCustomerMap = {};
