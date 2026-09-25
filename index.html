@@ -3264,9 +3264,6 @@ function calcExprToWords(tokens) {
       } else {
         var valForWords = _kMode ? num * 1000 : num;
         var w = numToWords(valForWords);
-        if (t.label) {
-          w += ' (' + t.label + ')';
-        }
         parts.push(w);
       }
     }
@@ -3289,9 +3286,6 @@ function calcLatestTokenToWords(tokens) {
   if (isNaN(num)) return '';
   var valForWords = _kMode ? num * 1000 : num;
   var w = numToWords(valForWords);
-  if (w && lastNumToken.label) {
-    w += ' (' + lastNumToken.label + ')';
-  }
   return w || '';
 }
 function evalExpr(str) { try { return eval(str.replace(/([\d.]+)%([\d.]+)/g, '$1*$2/100')); } catch(e) { return NaN; } }
@@ -6714,7 +6708,7 @@ function deactivateSticky() {
       if (['+','-','*','/','%'].indexOf(t.v) !== -1) {
         parts.push('<span>' + (t.v === '*' ? '×' : t.v === '/' ? '÷' : t.v) + '</span>');
       } else {
-        var showLabel = t.label ? ' <span style="color:#aaa;font-size:0.75em">(' + escHtml(t.label) + ')</span>' : '';
+        var showLabel = t.label ? '<span style="color:#aaa;font-size:0.75em">(' + escHtml(t.label) + ')</span>' : '';
         parts.push('<span onclick="editCalcTokenLabel(' + i + ')" style="cursor:pointer;font-weight:600">' + escHtml(t.v) + '</span>' + showLabel);
       }
     });
@@ -7003,9 +6997,9 @@ function calcUpdateDisplay(skipEditor) {
       if (_recordExpenses && !_billMode && t.label) {
         var recClick = t._recorded ? 'showToast(\'' + _t('⏳ Already added to Expenses', '⏳ पहले से खर्च में जोड़ा गया', '⏳ Pehle se kharch me joda gaya') + '\')' : 'sendTokenToExpenses('+i+')';
         var recColor = t._recorded ? '#e74c3c' : 'var(--color-accent)';
-        parts.push('<span onclick="editCalcTokenLabel('+i+')" style="cursor:pointer;font-weight:600;text-decoration:underline dotted var(--color-accent);">' + escHtml(formattedVal) + '</span> <span onclick="'+recClick+'" style="cursor:pointer;color:'+recColor+';font-size:0.75em;font-weight:600;">(' + escHtml(t.label) + ')</span>');
+        parts.push('<span onclick="editCalcTokenLabel('+i+')" style="cursor:pointer;font-weight:600;text-decoration:underline dotted var(--color-accent);">' + escHtml(formattedVal) + '</span><span onclick="'+recClick+'" style="cursor:pointer;color:'+recColor+';font-size:0.75em;font-weight:600;">(' + escHtml(t.label) + ')</span>');
       } else {
-        var showLabel = t.label ? ' <span onclick="editCalcTokenLabel('+i+')" style="color:var(--color-accent);font-size:0.75em;cursor:pointer;">(' + escHtml(t.label) + ')</span>' : '';
+        var showLabel = t.label ? '<span onclick="editCalcTokenLabel('+i+')" style="color:var(--color-accent);font-size:0.75em;cursor:pointer;">(' + escHtml(t.label) + ')</span>' : '';
         parts.push('<span onclick="editCalcTokenLabel('+i+')" style="cursor:pointer;font-weight:600;text-decoration:underline dotted var(--color-accent);">' + escHtml(formattedVal) + '</span>' + showLabel);
       }
     }
