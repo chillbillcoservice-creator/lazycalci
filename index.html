@@ -507,10 +507,10 @@ details[open] summary:before { content:'▼'; }
 .sp-expense-top .rm-exp:hover { color:var(--color-accent); opacity:1; }
 .sp-chips { margin-top:0.45rem; padding-top:0.45rem; border-top:1px solid var(--border-color); }
 .sp-chips-inline { display:flex; flex-wrap:wrap; align-items:center; gap:0.35rem; }
-.sp-chips-table { display:flex; flex-direction:column; gap:0.35rem; }
-.sp-chip-row { display:flex; align-items:center; justify-content:space-between; width:100%; gap:0.5rem; background:transparent; padding:0.25rem 0.2rem; border-bottom:1px solid rgba(255,255,255,0.06); border-radius:0; }
+.sp-chips-table { display:flex; flex-direction:column; gap:0.4rem; }
+.sp-chip-row { display:flex; align-items:center; justify-content:space-between; width:100%; gap:0.5rem; background:transparent; padding:0.2rem 0; border-bottom:1px solid rgba(255,255,255,0.05); }
 .sp-chip-row:last-child { border-bottom:none; }
-.sp-chip { font-size:0.82rem; font-weight:700; padding:0.3rem 0.75rem; border-radius:20px; border:1px solid rgba(255,255,255,0.12); cursor:pointer; color:var(--text-primary) !important; background:rgba(255,255,255,0.06); touch-action:manipulation; transition:all 0.15s; white-space:nowrap; display:inline-flex; align-items:center; gap:4px; }
+.sp-chip { font-size:0.82rem; font-weight:700; padding:0.35rem 0.65rem; border-radius:8px; border:1px solid rgba(255,255,255,0.12); cursor:pointer; color:var(--text-primary) !important; background:rgba(255,255,255,0.04); touch-action:manipulation; transition:all 0.15s; white-space:nowrap; display:inline-flex; align-items:center; gap:5px; height:36px; box-sizing:border-box; }
 .sp-action-row { display:flex; gap:0.5rem; margin-bottom:0.4rem; }
 .sp-btn-primary { flex:1; min-width:0; padding:0.55rem 0.4rem; border:1.5px solid var(--color-accent); border-radius:var(--radius-sm); background:rgba(243, 139, 168, 0.12); color:var(--color-accent); cursor:pointer; font-size:0.84rem; font-weight:700; touch-action:manipulation; transition:all 0.15s; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; text-align:center; }
 .sp-btn-secondary { flex:1; min-width:0; padding:0.55rem 0.4rem; border:1.5px solid var(--border-color); border-radius:var(--radius-sm); background:var(--bg-tertiary); color:var(--text-primary); cursor:pointer; font-size:0.84rem; font-weight:700; touch-action:manipulation; transition:all 0.15s; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; text-align:center; }
@@ -533,11 +533,15 @@ details[open] summary:before { content:'▼'; }
 .sp-invite-btn { cursor:pointer; font-size:0.95rem; padding:2px 4px; border-radius:3px; line-height:1; color:var(--text-muted); }
 .sp-invite-btn:hover { color:var(--color-accent); }
 .sp-you-badge { font-size:0.58rem; color:var(--color-accent); border:1px solid var(--color-accent); border-radius:3px; padding:0 3px; margin-left:0.2rem; white-space:nowrap; font-weight:700; }
-.sp-amt-input-wrap { display:inline-flex; align-items:center; gap:3px; background:rgba(255,255,255,0.05); padding:0.25rem 0.65rem; border-radius:20px; border:1px solid rgba(255,255,255,0.12); transition:border-color 0.15s; }
-.sp-amt-input-wrap:focus-within { border-color:var(--color-accent); background:rgba(243, 139, 168, 0.08); }
-.sp-currency-prefix { font-size:0.82rem; font-weight:800; color:var(--color-accent); }
-.sp-custom-amt { width:70px; padding:0.1rem 0.2rem; font-size:0.88rem; font-weight:800; border:none; background:transparent; color:var(--text-primary); outline:none; text-align:right; }
-.sp-custom-amt:focus { border-color:var(--color-accent); }
+.sp-amt-input-wrap { display:inline-flex; align-items:center; gap:5px; background:rgba(255,255,255,0.04); padding:0 10px; border-radius:8px; border:1px solid rgba(255,255,255,0.12); height:36px; width:105px; box-sizing:border-box; transition:all 0.15s ease; cursor:text; }
+.sp-amt-input-wrap:focus-within { border-color:var(--color-accent); background:rgba(243, 139, 168, 0.08); box-shadow:0 0 0 2px rgba(243, 139, 168, 0.2); }
+.sp-currency-prefix { font-size:0.88rem; font-weight:700; color:var(--color-accent); opacity:0.9; flex-shrink:0; user-select:none; }
+.calc-mode-body .sp-amt-input-wrap .sp-custom-amt, .sp-custom-amt { width:100% !important; height:100% !important; padding:0 !important; font-size:0.95rem !important; font-weight:750 !important; border:none !important; border-radius:0 !important; background:transparent !important; color:var(--text-primary) !important; outline:none !important; text-align:left !important; font-family:inherit !important; font-variant-numeric:tabular-nums !important; box-shadow:none !important; }
+.sp-custom-amt:focus { border:none !important; outline:none !important; box-shadow:none !important; }
+.sp-amt-placeholder { opacity:0.35; cursor:pointer; justify-content:center; }
+.sp-amt-placeholder:hover { opacity:0.75; border-color:var(--color-accent); }
+.theme-light .sp-amt-input-wrap { background:rgba(0,0,0,0.04); border-color:rgba(0,0,0,0.12); }
+.theme-light .sp-chip { background:rgba(0,0,0,0.04); border-color:rgba(0,0,0,0.12); color:var(--text-primary) !important; }
 .sp-result { background:var(--bg-tertiary); border-radius:var(--radius-sm); padding:0.6rem; margin-top:0.5rem; border:1px solid var(--border-color); }
 .sp-result-line { font-size:0.85rem; color:var(--text-primary); padding:0.2rem 0; }
 .sp-result-owed { font-size:0.85rem; color:var(--color-accent); padding:0.15rem 0; }
@@ -11094,6 +11098,8 @@ function renderSplitterModeContent(container) {
           if (e.checked[p.id]) {
             var cv = e.customAmounts && e.customAmounts[p.id] !== undefined ? e.customAmounts[p.id] : '';
             html += '<div class="sp-amt-input-wrap"><span class="sp-currency-prefix">₹</span><input class="sp-custom-amt" placeholder="' + _t('Amount', 'राशि', 'Amount') + '" inputmode="decimal" value="'+(cv!==''?cv:'')+'" oninput="spSetCustom('+e.id+','+p.id+',this.value);renderSplitResults()"'+disabledAttr+'></div>';
+          } else {
+            html += '<div class="sp-amt-input-wrap sp-amt-placeholder" onclick="'+toggleClick+'" title="' + _t('Tap to include in split', 'हिस्से में शामिल करने के लिए दबाएं', 'Split me shamil karne ke liye tap karein') + '"><span style="color:var(--text-muted);font-size:0.85rem;font-weight:700;">—</span></div>';
           }
           html += '</div>';
         });
