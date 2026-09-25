@@ -1171,6 +1171,24 @@ body {
       </div>
       <button id="btn-text-bill" onclick="openBillCustomizationModal()" style="display:block;width:100%;padding:0.65rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-secondary);color:var(--color-accent);font-size:0.85rem;cursor:pointer;font-weight:700;text-align:center;text-transform:uppercase;margin-top:0.6rem;margin-bottom:0.4rem;">📝 TEXT ON BILL PRINT / BILL HISTORY</button>
       <button id="btn-customer-data" onclick="openCustomerDataModal()" style="display:block;width:100%;padding:0.65rem;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-secondary);color:#38bdf8;font-size:0.85rem;cursor:pointer;font-weight:700;text-align:center;text-transform:uppercase;margin-top:0.4rem;margin-bottom:0.4rem;">👥 CUSTOMER DATA</button>
+      <div id="card-cloud-backup" style="margin-top:0.65rem;margin-bottom:0.65rem;background:var(--bg-tertiary);padding:0.75rem;border-radius:12px;border:1px solid var(--border-color);transition:all 0.3s ease;">
+        <div style="font-size:0.8rem;font-weight:700;color:var(--color-accent);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.4rem;display:flex;align-items:center;justify-content:space-between;">
+          <span id="lbl-cloud-sync-title">☁️ CLOUD AUTO-SYNC</span>
+          <span id="cloud-sync-badge" style="font-size:0.68rem;font-weight:700;padding:2px 8px;border-radius:10px;background:rgba(255,255,255,0.08);color:var(--text-muted);border:1px solid var(--border-color);">⚪ Not Linked</span>
+        </div>
+        <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:0.55rem;line-height:1.35;" id="lbl-cloud-sync-desc">
+          Enter your 10-digit mobile number to automatically safeguard your Khata & Expense data in the cloud.
+        </div>
+        <div style="display:flex;gap:0.4rem;margin-bottom:0.5rem;">
+          <input type="tel" id="cloud-sync-phone" maxlength="10" placeholder="10-digit Mobile No." style="flex:1;padding:0.55rem 0.65rem;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-secondary);color:var(--text-primary);font-size:0.88rem;font-weight:700;outline:none;" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+          <button id="btn-cloud-sync-save" onclick="saveAndLinkCloudPhone()" style="padding:0.55rem 0.85rem;border-radius:8px;border:none;background:#2563eb;color:#fff;font-size:0.8rem;font-weight:800;cursor:pointer;">Link 🔗</button>
+        </div>
+        <div style="display:flex;gap:0.4rem;">
+          <button id="btn-cloud-sync-now" onclick="triggerManualCloudSync()" style="flex:1;padding:0.5rem;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-secondary);color:var(--text-primary);font-size:0.78rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;">☁️ Sync Now</button>
+          <button id="btn-cloud-restore-now" onclick="triggerCloudRestorePrompt()" style="flex:1;padding:0.5rem;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-secondary);color:#38bdf8;font-size:0.78rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;">📲 Restore</button>
+        </div>
+        <div id="cloud-sync-last-time" style="font-size:0.68rem;color:var(--text-muted);text-align:center;margin-top:0.45rem;display:none;"></div>
+      </div>
       <div style="margin-top:0.65rem;margin-bottom:0.65rem;background:var(--bg-tertiary);padding:0.75rem;border-radius:12px;border:1px solid var(--border-color);">
         <div style="font-size:0.78rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.55rem;text-align:center;">🌐 APP LANGUAGE / भाषा चुनें</div>
         <div style="display:flex;gap:0.35rem;justify-content:center;">
@@ -3879,6 +3897,7 @@ function openSettingsModal() {
     if (typeof applyCalcSkin === 'function') applyCalcSkin(_calcSkin);
     updateThemeSwatchesVisibility();
     if (typeof updatePaywallUI === 'function') updatePaywallUI();
+    if (typeof updateCloudSyncUI === 'function') updateCloudSyncUI();
   } catch(e) {}
 }
 
@@ -4328,6 +4347,7 @@ function setAppLanguage(lang) {
   }
 
   translateStaticHtml();
+  if (typeof updateCloudSyncUI === 'function') updateCloudSyncUI();
 }
 var _appLang = localStorage.getItem('calc_app_lang') || 'en';
 function _t(en, hi, hn) {
@@ -5487,6 +5507,7 @@ function buildPosBillMessage(custName) {
   msg += '*' + _t('TOTAL AMOUNT', 'कुल राशि', 'TOTAL AMOUNT') + ': ₹' + Number(grandTotal).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '*\n\n';
   if (upiStr) msg += upiStr + '\n\n';
   msg += footerStr;
+  msg += '\n\n⚡ Powered by Lazy Calc (https://lazy-calc-peach.vercel.app)';
 
   return { msg: msg, grandTotal: grandTotal, usedSource: usedSource };
 }
@@ -5619,6 +5640,7 @@ function saveCustomerDataRecord(name, phone, amount) {
   }
 
   localStorage.setItem('calc_customer_directory', JSON.stringify(directory));
+  if (typeof triggerCloudSync === 'function') triggerCloudSync();
 }
 
 function openCustomerDataModal() {
@@ -7774,7 +7796,20 @@ var _splitIdCounter = 1;
 
 /* expenses mode */
 var expensesList = [];
+try {
+  var _savedExp = localStorage.getItem('calc_expenses');
+  if (_savedExp) expensesList = JSON.parse(_savedExp);
+  if (!Array.isArray(expensesList)) expensesList = [];
+} catch(e) { expensesList = []; }
 var _expIdCounter = 1;
+if (expensesList.length > 0) {
+  var _maxExpId = 0;
+  expensesList.forEach(function(e) {
+    var nid = parseInt(e.id, 10);
+    if (!isNaN(nid) && nid > _maxExpId) _maxExpId = nid;
+  });
+  _expIdCounter = _maxExpId + 1;
+}
 var _spColors = ['#e74c3c','#3498db','#2ecc71','#f39c12','#9b59b6','#1abc9c','#e67e22','#34495e','#e91e63','#00bcd4'];
 
 function fmtDateShort(isoStr) { if (!isoStr) return ''; var p = isoStr.split('-'); var months = ['JANUARY','FEBRUARY','MARCH','APRIL','MAY','JUNE','JULY','AUGUST','SEPTEMBER','OCTOBER','NOVEMBER','DECEMBER']; return parseInt(p[2],10) + ' ' + months[parseInt(p[1],10)-1]; }
@@ -7795,6 +7830,259 @@ if (typeof firebase !== 'undefined') {
   } catch(e) {
     console.log('Firebase init warning:', e);
   }
+}
+
+/* ============================================================
+   Automated Zero-Effort Data Protection & Cloud Sync (Beta)
+   ============================================================ */
+
+var _cloudSyncDebounceTimer = null;
+
+function getCloudBackupPhone() {
+  try {
+    return (localStorage.getItem('calc_cloud_phone') || '').replace(/\D/g, '');
+  } catch(e) {
+    return '';
+  }
+}
+
+function updateCloudSyncUI() {
+  var phone = getCloudBackupPhone();
+  var inputEl = document.getElementById('cloud-sync-phone');
+  var badgeEl = document.getElementById('cloud-sync-badge');
+  var descEl = document.getElementById('lbl-cloud-sync-desc');
+  var saveBtn = document.getElementById('btn-cloud-sync-save');
+  var timeEl = document.getElementById('cloud-sync-last-time');
+
+  if (inputEl && !inputEl.matches(':focus')) {
+    inputEl.value = phone;
+  }
+
+  var lastSync = localStorage.getItem('calc_cloud_last_sync');
+
+  if (phone && phone.length === 10) {
+    if (badgeEl) {
+      badgeEl.textContent = _t('🟢 Auto-Sync Active', '🟢 ऑटो-सिंक चालू', '🟢 Auto-Sync Active');
+      badgeEl.style.color = '#22c55e';
+      badgeEl.style.borderColor = 'rgba(34,197,94,0.35)';
+      badgeEl.style.background = 'rgba(34,197,94,0.12)';
+    }
+    if (descEl) {
+      descEl.textContent = _t('Khata & Expenses are automatically synced with cloud number: ', 'खाता और खर्च डेटा आपके क्लाउड नंबर पर ऑटो-बैकअप हो रहे हैं: ', 'Khata aur Expenses aapke cloud number par auto-backup ho rahe hain: ') + phone;
+    }
+    if (saveBtn) {
+      saveBtn.textContent = _t('Linked ✅', 'जुड़ा हुआ ✅', 'Linked ✅');
+      saveBtn.style.background = '#16a34a';
+    }
+    if (timeEl) {
+      if (lastSync) {
+        var d = new Date(lastSync);
+        var timeFmt = d.toLocaleDateString('en-IN') + ' ' + d.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+        timeEl.textContent = _t('Last synced: ', 'अंतिम सिंक: ', 'Last synced: ') + timeFmt;
+        timeEl.style.display = 'block';
+      } else {
+        timeEl.style.display = 'none';
+      }
+    }
+  } else {
+    if (badgeEl) {
+      badgeEl.textContent = _t('⚪ Not Linked', '⚪ लिंक नहीं है', '⚪ Not Linked');
+      badgeEl.style.color = 'var(--text-muted)';
+      badgeEl.style.borderColor = 'var(--border-color)';
+      badgeEl.style.background = 'rgba(255,255,255,0.08)';
+    }
+    if (descEl) {
+      descEl.textContent = _t('Enter your 10-digit mobile number to automatically safeguard your Khata & Expense data in the cloud.', 'अपना 10 अंकों का मोबाइल नंबर दर्ज करें ताकि आपका खाता और खर्च डेटा क्लाउड में सुरक्षित रहे।', 'Apna 10-digit mobile number daalein taaki aapka Khata aur Expense data cloud me safe rahe.');
+    }
+    if (saveBtn) {
+      saveBtn.textContent = _t('Link 🔗', 'जोड़ें 🔗', 'Link 🔗');
+      saveBtn.style.background = '#2563eb';
+    }
+    if (timeEl) {
+      timeEl.style.display = 'none';
+    }
+  }
+}
+
+function saveAndLinkCloudPhone() {
+  var inputEl = document.getElementById('cloud-sync-phone');
+  var raw = inputEl ? inputEl.value : '';
+  var phone = raw.replace(/\D/g, '');
+  if (phone.length > 10 && (phone.startsWith('91') || phone.startsWith('0'))) {
+    phone = phone.replace(/^(91|0)/, '');
+  }
+  if (!phone || phone.length !== 10) {
+    if (typeof showToast === 'function') {
+      showToast('⚠️ ' + _t('Please enter a valid 10-digit mobile number', 'कृपया 10 अंकों का सही मोबाइल नंबर दर्ज करें', 'Kripya 10-digit sahi mobile number daalein'));
+    }
+    return;
+  }
+  localStorage.setItem('calc_cloud_phone', phone);
+  updateCloudSyncUI();
+  if (typeof showToast === 'function') {
+    showToast('🔗 ' + _t('Phone linked! Syncing data to cloud...', 'नंबर जुड़ गया! डेटा क्लाउड पर सिंक हो रहा है...', 'Number link ho gaya! Data cloud pe sync ho raha hai...'));
+  }
+  syncUserDataToCloud(true);
+}
+
+function triggerCloudSync() {
+  var phone = getCloudBackupPhone();
+  if (!phone || phone.length !== 10) return;
+  if (_cloudSyncDebounceTimer) clearTimeout(_cloudSyncDebounceTimer);
+  _cloudSyncDebounceTimer = setTimeout(function() {
+    syncUserDataToCloud(false);
+  }, 2500);
+}
+
+function triggerManualCloudSync() {
+  var phone = getCloudBackupPhone();
+  if (!phone || phone.length !== 10) {
+    var inputEl = document.getElementById('cloud-sync-phone');
+    if (inputEl && inputEl.value.replace(/\D/g, '').length === 10) {
+      saveAndLinkCloudPhone();
+      return;
+    }
+    if (typeof showToast === 'function') {
+      showToast('⚠️ ' + _t('Link your 10-digit phone number first', 'पहले अपना 10 अंकों का नंबर लिंक करें', 'Pehle apna 10-digit number link karein'));
+    }
+    if (inputEl) inputEl.focus();
+    return;
+  }
+  syncUserDataToCloud(true);
+}
+
+function syncUserDataToCloud(isManual) {
+  var phone = getCloudBackupPhone();
+  if (!phone || phone.length !== 10) return;
+  if (!fdb || typeof fdb.collection !== 'function') {
+    if (isManual && typeof showToast === 'function') {
+      showToast('⚠️ ' + _t('Cloud backup currently unavailable (offline)', 'क्लाउड बैकअप अभी उपलब्ध नहीं है (ऑफ़लाइन)', 'Cloud backup abhi available nahi hai (offline)'));
+    }
+    return;
+  }
+
+  var custDir = [];
+  try { custDir = JSON.parse(localStorage.getItem('calc_customer_directory') || '[]'); } catch(e){}
+  var billProf = {};
+  try { billProf = JSON.parse(localStorage.getItem('calc_bill_profile') || '{}'); } catch(e){}
+
+  var payload = {
+    phone: phone,
+    khata: (typeof _calcLedgerCustomers !== 'undefined' && Array.isArray(_calcLedgerCustomers)) ? _calcLedgerCustomers : [],
+    expenses: (typeof expensesList !== 'undefined' && Array.isArray(expensesList)) ? expensesList : [],
+    customerDirectory: custDir,
+    billProfile: billProf,
+    version: 1,
+    lastSyncISO: new Date().toISOString()
+  };
+
+  if (typeof firebase !== 'undefined' && firebase.firestore && firebase.firestore.FieldValue) {
+    payload.updatedAt = firebase.firestore.FieldValue.serverTimestamp();
+  } else {
+    payload.updatedAt = new Date().toISOString();
+  }
+
+  fdb.collection('user_backups').doc(phone).set(payload, { merge: true }).then(function() {
+    localStorage.setItem('calc_cloud_last_sync', new Date().toISOString());
+    updateCloudSyncUI();
+    if (isManual && typeof showToast === 'function') {
+      showToast('☁️ ' + _t('Data backed up successfully to cloud!', 'डेटा क्लाउड पर सुरक्षित सेव हो गया!', 'Data cloud par safely save ho gaya!'));
+    }
+  }).catch(function(err) {
+    console.error('Lazy Calc: Cloud sync error:', err);
+    if (isManual && typeof showToast === 'function') {
+      showToast('⚠️ ' + _t('Cloud sync failed: ', 'क्लाउड सिंक विफल: ', 'Cloud sync fail hua: ') + (err.message || 'Error'));
+    }
+  });
+}
+
+function triggerCloudRestorePrompt() {
+  var inputEl = document.getElementById('cloud-sync-phone');
+  var phone = (inputEl && inputEl.value.replace(/\D/g, '')) || getCloudBackupPhone();
+  if (!phone || phone.length !== 10) {
+    if (typeof showToast === 'function') {
+      showToast('⚠️ ' + _t('Enter your 10-digit number to restore from cloud', 'क्लाउड से रीस्टोर करने के लिए 10 अंकों का नंबर दर्ज करें', 'Cloud se restore karne ke liye 10-digit number daalein'));
+    }
+    if (inputEl) inputEl.focus();
+    return;
+  }
+  var confirmMsg = _t(
+    'Restore all Khata & Expense data for ' + phone + ' from cloud?\n\n(Current records on this device will be updated with your cloud backup)',
+    'क्या आप ' + phone + ' का खाता और खर्च डेटा क्लाउड से रीस्टोर करना चाहते हैं?\n\n(इस डिवाइस का डेटा क्लाउड बैकअप से अपडेट हो जाएगा)',
+    'Kya aap ' + phone + ' ka Khata aur Expense data cloud se restore karna chahte hain?\n\n(Is device ka data cloud backup se update ho jayega)'
+  );
+  if (confirm(confirmMsg)) {
+    restoreUserDataFromCloud(phone);
+  }
+}
+
+function restoreUserDataFromCloud(phoneToRestore) {
+  phoneToRestore = (phoneToRestore || '').replace(/\D/g, '');
+  if (!phoneToRestore || phoneToRestore.length !== 10) {
+    if (typeof showToast === 'function') showToast('⚠️ Invalid phone number');
+    return;
+  }
+  if (!fdb || typeof fdb.collection !== 'function') {
+    if (typeof showToast === 'function') {
+      showToast('⚠️ ' + _t('Cloud service currently unavailable (offline)', 'क्लाउड सेवा अभी उपलब्ध नहीं है', 'Cloud service abhi available nahi hai'));
+    }
+    return;
+  }
+
+  if (typeof showToast === 'function') {
+    showToast('⏳ ' + _t('Fetching cloud backup for ', 'क्लाउड बैकअप लाया जा रहा है: ', 'Cloud backup laya ja raha hai: ') + phoneToRestore + '...');
+  }
+
+  fdb.collection('user_backups').doc(phoneToRestore).get().then(function(doc) {
+    if (!doc.exists) {
+      if (typeof showToast === 'function') {
+        showToast('❌ ' + _t('No cloud backup found for number ', 'इस नंबर के लिए कोई बैकअप नहीं मिला: ', 'Is number ke liye koi backup nahi mila: ') + phoneToRestore);
+      }
+      return;
+    }
+    var data = doc.data() || {};
+    var restoredKhataCount = 0;
+    var restoredExpCount = 0;
+
+    if (Array.isArray(data.khata)) {
+      _calcLedgerCustomers = data.khata;
+      localStorage.setItem('calc_ledger_customers', JSON.stringify(_calcLedgerCustomers));
+      restoredKhataCount = _calcLedgerCustomers.length;
+    }
+    if (Array.isArray(data.expenses)) {
+      expensesList = data.expenses;
+      localStorage.setItem('calc_expenses', JSON.stringify(expensesList));
+      restoredExpCount = expensesList.length;
+    }
+    if (Array.isArray(data.customerDirectory)) {
+      localStorage.setItem('calc_customer_directory', JSON.stringify(data.customerDirectory));
+    }
+    if (data.billProfile && typeof data.billProfile === 'object') {
+      _billProfile = data.billProfile;
+      localStorage.setItem('calc_bill_profile', JSON.stringify(_billProfile));
+    }
+
+    localStorage.setItem('calc_cloud_phone', phoneToRestore);
+    localStorage.setItem('calc_cloud_last_sync', new Date().toISOString());
+
+    updateCloudSyncUI();
+    if (typeof renderCalcHistory === 'function') renderCalcHistory();
+    if (typeof calcUpdateDisplay === 'function') calcUpdateDisplay();
+    if (typeof renderCalcButtons === 'function') renderCalcButtons();
+    if (_calcMode === 'expenses') {
+      var body = document.getElementById('calc-mode-body');
+      if (body && typeof renderExpensesMode === 'function') renderExpensesMode(body);
+    }
+
+    if (typeof showToast === 'function') {
+      showToast('✅ ' + _t('Restore complete! ', 'रीस्टोर पूरा हुआ! ', 'Restore complete! ') + restoredKhataCount + ' Khata, ' + restoredExpCount + ' Expenses');
+    }
+  }).catch(function(err) {
+    console.error('Lazy Calc: Cloud restore error:', err);
+    if (typeof showToast === 'function') {
+      showToast('⚠️ ' + _t('Restore failed: ', 'रीस्टोर विफल: ', 'Restore fail hua: ') + (err.message || 'Error'));
+    }
+  });
 }
 var _fbTripId = null;
 var _fbUpdating = false;
@@ -8528,6 +8816,7 @@ function waPerson(payId, receiveId, amt, tel, ev, collect) {
   var txt;
   if (collect) txt = '👥 ' + _t('Split Bill', 'बिल बांटना', 'Bill baantna')+trip+'\n'+fromName+' ' + _t('needs to pay you', 'को आपको भुगतान करना है', 'ko aapko bhugtan karna hai') + ' ₹'+fmtNum(amt)+'\n' + _t('Total', 'कुल', 'Total') + ': ₹'+fmtNum(total);
   else txt = '👥 ' + _t('Split Bill', 'बिल बांटना', 'Bill baantna')+trip+'\n' + _t('You need to pay', 'आपको भुगतान करना है', 'Aapko bhugtan karna hai') + ' ₹'+fmtNum(amt)+' ' + _t('to', 'को', 'to')+' '+toName+'\n' + _t('Total', 'कुल', 'Total') + ': ₹'+fmtNum(total);
+  txt += '\n\n👥 Split with Lazy Calc\n👉 https://lazy-calc-peach.vercel.app';
   window.open('https://wa.me/'+tel.replace(/[^0-9]/g,'')+'?text='+encodeURIComponent(txt));
 }
 
@@ -8599,6 +8888,7 @@ function shareExpenseWA(expId) {
   var trip = splitTripName ? ' 🏕️ '+splitTripName : '';
   var mode = splitPeople.every(function(p) { return e.checked[p.id]; }) ? _t('Equal', 'बराबर', 'Equal') : _t('Custom', 'अनुकूलित', 'Custom');
   var txt = '👥 ' + _t('Split Bill', 'बिल बांटना', 'Bill baantna')+trip+'\n\n'+escHtml(e.desc)+' — ₹'+fmtNum(amtNum)+'\n💵 ' + _t('Paid by', 'द्वारा भुगतान', 'Paid by')+' '+payerName+'\n\n'+parts.map(function(p){return '• '+p}).join('\n')+'\n('+mode+')';
+  txt += '\n\n👥 Split with Lazy Calc\n👉 https://lazy-calc-peach.vercel.app';
   window.open('https://wa.me/?text='+encodeURIComponent(txt));
 }
 function removeSplitPerson(id) {
@@ -9114,6 +9404,8 @@ function sendTokenToExpenses(i) {
   var numericVal = parseFloat(t.v) || 0;
   var actualAmt = _kMode ? numericVal * 1000 : numericVal;
   expensesList.unshift({ id: newId, desc: t.label, amount: String(actualAmt), date: today, category: getCategoryFromDesc(t.label) });
+  try { localStorage.setItem('calc_expenses', JSON.stringify(expensesList)); } catch(e){}
+  if (typeof triggerCloudSync === 'function') triggerCloudSync();
   t._recorded = true;
   t._expId = newId;
   _expensesNewCount++;
@@ -9132,6 +9424,8 @@ function addExpenseItem() {
   if (!desc || !amt) return;
   var cat = getCategoryFromDesc(desc);
   expensesList.unshift({ id:expId(), desc:desc, amount:amt, date:d, category:cat });
+  try { localStorage.setItem('calc_expenses', JSON.stringify(expensesList)); } catch(e){}
+  if (typeof triggerCloudSync === 'function') triggerCloudSync();
   document.getElementById('exp-desc').value = '';
   document.getElementById('exp-amt').value = '';
   _expJustAdded = true;
@@ -9141,6 +9435,8 @@ function addExpenseItem() {
 
 function removeExpenseItem(id) {
   expensesList = expensesList.filter(function(e) { return e.id !== id; });
+  try { localStorage.setItem('calc_expenses', JSON.stringify(expensesList)); } catch(e){}
+  if (typeof triggerCloudSync === 'function') triggerCloudSync();
   renderExpensesMode(document.getElementById('calc-mode-body'));
 }
 
@@ -9180,6 +9476,8 @@ function saveEditExpenseItem(id) {
     item.category = getCategoryFromDesc(item.desc);
   }
   if (amtInp && amtInp.value.trim()) item.amount = amtInp.value.trim();
+  try { localStorage.setItem('calc_expenses', JSON.stringify(expensesList)); } catch(e){}
+  if (typeof triggerCloudSync === 'function') triggerCloudSync();
   renderExpensesMode(document.getElementById('calc-mode-body'));
 }
 
@@ -9228,6 +9526,7 @@ function seedExpensesMockData() {
   expensesList.push({ id:expId(), desc:'Laptop Repair', amount:'5200', date:d(-95), category:'🏠 Rent & Bills' });
   expensesList.push({ id:expId(), desc:'Resort Trip', amount:'8900', date:d(-125), category:'⛽ Travel' });
   expensesList.push({ id:expId(), desc:'House Rent', amount:'12000', date:d(-155), category:'🏠 Rent & Bills' });
+  try { localStorage.setItem('calc_expenses', JSON.stringify(expensesList)); } catch(e){}
 }
 
 var _expHeroIndex = 0;
@@ -11288,6 +11587,7 @@ function splitShareText() {
   });
   lines.push('────────────');
   lines.push('💰 ' + _t('Total', 'कुल', 'Total') + ': ₹'+fmtNum(totalBill));
+  lines.push('', '👥 Split with Lazy Calc', '👉 https://lazy-calc-peach.vercel.app');
   return lines.join('\n');
 }
 
@@ -11574,6 +11874,7 @@ function recordKhataTransaction(type, amount, shouldScroll) {
   }
 
   localStorage.setItem('calc_ledger_customers', JSON.stringify(_calcLedgerCustomers));
+  if (typeof triggerCloudSync === 'function') triggerCloudSync();
   _foldedCustomerMap[_activeKhataCustomerIndex] = false;
   _calcHistoryVisible = true;
   _historyFolded = false;
@@ -11628,6 +11929,7 @@ function deleteKhataCustomer(idx, event) {
   _calcLedgerCustomers.splice(idx, 1);
   try {
     localStorage.setItem('calc_ledger_customers', JSON.stringify(_calcLedgerCustomers));
+    if (typeof triggerCloudSync === 'function') triggerCloudSync();
   } catch(e) {}
   if (_activeKhataCustomerIndex === idx) {
     _activeKhataCustomerIndex = -1;
@@ -11727,6 +12029,7 @@ function deleteKhataTransaction(custIdx, txIdx) {
   c.transactions.splice(txIdx, 1);
   
   localStorage.setItem('calc_ledger_customers', JSON.stringify(_calcLedgerCustomers));
+  if (typeof triggerCloudSync === 'function') triggerCloudSync();
   renderCalcHistory();
   calcUpdateDisplay();
   if (typeof showToast === 'function') showToast('🗑️ ' + _t('Deleted entry & updated balance', 'प्रविष्टि हटाई व बैलेंस अपडेट हुआ', 'Pravishti hatayi aur balance update hua'));
@@ -11983,6 +12286,7 @@ function saveNewKhataContact() {
 
   _calcLedgerCustomers.unshift(newCust);
   localStorage.setItem('calc_ledger_customers', JSON.stringify(_calcLedgerCustomers));
+  if (typeof triggerCloudSync === 'function') triggerCloudSync();
   closeModal('modal-add-khata-contact');
   selectKhataCustomer(0);
   renderCalcHistory();
@@ -12033,15 +12337,16 @@ function buildLedgerSummaryText(idx) {
   }
 
   var balVal = targetBal > 0 ? '₹' + fmtNum(targetBal) : (targetBal < 0 ? '-₹' + fmtNum(Math.abs(targetBal)) + ' (i give)' : '₹0');
+  var viralFooter = '\n\n📒 Sent via Lazy Calc\n👉 https://lazy-calc-peach.vercel.app';
   if (entryLines.length > 0) {
     var head = 'Namaste ' + c.name + ' ji';
     if (baseAmount !== null) {
       var baseTxt = baseAmount < 0 ? '-₹' + fmtNum(Math.abs(baseAmount)) : '₹' + fmtNum(baseAmount);
       head += ',\n' + baseTxt;
     }
-    return head + '\n' + entryLines.join('\n') + '\n\nPending Balance: ' + balVal;
+    return head + '\n' + entryLines.join('\n') + '\n\nPending Balance: ' + balVal + viralFooter;
   }
-  return 'Namaste ' + c.name + ' ji, pending balance: ' + balVal;
+  return 'Namaste ' + c.name + ' ji, pending balance: ' + balVal + viralFooter;
 }
 
 function buildLedgerFullStatementText(idx) {
@@ -12049,9 +12354,10 @@ function buildLedgerFullStatementText(idx) {
   var c = _calcLedgerCustomers[idx];
 
   var balVal = c.balance > 0 ? '₹' + fmtNum(c.balance) : (c.balance < 0 ? '-₹' + fmtNum(Math.abs(c.balance)) + ' (i give)' : '₹0');
+  var viralFooter = '\n\n📒 Sent via Lazy Calc\n👉 https://lazy-calc-peach.vercel.app';
 
   if (!Array.isArray(c.transactions) || c.transactions.length === 0) {
-    return 'Namaste ' + c.name + ' ji, pending balance: ' + balVal;
+    return 'Namaste ' + c.name + ' ji, pending balance: ' + balVal + viralFooter;
   }
 
   var lines = [];
@@ -12067,7 +12373,7 @@ function buildLedgerFullStatementText(idx) {
     lines.push(label + '\n' + dateStr + noteStr + '\n' + balLine);
   }
 
-  return 'Namaste ' + c.name + ' ji,\n\n📒 Khata Statement\n\n' + lines.join('\n\n') + '\n\nPending Balance: ' + balVal;
+  return 'Namaste ' + c.name + ' ji,\n\n📒 Khata Statement\n\n' + lines.join('\n\n') + '\n\nPending Balance: ' + balVal + viralFooter;
 }
 
 function sendLedgerFullStatementWA(idx) {
@@ -12447,6 +12753,7 @@ function shareExpensesWA() {
   var total = 0;
   expensesList.forEach(function(e){ total += parseFloat(e.amount)||0; });
   lines.push('Total: ₹'+fmtNum(total));
+  lines.push('', '💸 Tracked with Lazy Calc', '👉 https://lazy-calc-peach.vercel.app');
   doShare(lines.join('\n'), 'Expenses Breakdown');
 }
 
@@ -12484,6 +12791,7 @@ function shareCalcExpression() {
   if (_stickyActive) {
     var exprText = _stickyFullExpr + (_stickyInput ? ' ' + _stickyOp + ' ' + _stickyInput : '');
     var text = exprText.trim() + ' = ' + fmtNum(_stickyResult);
+    text += '\n\n✨ Calculated with Lazy Calc\n👉 https://lazy-calc-peach.vercel.app';
     doShare(text, 'Calculation');
     return;
   }
@@ -12536,6 +12844,7 @@ function shareCalcExpression() {
       });
       outputText = lines.join('') + '\n= ' + fmtNum(result);
     }
+    outputText += '\n\n✨ Calculated with Lazy Calc\n👉 https://lazy-calc-peach.vercel.app';
     doShare(outputText, 'Calculation');
   } catch(e) {}
 }
@@ -12591,6 +12900,19 @@ el = document.getElementById('sound-mode-toggle'); if (el) el.checked = _soundEn
 updateShareIconUI();
 updateExpensesBadge();
 updateNavPositionUI();
+if (typeof updateCloudSyncUI === 'function') updateCloudSyncUI();
+
+if (typeof navigator !== 'undefined' && navigator.storage && navigator.storage.persist) {
+  navigator.storage.persist().then(function(persistent) {
+    if (persistent) {
+      console.log('Lazy Calc: Storage persistence granted.');
+    } else {
+      console.log('Lazy Calc: Storage persistence not granted.');
+    }
+  }).catch(function(e) {
+    console.log('Lazy Calc: Storage persist check warning:', e);
+  });
+}
 
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js?v=2.4.0').catch(function(err) {
