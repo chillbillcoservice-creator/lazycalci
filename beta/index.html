@@ -542,6 +542,12 @@ details[open] summary:before { content:'▼'; }
 .sp-amt-placeholder:hover { opacity:0.75; border-color:var(--color-accent); }
 .theme-light .sp-amt-input-wrap { background:rgba(0,0,0,0.04); border-color:rgba(0,0,0,0.12); }
 .theme-light .sp-chip { background:rgba(0,0,0,0.04); border-color:rgba(0,0,0,0.12); color:var(--text-primary) !important; }
+.card-input-box { display:inline-flex; align-items:center; background:var(--bg-primary); padding:0 0.75rem; border-radius:10px; border:1px solid var(--border-color); height:42px; box-sizing:border-box; transition:all 0.15s ease; cursor:text; }
+.card-input-box:focus-within { border-color:var(--color-accent) !important; box-shadow:0 0 0 2px rgba(251, 146, 60, 0.25); }
+.card-input-box.emi-box:focus-within { border-color:#34d399 !important; box-shadow:0 0 0 2px rgba(52, 211, 153, 0.25); }
+.calc-mode-body .card-input-box input, .card-input-box input { width:100% !important; height:100% !important; padding:0 !important; font-size:1.15rem !important; font-weight:800 !important; border:none !important; border-radius:0 !important; background:transparent !important; color:var(--text-primary) !important; outline:none !important; text-align:left !important; font-family:inherit !important; font-variant-numeric:tabular-nums !important; box-shadow:none !important; }
+.card-input-unit { font-size:0.82rem; font-weight:750; color:var(--text-muted); flex-shrink:0; user-select:none; }
+.calc-mode-body button.preset-tile { border-radius:10px !important; }
 .sp-result { background:var(--bg-tertiary); border-radius:var(--radius-sm); padding:0.6rem; margin-top:0.5rem; border:1px solid var(--border-color); }
 .sp-result-line { font-size:0.85rem; color:var(--text-primary); padding:0.2rem 0; }
 .sp-result-owed { font-size:0.85rem; color:var(--color-accent); padding:0.15rem 0; }
@@ -10209,40 +10215,40 @@ function renderFuelMode(container) {
     '<div style="display:flex;flex-direction:column;gap:0.65rem;background:var(--bg-tertiary);padding:0.9rem 1rem;border-radius:16px;border:1px solid var(--border-color);">' +
       '<div class="field-row" style="display:flex;align-items:center;justify-content:space-between;gap:0.6rem;">' +
         '<span class="field-label" style="font-size:0.92rem;font-weight:700;color:var(--text-primary);">' + lblDist + '</span>' +
-        '<div style="display:flex;align-items:center;gap:4px;flex:1;max-width:160px;">' +
-          '<input id="fuel-distance" type="text" inputmode="numeric" value="300" oninput="calcFuelTotal()" style="width:100%;padding:0.55rem 0.75rem;font-size:1.1rem;font-weight:800;border-radius:10px;border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);text-align:right;">' +
-          '<span style="font-size:0.85rem;font-weight:800;color:var(--text-muted);white-space:nowrap;">km</span>' +
+        '<div class="card-input-box" style="width:150px;">' +
+          '<input id="fuel-distance" type="text" inputmode="numeric" value="300" oninput="calcFuelTotal()">' +
+          '<span class="card-input-unit">km</span>' +
         '</div>' +
       '</div>' +
       '<div class="field-row" style="display:flex;align-items:center;justify-content:space-between;gap:0.6rem;">' +
         '<span class="field-label" style="font-size:0.92rem;font-weight:700;color:var(--text-primary);">' + lblMil + '</span>' +
-        '<div style="display:flex;align-items:center;gap:4px;flex:1;max-width:160px;">' +
-          '<input id="fuel-mileage" type="text" inputmode="decimal" value="15" oninput="calcFuelTotal()" style="width:100%;padding:0.55rem 0.75rem;font-size:1.1rem;font-weight:800;border-radius:10px;border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);text-align:right;">' +
-          '<span style="font-size:0.85rem;font-weight:800;color:var(--text-muted);white-space:nowrap;">km/L</span>' +
+        '<div class="card-input-box" style="width:150px;">' +
+          '<input id="fuel-mileage" type="text" inputmode="decimal" value="15" oninput="calcFuelTotal()">' +
+          '<span class="card-input-unit">km/L</span>' +
         '</div>' +
       '</div>' +
       '<div class="field-row" style="display:flex;align-items:center;justify-content:space-between;gap:0.6rem;">' +
         '<span class="field-label" style="font-size:0.92rem;font-weight:700;color:var(--text-primary);">' + lblRate + '</span>' +
-        '<div style="display:flex;align-items:center;gap:4px;flex:1;max-width:160px;">' +
-          '<input id="fuel-rate" type="text" inputmode="decimal" value="100" oninput="calcFuelTotal()" style="width:100%;padding:0.55rem 0.75rem;font-size:1.1rem;font-weight:800;border-radius:10px;border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);text-align:right;">' +
-          '<span style="font-size:0.85rem;font-weight:800;color:var(--text-muted);white-space:nowrap;">₹/L</span>' +
+        '<div class="card-input-box" style="width:150px;">' +
+          '<input id="fuel-rate" type="text" inputmode="decimal" value="100" oninput="calcFuelTotal()">' +
+          '<span class="card-input-unit">₹/L</span>' +
         '</div>' +
       '</div>' +
       '<div class="field-row" style="display:flex;align-items:center;justify-content:space-between;gap:0.6rem;">' +
         '<span class="field-label" style="font-size:0.92rem;font-weight:700;color:var(--text-primary);">' + lblPpl + '</span>' +
-        '<div style="display:flex;align-items:center;gap:4px;flex:1;max-width:160px;">' +
-          '<input id="fuel-people" type="text" inputmode="numeric" value="3" oninput="calcFuelTotal()" style="width:100%;padding:0.55rem 0.75rem;font-size:1.1rem;font-weight:800;border-radius:10px;border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);text-align:right;">' +
-          '<span style="font-size:0.85rem;font-weight:800;color:var(--text-muted);">' + unitPpl + '</span>' +
+        '<div class="card-input-box" style="width:150px;">' +
+          '<input id="fuel-people" type="text" inputmode="numeric" value="3" oninput="calcFuelTotal()">' +
+          '<span class="card-input-unit">' + unitPpl + '</span>' +
         '</div>' +
       '</div>' +
     '</div>' +
     '<div>' +
       '<div style="font-size:0.78rem;font-weight:700;color:var(--text-muted);margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.04em;">' + quickTitle + '</div>' +
       '<div style="display:flex;gap:0.45rem;flex-wrap:wrap;">' +
-        '<button onclick="setFuelDistance(50)" style="flex:1;min-width:55px;padding:0.5rem 0.4rem;font-size:0.85rem;font-weight:800;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:20px;cursor:pointer;transition:all 0.15s ease;">50 km</button>' +
-        '<button onclick="setFuelDistance(100)" style="flex:1;min-width:55px;padding:0.5rem 0.4rem;font-size:0.85rem;font-weight:800;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:20px;cursor:pointer;transition:all 0.15s ease;">100 km</button>' +
-        '<button onclick="setFuelDistance(250)" style="flex:1;min-width:55px;padding:0.5rem 0.4rem;font-size:0.85rem;font-weight:800;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:20px;cursor:pointer;transition:all 0.15s ease;">250 km</button>' +
-        '<button onclick="setFuelDistance(500)" style="flex:1;min-width:55px;padding:0.5rem 0.4rem;font-size:0.85rem;font-weight:800;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:20px;cursor:pointer;transition:all 0.15s ease;">500 km</button>' +
+        '<button class="preset-tile" onclick="setFuelDistance(50)" style="flex:1;min-width:55px;padding:0.5rem 0.4rem;font-size:0.85rem;font-weight:800;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:10px;cursor:pointer;transition:all 0.15s ease;">50 km</button>' +
+        '<button class="preset-tile" onclick="setFuelDistance(100)" style="flex:1;min-width:55px;padding:0.5rem 0.4rem;font-size:0.85rem;font-weight:800;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:10px;cursor:pointer;transition:all 0.15s ease;">100 km</button>' +
+        '<button class="preset-tile" onclick="setFuelDistance(250)" style="flex:1;min-width:55px;padding:0.5rem 0.4rem;font-size:0.85rem;font-weight:800;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:10px;cursor:pointer;transition:all 0.15s ease;">250 km</button>' +
+        '<button class="preset-tile" onclick="setFuelDistance(500)" style="flex:1;min-width:55px;padding:0.5rem 0.4rem;font-size:0.85rem;font-weight:800;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:10px;cursor:pointer;transition:all 0.15s ease;">500 km</button>' +
       '</div>' +
     '</div>' +
     '<div id="fuel-result" style="padding:1rem 1.1rem;background:rgba(251,146,60,0.1);border-radius:16px;border:1px solid rgba(251,146,60,0.3);border-left:5px solid #fb923c;box-shadow:0 8px 24px rgba(251,146,60,0.15);"></div>' +
@@ -10347,32 +10353,34 @@ function renderEmiMode(container) {
     '<div>' +
       '<div style="font-size:0.78rem;font-weight:700;color:var(--text-muted);margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.04em;">' + qAmt + '</div>' +
       '<div style="display:flex;gap:0.45rem;flex-wrap:wrap;">' +
-        '<button onclick="setEmiAmount(100000)" style="flex:1;min-width:65px;padding:0.5rem 0.4rem;font-size:0.85rem;font-weight:800;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:20px;cursor:pointer;transition:all 0.15s ease;">₹1 ' + pLakh + '</button>' +
-        '<button onclick="setEmiAmount(500000)" style="flex:1;min-width:65px;padding:0.5rem 0.4rem;font-size:0.85rem;font-weight:800;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:20px;cursor:pointer;transition:all 0.15s ease;">₹5 ' + pLakh + '</button>' +
-        '<button onclick="setEmiAmount(1000000)" style="flex:1;min-width:65px;padding:0.5rem 0.4rem;font-size:0.85rem;font-weight:800;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:20px;cursor:pointer;transition:all 0.15s ease;">₹10 ' + pLakh + '</button>' +
-        '<button onclick="setEmiAmount(2500000)" style="flex:1;min-width:65px;padding:0.5rem 0.4rem;font-size:0.85rem;font-weight:800;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:20px;cursor:pointer;transition:all 0.15s ease;">₹25 ' + pLakh + '</button>' +
+        '<button class="preset-tile" onclick="setEmiAmount(100000)" style="flex:1;min-width:65px;padding:0.5rem 0.4rem;font-size:0.85rem;font-weight:800;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:10px;cursor:pointer;transition:all 0.15s ease;">₹1 ' + pLakh + '</button>' +
+        '<button class="preset-tile" onclick="setEmiAmount(500000)" style="flex:1;min-width:65px;padding:0.5rem 0.4rem;font-size:0.85rem;font-weight:800;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:10px;cursor:pointer;transition:all 0.15s ease;">₹5 ' + pLakh + '</button>' +
+        '<button class="preset-tile" onclick="setEmiAmount(1000000)" style="flex:1;min-width:65px;padding:0.5rem 0.4rem;font-size:0.85rem;font-weight:800;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:10px;cursor:pointer;transition:all 0.15s ease;">₹10 ' + pLakh + '</button>' +
+        '<button class="preset-tile" onclick="setEmiAmount(2500000)" style="flex:1;min-width:65px;padding:0.5rem 0.4rem;font-size:0.85rem;font-weight:800;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:10px;cursor:pointer;transition:all 0.15s ease;">₹25 ' + pLakh + '</button>' +
       '</div>' +
     '</div>' +
     '<div style="display:flex;flex-direction:column;gap:0.65rem;background:var(--bg-tertiary);padding:0.9rem 1rem;border-radius:16px;border:1px solid var(--border-color);">' +
       '<div class="field-row" style="display:flex;align-items:center;justify-content:space-between;gap:0.6rem;">' +
         '<span class="field-label" style="font-size:0.92rem;font-weight:700;color:var(--text-primary);">' + lblAmt + '</span>' +
-        '<div style="display:flex;align-items:center;gap:4px;flex:1;max-width:170px;">' +
-          '<input id="emi-amount" type="text" inputmode="decimal" value="5,00,000" oninput="formatEmiInput(this)" style="width:100%;padding:0.55rem 0.75rem;font-size:1.1rem;font-weight:800;border-radius:10px;border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);text-align:right;">' +
-          '<span style="font-size:0.9rem;font-weight:800;color:var(--text-muted);">₹</span>' +
+        '<div class="card-input-box emi-box" style="width:160px;">' +
+          '<span class="card-input-unit" style="margin-right:4px;font-size:0.95rem;color:var(--color-accent,#34d399);">₹</span>' +
+          '<input id="emi-amount" type="text" inputmode="decimal" value="5,00,000" oninput="formatEmiInput(this)">' +
         '</div>' +
       '</div>' +
       '<div class="field-row" style="display:flex;align-items:center;justify-content:space-between;gap:0.6rem;">' +
         '<span class="field-label" style="font-size:0.92rem;font-weight:700;color:var(--text-primary);">' + lblRate + '</span>' +
-        '<div style="display:flex;align-items:center;gap:4px;flex:1;max-width:170px;">' +
-          '<input id="emi-rate" type="text" inputmode="decimal" value="8.5" oninput="calcEmiTotal()" style="width:100%;padding:0.55rem 0.75rem;font-size:1.1rem;font-weight:800;border-radius:10px;border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);text-align:right;">' +
-          '<span style="font-size:0.85rem;font-weight:800;color:var(--text-muted);white-space:nowrap;">% p.a.</span>' +
+        '<div class="card-input-box emi-box" style="width:160px;">' +
+          '<input id="emi-rate" type="text" inputmode="decimal" value="8.5" oninput="calcEmiTotal()">' +
+          '<span class="card-input-unit" style="margin-left:4px;">% p.a.</span>' +
         '</div>' +
       '</div>' +
       '<div class="field-row" style="display:flex;align-items:center;justify-content:space-between;gap:0.6rem;">' +
         '<span class="field-label" style="font-size:0.92rem;font-weight:700;color:var(--text-primary);">' + lblTenure + '</span>' +
         '<div style="display:flex;align-items:center;gap:6px;">' +
-          '<input id="emi-tenure" type="text" inputmode="numeric" value="5" oninput="calcEmiTotal()" style="width:65px;padding:0.55rem 0.5rem;font-size:1.1rem;font-weight:800;border-radius:10px;border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);text-align:center;">' +
-          '<select id="emi-unit" onchange="calcEmiTotal()" style="padding:0.55rem 0.6rem;font-size:0.88rem;font-weight:800;border-radius:10px;border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);">' +
+          '<div class="card-input-box emi-box" style="width:65px;padding:0 0.4rem;">' +
+            '<input id="emi-tenure" type="text" inputmode="numeric" value="5" oninput="calcEmiTotal()" style="text-align:center !important;">' +
+          '</div>' +
+          '<select id="emi-unit" onchange="calcEmiTotal()" style="height:42px;padding:0 0.6rem;font-size:0.88rem;font-weight:800;border-radius:10px;border:1px solid var(--border-color);background:var(--bg-primary);color:var(--text-primary);outline:none;cursor:pointer;">' +
             '<option value="years">' + optYrs + '</option>' +
             '<option value="months">' + optMths + '</option>' +
           '</select>' +
@@ -10382,10 +10390,10 @@ function renderEmiMode(container) {
     '<div>' +
       '<div style="font-size:0.78rem;font-weight:700;color:var(--text-muted);margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.04em;">' + qTenure + '</div>' +
       '<div style="display:flex;gap:0.45rem;flex-wrap:wrap;">' +
-        '<button onclick="setEmiTenure(1)" style="flex:1;min-width:55px;padding:0.5rem 0.4rem;font-size:0.85rem;font-weight:800;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:20px;cursor:pointer;transition:all 0.15s ease;">1 Yr</button>' +
-        '<button onclick="setEmiTenure(3)" style="flex:1;min-width:55px;padding:0.5rem 0.4rem;font-size:0.85rem;font-weight:800;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:20px;cursor:pointer;transition:all 0.15s ease;">3 Yrs</button>' +
-        '<button onclick="setEmiTenure(5)" style="flex:1;min-width:55px;padding:0.5rem 0.4rem;font-size:0.85rem;font-weight:800;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:20px;cursor:pointer;transition:all 0.15s ease;">5 Yrs</button>' +
-        '<button onclick="setEmiTenure(10)" style="flex:1;min-width:55px;padding:0.5rem 0.4rem;font-size:0.85rem;font-weight:800;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:20px;cursor:pointer;transition:all 0.15s ease;">10 Yrs</button>' +
+        '<button class="preset-tile" onclick="setEmiTenure(1)" style="flex:1;min-width:55px;padding:0.5rem 0.4rem;font-size:0.85rem;font-weight:800;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:10px;cursor:pointer;transition:all 0.15s ease;">1 Yr</button>' +
+        '<button class="preset-tile" onclick="setEmiTenure(3)" style="flex:1;min-width:55px;padding:0.5rem 0.4rem;font-size:0.85rem;font-weight:800;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:10px;cursor:pointer;transition:all 0.15s ease;">3 Yrs</button>' +
+        '<button class="preset-tile" onclick="setEmiTenure(5)" style="flex:1;min-width:55px;padding:0.5rem 0.4rem;font-size:0.85rem;font-weight:800;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:10px;cursor:pointer;transition:all 0.15s ease;">5 Yrs</button>' +
+        '<button class="preset-tile" onclick="setEmiTenure(10)" style="flex:1;min-width:55px;padding:0.5rem 0.4rem;font-size:0.85rem;font-weight:800;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-primary);border-radius:10px;cursor:pointer;transition:all 0.15s ease;">10 Yrs</button>' +
       '</div>' +
     '</div>' +
     '<div id="emi-result" style="padding:1rem 1.1rem;background:rgba(16,185,129,0.1);border-radius:16px;border:1px solid rgba(16,185,129,0.3);border-left:5px solid #10b981;box-shadow:0 8px 24px rgba(16,185,129,0.15);"></div>' +
