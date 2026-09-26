@@ -2284,7 +2284,10 @@ var calcTokens = (function() {
     var saved = localStorage.getItem('calc_active_tokens');
     if (saved) {
       var parsed = JSON.parse(saved);
-      if (Array.isArray(parsed) && parsed.length) return parsed;
+      if (Array.isArray(parsed) && parsed.length) {
+        parsed.forEach(function(t) { t.label = ''; });
+        return parsed;
+      }
     }
   } catch(e) {}
   return [{v: '0', label: ''}];
@@ -3328,7 +3331,7 @@ function calcLatestTokenToWords(tokens) {
   if (isNaN(num)) return '';
   var valForWords = _kMode ? num * 1000 : num;
   var w = numToWords(valForWords);
-  if (w && lastNumToken.label) {
+  if (w && _billMode && lastNumToken.label) {
     w += ' (' + lastNumToken.label + ')';
   }
   return w || '';
@@ -3487,7 +3490,9 @@ function parseVoiceSpeechToTokens(transcript) {
   // (Prevents "jod do" or "ghata do" from mistaking "do" for the digit 2)
   text = text
     .replace(/\b(jod|jodo|kar|karke|de|hata|ghata|bata|nikaal|nikal)\s+do\b/gi, '$1')
-    .replace(/(?<![\u0900-\u097F])(जोड़|जोड़ो|कर|करके|दे|हटा|घटा|बता|निकाल)\s+दो(?![\u0900-\u097F])/g, '$1');
+    .replace(/(?<![\u0900-\u097F])(जोड़|जोड़ो|कर|करके|दे|हटा|घटा|बता|निकाल)\s+दो(?![\u0900-\u097F])/g, '$1')
+    .replace(/\b(diye|diya|diyo|liye|liya|liyo|dijiye|lijiye|bheja|bheje|bhejo|paid|given|took|take|give)\b/gi, ' ')
+    .replace(/(?<![\u0900-\u097F])(दिए|दिया|दियो|लिए|लिया|लियो|दीजिए|लीजिए|भेजा|भेजे|भेजो|पे|पेड)(?![\u0900-\u097F])/g, ' ');
 
   // 4. Map Devanagari number words using Unicode boundary guards (?<![\u0900-\u097F]) and (?![\u0900-\u097F])
   var devNums = {
@@ -3637,13 +3642,12 @@ function parseVoiceSpeechToTokens(transcript) {
   }
 
   if (tokens.length > 0) {
+    tokens.forEach(function(t) { t.label = ''; });
     calcTokens = tokens;
     _calcSavedExpr = '';
     _calcShowExpr = true;
     calcUpdateDisplay();
     triggerResultPulse();
-  } else {
-    parsePastedCalcText(text);
   }
 }
 
@@ -4669,6 +4673,10 @@ function updateShareIconUI() {
 }
 function doShare(text, title) {
   if (!text) return;
+  var viralFooter = '\n\n✨ Calculated with Lazy Calc\n👉 https://lazy-calc-peach.vercel.app';
+  if (text.indexOf('lazy-calc') === -1) {
+    text = text.trim() + viralFooter;
+  }
   var waUrl = 'https://api.whatsapp.com/send?text=' + encodeURIComponent(text);
   function openWA() {
     var win = window.open(waUrl, '_blank');
@@ -6970,13 +6978,11 @@ function calcUpdateDisplay(skipEditor) {
       parts.push('<span>' + escHtml(displayV) + '</span>');
     } else {
       var formattedVal = fmtTokenVal(t.v);
-      if (_recordExpenses && !_billMode && t.label) {
-        var recClick = t._recorded ? 'showToast(\'' + _t('⏳ Already added to Expenses', '⏳ पहले से खर्च में जोड़ा गया', '⏳ Pehle se kharch me joda gaya') + '\')' : 'sendTokenToExpenses('+i+')';
-        var recColor = t._recorded ? '#e74c3c' : 'var(--color-accent)';
-        parts.push('<span onclick="editCalcTokenLabel('+i+')" style="cursor:pointer;font-weight:600;text-decoration:underline dotted var(--color-accent);">' + escHtml(formattedVal) + '</span> <span onclick="'+recClick+'" style="cursor:pointer;color:'+recColor+';font-size:0.75em;font-weight:600;">(' + escHtml(t.label) + ')</span>');
-      } else {
+      if (_billMode) {
         var showLabel = t.label ? ' <span onclick="editCalcTokenLabel('+i+')" style="color:var(--color-accent);font-size:0.75em;cursor:pointer;">(' + escHtml(t.label) + ')</span>' : '';
         parts.push('<span onclick="editCalcTokenLabel('+i+')" style="cursor:pointer;font-weight:600;text-decoration:underline dotted var(--color-accent);">' + escHtml(formattedVal) + '</span>' + showLabel);
+      } else {
+        parts.push('<span style="font-weight:600;">' + escHtml(formattedVal) + '</span>');
       }
     }
   });
@@ -10030,7 +10036,7 @@ function shareSpecializedMode() {
     var info = '• Weight: ' + weightStr + 'g (' + caratStr + 'K)\n• 24K Rate: ₹' + fmtNum(rateVal) + '/g\n';
     if (resDiv) text = '🪙 Gold Bill Summary:\n' + info + resDiv.innerText;
   } else if (mode === 'fuel') {
-    var distInp = document.getElementById('fuel-dist');
+    var distInp = document.getElementById('fuel-distance') || document.getElementById('fuel-dist');
     var milInp = document.getElementById('fuel-mileage');
     var rateInp = document.getElementById('fuel-rate');
     var resDiv = document.getElementById('fuel-result');
@@ -13016,8 +13022,13 @@ if (typeof navigator !== 'undefined' && navigator.storage && navigator.storage.p
 }
 
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js?v=2.4.0').catch(function(err) {
+  navigator.serviceWorker.register('sw.js?v=2.8.0').then(function(reg) {
+    if (reg) reg.update();
+  }).catch(function(err) {
     console.log('SW registration failed:', err);
+  });
+  navigator.serviceWorker.addEventListener('controllerchange', function() {
+    window.location.reload();
   });
 }
 
