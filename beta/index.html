@@ -2210,7 +2210,7 @@ body {
       </div>
 
       <div id="modes-dropdown-wrap" class="modes-dropdown-wrap" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);pointer-events:auto;z-index:10;">
-        <span id="h-btn-modes" class="mode-heading-btn" style="padding:0.25rem 0.65rem;display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:1.25rem;font-family:'Parisienne','Alex Brush','Great Vibes',cursive;letter-spacing:0.02em;background:transparent;border:none;cursor:default;pointer-events:none;">Lazy Calc</span>
+        <span id="h-btn-modes" class="mode-heading-btn" style="padding:0.25rem 0.65rem;display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:1.25rem;font-family:'Parisienne','Alex Brush','Great Vibes',cursive;letter-spacing:0.02em;background:transparent;border:none;cursor:default;pointer-events:none;">Lazy Calc <span style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;font-size:0.62rem;font-weight:800;background:var(--color-accent);color:#fff;padding:2px 6px;border-radius:6px;letter-spacing:0.5px;">BETA</span></span>
         <div id="modes-menu" class="modes-menu-popup" onclick="event.stopPropagation()">
           <div id="mitem-date" class="modes-menu-item" onclick="selectModeFromMenu('date')">🗓️ Date & Duration</div>
           <div id="mitem-billing" class="modes-menu-item" onclick="selectModeFromMenu('quickbilling')">🛒 Billing - POS</div>
@@ -3443,7 +3443,9 @@ function startVoiceCalc() {
 
       _voiceRecognition.onend = function() {
         if (_lastVoiceTranscript) {
-          parseVoiceSpeechToTokens(_lastVoiceTranscript);
+          var t = _lastVoiceTranscript;
+          _lastVoiceTranscript = '';
+          parseVoiceSpeechToTokens(t);
         }
         stopVoiceCalc();
       };
@@ -3457,7 +3459,11 @@ function startVoiceCalc() {
 
 function stopVoiceCalc() {
   _isVoiceListening = false;
-  _lastVoiceTranscript = '';
+  if (_lastVoiceTranscript) {
+    var t = _lastVoiceTranscript;
+    _lastVoiceTranscript = '';
+    parseVoiceSpeechToTokens(t);
+  }
   if (_voiceRecognition) {
     try { _voiceRecognition.stop(); } catch(e) {}
   }
@@ -4832,7 +4838,7 @@ function applyCalcMode(name) {
     if (hModesBtn) {
       hModesBtn.classList.remove('active');
       hModesBtn.style.display = '';
-      hModesBtn.innerHTML = 'Lazy Calc';
+      hModesBtn.innerHTML = 'Lazy Calc <span style="font-family:-apple-system,BlinkMacSystemFont,\'Segoe UI\',Roboto,sans-serif;font-size:0.62rem;font-weight:800;background:var(--color-accent);color:#fff;padding:2px 6px;border-radius:6px;letter-spacing:0.5px;">BETA</span>';
       hModesBtn.style.fontFamily = "'Parisienne', 'Alex Brush', 'Great Vibes', cursive";
       hModesBtn.style.cursor = 'default';
       hModesBtn.style.border = 'none';
@@ -4866,7 +4872,7 @@ function applyCalcMode(name) {
     if (hModesBtn) {
       hModesBtn.classList.remove('active');
       hModesBtn.style.display = '';
-      hModesBtn.innerHTML = 'Lazy Calc';
+      hModesBtn.innerHTML = 'Lazy Calc <span style="font-family:-apple-system,BlinkMacSystemFont,\'Segoe UI\',Roboto,sans-serif;font-size:0.62rem;font-weight:800;background:var(--color-accent);color:#fff;padding:2px 6px;border-radius:6px;letter-spacing:0.5px;">BETA</span>';
       hModesBtn.style.fontFamily = "'Parisienne', 'Alex Brush', 'Great Vibes', cursive";
       hModesBtn.style.cursor = 'default';
       hModesBtn.style.border = 'none';
