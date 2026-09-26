@@ -3333,7 +3333,16 @@ function calcLatestTokenToWords(tokens) {
   }
   return w || '';
 }
-function evalExpr(str) { try { return eval(str.replace(/([\d.]+)%([\d.]+)/g, '$1*$2/100')); } catch(e) { return NaN; } }
+function evalExpr(str) {
+  try {
+    var s = str
+      .replace(/([\d.]+)%([\d.]+)/g, '$1*$2/100')
+      .replace(/([\d.]+)%/g, '($1/100)');
+    return eval(s);
+  } catch(e) {
+    return NaN;
+  }
+}
 
 function showToast(msg, durationMs) {
   var el = document.getElementById('calc-toast');
@@ -3398,7 +3407,7 @@ function startVoiceCalc() {
       _voiceRecognition = new SpeechRec();
       _voiceRecognition.continuous = false;
       _voiceRecognition.interimResults = true;
-      _voiceRecognition.lang = 'en-IN';
+      _voiceRecognition.lang = (_appLang === 'hi') ? 'hi-IN' : 'en-IN';
 
       _voiceRecognition.onstart = function() {
         _isVoiceListening = true;
@@ -3464,64 +3473,136 @@ function parseVoiceSpeechToTokens(transcript) {
   var text = transcript.toLowerCase().trim();
   if (!text) return;
 
+  // 1. Normalize Unicode minuses, bullets, punctuation, and currency symbols
   text = text
     .replace(/[\u2013\u2014\u2212\u2796\u2011]/g, '-')
-    .replace(/[•·]/g, '')
-    .replace(/\b(twenty|bees)\s+(one|two|three|four|five|six|seven|eight|nine)\b/g, function(m, t, u) {
-      var nums = {'one':'1','two':'2','three':'3','four':'4','five':'5','six':'6','seven':'7','eight':'8','nine':'9'};
-      return '2' + nums[u];
-    })
-    .replace(/\b(thirty|tees)\s+(one|two|three|four|five|six|seven|eight|nine)\b/g, function(m, t, u) {
-      var nums = {'one':'1','two':'2','three':'3','four':'4','five':'5','six':'6','seven':'7','eight':'8','nine':'9'};
-      return '3' + nums[u];
-    })
-    .replace(/\b(forty|chalis)\s+(one|two|three|four|five|six|seven|eight|nine)\b/g, function(m, t, u) {
-      var nums = {'one':'1','two':'2','three':'3','four':'4','five':'5','six':'6','seven':'7','eight':'8','nine':'9'};
-      return '4' + nums[u];
-    })
-    .replace(/\b(fifty|pachaas)\s+(one|two|three|four|five|six|seven|eight|nine)\b/g, function(m, t, u) {
-      var nums = {'one':'1','two':'2','three':'3','four':'4','five':'5','six':'6','seven':'7','eight':'8','nine':'9'};
-      return '5' + nums[u];
-    })
-    .replace(/\b(sixty|saath)\s+(one|two|three|four|five|six|seven|eight|nine)\b/g, function(m, t, u) {
-      var nums = {'one':'1','two':'2','three':'3','four':'4','five':'5','six':'6','seven':'7','eight':'8','nine':'9'};
-      return '6' + nums[u];
-    })
-    .replace(/\b(seventy|sattar)\s+(one|two|three|four|five|six|seven|eight|nine)\b/g, function(m, t, u) {
-      var nums = {'one':'1','two':'2','three':'3','four':'4','five':'5','six':'6','seven':'7','eight':'8','nine':'9'};
-      return '7' + nums[u];
-    })
-    .replace(/\b(eighty|assi)\s+(one|two|three|four|five|six|seven|eight|nine)\b/g, function(m, t, u) {
-      var nums = {'one':'1','two':'2','three':'3','four':'4','five':'5','six':'6','seven':'7','eight':'8','nine':'9'};
-      return '8' + nums[u];
-    })
-    .replace(/\b(ninety|nabbe)\s+(one|two|three|four|five|six|seven|eight|nine)\b/g, function(m, t, u) {
-      var nums = {'one':'1','two':'2','three':'3','four':'4','five':'5','six':'6','seven':'7','eight':'8','nine':'9'};
-      return '9' + nums[u];
-    })
-    .replace(/\b(ninety|nabbe)\b/g, '90')
-    .replace(/\b(eighty|assi)\b/g, '80')
-    .replace(/\b(seventy|sattar)\b/g, '70')
-    .replace(/\b(sixty|saath)\b/g, '60')
-    .replace(/\b(fifty|pachaas)\b/g, '50')
-    .replace(/\b(forty|chalis)\b/g, '40')
-    .replace(/\b(thirty|tees)\b/g, '30')
-    .replace(/\b(twenty|bees)\b/g, '20')
-    .replace(/\b(ten|das)\b/g, '10')
-    .replace(/\b(douso|two hundred)\b/g, '200')
-    .replace(/\b(so|one hundred|hundred)\b/g, '100')
-    .replace(/\b(hazaar|thousand)\b/g, '1000')
-    .replace(/\b(plus|aur|add|jod|jodo|\+)\b/g, ' + ')
-    .replace(/\b(minus|ghatao|sub|\-)\b/g, ' - ')
-    .replace(/\b(into|times|multiply|guna|×|\*)\b/g, ' * ')
-    .replace(/\b(divide|divided by|bhag|bhaag|\/|÷)\b/g, ' / ');
+    .replace(/[•·?,!;:]/g, ' ')
+    .replace(/₹|rs\.?|inr/gi, ' ');
 
-  // Strip connecting filler words: "10 ka milk" ──► "10 milk", "10 for milk" ──► "10 milk"
-  text = text.replace(/\b(ka|ki|ke|ko|se|par|for|of|on)\b/gi, ' ');
+  // 2. Convert Devanagari numerals (०-९) to standard digits (0-9)
+  var devDigits = {'०':'0','१':'1','२':'2','३':'3','४':'4','५':'5','६':'6','७':'7','८':'8','९':'9'};
+  text = text.replace(/[०-९]/g, function(d) { return devDigits[d]; });
 
-  // Split into words and parse tokens cleanly
+  // 3. Normalize common Hindi verb phrases ending with "do" / "दो" before number conversions
+  // (Prevents "jod do" or "ghata do" from mistaking "do" for the digit 2)
+  text = text
+    .replace(/\b(jod|jodo|kar|karke|de|hata|ghata|bata|nikaal|nikal)\s+do\b/gi, '$1')
+    .replace(/(?<![\u0900-\u097F])(जोड़|जोड़ो|कर|करके|दे|हटा|घटा|बता|निकाल)\s+दो(?![\u0900-\u097F])/g, '$1');
+
+  // 4. Map Devanagari number words using Unicode boundary guards (?<![\u0900-\u097F]) and (?![\u0900-\u097F])
+  var devNums = {
+    'शून्य':'0', 'एक':'1', 'दो':'2', 'तीन':'3', 'चार':'4', 'पाँच':'5', 'पांच':'5',
+    'छह':'6', 'सात':'7', 'आठ':'8', 'नौ':'9', 'दस':'10',
+    'ग्यारह':'11', 'बारह':'12', 'तेरह':'13', 'चौदह':'14', 'पंद्रह':'15',
+    'सोलह':'16', 'सत्रह':'17', 'अठारह':'18', 'उन्नीस':'19',
+    'बीस':'20', 'इक्कीस':'21', 'बाईस':'22', 'तेईस':'23', 'चौबीस':'24', 'पच्चीस':'25',
+    'छब्बीस':'26', 'सत्ताईस':'27', 'अट्ठाईस':'28', 'उनतीस':'29',
+    'तीस':'30', 'इकतीस':'31', 'बत्तीस':'32', 'तैंतीस':'33', 'चौंतीस':'34', 'पैंतीस':'35',
+    'छत्तीस':'36', 'सैंतीस':'37', 'अड़तीस':'38', 'उनतालीस':'39',
+    'चालीस':'40', 'इकतालीस':'41', 'बयालीस':'42', 'तैंतालीस':'43', 'चवालीस':'44', 'पैंतालीस':'45',
+    'छियालीस':'46', 'सैंतालीस':'47', 'अड़तालीस':'48', 'उनचास':'49',
+    'पचास':'50', 'इक्यावन':'51', 'बावन':'52', 'तिरेपन':'53', 'चौवन':'54', 'पचपन':'55',
+    'छप्पन':'56', 'सत्तावन':'57', 'अट्ठावन':'58', 'उनसठ':'59',
+    'साठ':'60', 'इकसठ':'61', 'बासठ':'62', 'तिरसठ':'63', 'चौंसठ':'64', 'पैंसठ':'65',
+    'छियासठ':'66', 'सरसठ':'67', 'अड़सठ':'68', 'उनहत्तर':'69',
+    'सत्तर':'70', 'इकहत्तर':'71', 'बहत्तर':'72', 'तिहत्तर':'73', 'चौहत्तर':'74', 'पचहत्तर':'75',
+    'छिहत्तर':'76', 'सतहत्तर':'77', 'अठहत्तर':'78', 'उनासी':'79',
+    'अस्सी':'80', 'इक्यासी':'81', 'बयासी':'82', 'तिरासी':'83', 'चौरासी':'84', 'पचासी':'85',
+    'छियासी':'86', 'सत्तासी':'87', 'अठासी':'88', 'नवासी':'89',
+    'नब्बे':'90', 'इक्यानवे':'91', 'बानवे':'92', 'तिरानवे':'93', 'चौरानवे':'94', 'पंचानवे':'95',
+    'छियानवे':'96', 'सत्तानवे':'97', 'अट्ठानवे':'98', 'निन्यानवे':'99',
+    'सौ':'100', 'हज़ार':'1000', 'हजार':'1000', 'लाख':'100000', 'करोड़':'10000000'
+  };
+  for (var dn in devNums) {
+    text = text.replace(new RegExp('(?<![\\u0900-\\u097F])' + dn + '(?![\\u0900-\\u097F])', 'g'), devNums[dn]);
+  }
+
+  // 5. English & Romanized Hindi compound numbers (e.g. "twenty five", "chalis paanch")
+  var tens = {
+    'twenty':'2','bees':'2',
+    'thirty':'3','tees':'3',
+    'forty':'4','chalis':'4','chaalis':'4',
+    'fifty':'5','pachaas':'5','pachas':'5',
+    'sixty':'6','saath':'6','sath':'6',
+    'seventy':'7','sattar':'7',
+    'eighty':'8','assi':'8',
+    'ninety':'9','nabbe':'9'
+  };
+  var ones = {
+    'one':'1','ek':'1',
+    'two':'2','do':'2',
+    'three':'3','teen':'3',
+    'four':'4','chaar':'4','char':'4',
+    'five':'5','paanch':'5','panch':'5',
+    'six':'6','chhe':'6','che':'6',
+    'seven':'7','saat':'7','sat':'7',
+    'eight':'8','aath':'8','ath':'8',
+    'nine':'9','nau':'9','no':'9'
+  };
+  var tensRegex = new RegExp('\\b(' + Object.keys(tens).join('|') + ')\\s+(' + Object.keys(ones).join('|') + ')\\b', 'g');
+  text = text.replace(tensRegex, function(m, t, o) {
+    return tens[t] + ones[o];
+  });
+
+  // 6. Single tens
+  var singleTens = {
+    'ten': '10', 'das': '10',
+    'twenty': '20', 'bees': '20',
+    'thirty': '30', 'tees': '30',
+    'forty': '40', 'chalis': '40', 'chaalis': '40',
+    'fifty': '50', 'pachaas': '50', 'pachas': '50',
+    'sixty': '60', 'saath': '60', 'sath': '60',
+    'seventy': '70', 'sattar': '70',
+    'eighty': '80', 'assi': '80',
+    'ninety': '90', 'nabbe': '90'
+  };
+  for (var st in singleTens) {
+    text = text.replace(new RegExp('\\b' + st + '\\b', 'g'), singleTens[st]);
+  }
+
+  // 7. Single Hindi / English digits and scale words
+  var singleNums = {
+    'zero':'0','shunya':'0',
+    'one':'1','ek':'1',
+    'two':'2','do':'2',
+    'three':'3','teen':'3',
+    'four':'4','chaar':'4',
+    'five':'5','paanch':'5',
+    'six':'6','chhe':'6',
+    'seven':'7','saat':'7',
+    'eight':'8','aath':'8',
+    'nine':'9','nau':'9',
+    'hundred':'100','sau':'100','so':'100',
+    'thousand':'1000','hazaar':'1000','hazar':'1000',
+    'lakh':'100000','laakh':'100000',
+    'crore':'10000000','karod':'10000000'
+  };
+  for (var sn in singleNums) {
+    text = text.replace(new RegExp('\\b' + sn + '\\b', 'g'), singleNums[sn]);
+  }
+
+  // 8. Percentage patterns ("1200 ka 18 percent", "1000 of 10%")
+  text = text.replace(/(\d+)\s*(?:ka|ki|ke|का|की|के|of)\s*(\d+)\s*(?:percent|percentage|pratishat|taka|takke|%|प्रतिशत|पर्सेंट|टका|टक्के)/gi, '$1 * $2 %');
+
+  // 9. Hindi SOV Subtraction ("500 me se 200 minus/ghatao") -> "500 - 200"
+  text = text.replace(/(\d+)\s*(?:me\s*se|mein\s*se|से|में\s*से)\s*(\d+)\s*(?:minus|ghatao|ghata|kam|hatao|nikaalo|nikaal|घटाओ|घटा|माइनस|हटाओ|निकालो|कम)(?:\s*(?:karo|kardo|karen|do|दें|करें|करो))?/gi, '$1 - $2');
+
+  // 10. Hindi SOV Addition ("500 me 200 jodo/plus") -> "500 + 200"
+  text = text.replace(/(\d+)\s*(?:me|mein|में)\s*(\d+)\s*(?:plus|jod|jodo|add|jama|प्लस|जोड़|जोड़ो|जमा)(?:\s*(?:karo|kardo|karen|do|दें|करें|करो))?/gi, '$1 + $2');
+
+  // 11. Normalize Operators across Hindi, Devanagari, and English
+  text = text
+    .replace(/(?<![\u0900-\u097F])(प्लस|और|जोड़|जोड़ो|जमा)(?![\u0900-\u097F])|\b(plus|aur|add|jod|jodo|jama|and|\+)\b/gi, ' + ')
+    .replace(/(?<![\u0900-\u097F])(घटाओ|घटा|माइनस|कम|हटाओ)(?![\u0900-\u097F])|\b(minus|subtract|sub|ghatao|ghata|kam|hatao|nikaalo|\-)\b/gi, ' - ')
+    .replace(/(?<![\u0900-\u097F])(गुणा|गुना|इंटू)(?![\u0900-\u097F])|\b(into|times|multiply|multiplied by|guna|gune|\*|×)\b/gi, ' * ')
+    .replace(/(?<![\u0900-\u097F])(भाग|डिवाइड)(?![\u0900-\u097F])|\b(divide|divided by|bhag|bhaag|bate|batte|\/|÷)\b/gi, ' / ')
+    .replace(/(?<![\u0900-\u097F])(प्रतिशत|पर्सेंट|टका|टक्के)(?![\u0900-\u097F])|\b(percent|percentage|pratishat|taka|takke|%)\b/gi, ' % ');
+
+  // 12. Parse tokens strictly for Option B (Pure Math Only):
+  // Discard all conversational words (bhai, rupaye, kitna hua, please, karo, etc.)
   var words = text.split(/\s+/).filter(Boolean);
   var tokens = [];
+
   var isInitialZero = (calcTokens && calcTokens.length === 1 && (calcTokens[0].v === '0' || calcTokens[0].v === ''));
   if (calcTokens && calcTokens.length > 0 && !isInitialZero) {
     tokens = calcTokens.slice();
@@ -3530,23 +3611,29 @@ function parseVoiceSpeechToTokens(transcript) {
       tokens.push({ v: '+', label: '' });
     }
   }
-  var ignoreWords = ['plus','minus','into','divide','times','and','aur','jod','ghatao','ka','ki','ke','ko','for','of','on','+','-','*','/'];
 
   for (var i = 0; i < words.length; i++) {
     var w = words[i];
-    if (['+','-','*','/'].indexOf(w) !== -1) {
-      tokens.push({ v: w, label: '' });
-    } else if (/^\d+\.?\d*$/.test(w)) {
-      var label = '';
-      if (i + 1 < words.length && !/^\d+\.?\d*$/.test(words[i+1]) && ignoreWords.indexOf(words[i+1]) === -1) {
-        label = words[i+1];
-        i++;
+
+    if (['+', '-', '*', '/', '%'].indexOf(w) !== -1) {
+      if (tokens.length > 0 && ['+', '-', '*', '/', '%'].indexOf(tokens[tokens.length - 1].v) !== -1) {
+        tokens[tokens.length - 1].v = w; // replace operator if repeated
+      } else if (tokens.length > 0) {
+        tokens.push({ v: w, label: '' });
       }
-      if (tokens.length > 0 && ['+','-','*','/'].indexOf(tokens[tokens.length - 1].v) === -1) {
+    } else if (/^\d+\.?\d*$/.test(w)) {
+      // Auto-insert '+' if preceding token was also a number (e.g. "50 30" -> "50 + 30")
+      if (tokens.length > 0 && ['+', '-', '*', '/', '%'].indexOf(tokens[tokens.length - 1].v) === -1) {
         tokens.push({ v: '+', label: '' });
       }
-      tokens.push({ v: w, label: label });
+      tokens.push({ v: w, label: '' }); // Option B: Always empty label, pure math!
     }
+    // Any conversational word (Hindi or English) not matching numbers or operators is SILENTLY DISCARDED!
+  }
+
+  // Remove trailing binary operators if speech ended mid-operator (keep postfix %)
+  while (tokens.length > 0 && ['+', '-', '*', '/'].indexOf(tokens[tokens.length - 1].v) !== -1) {
+    tokens.pop();
   }
 
   if (tokens.length > 0) {
@@ -7997,7 +8084,10 @@ function syncUserDataToCloud(isManual) {
   }).catch(function(err) {
     console.error('Lazy Calc: Cloud sync error:', err);
     if (isManual && typeof showToast === 'function') {
-      showToast('⚠️ ' + _t('Cloud sync failed: ', 'क्लाउड सिंक विफल: ', 'Cloud sync fail hua: ') + (err.message || 'Error'));
+      var msg = (err && err.code === 'permission-denied')
+        ? _t('Firebase trial rules expired. Enable read/write in Firebase Console.', 'फायरबेस नियम समाप्त। कृपया फायरबेस कंसोल में अनुमति दें।', 'Firebase rules expired. Firebase Console me rules allow karein.')
+        : ((err && err.message) || 'Error');
+      showToast('⚠️ ' + _t('Cloud sync failed: ', 'क्लाउड सिंक विफल: ', 'Cloud sync fail hua: ') + msg);
     }
   });
 }
@@ -8086,7 +8176,10 @@ function restoreUserDataFromCloud(phoneToRestore) {
   }).catch(function(err) {
     console.error('Lazy Calc: Cloud restore error:', err);
     if (typeof showToast === 'function') {
-      showToast('⚠️ ' + _t('Restore failed: ', 'रीस्टोर विफल: ', 'Restore fail hua: ') + (err.message || 'Error'));
+      var msg = (err && err.code === 'permission-denied')
+        ? _t('Firebase trial rules expired. Enable read/write in Firebase Console.', 'फायरबेस नियम समाप्त। कृपया फायरबेस कंसोल में अनुमति दें।', 'Firebase rules expired. Firebase Console me rules allow karein.')
+        : ((err && err.message) || 'Error');
+      showToast('⚠️ ' + _t('Restore failed: ', 'रीस्टोर विफल: ', 'Restore fail hua: ') + msg);
     }
   });
 }
